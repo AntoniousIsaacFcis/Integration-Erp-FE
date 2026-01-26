@@ -4,31 +4,37 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
+    "start:ar": "ng serve --configuration ar",
+    "start:en": "ng serve --configuration en",
     "build": "ng build",
+    "build:prod": "ng build --configuration production",
+    "i18n:extract": "ng extract-i18n --output-path src/locale",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test",
+    "test": "vitest",
     "serve:ssr:ERP": "node dist/ERP/server/server.mjs"
   },
   "prettier": {
     "printWidth": 100,
     "singleQuote": true,
+    "trailingComma": "all",
     "overrides": [
       {
         "files": "*.html",
-        "options": {
-          "parser": "angular"
-        }
+        "options": { "parser": "angular" }
       }
     ]
   },
   "private": true,
   "packageManager": "npm@11.4.2",
   "dependencies": {
+    "@angular/animations": "^21.0.0",
     "@angular/common": "^21.0.0",
     "@angular/compiler": "^21.0.0",
     "@angular/core": "^21.0.0",
     "@angular/forms": "^21.0.0",
+    "@angular/localize": "^21.1.1",
     "@angular/platform-browser": "^21.0.0",
+    "@angular/platform-browser-dynamic": "^21.0.0",
     "@angular/platform-server": "^21.0.0",
     "@angular/router": "^21.0.0",
     "@angular/ssr": "^21.0.5",
@@ -44,6 +50,7 @@
     "@types/express": "^5.0.1",
     "@types/node": "^20.17.19",
     "jsdom": "^27.1.0",
+    "msw": "^2.7.0",
     "postcss": "^8.5.3",
     "tailwindcss": "^4.1.12",
     "typescript": "~5.9.2",

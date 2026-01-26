@@ -1,0 +1,24 @@
+export interface IOrganizationUnit {
+  id: string;         // Guid in C#
+  code: string;
+  name: string;
+  typeId: string;     // Guid linking to OrganizationType
+  levelId: string;    // Guid linking to OrganizationLevel
+  isActive: boolean;
+
+  //Audit Properties
+  creationTime?: string;
+  creatorId?: string;
+  lastModificationTime?: string;
+  lastModifierId?: string;
+}
+
+export type ICreateOrganizationUnit = Omit<
+  IOrganizationUnit,
+  'id' | 'isActive' | 'creationTime' | 'creatorId' | 'lastModificationTime' | 'lastModifierId'
+>;
+
+export type IUpdateOrganizationUnit = Omit<
+  IOrganizationUnit,
+  'id' | 'creationTime' | 'creatorId' | 'lastModificationTime' | 'lastModifierId'
+>;

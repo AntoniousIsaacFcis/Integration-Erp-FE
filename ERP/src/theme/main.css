@@ -1,0 +1,116 @@
+@import "tailwindcss";
+
+/* 🎨 1. THEME DEFINITION (Tokens & Variables) */
+
+@theme {
+  /* Brand & Semantic Colors */
+  --color-primary: #0ea5e9;    /* Sky 500 */
+  --color-secondary: #475569;  /* Slate 600 */
+  --color-success: #22c55e;    /* Green 500 */
+  --color-error: #ef4444;      /* Red 500 */
+  --color-warning: #f59e0b;     /* Amber 500 */
+
+  /* Surface & Backgrounds (Dynamic based on Light/Dark) */
+  --color-surface: #ffffff;
+  --color-background: #f8fafc;
+  --color-border-subtle: #e2e8f0;
+  --color-text-main: #0f172a;
+  --color-text-muted: #64748b;
+
+  /* Layout Constants */
+  --spacing-sidebar: 280px;
+  --spacing-header: 64px;
+  --radius-erp: 0.75rem;
+
+  /* Dark Mode Overrides */
+  @variant dark (&:where(.dark, .dark *)) {
+    --color-surface: #1e293b;
+    --color-background: #0f172a;
+    --color-border-subtle: #334155;
+    --color-text-main: #f1f5f9;
+    --color-text-muted: #94a3b8;
+    --color-primary: #38bdf8;
+  }
+
+  /* Animations */
+  --animate-skeleton: skeleton 2s infinite linear;
+}
+
+@keyframes skeleton {
+  0% { opacity: 0.5; }
+  50% { opacity: 1; }
+  100% { opacity: 0.5; }
+}
+
+/* 🏗️ 2. SHARED COMPONENTS (Utility-First Classes)                           */
+
+@utility btn-primary {
+  @apply px-4 py-2 bg-primary text-white rounded-[--radius-erp] font-medium transition-all;
+  @apply flex items-center justify-center gap-2 active:scale-95 shadow-sm;
+  @apply hover:bg-primary/90 hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed;
+}
+
+@utility btn-outline {
+  @apply px-4 py-2 bg-transparent border border-border-subtle text-text-main rounded-[--radius-erp] font-medium transition-all;
+  @apply flex items-center justify-center gap-2 hover:bg-slate-50 dark:hover:bg-slate-800;
+}
+
+@utility card {
+  @apply bg-surface border border-border-subtle rounded-[--radius-erp] shadow-sm overflow-hidden transition-all;
+  @apply hover:shadow-md hover:border-primary/30;
+}
+
+@utility input {
+  @apply w-full px-3 py-2.5 bg-surface border border-border-subtle rounded-lg outline-none transition-all;
+  @apply text-text-main placeholder:text-text-muted;
+  @apply focus:border-primary focus:ring-4 focus:ring-primary/10;
+  @apply disabled:bg-slate-100 dark:disabled:bg-slate-800 disabled:cursor-not-allowed;
+}
+
+@utility table-container {
+  @apply erp-card w-full overflow-x-auto;
+}
+
+@utility table-th {
+  @apply px-4 py-3 bg-slate-50 dark:bg-slate-800/50 text-start text-xs font-bold text-text-muted uppercase tracking-wider border-b border-border-subtle;
+}
+
+@utility table-td {
+  @apply px-4 py-4 text-sm text-text-main border-b border-border-subtle whitespace-nowrap;
+}
+
+@utility badge-active {
+  @apply px-2.5 py-1 rounded-full text-xs font-semibold bg-success/10 text-success border border-success/20;
+}
+
+@utility badge-inactive {
+  @apply px-2.5 py-1 rounded-full text-xs font-semibold bg-error/10 text-error border border-error/20;
+}
+
+
+/* 🧪 3. GLOBAL BASE STYLES                                                  */
+
+@layer base {
+  body {
+    @apply bg-background text-text-main antialiased font-sans;
+    font-family: 'Inter', 'Noto Sans Arabic', sans-serif; /*arabic and english fonts */
+  }
+
+  /* 🌍 4. LOGICAL PROPERTIES (RTL/LTR Support)                                 */
+
+  @utility ps-content { @apply ps-4; }
+  @utility pe-content { @apply pe-4; }
+  @utility me-content { @apply me-4; }
+  @utility ms-content { @apply ms-4; }
+
+  /* improve scroll to compite with ERP */
+  ::-webkit-scrollbar {
+    @apply w-1.5 h-1.5;
+  }
+  ::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-slate-300 dark:bg-slate-600 rounded-full hover:bg-slate-400;
+  }
+}
