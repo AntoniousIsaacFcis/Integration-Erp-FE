@@ -1,0 +1,28 @@
+<div class="min-h-screen">
+
+  <main class="min-h-screen transition-all duration-300">
+<!--  -->
+    <app-sidebar-component class="hidden"/>
+    <app-header-component class=""/>
+
+
+    <div class="flex items-center justify-between  border-b border-border-dark z-51">
+      <app-status-badge-component label="الحالة" ></app-status-badge-component>
+
+      <app-logout-btn-component class=" flex items-center gap-6"></app-logout-btn-component>
+
+      <app-header-notifications-component></app-header-notifications-component>
+
+      <app-language-switcher-component></app-language-switcher-component>
+
+      <app-searchbar-component></app-searchbar-component>
+
+      <!--  -->
+    </div>
+
+
+    <div class="animate-fade-in">
+      <router-outlet />
+    </div>
+  </main>
+</div>

@@ -1,0 +1,44 @@
+<aside class="sidebar fixed top-0 start-0 z-40 h-screen w-[260px] flex flex-col border-e border-border-dark animate-fade-in">
+  <ng-container *transloco="let t">
+    <nav class="flex-1 overflow-y-auto scrollbar-custom px-spacing-lg py-spacing-lg">
+      <ul class="space-y-spacing-xs">
+        @for (item of menuItems(); track item.id) {
+        <li class="flex flex-col cursor-pointer">
+
+          <div class="sidebar-item group flex items-center w-full transition-base"
+               [class.active]="openItemId() === item.id">
+
+            <ng-icon [name]="item.icon" class="sidebar-icon text-2xl"></ng-icon>
+
+            <span class="ms-spacing-sm font-medium flex-1">
+              {{ t(item.label) }}
+            </span>
+
+            <ng-icon
+              [name]="isRtl() ? 'lucideChevronLeft' : 'lucideChevronRight'"
+              class="w-4 h-4 transition-fast ms-spacing-sm"
+              [class.rotate-[-90deg]]="openItemId() === item.id && isRtl()"
+              [class.rotate-[90deg]]="openItemId() === item.id && !isRtl()">
+            </ng-icon>
+
+            <div class="w-1.5 h-1.5 rounded-full bg-primary opacity-0 group-[.active]:opacity-100 shadow-soft ms-spacing-sm"></div>
+          </div>
+
+          @if (openItemId() === item.id) {
+            <div class="ps-spacing-lg mt-spacing-sm space-y-spacing-xs border-s border-border-dark ms-spacing-lg overflow-hidden animate-slide-in-block-start"
+                 (click)="$event.stopPropagation()">
+              @for (sub of item.children; track sub.id) {
+                <a [routerLink]="sub.path"
+                   routerLinkActive="active"
+                   class="sidebar-item py-spacing-sm text-sm opacity-80 hover:opacity-100 hover:ps-spacing-xs transition-all">
+                  {{ t(sub.label) }}
+                </a>
+              }
+            </div>
+          }
+        </li>
+        }
+      </ul>
+    </nav>
+  </ng-container>
+</aside>

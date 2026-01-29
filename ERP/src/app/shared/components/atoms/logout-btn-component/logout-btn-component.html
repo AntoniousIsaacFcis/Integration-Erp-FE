@@ -1,0 +1,17 @@
+<ng-container *transloco="let t">
+  <button type="button" class="flex items-center justify-center
+           w-[133px] h-[37px]
+           py-[8px] px-[10px] gap-[10px]
+           rounded-[132px] bg-[#B2E742]
+           hover-lift transition-all duration-200 ">
+    <div class="flex items-center justify-center w-[113px] h-[21px] gap-[5px]">
+      <span class="inline-flex items-center h-[21px] text-[14px] font-[500] leading-none text-black font-arabic">
+        {{ t('AUTH.LOGOUT') }}
+      </span>
+
+      <ng-icon name="lucideLogOut" size="16" color="#000000" strokeWidth="2.5" class=" shrink-0 rotate-180 ">
+      </ng-icon>
+
+    </div>
+  </button>
+</ng-container>

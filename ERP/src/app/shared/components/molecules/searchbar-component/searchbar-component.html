@@ -1,0 +1,31 @@
+<ng-container *transloco="let t">
+  <div class="relative flex items-center w-[288px] h-[40px]
+              border border-[#333333] rounded-sm bg-transparent
+              focus-within:border-[#B2E742]
+              hover-lift hover:shadow-sm transition-all
+              transition-colors duration-200">
+
+    <div class="flex items-center w-[268px] h-[24px] gap-[10px] mx-auto">
+
+      <div class="relative w-[24px] h-[24px] flex shrink-0 items-center justify-center">
+        <ng-icon
+          name="lucideSearch"
+          size="18"
+          color="#FFFFFF"
+          strokeWidth="2.5"
+          [style.top.px]="3.26"
+          [style.left.px]="3.26">
+        </ng-icon>
+      </div>
+
+      <input
+        type="text"
+        [placeholder]="t('HEADER.SEARCH_PLACEHOLDER')"
+        class="flex-1 h-[23px] bg-transparent outline-none
+              border-none text-[15px] font-[400] leading-none text-white
+               placeholder:text-[#999999] font-arabic"
+      />
+
+    </div>
+  </div>
+</ng-container>

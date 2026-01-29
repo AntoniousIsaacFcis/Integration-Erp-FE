@@ -1,0 +1,23 @@
+<ng-container *transloco="let t">
+  <div class="flex items-center w-[116px] h-[38px] py-[2px] gap-[10px] overflow-hidden hover-lift hover:shadow-sm transition-all
+              transition-colors duration-200">
+
+    <div class="relative w-[48.00px] h-[34px] flex shrink-0 items-center justify-center">
+      <img
+        [ngSrc]="'/assets/imgs/entegrationLogo.png'"
+        priority
+        width="48"
+        height="34"
+        alt="Project Logo"
+        class="object-contain" />
+    </div>
+
+    <div class="w-[52px] h-[27px] flex items-center justify-end">
+      <span class="text-[18px] font-[700] leading-none text-[#FFFFFF] font-arabic whitespace-nowrap">
+        {{ t('HEADER.PROJECT_NAME') }}
+      </span>
+    </div>
+
+
+  </div>
+</ng-container>

@@ -1,0 +1,29 @@
+{
+  "BRAND_NAME": "التكامل",
+  "COMMON": {
+    "SEARCH_PLACEHOLDER": "عملية البحث ...",
+    "COMPANY_NAME": "شركة التكامل الدولية"
+  },
+  "MENU": {
+    "DASHBOARD": "لوحة التحكم",
+    "ORGANIZATION": "الهيكل التنظيمي",
+    "EMPLOYEES": "إدارة الموظفين",
+    "DEPARTMENTS": "الأقسام",
+    "JOB_LEVELS": "المستويات الوظيفية",
+    "SHIFT_TYPES": "أنواع الورديات",
+    "SHIFT_MANAGEMENT": "إدارة الورديات",
+    "SETTINGS": "الإعدادات"
+  },
+  "HEADER": {
+    "NOTIFICATION": "التنبيهات",
+    "CALENDER": "التقويم",
+    "COMPANY": "بيانات الشركة",
+    "LANGUAGE":"اللغة",
+    "SEARCH_PLACEHOLDER":"عملية البحث...",
+    "COMPANYNAME":"اسم الشركة",
+    "PROJECT_NAME":"التكامل"
+  },
+  "AUTH": {
+    "LOGOUT": "تسجيل الخروج"
+  }
+}

@@ -8,15 +8,6 @@
   "newProjectRoot": "projects",
   "projects": {
     "ERP": {
-      "i18n": {
-        "sourceLocale": "en-US",
-        "locales": {
-          "ar": {
-            "translation": "src/locale/messages.ar.xlf",
-            "baseHref": "ar"
-          }
-        }
-      },
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -41,11 +32,10 @@
             "ssr": {
               "entry": "src/server.ts"
             },
-            "polyfills": ["@angular/localize/init"]
+            "polyfills": []
           },
           "configurations": {
             "production": {
-              "localize": ["ar", "en-US"],
               "budgets": [
                 { "type": "initial", "maximumWarning": "500kB", "maximumError": "1MB" }
               ],
@@ -61,14 +51,6 @@
                   "with": "src/environments/environment.development.ts"
                 }
               ]
-            },
-            "ar": {
-              "localize": ["ar"],
-              "tsConfig": "tsconfig.app.json"
-            },
-            "en": {
-              "localize": ["en-US"],
-              "tsConfig": "tsconfig.app.json"
             }
           },
           "defaultConfiguration": "production"

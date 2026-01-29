@@ -1,0 +1,29 @@
+{
+  "BRAND_NAME": "Entergration",
+  "COMMON": {
+    "SEARCH_PLACEHOLDER": "Search ...",
+    "COMPANY_NAME": "Entegration International"
+  },
+  "MENU": {
+    "DASHBOARD": "Dashboard",
+    "ORGANIZATION": "Organization Structure",
+    "EMPLOYEES": "Employees Management",
+    "DEPARTMENTS": "Departments",
+    "JOB_LEVELS": "Job Levels",
+    "SHIFT_TYPES": "Shift Types",
+    "SHIFT_MANAGEMENT": "Shift Management",
+    "SETTINGS": "Settings"
+  },
+  "HEADER": {
+    "NOTIFICATION": "Notifications",
+    "CALENDER": "Calendar",
+    "COMPANY": "Company Info",
+    "LANGUAGE": "Language",
+    "SEARCH_PLACEHOLDER": "Search for...",
+    "COMPANYNAME": "Company Name",
+    "PROJECT_NAME":"ERP"
+  },
+  "AUTH": {
+    "LOGOUT": "Logout"
+  }
+}
