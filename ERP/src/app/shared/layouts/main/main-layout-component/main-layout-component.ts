@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { HeaderComponent } from '@shared/components/organisms/header/header-component';
 import { SidebarComponent } from '@shared/components/organisms/sidebar-component/sidebar-component';
@@ -20,5 +20,9 @@ import { SearchbarComponent } from "@shared/components/molecules/searchbar-compo
 
 })
 export class MainLayoutComponent {
+  isSidebarExpanded = signal<boolean>(true);
 
+  toggleSidebar() {
+    this.isSidebarExpanded.update(v => !v);
+  }
 }

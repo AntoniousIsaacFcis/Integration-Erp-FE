@@ -1,42 +1,76 @@
-<aside class="sidebar fixed top-0 start-0 z-40 h-screen w-[260px] flex flex-col border-e border-border-dark animate-fade-in">
+<aside class="sidebar h-full flex flex-col transition-all duration-300 overflow-hidden bg-[#191919] border-e border-[#333333]">
+
+  <div class="flex items-center h-[85px] border-b border-white/5 relative transition-all duration-300"
+       [class.px-6]="isExpanded()"
+       [class.justify-center]="!isExpanded()"
+       [class.justify-between]="isExpanded()">
+
+    <ng-container *transloco="let t">
+      @if (isExpanded()) {
+        <div class="flex-1 flex justify-center animate-fade-in">
+          <h3 class="text-white font-bold text-[18px] font-arabic">{{ t('COMMON.MENU') }}</h3>
+        </div>
+      }
+    </ng-container>
+
+    <button (click)="toggle.emit()"
+            class="p-2 rounded-lg hover:bg-white/10 text-[#999999] hover:text-[#B2E742] transition-colors shrink-0"
+            [class.absolute]="!isExpanded()">
+      <ng-icon [name]="isExpanded() ? 'lucideChevronRight' : 'lucideChevronLeft'" size="24"></ng-icon>
+    </button>
+  </div>
+
   <ng-container *transloco="let t">
-    <nav class="flex-1 overflow-y-auto scrollbar-custom px-spacing-lg py-spacing-lg">
-      <ul class="space-y-spacing-xs">
+    <nav class="flex-1  scrollbar-custom py-4">
+      <ul class="space-y-2 transition-all duration-300"
+          [class.px-3]="isExpanded()"
+          [class.px-0]="!isExpanded()">
+
         @for (item of menuItems(); track item.id) {
-        <li class="flex flex-col cursor-pointer">
+          <li class="flex flex-col cursor-pointer w-full group">
 
-          <div class="sidebar-item group flex items-center w-full transition-base"
-               [class.active]="openItemId() === item.id">
+            <div (click)="toggleMenu(item, $event)"
+                 class="sidebar-item flex items-center transition-all duration-200 w-full relative"
+                 [class.justify-center]="!isExpanded()"
+                 [class.p-3]="isExpanded()"
+                 [class.py-5]="!isExpanded()"
+                 [class.rounded-xl]="isExpanded()"
+                 [class.bg-[#B2E742]/10]="openItemId() === item.id">
 
-            <ng-icon [name]="item.icon" class="sidebar-icon text-2xl"></ng-icon>
+              <ng-icon [name]="item.icon"
+                       size="24"
+                       class="text-[#999999] group-hover:text-[#B2E742] shrink-0 transition-colors"
+                       [class.text-[#B2E742]]="openItemId() === item.id"></ng-icon>
 
-            <span class="ms-spacing-sm font-medium flex-1">
-              {{ t(item.label) }}
-            </span>
+              @if (isExpanded()) {
+                <span class="ms-3 flex-1 text-white font-arabic text-[15px] animate-fade-in whitespace-nowrap">
+                  {{ t(item.label) }}
+                </span>
 
-            <ng-icon
-              [name]="isRtl() ? 'lucideChevronLeft' : 'lucideChevronRight'"
-              class="w-4 h-4 transition-fast ms-spacing-sm"
-              [class.rotate-[-90deg]]="openItemId() === item.id && isRtl()"
-              [class.rotate-[90deg]]="openItemId() === item.id && !isRtl()">
-            </ng-icon>
+                @if (item.children?.length) {
+                  <ng-icon [name]="isRtl() ? 'lucideChevronLeft' : 'lucideChevronRight'"
+                           class="w-4 h-4 text-[#999999] transition-transform"
+                           [class.rotate-[-90deg]]="openItemId() === item.id"></ng-icon>
+                }
+              }
 
-            <div class="w-1.5 h-1.5 rounded-full bg-primary opacity-0 group-[.active]:opacity-100 shadow-soft ms-spacing-sm"></div>
-          </div>
-
-          @if (openItemId() === item.id) {
-            <div class="ps-spacing-lg mt-spacing-sm space-y-spacing-xs border-s border-border-dark ms-spacing-lg overflow-hidden animate-slide-in-block-start"
-                 (click)="$event.stopPropagation()">
-              @for (sub of item.children; track sub.id) {
-                <a [routerLink]="sub.path"
-                   routerLinkActive="active"
-                   class="sidebar-item py-spacing-sm text-sm opacity-80 hover:opacity-100 hover:ps-spacing-xs transition-all">
-                  {{ t(sub.label) }}
-                </a>
+              @if (!isExpanded() && openItemId() === item.id) {
+                <div class="absolute inset-y-2 start-0 w-1 bg-[#B2E742] rounded-full shadow-[0_0_8px_#B2E742]"></div>
               }
             </div>
-          }
-        </li>
+
+            @if (isExpanded() && openItemId() === item.id && item.children?.length) {
+              <div class="ps-10 mt-1 space-y-1 animate-slide-in-block-start">
+                @for (sub of item.children; track sub.id) {
+                  <a [routerLink]="sub.path"
+                     routerLinkActive="text-[#B2E742]"
+                     class="block py-2 text-sm text-[#999999] hover:text-white transition-colors">
+                    {{ t(sub.label) }}
+                  </a>
+                }
+              </div>
+            }
+          </li>
         }
       </ul>
     </nav>

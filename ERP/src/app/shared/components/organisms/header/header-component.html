@@ -1,22 +1,51 @@
-<header class="sticky top-0 z-50 flex justify-center w-full h-[85px] py-[22px] px-[45px]
-               bg-[#191919] border-b border-[#F8F8F8] shadow-md transition-all">
+<header class="sticky top-0 z-50 flex justify-center w-full h-[85px] py-[22px] px-[20px] lg:px-[45px]
+               bg-[#191919] border-b border-[#F8F8F8] shadow-md transition-all duration-300">
 
-  <div class="flex items-center justify-between w-full max-w-[1310px] h-[40px] gap-xl">
+  <div class="flex items-center justify-between w-full max-w-[1310px] h-[40px] gap-4 md:gap-xl">
 
-    <div class="flex items-center gap-4xl shrink-0">
+    <div class="flex items-center gap-2 lg:gap-4xl shrink-0">
       <app-project-logo-component></app-project-logo-component>
-      <app-company-brand-component></app-company-brand-component>
+      <div class="hidden sm:block">
+        <app-company-brand-component></app-company-brand-component>
+      </div>
     </div>
 
-    <div class="flex-1 max-w-[400px] flex justify-center">
-      <app-searchbar-component></app-searchbar-component>
+    <div class="hidden md:flex flex-1 max-w-[400px] justify-center px-16">
+      <app-searchbar-component class="w-full"></app-searchbar-component>
     </div>
 
-    <div class="flex items-center gap-[15px] shrink-0">
-      <app-language-switcher-component></app-language-switcher-component>
+    <div class="flex items-center gap-[8px] md:gap-[15px] shrink-0">
+
+      <button class="md:hidden p-2 text-white hover:bg-white/10 rounded-full">
+        <ng-icon name="lucideSearch" size="20"></ng-icon>
+      </button>
+
+      <div class="hidden lg:block">
+        <app-language-switcher-component></app-language-switcher-component>
+      </div>
+
       <app-header-notifications-component></app-header-notifications-component>
-      <app-logout-btn-component></app-logout-btn-component>
+
+      <div class="hidden lg:block">
+        <app-logout-btn-component></app-logout-btn-component>
+      </div>
+
+      <button (click)="isMobileMenuOpen.set(!isMobileMenuOpen())"
+              class="lg:hidden flex items-center justify-center p-1 text-white hover:bg-white/10 rounded-md transition-colors">
+        <ng-icon [name]="isMobileMenuOpen() ? 'lucideSun' : 'lucideMoon'" size="28"></ng-icon>
+        </button>
     </div>
 
   </div>
 </header>
+
+@if (isMobileMenuOpen()) {
+  <div class="lg:hidden fixed inset-0 z-40 bg-black/50 backdrop-blur-sm" (click)="isMobileMenuOpen.set(false)">
+    <div class="absolute right-0 top-0 h-full w-[280px] bg-[#191919] p-6 shadow-xl" (click)="$event.stopPropagation()">
+      <div class="flex flex-col gap-6 pt-16">
+        <app-logout-btn-component class="w-full"></app-logout-btn-component>
+        <app-language-switcher-component class="w-full"></app-language-switcher-component>
+      </div>
+    </div>
+  </div>
+}

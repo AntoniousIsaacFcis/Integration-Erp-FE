@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, DOCUMENT, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DOCUMENT, inject, input, output, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { INavItem } from '@core/models/inav-item';
 import { NavigationService } from '@core/services/navigation-service';
@@ -10,11 +10,13 @@ import {
   lucideSettings,
   lucideChevronDown,
   lucideChevronLeft,
-  lucideBookmark
+  lucideBookmark,
+  lucideChevronRight
 } from '@ng-icons/lucide';
+import { ProjectLogoComponent } from "@shared/components/molecules/project-logo-component/project-logo-component";
 @Component({
   selector: 'app-sidebar-component',
-  imports: [RouterLink, TranslocoDirective,NgIcon],
+  imports: [RouterLink, TranslocoDirective, NgIcon, ProjectLogoComponent],
   templateUrl: './sidebar-component.html',
   styleUrl: './sidebar-component.css',
   providers: [provideIcons({
@@ -23,6 +25,7 @@ import {
     lucideSettings,
     lucideChevronDown,
     lucideChevronLeft,
+    lucideChevronRight,
     lucideBookmark
   })],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -36,13 +39,16 @@ export class SidebarComponent {
   protected readonly menuItems = this.navService.menuItems;
   protected readonly isRtl = signal(this.document.documentElement.dir === 'rtl');
 
-  toggleMenu(item: INavItem, event: Event) {
-  if (item.children && item.children.length > 0) {
-    event.stopPropagation();
+  isExpanded = input.required<boolean>();
+  toggle = output<void>();
 
-    this.openItemId.update(currentId => currentId === item.id ? null : item.id);
+  toggleMenu(item: INavItem, event: Event) {
+    if (item.children && item.children.length > 0) {
+      event.stopPropagation();
+
+      this.openItemId.update(currentId => currentId === item.id ? null : item.id);
+    }
   }
-}
 
 
 

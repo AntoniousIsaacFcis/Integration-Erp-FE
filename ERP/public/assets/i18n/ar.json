@@ -2,7 +2,8 @@
   "BRAND_NAME": "التكامل",
   "COMMON": {
     "SEARCH_PLACEHOLDER": "عملية البحث ...",
-    "COMPANY_NAME": "شركة التكامل الدولية"
+    "COMPANY_NAME": "شركة التكامل الدولية",
+    "MENU":"القائمة"
   },
   "MENU": {
     "DASHBOARD": "لوحة التحكم",

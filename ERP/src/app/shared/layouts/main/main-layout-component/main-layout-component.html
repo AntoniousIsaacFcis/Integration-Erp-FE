@@ -1,28 +1,47 @@
-<div class="min-h-screen">
+<div class="grid grid-cols-[auto_1fr] grid-rows-[85px_1fr] h-screen w-full overflow-hidden bg-[#F8F8F8] antialiased">
 
-  <main class="min-h-screen transition-all duration-300">
-<!--  -->
-    <app-sidebar-component class="hidden"/>
-    <app-header-component class=""/>
+  <header class="col-start-1 col-end-3 row-start-1 row-end-2 z-20 border-b border-black/5">
+    <app-header-component></app-header-component>
+  </header>
 
+  <aside class="row-start-2 row-end-3 bg-[#191919] transition-all duration-300 ease-in-out shadow-2xl"
+         [style.width]="isSidebarExpanded() ? '260px' : '80px'">
+    <app-sidebar-component
+      [isExpanded]="isSidebarExpanded()"
+      (toggle)="toggleSidebar()">
+    </app-sidebar-component>
+  </aside>
 
-    <div class="flex items-center justify-between  border-b border-border-dark z-51">
-      <app-status-badge-component label="الحالة" ></app-status-badge-component>
+  <main class="row-start-2 row-end-3 overflow-y-auto overflow-x-hidden scrollbar-custom p-4 md:p-6 lg:p-10 font-arabic">
 
-      <app-logout-btn-component class=" flex items-center gap-6"></app-logout-btn-component>
+    <div class="w-full mx-auto transition-all duration-500 max-w-full lg:max-w-[1440px] 2xl:max-w-[1600px] flex flex-col min-h-full">
 
-      <app-header-notifications-component></app-header-notifications-component>
+      <header class="mb-8 flex flex-col gap-3 animate-fade-in" *transloco="let t">
+        <nav class="flex items-center gap-2 text-[14px] text-[#999999] font-medium">
+          <span class="hover:text-[#B2E742] cursor-pointer transition-colors">{{ t('BREADCRUMB.DASHBOARD') }}</span>
+          <span class="text-[#CCCCCC]">/</span>
+          <span class="text-[#666666]">{{ t('BREADCRUMB.EMPLOYEES') }}</span>
+        </nav>
+        <h1 class="text-[28px] font-bold text-[#1a1a1a] tracking-tight">
+          {{ t('PAGES.EMPLOYEE_TABLE') }}
+        </h1>
+      </header>
 
-      <app-language-switcher-component></app-language-switcher-component>
+      <section class="bg-white rounded-[20px] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-[#EEEEEE] flex-1 p-8 relative">
+        @defer (on timer(100ms)) {
+          <router-outlet></router-outlet>
+        } @placeholder {
+          <div class="w-full h-64 animate-pulse bg-gray-50 rounded-lg"></div>
+        }
+      </section>
 
-      <app-searchbar-component></app-searchbar-component>
-
-      <!--  -->
-    </div>
-
-
-    <div class="animate-fade-in">
-      <router-outlet />
+      <footer class="py-6 mt-auto text-sm text-[#BBBBBB] flex justify-between items-center opacity-70">
+        <p>&copy; 2026 ERP System. All rights reserved.</p>
+        <div class="flex gap-4">
+          <span class="hover:text-[#B2E742] cursor-pointer">Support</span>
+          <span class="hover:text-[#B2E742] cursor-pointer">Privacy</span>
+        </div>
+      </footer>
     </div>
   </main>
 </div>

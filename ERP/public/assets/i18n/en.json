@@ -2,7 +2,8 @@
   "BRAND_NAME": "Entergration",
   "COMMON": {
     "SEARCH_PLACEHOLDER": "Search ...",
-    "COMPANY_NAME": "Entegration International"
+    "COMPANY_NAME": "Entegration International",
+    "MENU": "Menu"
   },
   "MENU": {
     "DASHBOARD": "Dashboard",
@@ -21,7 +22,7 @@
     "LANGUAGE": "Language",
     "SEARCH_PLACEHOLDER": "Search for...",
     "COMPANYNAME": "Company Name",
-    "PROJECT_NAME":"ERP"
+    "PROJECT_NAME": "ERP"
   },
   "AUTH": {
     "LOGOUT": "Logout"
