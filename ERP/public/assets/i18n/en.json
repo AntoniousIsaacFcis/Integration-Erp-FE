@@ -26,5 +26,13 @@
   },
   "AUTH": {
     "LOGOUT": "Logout"
+  },
+  "BREADCRUMB":{
+    "DASHBOARD":"Dashboard",
+    "EMPLOYEES":"Employees Management",
+    "EMPLOYEE_TABLE":"Employees Table"
+  },
+  "TABLES":{
+    "ADD_EMPLOEE":"اضافة موظف جديد"
   }
 }

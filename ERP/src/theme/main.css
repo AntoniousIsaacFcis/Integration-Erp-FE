@@ -95,6 +95,13 @@
   --font-english: 'IBM Plex Sans', sans-serif;
   --font-system: system-ui, -apple-system, sans-serif;
   --font-mono: 'Monaco', 'Courier New', monospace;
+
+    /* figam sideBar Configuration */
+  --sidebar-width-expanded: 251px;
+  --sidebar-width-collapsed: 80px;
+  --sidebar-header-height: 85px;
+  --sidebar-item-height: 48px;
+  --sidebar-icon-size: 24px;
 }
 
 /* Dark mode support */

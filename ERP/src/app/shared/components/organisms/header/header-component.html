@@ -3,11 +3,11 @@
 
   <div class="flex items-center justify-between w-full max-w-[1310px] h-[40px] gap-4 md:gap-xl">
 
-    <div class="flex items-center gap-2 lg:gap-4xl shrink-0">
+    <div class="flex items-center mx-auto">
       <app-project-logo-component></app-project-logo-component>
-      <div class="hidden sm:block">
-        <app-company-brand-component></app-company-brand-component>
-      </div>
+    </div>
+    <div class="hidden sm:block ms-20">
+      <app-company-brand-component></app-company-brand-component>
     </div>
 
     <div class="hidden md:flex flex-1 max-w-[400px] justify-center px-16">
@@ -31,21 +31,21 @@
       </div>
 
       <button (click)="isMobileMenuOpen.set(!isMobileMenuOpen())"
-              class="lg:hidden flex items-center justify-center p-1 text-white hover:bg-white/10 rounded-md transition-colors">
+        class="lg:hidden flex items-center justify-center p-1 text-white hover:bg-white/10 rounded-md transition-colors">
         <ng-icon [name]="isMobileMenuOpen() ? 'lucideSun' : 'lucideMoon'" size="28"></ng-icon>
-        </button>
+      </button>
     </div>
 
   </div>
 </header>
 
 @if (isMobileMenuOpen()) {
-  <div class="lg:hidden fixed inset-0 z-40 bg-black/50 backdrop-blur-sm" (click)="isMobileMenuOpen.set(false)">
-    <div class="absolute right-0 top-0 h-full w-[280px] bg-[#191919] p-6 shadow-xl" (click)="$event.stopPropagation()">
-      <div class="flex flex-col gap-6 pt-16">
-        <app-logout-btn-component class="w-full"></app-logout-btn-component>
-        <app-language-switcher-component class="w-full"></app-language-switcher-component>
-      </div>
+<div class="lg:hidden fixed inset-0 z-40 bg-black/50 backdrop-blur-sm" (click)="isMobileMenuOpen.set(false)">
+  <div class="absolute right-0 top-0 h-full w-[280px] bg-[#191919] p-6 shadow-xl" (click)="$event.stopPropagation()">
+    <div class="flex flex-col gap-6 pt-16">
+      <app-logout-btn-component class="w-full"></app-logout-btn-component>
+      <app-language-switcher-component class="w-full"></app-language-switcher-component>
     </div>
   </div>
+</div>
 }

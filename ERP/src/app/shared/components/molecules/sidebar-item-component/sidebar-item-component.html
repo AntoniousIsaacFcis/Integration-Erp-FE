@@ -1,0 +1,29 @@
+<div (click)="onToggle.emit() " [class.justify-center]="!isExpanded()" [class.bg-white/10]="isActive()" class="group flex items-center h-[var(--sidebar-item-height)] w-full max-w-[var(--sidebar-item-width)]
+            px-3 rounded-md transition-all duration-200 cursor-pointer hover:bg-white/5 relative mx-auto"
+  *transloco="let t">
+
+  <div class="flex items-center gap-[24px] flex-1">
+    @if(isChild()){
+    <div class="w-1.5 h-1.5 rounded-full transition-colors"
+      [class]="isActive() ? 'bg-black' : 'bg-[#444444] group-hover:bg-[#B2E742]'"></div>
+    }@else {
+    <ng-icon [name]="item().icon" class="stroke-[1.5px]
+                    text-[#999999] group-hover:text-[#B2E742] transition-colors" size="24"
+      [class.text-white]="isActive()"></ng-icon>
+    }
+    @if (isExpanded()) {
+    <span class="text-[var(--sidebar-font-size)] font-arabic leading-none text-white whitespace-nowrap animate-fade-in">
+      {{ t(item().label) }}
+    </span>
+    }
+  </div>
+
+  @if (isExpanded() && item().children?.length) {
+  <ng-icon [name]="isActive() ? 'lucideChevronDown' : (isRtl() ? 'lucideChevronLeft' : 'lucideChevronRight')"
+    class="text-white/70 "></ng-icon>
+  }
+
+  @if (isActive()) {
+  <div class="absolute inset-y-1.5 start-0 w-1 bg-[#B2E742] rounded-full shadow-[0_0_8px_#B2E742]"></div>
+  }
+</div>

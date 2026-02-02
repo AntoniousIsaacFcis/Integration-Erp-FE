@@ -26,5 +26,13 @@
   },
   "AUTH": {
     "LOGOUT": "تسجيل الخروج"
+  },
+  "BREADCRUMB":{
+    "DASHBOARD":"القائمة الرئيسية",
+    "EMPLOYEES":"إدارة الموظفين",
+    "EMPLOYEE_TABLE":"جدول الموظفين"
+  },
+  "TABLES":{
+    "ADD_EMPLOEE":"اضافة موظف جديد"
   }
 }
