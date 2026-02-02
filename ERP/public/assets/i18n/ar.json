@@ -3,36 +3,52 @@
   "COMMON": {
     "SEARCH_PLACEHOLDER": "عملية البحث ...",
     "COMPANY_NAME": "شركة التكامل الدولية",
-    "MENU":"القائمة"
+    "MENU": "القائمة"
   },
   "MENU": {
     "DASHBOARD": "لوحة التحكم",
     "ORGANIZATION": "الهيكل التنظيمي",
     "EMPLOYEES": "إدارة الموظفين",
     "DEPARTMENTS": "الأقسام",
+    "DESIGNATIONS": "المسميات الوظيفية",
+    "LEVELS": "المستويات",
     "JOB_LEVELS": "المستويات الوظيفية",
     "SHIFT_TYPES": "أنواع الورديات",
     "SHIFT_MANAGEMENT": "إدارة الورديات",
-    "SETTINGS": "الإعدادات"
+    "SETTINGS": "الإعدادات",
+    "ALL_EMPLOYEES": "كل الموظفين",
+    "ADD_EMPLOYEE": "إضافة موظف",
+    "EMPLOYEE_RECORDS": "سجلات الموظفين",
+    "ATTENDANCE": "الحضور",
+    "VIEW_LEVELS": "عرض المستويات",
+    "CREATE_LEVEL": "إنشاء مستوى",
+    "LEVEL_MAPPING": "ربط المستويات",
+    "SHIFT_SCHEDULE": "جدول الورديات",
+    "SHIFT_ASSIGNMENT": "تعيين الورديات",
+    "SHIFT_REPORTS": "تقارير الورديات",
+    "GENERAL_SETTINGS": "الإعدادات العامة",
+    "USER_MANAGEMENT": "إدارة المستخدمين",
+    "SYSTEM_CONFIGURATION": "إعدادات النظام",
+    "AUDIT_LOG": "سجل التدقيق"
   },
   "HEADER": {
     "NOTIFICATION": "التنبيهات",
     "CALENDER": "التقويم",
     "COMPANY": "بيانات الشركة",
-    "LANGUAGE":"اللغة",
-    "SEARCH_PLACEHOLDER":"عملية البحث...",
-    "COMPANYNAME":"اسم الشركة",
-    "PROJECT_NAME":"التكامل"
+    "LANGUAGE": "اللغة",
+    "SEARCH_PLACEHOLDER": "عملية البحث...",
+    "COMPANYNAME": "اسم الشركة",
+    "PROJECT_NAME": "التكامل"
   },
   "AUTH": {
     "LOGOUT": "تسجيل الخروج"
   },
-  "BREADCRUMB":{
-    "DASHBOARD":"القائمة الرئيسية",
-    "EMPLOYEES":"إدارة الموظفين",
-    "EMPLOYEE_TABLE":"جدول الموظفين"
+  "BREADCRUMB": {
+    "DASHBOARD": "القائمة الرئيسية",
+    "EMPLOYEES": "إدارة الموظفين",
+    "EMPLOYEE_TABLE": "جدول الموظفين"
   },
-  "TABLES":{
-    "ADD_EMPLOEE":"اضافة موظف جديد"
+  "TABLES": {
+    "ADD_EMPLOEE": "اضافة موظف جديد"
   }
 }

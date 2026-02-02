@@ -1,28 +1,29 @@
 <aside
-  class="sidebar h-full flex flex-col transition-all duration-300 border-e border-[#333333] bg-[#1a1a1a] z-50 relative "
+  class="sidebar h-screen flex flex-col transition-all duration-300 border-e border-[#333333] bg-[#1a1a1a] z-50 relative "
   [style.width]="isExpanded() ? 'var(--sidebar-width-expanded)' : 'var(--sidebar-width-collapsed)'" *transloco="let t">
   <div class=" flex items-center justify-between  border-b border-white/5 shrink-0 relative">
     <button (click)="toggle.emit()"
-      class="w-full min-w-10 flex items-center justify-center p-3 rounded-xl bg-white/90  group transition-all duration-200  hover:bg-white/100 ">
+      class="w-full min-w-10 flex items-center justify-center p-3 rounded-xl bg-white/90  group transition-all duration-200  hover:bg-white/100 overflow-hidden">
       <ng-icon
         [name]="isExpanded() ? (isRtl() ? 'lucideArrowRightFromLine' : 'lucideArrowLeftFromLine ') : (isRtl() ? 'lucideArrowLeftFromLine' : 'lucideArrowRightFromLine')"
-        size="14" color="#000000"></ng-icon>
+        size="14" color="#000000">
+      </ng-icon>
     </button>
   </div>
 
   <nav class="flex-1 overflow-y-auto overflow-x-hidden scrollbar-custom py-2 ">
-    <div class="flex flex-col gap-[4px]" [class.px-4]="isExpanded()" [class.px-2]="!isExpanded()">
+    <div class="flex flex-col gap-[4px]">
       @for (item of menuItems(); track item.id) {
-      <div class="w-full flex flex-col gap-2">
+      <div class="w-full flex flex-col gap-1">
         <app-sidebar-item-component [item]="item" [isExpanded]="isExpanded()" [isActive]="openItemId() === item.id"
           [isRtl]="isRtl()" (onToggle)="toggleMenu(item)">
         </app-sidebar-item-component>
 
         @if (isExpanded() && openItemId() === item.id && item.children?.length) {
-        <div class="flex flex-col gap-1 mt-1 overflow-hidden animate-expand-height border-s border-white/5 ms-6 ps-4">
+        <div class="flex flex-col  overflow-hidden animate-expand-height border-s border-white/5  ">
           @for (sub of item.children; track sub.id) {
-          <app-sidebar-item-component [item]="sub" [isExpanded]="true" [isChild]="true">
-          </app-sidebar-item-component>
+          <app-sidebar-sub-item-component [item]="sub" [isActive]="activeSubId() === sub.id" (onSelect)="selectSubItem(sub.id)">
+          </app-sidebar-sub-item-component>
           }
         </div>
         }

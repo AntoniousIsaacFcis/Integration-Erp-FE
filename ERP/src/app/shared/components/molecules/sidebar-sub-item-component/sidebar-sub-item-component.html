@@ -1,0 +1,18 @@
+<div (click)="onSelect.emit()"
+     [class.shadow-md]="isActive()"
+     class="group flex items-center h-9 w-full ms-9 rounded-md transition-all duration-300 cursor-pointer
+             hover:shadow-sm relative"
+     *transloco="let t">
+
+  @if (isActive()) {
+    <div class="absolute -start-3 w-1 h-4 bg-[#B2E742] rounded-full animate-fade-in"></div>
+  }
+
+  <span
+    class="text-[13px] font-arabic transition-colors duration-300 whitespace-nowrap"
+    [class.text-white]="isActive()"
+    [class.text-[#B2E742]]="!isActive()"
+    [class.group-hover:text-white]="!isActive()">
+    {{ t(item().label) }}
+  </span>
+</div>

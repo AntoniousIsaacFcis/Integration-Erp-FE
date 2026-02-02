@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { IconComponent } from './icon-component';
+import { SidebarSubItemComponent } from './sidebar-sub-item-component';
 
-describe('IconComponent', () => {
-  let component: IconComponent;
-  let fixture: ComponentFixture<IconComponent>;
+describe('SidebarSubItemComponent', () => {
+  let component: SidebarSubItemComponent;
+  let fixture: ComponentFixture<SidebarSubItemComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [IconComponent]
+      imports: [SidebarSubItemComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(IconComponent);
+    fixture = TestBed.createComponent(SidebarSubItemComponent);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });

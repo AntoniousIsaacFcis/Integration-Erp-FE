@@ -9,13 +9,14 @@ import {
 } from '@ng-icons/lucide';
 import { ProjectLogoComponent } from "@shared/components/molecules/project-logo-component/project-logo-component";
 import { SidebarItemComponent } from "@shared/components/molecules/sidebar-item-component/sidebar-item-component";
+import { SidebarSubItemComponent } from "@shared/components/molecules/sidebar-sub-item-component/sidebar-sub-item-component";
 @Component({
   selector: 'app-sidebar-component',
-  imports: [ProjectLogoComponent, SidebarItemComponent, TranslocoModule, NgIcon],
+  imports: [ProjectLogoComponent, SidebarItemComponent, TranslocoModule, NgIcon, SidebarSubItemComponent],
   templateUrl: './sidebar-component.html',
   styleUrl: './sidebar-component.css',
   providers: [provideIcons({
-    lucideArrowLeftFromLine ,
+    lucideArrowLeftFromLine,
     lucideArrowRightFromLine,
   })],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -33,6 +34,7 @@ export class SidebarComponent {
   protected readonly openItemId = signal<string | null>(null);
   protected readonly menuItems = this.navService.menuItems;
   protected readonly isRtl = signal(this.document.documentElement.dir === 'rtl');
+  protected readonly activeSubId = signal<string | null>(null);
 
   toggleMenu(item: INavItem) {
     if (item.children && item.children.length > 0) {
@@ -40,6 +42,8 @@ export class SidebarComponent {
     }
   }
 
-
+  selectSubItem(subId: string) {
+    this.activeSubId.set(subId);
+  }
 
 }

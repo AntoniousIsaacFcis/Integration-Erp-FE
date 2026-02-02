@@ -31,4 +31,12 @@ export class SidebarItemComponent {
   isChild = input<boolean>(false);
 
   onToggle = output<void>();
+
+  handleToggle() {
+  if (!this.item().children || this.item().children?.length === 0) {
+    console.log('No sub items added');
+    return;
+  }
+  this.onToggle.emit();
+}
 }
