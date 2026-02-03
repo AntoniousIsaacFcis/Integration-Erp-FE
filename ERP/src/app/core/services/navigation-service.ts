@@ -1,5 +1,8 @@
-import { Injectable, signal } from '@angular/core';
+import { computed, inject, Injectable, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { NavigationEnd, RouterEvent, Router } from '@angular/router';
 import { INavItem } from '@core/models/inav-item';
+import { filter, map } from 'rxjs';
 
 export const MENU_ITEMS: INavItem[] = [
   { id: '1', label: 'MENU.DASHBOARD', path: '/dashboard', icon: 'lucideLayoutDashboard' },
@@ -60,43 +63,7 @@ export const MENU_ITEMS: INavItem[] = [
       { id: '7-3', label: 'MENU.SYSTEM_CONFIGURATION', path: '/settings/config', icon: 'lucideSliders' },
       { id: '7-4', label: 'MENU.AUDIT_LOG', path: '/settings/audit', icon: 'lucideHistory' }
     ]
-  },
-  {
-    id: '2',
-    label: 'MENU.EMPLOYEES',
-    path: '/employees',
-    icon: 'lucideUsers',
-    children: [
-      { id: '2-1', label: 'MENU.ALL_EMPLOYEES', path: '/employees/list', icon: 'lucideList' },
-      { id: '2-2', label: 'MENU.ADD_EMPLOYEE', path: '/employees/add', icon: 'lucidePlus' },
-      { id: '2-3', label: 'MENU.EMPLOYEE_RECORDS', path: '/employees/records', icon: 'lucideFileText' },
-      { id: '2-4', label: 'MENU.ATTENDANCE', path: '/employees/attendance', icon: 'lucideClipboardList' }
-    ]
-  },
-  {
-    id: '2',
-    label: 'MENU.EMPLOYEES',
-    path: '/employees',
-    icon: 'lucideUsers',
-    children: [
-      { id: '2-1', label: 'MENU.ALL_EMPLOYEES', path: '/employees/list', icon: 'lucideList' },
-      { id: '2-2', label: 'MENU.ADD_EMPLOYEE', path: '/employees/add', icon: 'lucidePlus' },
-      { id: '2-3', label: 'MENU.EMPLOYEE_RECORDS', path: '/employees/records', icon: 'lucideFileText' },
-      { id: '2-4', label: 'MENU.ATTENDANCE', path: '/employees/attendance', icon: 'lucideClipboardList' }
-    ]
-  },
-  {
-    id: '2',
-    label: 'MENU.EMPLOYEES',
-    path: '/employees',
-    icon: 'lucideUsers',
-    children: [
-      { id: '2-1', label: 'MENU.ALL_EMPLOYEES', path: '/employees/list', icon: 'lucideList' },
-      { id: '2-2', label: 'MENU.ADD_EMPLOYEE', path: '/employees/add', icon: 'lucidePlus' },
-      { id: '2-3', label: 'MENU.EMPLOYEE_RECORDS', path: '/employees/records', icon: 'lucideFileText' },
-      { id: '2-4', label: 'MENU.ATTENDANCE', path: '/employees/attendance', icon: 'lucideClipboardList' }
-    ]
-  },
+  }
 ];
 
 @Injectable({
@@ -104,5 +71,23 @@ export const MENU_ITEMS: INavItem[] = [
 })
 
 export class NavigationService {
-  readonly menuItems = signal(MENU_ITEMS);
+  private readonly router = inject(Router);
+  readonly menuItems = signal<INavItem[]>(MENU_ITEMS);
+
+  readonly currentUrl = toSignal(
+    this.router.events.pipe(
+      filter((e): e is NavigationEnd => e instanceof NavigationEnd),
+      map(e => e.urlAfterRedirects)
+    ),
+    { initialValue: this.router.url }
+  );
+
+  isActive(path: string): boolean {
+    const url = this.currentUrl();
+    return url === path || url.startsWith(path + '/');
+  }
+
+  navigateTo(path: string) {
+    this.router.navigate([path]);
+  }
 }

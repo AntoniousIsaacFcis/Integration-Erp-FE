@@ -1,17 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { BreadcrumbComponent } from './breadcrumb-component';
 
-describe('BreadcrumbComponent', () => {
-  let component: BreadcrumbComponent;
-  let fixture: ComponentFixture<BreadcrumbComponent>;
+import { LevelMappingComponent } from './level-mapping-component';
+
+describe('LevelMappingComponent', () => {
+  let component: LevelMappingComponent;
+  let fixture: ComponentFixture<LevelMappingComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [BreadcrumbComponent]
+      imports: [LevelMappingComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(BreadcrumbComponent);
+    fixture = TestBed.createComponent(LevelMappingComponent);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });

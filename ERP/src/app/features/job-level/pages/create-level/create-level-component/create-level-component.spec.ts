@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { OrgFiltersBarComponent } from './org-filters-bar-component';
+import { CreateLevelComponent } from './create-level-component';
 
-describe('OrgFiltersBarComponent', () => {
-  let component: OrgFiltersBarComponent;
-  let fixture: ComponentFixture<OrgFiltersBarComponent>;
+describe('CreateLevelComponent', () => {
+  let component: CreateLevelComponent;
+  let fixture: ComponentFixture<CreateLevelComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [OrgFiltersBarComponent]
+      imports: [CreateLevelComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(OrgFiltersBarComponent);
+    fixture = TestBed.createComponent(CreateLevelComponent);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });

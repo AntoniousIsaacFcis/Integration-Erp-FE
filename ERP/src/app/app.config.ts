@@ -17,6 +17,7 @@ export const appConfig: ApplicationConfig = {
       withComponentInputBinding(),//change url params to signals (instead of activatedRouter)
       withViewTransitions(),
       withPreloading(PreloadAllModules),
+      
     ),
 
      provideHttpClient(

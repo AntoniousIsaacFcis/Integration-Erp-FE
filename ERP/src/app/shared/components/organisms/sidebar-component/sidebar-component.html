@@ -22,7 +22,7 @@
         @if (isExpanded() && openItemId() === item.id && item.children?.length) {
         <div class="flex flex-col  overflow-hidden animate-expand-height border-s border-white/5  ">
           @for (sub of item.children; track sub.id) {
-          <app-sidebar-sub-item-component [item]="sub" [isActive]="activeSubId() === sub.id" (onSelect)="selectSubItem(sub.id)">
+          <app-sidebar-sub-item-component [item]="sub" [isActive]="activeSubId() === sub.id" (onSelect)="handleSubItemClick(sub.path)">
           </app-sidebar-sub-item-component>
           }
         </div>

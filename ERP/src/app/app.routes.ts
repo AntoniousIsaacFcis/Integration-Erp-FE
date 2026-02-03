@@ -10,12 +10,19 @@ export const routes: Routes = [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       {
         path: 'dashboard',
-        loadComponent: () => import('./features/dashboard/pages/dashboard-component/dashboard-component').then(x => x.DashboardComponent)
+        loadComponent: () => import('./features/dashboard/pages/dashboard-component/dashboard-component').then(x => x.DashboardComponent),
+        data: { breadcrumb: 'MENU.DASHBOARD' }
       },
       {
         path: 'organization',
         canMatch: [],//not load except for user has permission
         loadChildren: () => import('./features/organization/organization.route').then(x => x.ORGANIZATION_ROUTES)
+      },
+      {
+        path: 'job-levels',
+            data: { breadcrumb: 'MENU.JOB_LEVELS' },
+        loadChildren: () => import('./features/job-level/job-level.routes').then(x => x.JOB_LEVEL_ROUTES),
+
       }
     ]
   }

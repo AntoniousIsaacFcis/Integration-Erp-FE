@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, DOCUMENT, inject, input, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DOCUMENT, inject, input, linkedSignal, output, signal } from '@angular/core';
 import { INavItem } from '@core/models/inav-item';
 import { NavigationService } from '@core/services/navigation-service';
 import { TranslocoModule } from '@jsverse/transloco';
@@ -31,19 +31,42 @@ export class SidebarComponent {
 
   toggle = output<void>();
 
-  protected readonly openItemId = signal<string | null>(null);
   protected readonly menuItems = this.navService.menuItems;
   protected readonly isRtl = signal(this.document.documentElement.dir === 'rtl');
-  protected readonly activeSubId = signal<string | null>(null);
+
+  protected readonly openItemId = linkedSignal<string | null>(() => {
+    const url = this.navService.currentUrl() ?? ''; // حل مشكلة 'possibly undefined'
+    return this.menuItems().find((item: INavItem) =>
+      url.startsWith(item.path)
+    )?.id || null;
+  });
+
+  protected readonly activeSubId = computed(() => {
+    const url = this.navService.currentUrl();
+    for (const item of this.navService.menuItems()) {
+      const activeChild = item.children?.find((child: INavItem) => child.path === url);
+      if (activeChild) return activeChild.id;
+    }
+    return null;
+  });
 
   toggleMenu(item: INavItem) {
-    if (item.children && item.children.length > 0) {
-      this.openItemId.update(currentId => currentId === item.id ? null : item.id);
-    }
-  }
+  if (item.children && item.children.length > 0) {
+    const isOpening = this.openItemId() !== item.id;
 
-  selectSubItem(subId: string) {
-    this.activeSubId.set(subId);
+    this.openItemId.update(currentId => currentId === item.id ? null : item.id);
+
+    if (isOpening) {
+      const firstChildPath = item.children[0].path;
+      this.navService.navigateTo(firstChildPath);
+    }
+  } else {
+    this.navService.navigateTo(item.path);
+  }
+}
+
+  handleSubItemClick(path: string) {
+    this.navService.navigateTo(path);
   }
 
 }
