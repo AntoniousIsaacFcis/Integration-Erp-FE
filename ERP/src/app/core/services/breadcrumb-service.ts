@@ -2,50 +2,46 @@ import { inject, Injectable } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { IBreadrump } from '@core/models/ibreadrump';
-import { filter, map } from 'rxjs';
+import { BehaviorSubject, filter, map } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class BreadcrumbService {
   private readonly router = inject(Router);
-  private readonly route = inject(ActivatedRoute);
+
+  private readonly breadcrumbsSubject = new BehaviorSubject<IBreadrump[]>(//for intial value immedatly when run
+    this.#recursiveBuild(this.router.routerState.root)
+  );
 
   readonly items = toSignal(
     this.router.events.pipe(
       filter((e): e is NavigationEnd => e instanceof NavigationEnd),
-      map(() => this.#recursiveBuild(this.route.root))
+      map(() => this.#recursiveBuild(this.router.routerState.root))
     ),
-    { initialValue: [] as IBreadrump[] }
+    { initialValue: this.#recursiveBuild(this.router.routerState.root) }
   );
 
   #recursiveBuild(route: ActivatedRoute, url: string = '', breadcrumbs: IBreadrump[] = []): IBreadrump[] {
-    const children: ActivatedRoute[] = route.children;
+    const child = route.firstChild;
 
-    if (children.length === 0) {
+    if (!child) {
       return breadcrumbs;
     }
 
-    for (const child of children) {
-      const routeURL: string = child.snapshot.url.map(segment => segment.path).join('/');
+    const routeURL: string = child.snapshot.url.map(segment => segment.path).join('/');
+    const fullUrl = routeURL ? `${url}/${routeURL}` : url;
 
-      let fullUrl = url;
-      if (routeURL !== '') {
-        fullUrl += `/${routeURL}`;
-      }
+    const label = child.snapshot.data['breadcrumb'];
 
-      const label = child.snapshot.data['breadcrumb'];
-
-      if (label && (!breadcrumbs.length || breadcrumbs[breadcrumbs.length - 1].label !== label)) {
-        breadcrumbs.push({
-          label: label,
-          url: fullUrl || '/'
-        });
-      }
-
-      return this.#recursiveBuild(child, fullUrl, breadcrumbs);
+    // فحص التكرار لضمان نظافة المسار
+    if (label && (!breadcrumbs.length || breadcrumbs[breadcrumbs.length - 1].label !== label)) {
+      breadcrumbs.push({
+        label: label,
+        url: fullUrl || '/'
+      });
     }
 
-    return breadcrumbs;
+    return this.#recursiveBuild(child, fullUrl, breadcrumbs);
   }
 }

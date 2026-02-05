@@ -1,24 +1,28 @@
-<div class="grid grid-cols-[auto_1fr] grid-rows-[85px_1fr] h-screen w-full overflow-hidden bg-[#F8F8F8] antialiased"
+<div
+  class="grid grid-cols-[auto_1fr] grid-rows-[85px_1fr_auto] h-screen w-full overflow-hidden bg-[#F8F8F8] antialiased"
   *transloco="let t">
 
-  <header class="col-start-1 col-end-3 row-start-1 row-end-2 z-20 border-b border-black/5">
+  <header class="col-start-1 col-end-3 row-start-1 row-end-2 z-20 border-b border-black/5 bg-white">
     <app-header-component></app-header-component>
   </header>
 
-  <aside class="row-start-2 row-end-3 bg-[#191919] transition-all duration-300 ease-in-out shadow-2xl"
+  <aside class="row-start-2 row-end-4 bg-[#191919] transition-all duration-300 ease-in-out shadow-2xl z-10"
     [style.width]="isSidebarExpanded() ? '251px' : '80px'">
     <app-sidebar-component [isExpanded]="isSidebarExpanded()" (toggle)="toggleSidebar()">
     </app-sidebar-component>
   </aside>
 
-  <main class="row-start-2 row-end-3 overflow-y-auto p-4 md:p-10 font-arabic bg-[#F8F8F8]">
-  <div class="w-full mx-auto max-w-[1600px] flex flex-col min-h-full">
-    <app-breadcrumb-component class="mb-6" />
+  <main class="row-start-2 row-end-3 overflow-y-auto p-4 md:p-10 font-arabic bg-[#F8F8F8] flex flex-col">
+    <div class="w-full mx-auto max-w-[1600px] flex flex-col flex-1">
+      <app-breadcrumb-component class="mb-1 shrink-0" />
+      <section class="flex-1 relative mb-10">
+        <router-outlet></router-outlet>
+      </section>
+    </div>
+  </main>
 
-    <section class="flex-1 relative text-black">
-      <router-outlet></router-outlet>
-    </section>
-  </div>
-</main>
+  <footer class="row-start-3 row-end-4 col-start-2 col-end-3 bg-white border-t border-black/5 px-4 md:px-10 py-3 z-20">
+    <app-footer-component />
+  </footer>
 
 </div>

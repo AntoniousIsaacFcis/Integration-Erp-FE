@@ -1,1 +1,35 @@
-<p>paginagtion-component works!</p>
+<div class="flex items-center justify-between w-full h-[40px]  font-arabic " *transloco="let t">
+
+  <div
+    class="flex items-center justify-center  text-[#BEBEBE]  px-4 py-1 text-[14px] ">
+    {{ t('BREADCRUMB.TRANSFER_BETWEEN_PAGES')}}
+  </div>
+
+  <div class="flex items-center gap-[10px] ">
+    <button (click)="goToPage(currentPage() - 1)" [disabled]="currentPage() === 1"
+      class="flex items-center justify-center w-[32px] h-[32px] rounded-full border border-[#E5E7EB] disabled:opacity-20 hover:bg-gray-50 transition-all">
+      <ng-icon name="lucideChevronRight" size="18" color="#000000"></ng-icon>
+    </button>
+
+    <div class="flex items-center gap-[6px]">
+      @for (page of displayedPages(); track $index) {
+      @if (page === '...') {
+      <span class="text-[#9CA3AF] px-1 font-bold">...</span>
+      } @else {
+      <button (click)="goToPage(page)"
+        class="flex items-center justify-center min-w-[32px] h-[32px] rounded-full border transition-all duration-200 text-[14px] font-arabic "
+        [class]="currentPage() === page
+                     ? 'bg-[#000000] text-white border-[#000000] shadow-md'
+                     : 'bg-white text-[#000000] border-[#000000] hover:border-[#000000]/50'">
+        {{ page }}
+      </button>
+      }
+      }
+    </div>
+
+    <button (click)="goToPage(currentPage() + 1)" [disabled]="currentPage() === totalPages()"
+      class="flex items-center justify-center w-[32px] h-[32px] rounded-full border border-[#E5E7EB] disabled:opacity-20 hover:bg-gray-50 transition-all">
+      <ng-icon name="lucideChevronLeft" size="18" color="#000000"></ng-icon>
+    </button>
+  </div>
+</div>

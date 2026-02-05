@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, signal } from '@angular/core';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { lucideSearch } from '@ng-icons/lucide';
@@ -12,5 +12,7 @@ import { lucideSearch } from '@ng-icons/lucide';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SearchbarComponent {
+  //default => the header with transpet background
+  variant = input<'default' | 'table'>('default');
   searchQuery = signal<string>('');
 }

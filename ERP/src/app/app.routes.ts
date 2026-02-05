@@ -20,7 +20,10 @@ export const routes: Routes = [
       },
       {
         path: 'job-levels',
-            data: { breadcrumb: 'MENU.JOB_LEVELS' },
+        data: {
+          breadcrumb: 'MENU.JOB_LEVELS',
+          actionLabel: 'BUTTON.ADD_LEVEL'
+        },
         loadChildren: () => import('./features/job-level/job-level.routes').then(x => x.JOB_LEVEL_ROUTES),
 
       }

@@ -1,0 +1,19 @@
+<header class="grid grid-cols-3 items-center w-full min-h-[42px]  text-black " *transloco="let t">
+
+  <div class="flex justify-start">
+    <app-page-title-component [title]="t(autoTitle())" />
+  </div>
+
+  <div class="flex justify-center me-25">
+    <app-searchbar-component variant="table" />
+  </div>
+
+  <div class="flex items-center gap-4 justify-end">
+    <app-status-badge-component label="الحالة" />
+    <app-action-btn-component
+      [label]="actionLabel()"
+      (clicked)="actionClicked.emit()"
+    />
+  </div>
+
+</header>

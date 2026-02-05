@@ -1,1 +1,24 @@
-<p>action-btn-component works!</p>
+<button
+  (click)="clicked.emit()"
+  class="group flex items-center justify-center w-[170px] h-[42px] px-[12px] py-[10px] gap-[10px] bg-[#6EA30D33] border border-[#6EA30D] rounded-[8px] transition-all hover:scale-[1.02] active:scale-95" *transloco="let t"
+>
+  <div class="flex items-center justify-between w-[146px] h-[22px] gap-[12px]">
+
+
+
+    <div class="relative flex items-center justify-center w-[14.67px] h-[14.67px] border-[2px] border-[#6EA30D] rounded-t-[104px] rounded-br-[97px] rounded-bl-[104px] overflow-hidden">
+      <ng-icon
+        name="lucidePlus"
+        size="10"
+        strokeWidth="4"
+        class="text-[#6EA30D]"
+      ></ng-icon>
+    </div>
+
+
+      <span class="w-[120px] h-[14px] text-black font-bold text-[14px] font-arabic leading-none text-right whitespace-nowrap">
+      {{ t(label()) }}
+    </span>
+
+  </div>
+</button>
