@@ -16,4 +16,6 @@ export class AppBaseTableComponent {
 onAdd = output<void>();
 
 searchTerm = model<string>('');
+
+statusFilter = model<'active' | 'inactive' | ''>('');
 }

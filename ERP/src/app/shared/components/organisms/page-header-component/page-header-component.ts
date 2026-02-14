@@ -29,4 +29,6 @@ searchQuery = model<string>('');//modal for twoWay binding
   handleActionClick() {
     this.actionClicked.emit();
   }
+
+  selectedStatus = model<'active' | 'inactive' | ''>('');
 }

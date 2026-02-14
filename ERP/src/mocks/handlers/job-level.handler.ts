@@ -12,6 +12,7 @@ export const jobLevelHandlers = [
     const page = parseInt(url.searchParams.get('page') || '1');
     const limit = parseInt(url.searchParams.get('limit') || '10');
     const searchTerm = url.searchParams.get('q') || '';
+    const statusFilter = url.searchParams.get('status') || '';
 
     let filteredResults = [...currentDb];
 
@@ -20,6 +21,10 @@ export const jobLevelHandlers = [
         item.nameAr?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         (item as any).nameEn?.toLowerCase().includes(searchTerm.toLowerCase())
       );
+    }
+
+    if (statusFilter) {
+      filteredResults = filteredResults.filter(item => item.status === statusFilter);
     }
 
     const startIndex = (page - 1) * limit;

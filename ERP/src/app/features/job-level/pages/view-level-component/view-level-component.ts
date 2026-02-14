@@ -29,11 +29,14 @@ export class ViewLevelComponent {
 
   searchTerm = signal('');
 
+    selectedStatus = signal<'active' | 'inactive' | ''>('');
+
   levelsResource = rxResource({
     params: () => ({
       page: this.currentPage(),
       limit: this.pageSize(),
-      search: this.searchTerm()
+      search: this.searchTerm(),
+      status: this.selectedStatus()
     }),
     stream: ({ params }) => {
       if (!isPlatformBrowser(this.platformId)) {

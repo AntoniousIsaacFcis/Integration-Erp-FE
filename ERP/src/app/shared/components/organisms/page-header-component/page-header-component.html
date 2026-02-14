@@ -5,15 +5,13 @@
   </div>
 
   <div class="flex justify-center me-25">
-    <app-searchbar-component variant="table" [(searchQuery)]="searchQuery"/>
+    <app-searchbar-component variant="table" [(searchQuery)]="searchQuery" />
   </div>
 
   <div class="flex items-center gap-4 justify-end">
-    <app-status-badge-component label="الحالة" />
-    <app-action-btn-component
-      [label]="actionLabel()"
-      (clicked)="actionClicked.emit()"
-    />
+    <app-status-badge-component label="الحالة" [(selectedStatus)]="selectedStatus" />
+
+    <app-action-btn-component [label]="actionLabel()" (clicked)="actionClicked.emit()" />
   </div>
 
 </header>

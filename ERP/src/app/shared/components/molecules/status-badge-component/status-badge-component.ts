@@ -1,17 +1,15 @@
-import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, model, signal } from '@angular/core';
 import { NgIcon, provideIcons } from '@ng-icons/core';
-import { lucideChevronDown, lucideSettings2 } from '@ng-icons/lucide';
+import { lucideCheck, lucideChevronDown, lucideSettings2 } from '@ng-icons/lucide';
 @Component({
   selector: 'app-status-badge-component',
   imports: [NgIcon],
   templateUrl: './status-badge-component.html',
   styleUrl: './status-badge-component.css',
-  providers: [provideIcons({ lucideSettings2, lucideChevronDown })],
+  providers: [provideIcons({ lucideSettings2, lucideChevronDown, lucideCheck })],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class StatusBadgeComponent {
-  label = input.required<string>();
-
   containerClasses = computed(() => {
     return `
      flex items-center justify-between
@@ -20,4 +18,31 @@ export class StatusBadgeComponent {
      hover-lift cursor-pointer transition-all
     `;
   });
+
+  label = input.required<string>();
+
+  selectedStatus = model<'active' | 'inactive' | ''>('');
+
+  isDropdownOpen = signal(false);
+
+  statuses = [
+    { value: '', label: 'الحالة' },
+    { value: 'active', label: 'نشط' },
+    { value: 'inactive', label: 'غير نشط' }
+  ] as const;
+
+  currentLabel = computed(() => {
+    const status = this.statuses.find(s => s.value === this.selectedStatus());
+    return status ? status.label : this.label();
+  });
+
+  toggle() {
+    this.isDropdownOpen.update(v => !v);
+  }
+
+  selectStatus(value: 'active' | 'inactive' | '') {
+    this.selectedStatus.set(value);
+    this.isDropdownOpen.set(false); //close the dropdown list when choose
+  }
+
 }

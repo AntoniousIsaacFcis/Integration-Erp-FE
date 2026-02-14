@@ -1,5 +1,5 @@
 <app-app-base-table-component [(searchTerm)]="searchTerm" actionLabel="BUTTON.ADD_LEVEL"
-  (onAdd)="handleCreateNavigation()" [totalItems]="totalItems()" [(currentPage)]="currentPage" *transloco="let t">
+  (onAdd)="handleCreateNavigation()" [totalItems]="totalItems()" [(currentPage)]="currentPage" [(statusFilter)]="selectedStatus" *transloco="let t">
   <div class="w-full">
     @if (levelsResource.isLoading()) {
     <div class="flex justify-center py-20 text-gray-400">

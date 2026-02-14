@@ -1,16 +1,34 @@
-<div [class]="containerClasses()">
+<div class="relative inline-block font-arabic">
 
-      <ng-icon name="lucideSettings2" size="16" class="text-blue-600" color="#bbbbbb" strokeWidth="3"></ng-icon>
+  <div [class]="containerClasses()" (click)="toggle(); $event.stopPropagation()">
+    <ng-icon name="lucideSettings2" size="16" class="text-blue-600" color="#bbbbbb" strokeWidth="3"></ng-icon>
 
-      <span class="text-[14px] font-[700] ms-[10px] font-arabic leading-none ">
-        {{ label() }}
-      </span>
+    <span class="text-[14px] font-[700] ms-[10px] leading-none flex-1 text-center truncate">
+      {{ currentLabel() }}
+    </span>
 
-      <ng-icon
-        name="lucideChevronDown"
-        size="16"
-        strokeWidth="3"
-        >
-      </ng-icon>
+    <ng-icon name="lucideChevronDown" size="16" strokeWidth="3" [class.rotate-180]="isDropdownOpen()"
+      class="transition-transform duration-200">
+    </ng-icon>
+  </div>
 
-    </div>
+  @if (isDropdownOpen()) {
+  <div class="absolute z-[100] mt-1 w-full left-0 right-0
+                bg-white border border-gray-200 rounded-lg shadow-xl overflow-hidden
+                animate-in fade-in zoom-in-95 duration-150 origin-top
+                top-full">
+
+    @for (status of statuses; track status.value) {
+    <button (click)="selectStatus(status.value); $event.stopPropagation()"
+      class="flex items-center justify-between w-full px-4 py-2 text-[13px] hover:bg-primary/5 hover:text-primary transition-colors text-black border-b last:border-none border-gray-50">
+      <span class="flex-1 text-start">{{ status.label }}</span>
+      @if (selectedStatus() === status.value) {
+      <ng-icon name="lucideCheck" class="text-green-600" size="14"></ng-icon>
+      }
+    </button>
+    }
+  </div>
+
+  <div class="fixed inset-0 z-[90] bg-transparent" (click)="isDropdownOpen.set(false); $event.stopPropagation()"></div>
+  }
+</div>

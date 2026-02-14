@@ -10,15 +10,14 @@ export class JobLevelService {
   private http = inject(HttpClient);
   private readonly API_URL = `${environment.baseUrl}/api/job-levels`;
 
-  getLevels(params: { page: number; limit: number; search?: string }) {
+  getLevels(params: { page: number; limit: number; search?: string;status?: string }) {
   const queryParams: any = {
     page: params.page,
-    limit: params.limit
-  };
+    limit: params.limit,
 
-  if (params.search) {
-    queryParams['q'] = params.search; 
-  }
+    ...(params.search && { q: params.search }),
+    ...(params.status && { status: params.status })
+  };
 
   return this.http.get<IJobLevelResponse>(this.API_URL, { params: queryParams });
 }
