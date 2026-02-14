@@ -1,0 +1,38 @@
+<div class="flex flex-col gap-[12px] w-full font-arabic text-right" *transloco="let t">
+  <label class="font-medium text-[16px] text-black">
+    {{ label() }} @if(required()) { <span class="text-red-500">*</span> }
+  </label>
+
+  @let hasError = errorMessage();
+
+  @if (inputRows() === 1) {
+    <input
+      [formControl]="control()"
+      [placeholder]="placeholder()"
+      (blur)="control().markAsTouched(); updateValidationState()"
+      (input)="updateValidationState()"
+      class="h-[52px] border rounded-[12px] ps-[19px] pe-[19px] outline-none transition-all focus:ring-1 text-black placeholder:text-[#00000033]"
+      [class]="hasError ? 'border-red-500 focus:ring-red-500' : 'border-[#0000001A] focus:ring-[#537C0F]'"
+    >
+  } @else {
+    <textarea
+      [formControl]="control()"
+      [placeholder]="placeholder()"
+      [attr.rows]="inputRows()"
+      (blur)="control().markAsTouched(); updateValidationState()"
+      (input)="updateValidationState()"
+      class="border rounded-[12px] ps-[19px] pe-[19px] py-[15px] resize-none outline-none transition-all focus:ring-1 text-black placeholder:text-[#00000033]"
+      [class]="hasError ? 'border-red-500 focus:ring-red-500' : 'border-[#0000001A] focus:ring-[#537C0F]'"
+    ></textarea>
+  }
+
+  @if (hasError; as msg) {
+    <span class="text-red-500 text-[12px] mt-[-8px] animate-in fade-in duration-300">
+      {{ t(msg, {
+           actual: control().errors?.['maxWords']?.actual,
+           limit: control().errors?.['maxWords']?.limit || 250
+         })
+      }}
+    </span>
+  }
+</div>

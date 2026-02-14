@@ -2,7 +2,7 @@
   "BRAND_NAME": "التكامل",
   "COMMON": {
     "SEARCH_PLACEHOLDER": "البحث ...",
-    "COMPANY_NAME": "شركة التكامل الدولية",
+    "COMPANY_NAME": " شركة التكامل الدولية",
     "MENU": "القائمة",
     "PROJECT_NAME": "نظام التكامل",
     "ALL_RIGHTS_RESERVED": "جميع الحقوق محفوظة",
@@ -10,7 +10,7 @@
     "CANCEL": "إلغاء",
     "SAVE": "حفظ",
     "DELETE": "حذف",
-    "EDIT": "تعديل",
+    "EDIT": " تعديل",
     "VIEW": "عرض",
     "ADD": "إضافة",
     "UPDATE": "تحديث",
@@ -40,8 +40,10 @@
     "CODE": "الكود",
     "TOTAL": "الإجمالي",
     "EMPTY_STATE": "لا توجد عناصر",
+    "WORDS": "كلمة",
     "MESSAGES": {
       "SUCCESS": "تم بنجاح",
+      "SUCCESS_MESSAGE": "تمت العملية بنجاح",
       "ERROR": "حدث خطأ",
       "WARNING": "تحذير",
       "INFO": "معلومات",
@@ -108,11 +110,13 @@
     "REFRESH": "تحديث",
     "CLEAR": "مسح",
     "CREATE": "إنشاء",
-    "EDIT": "تعديل",
+    "EDIT": " تعديل",
     "DELETE": "حذف",
     "APPROVE": "موافقة",
     "REJECT": "رفض",
-    "BACK": "رجوع"
+    "BACK": "رجوع",
+    "SAVE": "حفظ",
+    "CANCEL": "إلغاء"
   },
   "HEADER": {
     "NOTIFICATION": "التنبيهات",
@@ -199,18 +203,18 @@
     "POSTAL_CODE": "الرمز البريدي"
   },
   "PLACEHOLDER": {
-    "ENTER_NAME": "أدخل الاسم",
+    "ENTER_NAME": "مدير عام",
     "ENTER_EMAIL": "أدخل البريد الإلكتروني",
     "ENTER_PHONE": "أدخل رقم الهاتف",
     "ENTER_ADDRESS": "أدخل العنوان",
-    "ENTER_DESCRIPTION": "أدخل الوصف",
+    "ENTER_DESCRIPTION": "الوصف لا يتعدي ال 250 كلمة",
     "ENTER_USERNAME": "أدخل اسم المستخدم",
     "ENTER_PASSWORD": "أدخل كلمة المرور",
     "SELECT_OPTION": "اختر خياراً",
     "SELECT_DATE": "اختر تاريخاً",
     "SEARCH_HERE": "ابحث هنا",
     "ENTER_CODE": "أدخل الكود",
-    "SELECT_DEPARTMENT": "اختر قسماً",
+    "SELECT_DEPARTMENT": "أختر قسم",
     "SELECT_LEVEL": "اختر مستوى",
     "SELECT_TYPE": "اختر نوعاً"
   },
@@ -226,7 +230,8 @@
     "INVALID_URL": "عنوان URL غير صحيح",
     "INVALID_NUMBER": "رقم غير صحيح",
     "MUST_BE_POSITIVE": "يجب أن تكون القيمة موجبة",
-    "MUST_BE_UNIQUE": "يجب أن تكون هذه القيمة فريدة"
+    "MUST_BE_UNIQUE": "يجب أن تكون هذه القيمة فريدة",
+    "MAX_WORDS_LIMIT": "لا يمكن تجاوز 250 كلمة"
   },
   "ORGANIZATION": {
     "TITLE": "الهيكل التنظيمي",
@@ -243,8 +248,8 @@
     "ADD_DESIGNATION": "إضافة مسمى وظيفي",
     "ADD_LEVEL": "إضافة مستوى",
     "ADD_UNIT": "إضافة وحدة تنظيمية",
-    "EDIT_DEPARTMENT": "تعديل القسم",
-    "EDIT_DESIGNATION": "تعديل المسمى",
+    "EDIT_DEPARTMENT": " تعديل القسم",
+    "EDIT_DESIGNATION": " تعديل المسمى",
     "EDIT_LEVEL": "تعديل المستوى",
     "DELETE_DEPARTMENT": "حذف القسم",
     "DELETE_DESIGNATION": "حذف المسمى",
@@ -286,7 +291,7 @@
     "EMERGENCY_CONTACT": "جهة الاتصال الطوارئ",
     "BLOOD_GROUP": "فصيلة الدم",
     "ADD_EMPLOYEE": "إضافة موظف",
-    "EDIT_EMPLOYEE": "تعديل بيانات الموظف",
+    "EDIT_EMPLOYEE": " تعديل بيانات الموظف",
     "DELETE_EMPLOYEE": "حذف الموظف",
     "EMPLOYEE_DETAILS": "تفاصيل الموظف",
     "EMPLOYEE_LIST": "قائمة الموظفين"
@@ -307,7 +312,7 @@
     "SHIFT_ASSIGNMENT": "تعيين الورديات",
     "SHIFT_REPORTS": "تقارير الورديات",
     "ADD_SHIFT": "إضافة وردية",
-    "EDIT_SHIFT": "تعديل الوردية",
+    "EDIT_SHIFT": " تعديل الوردية",
     "DELETE_SHIFT": "حذف الوردية",
     "ASSIGNED_EMPLOYEES": "الموظفون المعينون",
     "EMPLOYEE_COUNT": "عدد الموظفين"
@@ -389,7 +394,7 @@
     "SORT_ORDER": "ترتيب الفرز",
     "EMPLOYEE_COUNT": "عدد الموظفين",
     "ADD_JOB_LEVEL": "إضافة مستوى وظيفي",
-    "EDIT_JOB_LEVEL": "تعديل المستوى الوظيفي",
+    "EDIT_JOB_LEVEL": " تعديل المستوى الوظيفي",
     "DELETE_JOB_LEVEL": "حذف المستوى الوظيفي",
     "LEVEL_MAPPING": "ربط المستويات",
     "MAP_TO_DESIGNATION": "ربط بمسمى وظيفي",

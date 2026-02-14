@@ -3,12 +3,28 @@ import { bootstrapApplication } from '@angular/platform-browser';
 import { appConfig } from './app/app.config';
 import { isDevMode } from '@angular/core';
 import { App } from './app/app';
+import { environment } from '@env/environment.development';
+
+// src/main.ts (أو ملف تهيئة MSW)
 
 async function prepareApp() {
   if (isDevMode()) {
     const { worker } = await import('./mocks/browser');
     return worker.start({
-      onUnhandledRequest: 'bypass',
+      // this line prevent msw for intercepting any angular chunk(force him intercept http requests only)
+      onUnhandledRequest(req, print) {
+        const url = new URL(req.url);
+
+        if (
+          url.pathname.startsWith('/@ng/') ||
+          url.pathname.startsWith('/@vite/') ||
+          url.href.includes('localhost:4200') && !url.pathname.startsWith('/api')
+        ) {
+          return;
+        }
+
+        print.warning();
+      },
     });
   }
   return Promise.resolve();

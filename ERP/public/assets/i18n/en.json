@@ -40,8 +40,10 @@
     "CODE": "Code",
     "TOTAL": "Total",
     "EMPTY_STATE": "No Items",
+    "WORDS": "Words",
     "MESSAGES": {
       "SUCCESS": "Success",
+      "SUCCESS_MESSAGE": "Operation Completed Successfully",
       "ERROR": "An Error Occurred",
       "WARNING": "Warning",
       "INFO": "Information",
@@ -112,7 +114,9 @@
     "DELETE": "Delete",
     "APPROVE": "Approve",
     "REJECT": "Reject",
-    "BACK": "Back"
+    "BACK": "Back",
+    "SAVE": "Save",
+    "CANCEL": "Cancel"
   },
   "HEADER": {
     "NOTIFICATION": "Notifications",
@@ -199,18 +203,18 @@
     "POSTAL_CODE": "Postal Code"
   },
   "PLACEHOLDER": {
-    "ENTER_NAME": "Enter Name",
+    "ENTER_NAME": "General Manager",
     "ENTER_EMAIL": "Enter Email",
     "ENTER_PHONE": "Enter Phone Number",
     "ENTER_ADDRESS": "Enter Address",
-    "ENTER_DESCRIPTION": "Enter Description",
+    "ENTER_DESCRIPTION": "Description does not exceed 250 Words",
     "ENTER_USERNAME": "Enter Username",
     "ENTER_PASSWORD": "Enter Password",
     "SELECT_OPTION": "Select an Option",
     "SELECT_DATE": "Select a Date",
     "SEARCH_HERE": "Search Here",
     "ENTER_CODE": "Enter Code",
-    "SELECT_DEPARTMENT": "Select Department",
+    "SELECT_DEPARTMENT": "Choose a Department",
     "SELECT_LEVEL": "Select Level",
     "SELECT_TYPE": "Select Type"
   },
@@ -226,7 +230,8 @@
     "INVALID_URL": "Invalid URL",
     "INVALID_NUMBER": "Invalid number",
     "MUST_BE_POSITIVE": "Value must be positive",
-    "MUST_BE_UNIQUE": "This value must be unique"
+    "MUST_BE_UNIQUE": "This value must be unique",
+    "MAX_WORDS_LIMIT": "Cannot exceed 250 words"
   },
   "ORGANIZATION": {
     "TITLE": "Organization Structure",

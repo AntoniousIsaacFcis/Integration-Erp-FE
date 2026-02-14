@@ -8,6 +8,7 @@ import { lucidePencil, lucideTrash2 } from '@ng-icons/lucide';
 import { isPlatformBrowser } from '@angular/common';
 import { of } from 'rxjs';
 import { JobLevelService } from '@features/job-level/service/job-level-service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-view-level-component',
@@ -21,6 +22,7 @@ export class ViewLevelComponent {
   private readonly http = inject(HttpClient);
   private readonly platformId = inject(PLATFORM_ID);
   private readonly jobService = inject(JobLevelService);
+  private readonly router=inject(Router);
 
   currentPage = signal(1);
   pageSize = signal(10);
@@ -39,6 +41,7 @@ export class ViewLevelComponent {
   });
 
   handleCreateNavigation() {
+    this.router.navigate(['/job-levels/create']);
     console.log('Navigate to Create Level Page');
   }
 

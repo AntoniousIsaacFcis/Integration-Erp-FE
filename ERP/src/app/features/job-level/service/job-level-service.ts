@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { IJobLevel, IJobLevelResponse } from '../models/ijob-level';
+import { CreateJobLevelDTO, IJobLevel, IJobLevelResponse } from '../models/ijob-level';
 import { environment } from '@env/environment.development';
 
 @Injectable({
@@ -12,5 +12,9 @@ export class JobLevelService {
 
   getLevels(params: { page: number; limit: number }) {
     return this.http.get<IJobLevelResponse>(this.API_URL, { params });
+  }
+
+  create(data: CreateJobLevelDTO) {
+    return this.http.post<IJobLevel>(this.API_URL, data);
   }
 }

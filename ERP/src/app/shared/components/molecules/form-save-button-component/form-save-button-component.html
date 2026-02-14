@@ -1,0 +1,10 @@
+<button
+      *transloco="let t"
+      [disabled]="isLoading() || isDisabled()"
+      (click)="clicked.emit()"
+      class="w-[180px] h-[52px] bg-[#537C0F] text-white rounded-[12px] flex items-center justify-center transition-all hover:bg-opacity-90 active:scale-95 disabled:opacity-50"
+    >
+      <span class="font-arabic font-semibold text-[16px] leading-none">
+        @if (isLoading()) { ... } @else { {{ t(label()) }} }
+      </span>
+    </button>

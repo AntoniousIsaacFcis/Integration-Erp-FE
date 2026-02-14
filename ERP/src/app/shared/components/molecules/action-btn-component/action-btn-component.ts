@@ -13,5 +13,6 @@ import { lucidePlus } from '@ng-icons/lucide';
 })
 export class ActionBtnComponent {
   label = input.required<string>();
+  isLoading = input<boolean>(false);
   clicked = output<void>();
 }
