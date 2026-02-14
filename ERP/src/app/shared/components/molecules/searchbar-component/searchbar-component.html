@@ -6,18 +6,16 @@
     <div class="flex items-center w-[268px] h-[24px] gap-[10px] mx-auto">
 
       <div class="relative w-[24px] h-[24px] flex shrink-0 items-center justify-center">
-       <ng-icon
-          name="lucideSearch"
-          size="18"
-          [color]="variant() === 'table' ? '#00000080' : '#FFFFFF'"
+        <ng-icon name="lucideSearch" size="18" [color]="variant() === 'table' ? '#00000080' : '#FFFFFF'"
           strokeWidth="2.5">
         </ng-icon>
       </div>
 
-      <input type="text" [placeholder]="t('HEADER.SEARCH_PLACEHOLDER')" class="flex-1 h-[23px] bg-transparent outline-none
-              border-none text-[15px] font-[400] leading-none text-white
-               placeholder:text-[#999999] font-arabic" />
-
+      <input type="text" [value]="searchQuery()" (input)="onInput($event)"
+        [placeholder]="t('HEADER.SEARCH_PLACEHOLDER')" [class.text-black]="variant() === 'table'" class="flex-1 h-[23px] bg-transparent outline-none
+              border-none text-[15px] font-[400] leading-none
+               placeholder:text-[#999999] font-arabic" [class.text-black]="variant() === 'table'"
+        [class.text-white]="variant() === 'default'" />
     </div>
   </div>
 </ng-container>

@@ -1,7 +1,9 @@
-import { ChangeDetectionStrategy, Component, input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, model, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { lucideSearch } from '@ng-icons/lucide';
+import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
 
 @Component({
   selector: 'app-searchbar-component',
@@ -14,5 +16,23 @@ import { lucideSearch } from '@ng-icons/lucide';
 export class SearchbarComponent {
   //default => the header with transpet background
   variant = input<'default' | 'table'>('default');
-  searchQuery = signal<string>('');
+
+  searchQuery = model<string>('');
+
+private readonly searchUpdater$ = new Subject<string>();
+
+  constructor() {
+    this.searchUpdater$.pipe(
+      debounceTime(400), //wait after last letter inserted
+      distinctUntilChanged(), // not make request until change
+      takeUntilDestroyed() // auto clean memory
+    ).subscribe(value => {
+      this.searchQuery.set(value);
+    });
+  }
+
+  onInput(event: Event) {
+    const value = (event.target as HTMLInputElement).value;
+    this.searchUpdater$.next(value);
+  }
 }

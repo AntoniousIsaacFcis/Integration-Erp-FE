@@ -1,62 +1,61 @@
-<app-app-base-table-component
-  actionLabel="BUTTON.ADD_LEVEL"
-  (onAdd)="handleCreateNavigation()"
-  [totalItems]="totalItems()"
-  [(currentPage)]="currentPage"
-  *transloco="let t"
->
+<app-app-base-table-component [(searchTerm)]="searchTerm" actionLabel="BUTTON.ADD_LEVEL"
+  (onAdd)="handleCreateNavigation()" [totalItems]="totalItems()" [(currentPage)]="currentPage" *transloco="let t">
   <div class="w-full">
     @if (levelsResource.isLoading()) {
-      <div class="flex justify-center py-20 text-gray-400">
-        {{ t('COMMON.MESSAGES.LOADING_DATA') }}
-      </div>
+    <div class="flex justify-center py-20 text-gray-400">
+      {{ t('COMMON.MESSAGES.LOADING_DATA') }}
+    </div>
     }
 
     @if (levelsResource.error()) {
-      <div class="bg-red-50 text-red-600 p-6 rounded-xl text-center border border-red-100">
-        <p>فشل الاتصال بالنظام</p>
-        <button (click)="levelsResource.reload()" class="mt-3 px-4 py-2 bg-red-600 text-white rounded-lg">
-          إعادة المحاولة
-        </button>
-      </div>
+    <div class="bg-red-50 text-red-600 p-6 rounded-xl text-center border border-red-100">
+      <p>فشل الاتصال بالنظام</p>
+      <button (click)="levelsResource.reload()" class="mt-3 px-4 py-2 bg-red-600 text-white rounded-lg">
+        إعادة المحاولة
+      </button>
+    </div>
     }
 
     @if (levelsResource.value()) {
-      <table class="w-full text-right font-arabic text-black border border-[#F4F4F4]/50 rounded-xl overflow-hidden">
-        <thead class="text-[14px] sticky top-0 bg-[#F4F4F4] z-10">
-          <tr>
-            <th class="py-4 ps-12 text-start">المستوى الوظيفي</th>
-            <th class="py-4 pe-26">عدد الموظفين</th>
-            <th class="py-4 pe-60 ">الحالة</th>
-            <th class="py-4 px-10 text-center">العمليات</th>
-          </tr>
-        </thead>
-        <tbody>
-          @for (level of levelsList(); track level.id) {
-            <tr class="bg-white hover:bg-gray-50/50 transition-all border-b border-gray-100">
-              <td class="py-4 ps-12 font-medium text-[14px]">{{ level.nameAr }}</td>
-              <td class="py-4 pe-26 text-[14px]">{{ level.employeeCount }} موظف</td>
+    <table class="w-full text-right font-arabic text-black border border-[#F4F4F4]/50 rounded-xl overflow-hidden">
+      <thead class="text-[14px] sticky top-0 bg-[#F4F4F4] z-10">
+        <tr>
+          <th class="py-4 ps-12 text-start">المستوى الوظيفي</th>
+          <th class="py-4 pe-26">عدد الموظفين</th>
+          <th class="py-4 pe-60 ">الحالة</th>
+          <th class="py-4 px-10 text-center">العمليات</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (level of levelsList(); track level.id) {
+        <tr class="bg-white hover:bg-gray-50/50 transition-all border-b border-gray-100">
+          <td class="py-4 ps-12 font-medium text-[14px]">{{ level.nameAr }}</td>
+          <td class="py-4 pe-26 text-[14px]">{{ level.employeeCount }} موظف</td>
 
-              <td class="py-3 pe-60">
-                @let isActive = level.status === 'active';
-                <div class="flex items-center justify-center rounded-[8px] w-[65px] h-[32px]"
-                     [class]="isActive ? 'bg-[#00A3891A]' : 'bg-[#EF44441A]'">
-                  <span class="font-semibold text-[13px]" [class]="isActive ? 'text-[#00A389]' : 'text-[#EF4444]'">
-                    {{ isActive ? t('COMMON.ACTIVE') : t('COMMON.INACTIVE') }}
-                  </span>
-                </div>
-              </td>
+          <td class="py-3 pe-60">
+            @let isActive = level.status === 'active';
+            <div class="flex items-center justify-center rounded-[8px] w-[65px] h-[32px]"
+              [class]="isActive ? 'bg-[#00A3891A]' : 'bg-[#EF44441A]'">
+              <span class="font-semibold text-[13px]" [class]="isActive ? 'text-[#00A389]' : 'text-[#EF4444]'">
+                {{ isActive ? t('COMMON.ACTIVE') : t('COMMON.INACTIVE') }}
+              </span>
+            </div>
+          </td>
 
-              <td class="py-4 px-10">
-                <div class="flex gap-4 justify-end">
-                  <button class="flex size-[30px] items-center justify-center rounded-full bg-[#0000001A] transition-colors hover:bg-[#00000033]"><ng-icon name="lucidePencil" size="16px" color="black"/></button>
-                  <button class="flex size-[30px] items-center justify-center rounded-full bg-[#0000001A] transition-colors hover:bg-[#00000033]"><ng-icon name="lucideTrash2" size="16px" color="#F40552" /></button>
-                </div>
-              </td>
-            </tr>
-          }
-        </tbody>
-      </table>
+          <td class="py-4 px-10">
+            <div class="flex gap-4 justify-end">
+              <button
+                class="flex size-[30px] items-center justify-center rounded-full bg-[#0000001A] transition-colors hover:bg-[#00000033]"><ng-icon
+                  name="lucidePencil" size="16px" color="black" /></button>
+              <button
+                class="flex size-[30px] items-center justify-center rounded-full bg-[#0000001A] transition-colors hover:bg-[#00000033]"><ng-icon
+                  name="lucideTrash2" size="16px" color="#F40552" /></button>
+            </div>
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
     }
   </div>
 </app-app-base-table-component>

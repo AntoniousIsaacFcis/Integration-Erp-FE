@@ -22,15 +22,18 @@ export class ViewLevelComponent {
   private readonly http = inject(HttpClient);
   private readonly platformId = inject(PLATFORM_ID);
   private readonly jobService = inject(JobLevelService);
-  private readonly router=inject(Router);
+  private readonly router = inject(Router);
 
   currentPage = signal(1);
   pageSize = signal(10);
 
+  searchTerm = signal('');
+
   levelsResource = rxResource({
     params: () => ({
       page: this.currentPage(),
-      limit: this.pageSize()
+      limit: this.pageSize(),
+      search: this.searchTerm()
     }),
     stream: ({ params }) => {
       if (!isPlatformBrowser(this.platformId)) {
@@ -49,4 +52,5 @@ export class ViewLevelComponent {
   totalItems = computed(() => this.levelsResource.value()?.total ?? 0);
 
   levelsList = computed(() => this.levelsResource.value()?.data ?? []);
+
 }

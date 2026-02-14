@@ -14,4 +14,6 @@ export class AppBaseTableComponent {
   totalItems = input<number>(0);
   currentPage = model<number>(1); //for twoWayBinding [(currentPage)]
 onAdd = output<void>();
+
+searchTerm = model<string>('');
 }

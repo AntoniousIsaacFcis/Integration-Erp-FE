@@ -11,16 +11,26 @@ export const jobLevelHandlers = [
     const url = new URL(request.url);
     const page = parseInt(url.searchParams.get('page') || '1');
     const limit = parseInt(url.searchParams.get('limit') || '10');
+    const searchTerm = url.searchParams.get('q') || '';
+
+    let filteredResults = [...currentDb];
+
+    if (searchTerm) {
+      filteredResults = currentDb.filter(item =>
+        item.nameAr?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (item as any).nameEn?.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
 
     const startIndex = (page - 1) * limit;
     const endIndex = startIndex + limit;
 
     // استخدام البيانات المستوردة لعمل الـ Slice
-    const paginatedData = currentDb.slice(startIndex, endIndex);
+    const paginatedData = filteredResults.slice(startIndex, endIndex);
 
     return HttpResponse.json({
       data: paginatedData,
-      total: currentDb.length,
+      total: filteredResults.length,
       page,
       limit
     });
