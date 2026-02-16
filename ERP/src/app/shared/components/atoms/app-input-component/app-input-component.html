@@ -1,0 +1,30 @@
+<div class="flex flex-col w-full gap-sm" *transloco="let t">
+  @if (label()) {
+  <label class="text-sm font-medium text-start">
+    {{ t(label()) }}
+  </label>
+  }
+
+  <div class="relative w-full">
+    <input [formControl]="control()" [type]="isPassword() && !showPassword() ? 'password' : 'text'"
+      [placeholder]="t(placeholder())"
+      class="w-full h-[44px] px-md  bg-white border rounded-md outline-none transition-base text-sm text-start placeholder:text-black focus:border-primary  focus:ring-4 focus:ring-primary/10"
+      [class.!border-[#FF383C]]="control().invalid && control().touched"
+      [class.!border-2]="control().invalid && control().touched" [class.pe-xl]="isPassword()" />
+
+    @if (isPassword()) {
+    <button type="button" (click)="togglePassword()"
+      class="absolute inset-y-0 right-0 flex items-center text-[--color-text-muted] hover:text-[--color-text-primary] transition-fast pe-[--spacing-sm]">
+    </button>
+    }
+  </div>
+
+  @if (errorKey; as key) {
+    <div class="flex items-center gap-xs text-error animate-fade-in mt-1">
+      <ng-icon name="lucideOctagonX" class="size-[16px]" strokeWidth="3"></ng-icon>
+      <span class="text-xs font-medium text-start">
+        {{ t(key) }}
+      </span>
+    </div>
+  }
+</div>

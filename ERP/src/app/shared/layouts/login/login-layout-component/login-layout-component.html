@@ -1,0 +1,58 @@
+<div class="p-[20px] w-full  mx-auto flex-center bg-white relative  " *transloco="let t">
+
+  <main class="relative flex flex-row w-full h-[968px] max-w-[1383px] mx-auto animate-scale-in gap-[20px]">
+
+    <section
+      class="flex-1 flex flex-col items-center bg-white rounded-[20px] border-[4px] border-[#EDF1F1] relative text-black">
+
+      <header class="w-full max-w-[583px] h-[42px] mt-[27px] px-[24px] flex flex-row justify-between items-center">
+        <app-project-logo-component aboveColor="#000000" textColor="#000000" outlineColor="#FFFFFF"
+          class="h-full text-black bg-white"></app-project-logo-component>
+        <app-language-switcher-component variant="toggle"></app-language-switcher-component>
+      </header>
+
+      <div class="w-full max-w-[450px] mt-[180px] flex flex-col gap-[24px] animate-fade-in">
+        <div class="text-start">
+          <h2 class="text-black text-3xl font-bold">{{ t('AUTH.WELCOME_TITLE') }}</h2>
+          <p class="text-[#909091] text-md mt-2">{{ t('AUTH.WELCOME_SUBTITLE') }}</p>
+        </div>
+
+        <app-login-form-component></app-login-form-component>
+
+        <app-auth-prompt-component message="AUTH.NO_ACCOUNT" actionText="AUTH.JOINUS" route="/auth/register" linkColor="text-[#196FEB]">
+        </app-auth-prompt-component>
+      </div>
+
+      <footer class="absolute bottom-[40px] text-xs text-[--color-text-muted]">
+        {{ t('AUTH.COPYRIGHT') }}
+      </footer>
+    </section>
+
+    <section class="hidden flex-[1.12]  lg:flex flex-col relative  rounded-[20px] overflow-hidden ">
+
+      <div class="absolute inset-0 z-0">
+        <img ngSrc="assets/imgs/loginBackground.png" fill class="object-cover  mix-blend-overlay"
+          alt="Background Pattern" />
+      </div>
+
+      <div class="relative z-10 w-full max-w-[562px] mx-auto mt-[52px]">
+        <h1 class="text-white text-[24px] font-semibold leading-[120%] text-center">
+          {{ t('AUTH.SLOGAN') }}
+        </h1>
+      </div>
+
+      <div class="flex gap-[4px] justify-center mt-[24px] relative z-10">
+        <span class="w-[24px] h-[8px] rounded-[100px] bg-[#FFFFFF]"></span>
+        <span class="w-[8px] h-[8px] rounded-[100px] bg-[#FFFFFF66]"></span>
+        <span class="w-[8px] h-[8px] rounded-[100px] bg-[#FFFFFF66]"></span>
+      </div>
+
+      <div
+        class="absolute top-[193px] -inline-start-[150px] w-[1086px] h-[796px] rounded-[12px] border-[12px] border-[#FFFFFF1A] overflow-hidden shadow-2xl ms-20 ">
+        <img ngSrc="assets/imgs/login-illustration.png" fill priority alt="Dashboard Preview"
+          class="object-cover object-top " />
+      </div>
+    </section>
+
+  </main>
+</div>

@@ -1,5 +1,5 @@
 import { NgOptimizedImage } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, signal } from '@angular/core';
 import { TranslationService } from '@core/services/translation-service';
 import { TranslocoModule } from '@jsverse/transloco';
 import { NgIcon, provideIcons } from '@ng-icons/core';
@@ -16,6 +16,8 @@ import { lucideChevronDown } from '@ng-icons/lucide';
 export class LanguageSwitcherComponent {
   private translationService = inject(TranslationService);
 
+  variant = input<'dropdown' | 'toggle'>('dropdown');
+
   isDropdownOpen = signal(false);
 
   currentLang = this.translationService.lang;
@@ -29,8 +31,16 @@ export class LanguageSwitcherComponent {
     this.languages.find(l => l.code === this.currentLang()) || this.languages[0]
   );
 
-  toggleDropdown() {
-    this.isDropdownOpen.update(v => !v);
+  nextLangData = computed(() =>
+    this.languages.find(l => l.code !== this.currentLang()) || this.languages[1]
+  );
+
+  toggleOrSelect() {
+    if (this.variant() === 'toggle') {
+      this.selectLanguage(this.nextLangData().code);
+    } else {
+      this.isDropdownOpen.update(v => !v);
+    }
   }
 
   selectLanguage(langCode: string) {

@@ -1,0 +1,17 @@
+<button
+      [type]="type()"
+      [disabled]="disabled()"
+      class="
+        flex-center rounded-lg transition-base
+        w-[450px] h-[47px]
+        bg-brand shadow-login
+        border-[1.5px] border-solid border-white/10
+        hover:brightness-110 active:scale-[0.98]
+        disabled:opacity-80
+        disabled:cursor-not-allowed
+      "
+    >
+      <span *transloco="let t" class="text-white font-semibold text-[14px] leading-none text-center w-full">
+        {{ t(label()) }}
+      </span>
+    </button>

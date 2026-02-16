@@ -136,11 +136,24 @@
     "LOGIN": "Login",
     "USERNAME": "Username",
     "PASSWORD": "Password",
+    "PASSWORD_LABEL": "Password",
+    "PASSWORD_PLACEHOLDER": "************",
+    "EMAIL": "Email",
+    "EMAIL_LABEL": "Email",
+    "EMAIL_PLACEHOLDER": "@gmail.com",
     "REMEMBER_ME": "Remember Me",
     "FORGOT_PASSWORD": "Forgot Password?",
     "SIGN_UP": "Sign Up",
     "ALREADY_HAVE_ACCOUNT": "Already have an account?",
-    "EMAIL": "Email"
+    "SLOGAN": "Log in now to access all employee management tools and full control over your team data.",
+    "WELCOME_TITLE": "Welcome to Al-Takamul System",
+    "WELCOME_SUBTITLE": "Welcome back! Please enter your details.",
+    "COPYRIGHT": "All Rights Reserved © 2026",
+    "NO_ACCOUNT": "Don't have an account?",
+    "JOINUS": "Join Us",
+    "REQUIRED_FIELD": "This field is required",
+    "INVALID_EMAIL": "Invalid email address",
+    "MIN_LENGTH": "Minimum length is required"
   },
   "BREADCRUMB": {
     "DASHBOARD": "Dashboard",
@@ -219,19 +232,9 @@
     "SELECT_TYPE": "Select Type"
   },
   "VALIDATION": {
-    "REQUIRED": "This field is required",
+    "REQUIRED_FIELD": "This field is required",
     "INVALID_EMAIL": "Invalid email address",
-    "INVALID_PHONE": "Invalid phone number",
-    "MIN_LENGTH": "Minimum length is",
-    "MAX_LENGTH": "Maximum length is",
-    "PATTERN_MISMATCH": "Invalid format",
-    "PASSWORDS_NOT_MATCH": "Passwords do not match",
-    "FIELD_ALREADY_EXISTS": "This field already exists",
-    "INVALID_URL": "Invalid URL",
-    "INVALID_NUMBER": "Invalid number",
-    "MUST_BE_POSITIVE": "Value must be positive",
-    "MUST_BE_UNIQUE": "This value must be unique",
-    "MAX_WORDS_LIMIT": "Cannot exceed 250 words"
+    "MIN_LENGTH": "Minimum length is required"
   },
   "ORGANIZATION": {
     "TITLE": "Organization Structure",

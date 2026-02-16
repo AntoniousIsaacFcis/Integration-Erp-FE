@@ -101,6 +101,12 @@
   --sidebar-header-height: 85px;
   --sidebar-item-height: 48px;
   --sidebar-icon-size: 24px;
+
+  /* Login Button Shadows */
+  --shadow-login-btn: 0px 0.75px 0.75px 0px #2A2A2A14, 0px 2.25px 3px -0.75px #2A2A2A24;
+  --shadow-login-btn-inner: inset 0px -2.25px 2.25px 0px #0000001A, inset 0px 2.25px 2.25px 0px #FFFFFF1A, inset 0px 0px 0px 0.75px #1018283D;
+
+  --gradient-brand: linear-gradient(90.62deg, #85BB23 0%, #6EA30D 100%);
 }
 
 /* Dark mode support */
@@ -158,6 +164,10 @@
   --radius-md: var(--radius-md);
   --radius-lg: var(--radius-lg);
   --radius-xl: var(--radius-xl);
+
+  /* login button */
+  --shadow-login: var(--shadow-login-btn), var(--shadow-login-btn-inner);
+  --background-image-brand: var(--gradient-brand);
 }
 
 /* ============================================================================

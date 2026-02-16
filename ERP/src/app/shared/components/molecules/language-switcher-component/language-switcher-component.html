@@ -1,39 +1,33 @@
-<div class="relative inline-block text-left font-arabic">
-  <button (click)="toggleDropdown()"
-    class="flex items-center justify-between w-[152px] h-[39px] px-3 border border-[#333333] rounded-[8px] bg-[#1a1a1a] text-white hover:bg-[#252525] transition-all">
+<div class="relative inline-block text-left font-manrope">
 
-    <div class="flex items-center gap-2">
-      <img [ngSrc]="selectedLangData().flag" width="20" height="20" alt="flag" class="rounded-full overflow-hidden" />
-      <span class="text-[14px]">{{ selectedLangData().label }}</span>
-    </div>
+  <button (click)="toggleOrSelect()"
+    [class]="variant() === 'toggle'
+      ? 'flex items-center justify-center gap-[10px] w-[95px] h-[42px] rounded-[44px] border border-[#E1E1E1] bg-white text-black hover:bg-gray-50'
+      : 'flex items-center justify-between w-[152px] h-[39px] px-3 border border-[#333333] rounded-[8px] bg-[#1a1a1a] text-white'"
+    class="transition-all active:scale-95 shadow-sm">
 
-    <ng-icon name="lucideChevronDown" [class.rotate-180]="isDropdownOpen()"
-      class="transition-transform duration-300 text-gray-400">
-    </ng-icon>
+    @if (variant() === 'toggle') {
+      <span class="text-[16px] font-[500] leading-none">{{ nextLangData().label }}</span>
+    } @else {
+      <div class="flex items-center gap-2">
+        <img [ngSrc]="selectedLangData().flag" width="20" height="20" alt="flag" class="rounded-full" />
+        <span class="text-[14px]">{{ selectedLangData().label }}</span>
+      </div>
+      <ng-icon name="lucideChevronDown" [class.rotate-180]="isDropdownOpen()" class="transition-transform text-gray-400"></ng-icon>
+    }
   </button>
 
-  @if (isDropdownOpen()) {
-  <div
-    class="absolute z-50 mt-2 w-full bg-[#1a1a1a] border border-[#333333] rounded-[8px] shadow-xl overflow-hidden animate-in fade-in zoom-in duration-200">
-    @for (lang of languages; track lang.code) {
-    <button (click)="selectLanguage(lang.code)"
-      class="flex items-center justify-between w-full px-4 py-2.5 hover:bg-[#252525] transition-colors"
-      [class.bg-[#252525]]="currentLang() === lang.code">
-
-      <div class="flex items-center gap-3">
-        <div class="flex shrink-0 w-[20px] h-[20px] rounded-full overflow-hidden border border-white/10">
-          <img [ngSrc]="lang.flag" width="20" height="20" alt="flag" class="object-cover" />
-        </div>
-        <span class="text-[14px] text-gray-200">{{ lang.label }}</span>
-      </div>
-
-      @if (currentLang() === lang.code) {
-      <ng-icon name="lucideCheck" class="text-green-500" size="14"></ng-icon>
+  @if (variant() === 'dropdown' && isDropdownOpen()) {
+    <div class="absolute z-50 mt-2 w-full bg-[#1a1a1a] border border-[#333333] rounded-[8px] shadow-xl overflow-hidden animate-in fade-in zoom-in duration-200">
+      @for (lang of languages; track lang.code) {
+        <button (click)="selectLanguage(lang.code)"
+          class="flex items-center gap-3 w-full px-4 py-2.5 hover:bg-[#252525] transition-colors"
+          [class.bg-[#252525]]="currentLang() === lang.code">
+          <img [ngSrc]="lang.flag" width="20" height="20" alt="flag" class="rounded-full object-cover" />
+          <span class="text-[14px] text-gray-200">{{ lang.label }}</span>
+        </button>
       }
-    </button>
-    }
-  </div>
-
-  <div class="fixed inset-0 z-40" (click)="isDropdownOpen.set(false)"></div>
+    </div>
+    <div class="fixed inset-0 z-40" (click)="isDropdownOpen.set(false)"></div>
   }
 </div>

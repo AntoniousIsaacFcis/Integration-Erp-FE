@@ -4,7 +4,7 @@ import { TranslocoDirective } from '@jsverse/transloco';
 
 @Component({
   selector: 'app-project-logo-component',
-  imports: [NgOptimizedImage,TranslocoDirective],
+  imports: [TranslocoDirective],
   templateUrl: './project-logo-component.html',
   styleUrl: './project-logo-component.css',
   providers:[],
@@ -12,4 +12,7 @@ import { TranslocoDirective } from '@jsverse/transloco';
 })
 export class ProjectLogoComponent {
 isCollapsed = input<boolean>(false);
+aboveColor = input<string>('#FFFFFF');
+textColor = input<string>('#FFFFFF');
+outlineColor = input<string>('#000000 ');
 }

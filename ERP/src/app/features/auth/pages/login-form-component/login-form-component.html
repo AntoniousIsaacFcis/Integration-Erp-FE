@@ -1,0 +1,28 @@
+<form
+  [formGroup]="loginForm"
+  (ngSubmit)="onSubmit()"
+  class="flex flex-col w-[450px] gap-lg animate-fade-in"
+  *transloco="let t"
+>
+  <app-app-input-component
+    [label]="'AUTH.EMAIL_LABEL'"
+    [placeholder]="'AUTH.EMAIL_PLACEHOLDER'"
+    [control]="loginForm.controls.email"
+  ></app-app-input-component>
+
+  <app-app-input-component
+    [label]="'AUTH.PASSWORD_LABEL'"
+    [placeholder]="'AUTH.PASSWORD_PLACEHOLDER'"
+    [control]="loginForm.controls.password"
+    [isPassword]="true"
+  ></app-app-input-component>
+
+
+
+  <app-app-btn-component
+    [label]="isLoading() ? 'AUTH.LOGGING_IN' : 'AUTH.LOGIN'"
+    [disabled]="isLoading()"
+    type="submit"
+    class="mt-md text-black"
+  ></app-app-btn-component>
+</form>

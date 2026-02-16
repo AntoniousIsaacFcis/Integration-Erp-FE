@@ -1,23 +1,37 @@
 <ng-container *transloco="let t">
-  <div class="flex items-center w-[116px] h-[38px] py-[2px] gap-[10px] overflow-hidden hover-lift hover:shadow-sm transition-all
-              transition-colors duration-200">
+  <div class="flex items-center gap-[12px] h-[38px] overflow-hidden transition-base hover-lift group cursor-pointer">
 
-    <div class="relative w-[48.00px] h-[34px] flex shrink-0 items-center justify-center">
-      <img
-        [ngSrc]="'/assets/imgs/entegrationLogo.png'"
-        priority
-        width="48"
-        height="37"
-        alt="Project Logo"
-        class="object-contain" />
+    <div class="relative w-[54px] h-[34px] flex shrink-0">
+
+      <div
+        class="absolute z-10 -skew-x-[38deg]  transition-colors duration-300 shadow-sm outline outline-3 "
+        [style.width.px]="24"
+        [style.height.px]="22.97"
+        [style.background-color]="aboveColor()"
+        [style.outline-color]="outlineColor()"
+        [style.top.px]="4"
+        [style.left.px]="4">
+      </div>
+
+      <div
+        class="absolute z-0 -skew-x-[38deg]  transition-all duration-300 "
+        [style.width.px]="24"
+        [style.height.px]="22.97"
+        [style.background-color]="'#8c8c8c'"
+        [style.top.px]="15"
+        [style.left.px]="15">
+      </div>
+
     </div>
 
-    <div class="w-[52px] h-[27px] flex items-center justify-end">
-      <span class="text-[18px] font-[700] leading-none text-[#FFFFFF] font-arabic whitespace-nowrap">
-        {{ t('HEADER.PROJECT_NAME') }}
-      </span>
-    </div>
-
-
+    @if (!isCollapsed()) {
+      <div class="flex items-center animate-fade-in">
+        <span
+          class="text-[18px] font-bold leading-none font-arabic whitespace-nowrap tracking-tight"
+          [style.color]="textColor()">
+          {{ t('HEADER.PROJECT_NAME') }}
+        </span>
+      </div>
+    }
   </div>
 </ng-container>

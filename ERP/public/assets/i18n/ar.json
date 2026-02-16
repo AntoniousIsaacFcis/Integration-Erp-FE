@@ -136,11 +136,24 @@
     "LOGIN": "تسجيل الدخول",
     "USERNAME": "اسم المستخدم",
     "PASSWORD": "كلمة المرور",
+    "PASSWORD_LABEL": "كلمة المرور",
+    "PASSWORD_PLACEHOLDER": "************",
+    "EMAIL": "البريد الإلكتروني",
+    "EMAIL_LABEL": "البريد الإلكتروني",
+    "EMAIL_PLACEHOLDER": "gmail.com@",
     "REMEMBER_ME": "تذكرني",
     "FORGOT_PASSWORD": "هل نسيت كلمة المرور؟",
     "SIGN_UP": "إنشاء حساب",
     "ALREADY_HAVE_ACCOUNT": "هل لديك حساب بالفعل؟",
-    "EMAIL": "البريد الإلكتروني"
+    "SLOGAN": "سجّل دخولك الآن للوصول إلى جميع أدوات إدارة الموظفين والتحكم الكامل في بيانات فريقك.",
+    "WELCOME_TITLE": "مرحباً بك في نظام التكامل",
+    "WELCOME_SUBTITLE": "أهلاً بعودتك! أدخل بياناتك للمتابعة.",
+    "COPYRIGHT": "جميع الحقوق محفوظة © 2026",
+    "NO_ACCOUNT": "ليس لديك حساب؟",
+    "JOINUS": "انضم الآن",
+    "REQUIRED_FIELD": "هذا الحقل مطلوب",
+    "INVALID_EMAIL": "بريد إلكتروني غير صحيح",
+    "MIN_LENGTH": "الحد الأدنى 6 احرف"
   },
   "BREADCRUMB": {
     "DASHBOARD": "لوحة التحكم",
@@ -219,19 +232,9 @@
     "SELECT_TYPE": "اختر نوعاً"
   },
   "VALIDATION": {
-    "REQUIRED": "هذا الحقل مطلوب",
+    "REQUIRED_FIELD": "هذا الحقل مطلوب",
     "INVALID_EMAIL": "بريد إلكتروني غير صحيح",
-    "INVALID_PHONE": "رقم هاتف غير صحيح",
-    "MIN_LENGTH": "الحد الأدنى للطول هو",
-    "MAX_LENGTH": "الحد الأقصى للطول هو",
-    "PATTERN_MISMATCH": "الصيغة غير صحيحة",
-    "PASSWORDS_NOT_MATCH": "كلمات المرور غير متطابقة",
-    "FIELD_ALREADY_EXISTS": "هذا الحقل موجود بالفعل",
-    "INVALID_URL": "عنوان URL غير صحيح",
-    "INVALID_NUMBER": "رقم غير صحيح",
-    "MUST_BE_POSITIVE": "يجب أن تكون القيمة موجبة",
-    "MUST_BE_UNIQUE": "يجب أن تكون هذه القيمة فريدة",
-    "MAX_WORDS_LIMIT": "لا يمكن تجاوز 250 كلمة"
+    "MIN_LENGTH": "الحد الأدنى للطول مطلوب"
   },
   "ORGANIZATION": {
     "TITLE": "الهيكل التنظيمي",
