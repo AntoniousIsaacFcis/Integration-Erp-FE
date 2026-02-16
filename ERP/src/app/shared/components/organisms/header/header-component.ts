@@ -1,6 +1,4 @@
-import { NgOptimizedImage } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
-import { IHeaderNavItem } from '@core/models/iheader-nav-item';
 import { NavigationService } from '@core/services/navigation-service';
 import { ThemeService } from '@core/services/theme-service';
 import { TranslationService } from '@core/services/translation-service';
@@ -17,7 +15,7 @@ import { ProjectLogoComponent } from "@shared/components/molecules/project-logo-
 
 @Component({
   selector: 'app-header-component',
-  imports: [NgOptimizedImage, TranslocoModule, NgIcon, LogoutBtnComponent, LanguageSwitcherComponent, HeaderNotificationsComponent, SearchbarComponent, CompanyBrandComponent, ProjectLogoComponent],
+  imports: [ TranslocoModule, NgIcon, LogoutBtnComponent, LanguageSwitcherComponent, HeaderNotificationsComponent, SearchbarComponent, CompanyBrandComponent, ProjectLogoComponent],
   templateUrl: './header-component.html',
   styleUrl: './header-component.css',
   providers: [
