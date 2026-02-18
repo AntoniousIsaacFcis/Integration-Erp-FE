@@ -68,7 +68,7 @@ export class AuthService {
       tap(() => {
         this.storage.removeToken();
         // reset to make the user as guest without any credintioals
-        this.configResource.reload();
+        this.configResource.reload(); //this change isAuthenticated() in configResource to false immedately
       })
     );
   }
