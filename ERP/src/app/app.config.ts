@@ -1,7 +1,6 @@
 import { ApplicationConfig, provideBrowserGlobalErrorListeners, provideZonelessChangeDetection, isDevMode } from '@angular/core';
 import { PreloadAllModules, provideRouter, TitleStrategy, withComponentInputBinding, withPreloading, withViewTransitions } from '@angular/router';
 import { routes } from './app.routes';
-import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
 import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
 import { TranslocoHttpLoader } from './transloco-loader';
 import { provideTransloco } from '@jsverse/transloco';
@@ -11,6 +10,7 @@ import { authInterceptor } from '@core/auth/interceptors/auth-interceptor';
 import { AUTH_STORAGE } from '@core/auth/tokens/auth-storage.token';
 import { LocalAuthStorageService } from '@core/auth/services/local-auth-storage-service';
 import { xsrfInterceptor } from '@core/auth/interceptors/xsrf-interceptor';
+import { errorInterceptor } from '@core/interceptors/error-interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -30,13 +30,12 @@ export const appConfig: ApplicationConfig = {
       withFetch(),//improve peformance
       withInterceptors([
         xsrfInterceptor,//to add xsrf token with every request
-        authInterceptor //to add auth token with every request
+        authInterceptor, //to add auth token with every request,
+        errorInterceptor
       ])
     ),
 
     // { provide: TitleStrategy, useClass: TemplatePageTitleStrategy },
-
-    provideClientHydration(withEventReplay()),
 
     provideBrowserGlobalErrorListeners(),
 

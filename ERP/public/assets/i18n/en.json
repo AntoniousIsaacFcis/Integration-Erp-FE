@@ -146,7 +146,7 @@
     "SIGN_UP": "Sign Up",
     "ALREADY_HAVE_ACCOUNT": "Already have an account?",
     "SLOGAN": "Log in now to access all employee management tools and full control over your team data.",
-    "WELCOME_TITLE": "Welcome to Al-Takamul System",
+    "WELCOME_TITLE": "Welcome to Integration System",
     "WELCOME_SUBTITLE": "Welcome back! Please enter your details.",
     "COPYRIGHT": "All Rights Reserved © 2026",
     "NO_ACCOUNT": "Don't have an account?",
@@ -154,9 +154,11 @@
     "REQUIRED_FIELD": "This field is required",
     "INVALID_EMAIL": "Invalid email address",
     "MIN_LENGTH": "Minimum length is required",
+    "LOGGING_IN": "Logging In",
     "ERRORS": {
-      "InvalidUserNameOrPassword": "Invalid username or password",
-      "Error: InvalidUserNameOrPassword": "Error: Invalid username or password"
+      "INVALID_CREDENTIALS": "Invalid Credentials",
+      "UNEXPECTED_ERROR": "Unexpected Error",
+      "PERMISSION_DENIED": "Permission Denied"
     }
   },
   "BREADCRUMB": {
@@ -238,7 +240,8 @@
   "VALIDATION": {
     "REQUIRED_FIELD": "This field is required",
     "INVALID_EMAIL": "Invalid email address",
-    "MIN_LENGTH": "Minimum length is required"
+    "MIN_LENGTH": "Minimum length is required",
+    "REQUIRED": "This field is required"
   },
   "ORGANIZATION": {
     "TITLE": "Organization Structure",

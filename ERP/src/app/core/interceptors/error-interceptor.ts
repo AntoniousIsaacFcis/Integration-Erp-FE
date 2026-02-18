@@ -5,23 +5,28 @@ import { catchError, throwError } from 'rxjs';
 export const errorInterceptor: HttpInterceptorFn = (req, next) => {
   return next(req).pipe(
     catchError((error: HttpErrorResponse) => {
-      const errorBody = error.error as IErrorResponse;
+      const errorBody = typeof error.error === 'object' ? error.error as IErrorResponse : null;
 
-      // منطق معالجة الأخطاء بناءً على الـ Status Code والـ ABP Schema
-      let userFriendlyMessage = 'Something went wrong. Please try again.';
+      let userFriendlyMessage = 'UNEXPECTED_ERROR';
 
-      if (error.status === 401) {
-        userFriendlyMessage = 'Invalid email or password.';
+      if (error.status === 401 || error.status === 400) {
+        if (error.error?.error?.message) {
+          userFriendlyMessage = error.error.error.message;
+        } else if (typeof error.error === 'string') {
+          userFriendlyMessage = error.error;
+        } else {
+          userFriendlyMessage = 'INVALID_CREDENTIALS';
+        }
       } else if (error.status === 403) {
-        userFriendlyMessage = 'You do not have permission to perform this action.';
-      } else if (errorBody?.error?.message) {
-        userFriendlyMessage = errorBody.error.message;
+        userFriendlyMessage = 'PERMISSION_DENIED.';
       }
 
       // Toast can be used here
       console.error(`[API Error]: ${userFriendlyMessage}`, errorBody?.error?.details);
 
-      return throwError(() => new Error(userFriendlyMessage));
+      return throwError(
+        () => String(userFriendlyMessage)
+      );
     })
   );
 };

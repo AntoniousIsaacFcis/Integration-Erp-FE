@@ -8,27 +8,13 @@ async function prepareApp() {
   if (isDevMode()) {
     const { worker } = await import('./mocks/browser');
     return worker.start({
-      // this line prevent msw for intercepting any angular chunk(force him intercept http requests only)
-      onUnhandledRequest(req, print) {
-        const url = new URL(req.url);
-
-        if (
-          url.pathname.startsWith('/@ng/') ||
-          url.pathname.startsWith('/@vite/') ||
-          url.pathname.startsWith('/assets/') ||
-          url.href.includes('localhost:4200') && !url.pathname.startsWith('/api')
-        ) {
-          return;
-        }
-
-        print.warning();
-      },
+      onUnhandledRequest: 'bypass',
     });
   }
   return Promise.resolve();
 }
 
-// prepareApp().then(() => {
+prepareApp().then(() => {  //this line make smw work and if commented live api work
   bootstrapApplication(App, appConfig)
     .catch((err) => console.error(err));
-// });
+});

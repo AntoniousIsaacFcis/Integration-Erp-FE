@@ -44,7 +44,7 @@ export class LoginFormComponent {
       next: () => {
         this.router.navigate(['/dashboard'], { replaceUrl: true });
       },
-      error: (err) => {
+      error: (err:string) => {
         this.isLoading.set(false);
         //toast with err message
         this.serverError.set(err);

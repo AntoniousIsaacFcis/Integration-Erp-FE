@@ -154,9 +154,11 @@
     "REQUIRED_FIELD": "هذا الحقل مطلوب",
     "INVALID_EMAIL": "بريد إلكتروني غير صحيح",
     "MIN_LENGTH": "الحد الأدنى 6 احرف",
+    "LOGGING_IN":"جاري تسجيل الدخول",
     "ERRORS": {
-      "InvalidUserNameOrPassword": "اسم المستخدم أو كلمة المرور غير صحيحة",
-      "Error: InvalidUserNameOrPassword": "خطأ: اسم المستخدم أو كلمة المرور غير صحيحة"
+      "INVALID_CREDENTIALS": "اسم المستخدم أو كلمة المرور غير صحيحة",
+      "UNEXPECTED_ERROR": "خطأ: اسم المستخدم أو كلمة المرور غير صحيحة",
+      "PERMISSION_DENIED": "ليس لديك صلاحية للقيام بهذا الإجراء"
     }
   },
   "BREADCRUMB": {
@@ -238,7 +240,8 @@
   "VALIDATION": {
     "REQUIRED_FIELD": "هذا الحقل مطلوب",
     "INVALID_EMAIL": "بريد إلكتروني غير صحيح",
-    "MIN_LENGTH": "الحد الأدنى للطول مطلوب"
+    "MIN_LENGTH": "الحد الأدنى للطول مطلوب",
+    "REQUIRED": "هذا الحقل مطلوب"
   },
   "ORGANIZATION": {
     "TITLE": "الهيكل التنظيمي",
@@ -257,7 +260,7 @@
     "ADD_UNIT": "إضافة وحدة تنظيمية",
     "EDIT_DEPARTMENT": " تعديل القسم",
     "EDIT_DESIGNATION": " تعديل المسمى",
-    "EDIT_LEVEL": "تعديل المستوى",
+    "EDIT_LEVEL": " تعديل المستوى",
     "DELETE_DEPARTMENT": "حذف القسم",
     "DELETE_DESIGNATION": "حذف المسمى",
     "DELETE_LEVEL": "حذف المستوى",

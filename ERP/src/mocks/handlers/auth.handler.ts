@@ -18,19 +18,21 @@ export const authHandlers = [
     const body: any = await request.json();
     await delay(1200); // to see spinner
 
+    //admin creditionals (simulation to apb admin creditionals)
+    const isAdmin = body.userNameOrEmailAddress === 'admin' && body.password === '1q2w3E*';
+
     // simulating bad password
-    if (body.password === '111111') {
-      return new HttpResponse(
-        JSON.stringify({
-          error: {
-            code: 'Volo.Abp:010001',
-            message: 'Invalid email or password.', // Friendly error
-            details: 'The username or password provided is incorrect.'
-          }
-        }),
-        { status: 401 }
-      );
-    }
+   if (!isAdmin) {
+    return new HttpResponse(
+      JSON.stringify({
+        error: {
+          code: 'Volo.Abp:010001',
+          message: 'INVALID_CREDENTIALS', 
+        }
+      }),
+      { status: 401 }
+    );
+  }
 
     isUserLoggedIn = true;
     return HttpResponse.json(MOCK_AUTH_DATA.loginSuccess);
@@ -41,5 +43,27 @@ export const authHandlers = [
     isUserLoggedIn = false;
     await delay(300);
     return new HttpResponse(null, { status: 204 });
-  })
+  }),
+
+// simulating signup
+http.post(`${environment.baseUrl}/api/account/register`, async ({ request }) => {
+    const body: any = await request.json();
+    await delay(1000);
+
+    // مثال لمحاكاة خطأ موجود في ABP عادةً
+    if (body.email === 'test@test.com') {
+      return new HttpResponse(
+        JSON.stringify({
+          error: { message: 'This email is already registered.' }
+        }),
+        { status: 400 }
+      );
+    }
+
+    return HttpResponse.json({
+      success: true,
+      message: 'User registered successfully'
+    });
+  }),
+
 ];
