@@ -20,18 +20,16 @@ export class AppInputComponent {
   control = input.required<FormControl>();
   isPassword = input<boolean>(false);
 
+  showErrors = input<boolean>(false);
   showPassword = signal<boolean>(false);
-
 
   requiredErrorKey = input<string>('AUTH.REQUIRED_FIELD')
   emailErrorKey = input<string>('AUTH.INVALID_EMAIL');
   minLengthErrorKey = input<string>('AUTH.MIN_LENGTH');
 
-
-
   get errorKey(): string | null {
     const ctrl = this.control();
-    if (ctrl.invalid && (ctrl.touched || ctrl.dirty)) {
+    if (this.showErrors() && ctrl.invalid) {
       if (ctrl.errors?.['required']) return this.requiredErrorKey();
       if (ctrl.errors?.['email']) return this.emailErrorKey();
       if (ctrl.errors?.['minlength']) return this.minLengthErrorKey();

@@ -1,4 +1,5 @@
 export interface ILoginCredentials {
-  email: string;
+  userNameOrEmailAddress: string; 
   password: string;
+  rememberMe: boolean;
 }

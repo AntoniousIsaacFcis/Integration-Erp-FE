@@ -10,7 +10,7 @@
       <span class="text-[16px] font-[500] leading-none">{{ nextLangData().label }}</span>
     } @else {
       <div class="flex items-center gap-2">
-        <img [ngSrc]="selectedLangData().flag" width="20" height="20" alt="flag" class="rounded-full" />
+        <img [ngSrc]="selectedLangData().flag" width="20" height="20" alt="flag" class="rounded-full " />
         <span class="text-[14px]">{{ selectedLangData().label }}</span>
       </div>
       <ng-icon name="lucideChevronDown" [class.rotate-180]="isDropdownOpen()" class="transition-transform text-gray-400"></ng-icon>

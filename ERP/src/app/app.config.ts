@@ -10,6 +10,7 @@ import { provideTranslocoPersistLang, cookiesStorage } from '@jsverse/transloco-
 import { authInterceptor } from '@core/auth/interceptors/auth-interceptor';
 import { AUTH_STORAGE } from '@core/auth/tokens/auth-storage.token';
 import { LocalAuthStorageService } from '@core/auth/services/local-auth-storage-service';
+import { xsrfInterceptor } from '@core/auth/interceptors/xsrf-interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -27,7 +28,10 @@ export const appConfig: ApplicationConfig = {
 
     provideHttpClient(
       withFetch(),//improve peformance
-      withInterceptors([authInterceptor]) //to add auth token with every request
+      withInterceptors([
+        xsrfInterceptor,//to add xsrf token with every request
+        authInterceptor //to add auth token with every request
+      ])
     ),
 
     // { provide: TitleStrategy, useClass: TemplatePageTitleStrategy },

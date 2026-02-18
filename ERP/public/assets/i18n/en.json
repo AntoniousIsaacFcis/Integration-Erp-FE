@@ -153,7 +153,11 @@
     "JOINUS": "Join Us",
     "REQUIRED_FIELD": "This field is required",
     "INVALID_EMAIL": "Invalid email address",
-    "MIN_LENGTH": "Minimum length is required"
+    "MIN_LENGTH": "Minimum length is required",
+    "ERRORS": {
+      "InvalidUserNameOrPassword": "Invalid username or password",
+      "Error: InvalidUserNameOrPassword": "Error: Invalid username or password"
+    }
   },
   "BREADCRUMB": {
     "DASHBOARD": "Dashboard",
@@ -446,5 +450,6 @@
     "FORM_SUBMITTED": "Form Submitted Successfully",
     "FORM_SAVED": "Form Saved Successfully",
     "FORM_UPDATED": "Form Updated Successfully"
-  }
+  },
+  "LOGGING_IN": "Logging In"
 }

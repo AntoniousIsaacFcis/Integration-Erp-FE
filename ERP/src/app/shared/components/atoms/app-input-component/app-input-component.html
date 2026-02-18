@@ -8,7 +8,7 @@
   <div class="relative w-full">
     <input [formControl]="control()" [type]="isPassword() && !showPassword() ? 'password' : 'text'"
       [placeholder]="t(placeholder())"
-      class="w-full h-[44px] px-md  bg-white border rounded-md outline-none transition-base text-sm text-start placeholder:text-black focus:border-primary  focus:ring-4 focus:ring-primary/10"
+      class="w-full h-[44px] px-md  bg-white border rounded-md outline-none transition-base text-sm text-start placeholder:text-[#BABABA] focus:border-primary  focus:ring-4 focus:ring-primary/10"
       [class.!border-[#FF383C]]="control().invalid && control().touched"
       [class.!border-2]="control().invalid && control().touched" [class.pe-xl]="isPassword()" />
 
@@ -20,7 +20,7 @@
   </div>
 
   @if (errorKey; as key) {
-    <div class="flex items-center gap-xs text-error animate-fade-in mt-1">
+    <div class="flex items-center gap-xs text-error animate-fade-in ">
       <ng-icon name="lucideOctagonX" class="size-[16px]" strokeWidth="3"></ng-icon>
       <span class="text-xs font-medium text-start">
         {{ t(key) }}

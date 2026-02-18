@@ -3,9 +3,6 @@ import { bootstrapApplication } from '@angular/platform-browser';
 import { appConfig } from './app/app.config';
 import { isDevMode } from '@angular/core';
 import { App } from './app/app';
-import { environment } from '@env/environment.development';
-
-// src/main.ts (أو ملف تهيئة MSW)
 
 async function prepareApp() {
   if (isDevMode()) {
@@ -18,6 +15,7 @@ async function prepareApp() {
         if (
           url.pathname.startsWith('/@ng/') ||
           url.pathname.startsWith('/@vite/') ||
+          url.pathname.startsWith('/assets/') ||
           url.href.includes('localhost:4200') && !url.pathname.startsWith('/api')
         ) {
           return;
@@ -30,7 +28,7 @@ async function prepareApp() {
   return Promise.resolve();
 }
 
-prepareApp().then(() => {
+// prepareApp().then(() => {
   bootstrapApplication(App, appConfig)
     .catch((err) => console.error(err));
-});
+// });

@@ -1,13 +1,14 @@
 <form
   [formGroup]="loginForm"
   (ngSubmit)="onSubmit()"
-  class="flex flex-col w-[450px] gap-lg animate-fade-in"
+  class="flex flex-col w-[450px] gap-md animate-fade-in"
   *transloco="let t"
 >
   <app-app-input-component
     [label]="'AUTH.EMAIL_LABEL'"
     [placeholder]="'AUTH.EMAIL_PLACEHOLDER'"
     [control]="loginForm.controls.email"
+    [showErrors]="submitted()"
   ></app-app-input-component>
 
   <app-app-input-component
@@ -15,9 +16,17 @@
     [placeholder]="'AUTH.PASSWORD_PLACEHOLDER'"
     [control]="loginForm.controls.password"
     [isPassword]="true"
+    [showErrors]="submitted()"
   ></app-app-input-component>
 
-
+@if (serverError(); as error) {
+    <div class="flex items-center gap-2 p-1 rounded-lg bg-[#FF383C]/10 border border-[#FF383C]/20 text-[#FF383C] animate-fade-in">
+      <ng-icon name="lucideOctagonX" class="size-4"></ng-icon>
+      <span class="text-xs font-medium">
+        {{ t('AUTH.ERRORS.' + error) !== 'AUTH.ERRORS.' + error ? t('AUTH.ERRORS.' + error) : error }}
+      </span>
+    </div>
+  }
 
   <app-app-btn-component
     [label]="isLoading() ? 'AUTH.LOGGING_IN' : 'AUTH.LOGIN'"
@@ -25,4 +34,6 @@
     type="submit"
     class="mt-md text-black"
   ></app-app-btn-component>
+
+
 </form>

@@ -7,12 +7,11 @@ import {
   lucideArrowLeftFromLine,
   lucideArrowRightFromLine,
 } from '@ng-icons/lucide';
-import { ProjectLogoComponent } from "@shared/components/molecules/project-logo-component/project-logo-component";
 import { SidebarItemComponent } from "@shared/components/molecules/sidebar-item-component/sidebar-item-component";
 import { SidebarSubItemComponent } from "@shared/components/molecules/sidebar-sub-item-component/sidebar-sub-item-component";
 @Component({
   selector: 'app-sidebar-component',
-  imports: [ProjectLogoComponent, SidebarItemComponent, TranslocoModule, NgIcon, SidebarSubItemComponent],
+  imports: [SidebarItemComponent, TranslocoModule, NgIcon, SidebarSubItemComponent],
   templateUrl: './sidebar-component.html',
   styleUrl: './sidebar-component.css',
   providers: [provideIcons({

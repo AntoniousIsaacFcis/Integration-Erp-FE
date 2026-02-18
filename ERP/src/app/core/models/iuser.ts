@@ -1,15 +1,16 @@
 export interface IUser {
   id: string;
-  name: string;
+  userName: string;
   email: string;
-  role: 'admin' | 'hr' | 'employee';
+  role: string[];
+  isAuthenticated: boolean
   permissions: string[];
   avatar?: string;
 }
 
 export interface ILoginDTO {
   email: string;
-  password?: string; 
+  password?: string;
 }
 
 export interface IAuthResponse {

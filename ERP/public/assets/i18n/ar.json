@@ -153,7 +153,11 @@
     "JOINUS": "انضم الآن",
     "REQUIRED_FIELD": "هذا الحقل مطلوب",
     "INVALID_EMAIL": "بريد إلكتروني غير صحيح",
-    "MIN_LENGTH": "الحد الأدنى 6 احرف"
+    "MIN_LENGTH": "الحد الأدنى 6 احرف",
+    "ERRORS": {
+      "InvalidUserNameOrPassword": "اسم المستخدم أو كلمة المرور غير صحيحة",
+      "Error: InvalidUserNameOrPassword": "خطأ: اسم المستخدم أو كلمة المرور غير صحيحة"
+    }
   },
   "BREADCRUMB": {
     "DASHBOARD": "لوحة التحكم",
@@ -446,5 +450,6 @@
     "FORM_SUBMITTED": "تم إرسال النموذج بنجاح",
     "FORM_SAVED": "تم حفظ النموذج بنجاح",
     "FORM_UPDATED": "تم تحديث النموذج بنجاح"
-  }
+  },
+  "LOGGING_IN": "جاري تسجيل الدخول"
 }

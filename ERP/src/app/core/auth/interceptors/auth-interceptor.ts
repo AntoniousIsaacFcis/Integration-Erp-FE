@@ -12,9 +12,14 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const storage = injector.get(AUTH_STORAGE);
   const token = storage.getToken();
 
+  //except login from Authorization headers
+  if (req.url.includes('/login') || req.url.includes('/application-configuration')) {
+    return next(req);
+  }
+
   //add an Authorization token in header without touching localStorage => protectation against XSS
   let clonedReq = req;
-  if (token) {
+  if (token && token !== 'null') {
     clonedReq = req.clone({
       setHeaders: {
         Authorization: `Bearer ${token}`
@@ -27,7 +32,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
       if (error.status === 401) {
         console.warn('⚠️ 401 Unauthorized - Logging out...');
         const authService = injector.get(AuthService);
-        authService.logout();
+        authService.logout().subscribe();
         router.navigate(['/auth/login']);
       }
 
