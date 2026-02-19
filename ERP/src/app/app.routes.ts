@@ -18,7 +18,17 @@ export const routes: Routes = [
       {
         path: 'login',
         loadComponent: () =>
-          import('./features/auth/pages/login-form-component/login-form-component').then(m => m.LoginFormComponent)
+          import('./features/auth/pages/login-form-component/login-form-component').then(m => m.LoginFormComponent),
+        data: { title: 'AUTH.WELCOME_TITLE', subtitle: 'AUTH.WELCOME_SUBTITLE' }
+      },
+      {
+        path: 'forget-password',
+        loadComponent: () => import('./features/auth/pages/forget-password-component/forget-password-component').then(m => m.ForgetPasswordComponent),
+        data: { title: 'AUTH.RECOVER_ACCESS', subtitle: 'AUTH.RECOVER_SUBTITLE' }
+      },
+      {
+        path: 'register',
+        loadComponent: () => import('./features/auth/pages/register-component/register-component').then(m => m.RegisterComponent)
       },
       { path: '', redirectTo: 'login', pathMatch: 'full' },
     ]

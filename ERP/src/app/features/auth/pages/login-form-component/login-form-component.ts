@@ -7,10 +7,11 @@ import { AuthService } from '@core/auth/services/auth-service';
 import { Router } from '@angular/router';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { lucideOctagonX } from '@ng-icons/lucide';
+import { AuthPromptComponent } from "@shared/components/atoms/auth-prompt-component/auth-prompt-component";
 
 @Component({
   selector: 'app-login-form-component',
-  imports: [ReactiveFormsModule, TranslocoModule, AppInputComponent, AppBtnComponent,NgIcon],
+  imports: [ReactiveFormsModule, TranslocoModule, AppInputComponent, AppBtnComponent, NgIcon, AuthPromptComponent],
   templateUrl: './login-form-component.html',
   styleUrl: './login-form-component.css',
   providers:[provideIcons({lucideOctagonX})],

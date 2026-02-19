@@ -1,8 +1,8 @@
 <div
-      class="flex items-center justify-center gap-xs mt-spacing-md animate-fade-in"
+      class="flex items-center justify-center font-bold gap-xs mt-spacing-md animate-fade-in"
       *transloco="let t"
     >
-      <span class="text-sm text-[#909091]">
+      <span class="text-md font-arabic font-medium text-[#909091]">
         {{ t(message()) }}
       </span>
 
@@ -10,7 +10,7 @@
         [routerLink]="[route()]"
         routerLinkActive="underline"
         [class]="linkColor()"
-        class=" text-sm font-bold  hover:underline transition-fast "
+        class=" text-md font-medium  hover:underline transition-fast "
       >
         {{ t(actionText()) }}
       </a>

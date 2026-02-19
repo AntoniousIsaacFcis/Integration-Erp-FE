@@ -155,6 +155,13 @@
     "INVALID_EMAIL": "Invalid email address",
     "MIN_LENGTH": "Minimum length is required",
     "LOGGING_IN": "Logging In",
+    "SEND_RESET_LINK": "Send Reset Link",
+    "SENDING": "Sending...",
+    "ENTER_CODE_SENT": "Enter the verification code sent to your email",
+    "RECOVER_ACCESS": "Recover Access",
+    "RECOVER_SUBTITLE": "Reset your password to regain access",
+    "REMEMBER_PASSWORD": "Remember your password?",
+    "CONFIRM":"Confirm",
     "ERRORS": {
       "INVALID_CREDENTIALS": "Invalid Credentials",
       "UNEXPECTED_ERROR": "Unexpected Error",
@@ -453,6 +460,5 @@
     "FORM_SUBMITTED": "Form Submitted Successfully",
     "FORM_SAVED": "Form Saved Successfully",
     "FORM_UPDATED": "Form Updated Successfully"
-  },
-  "LOGGING_IN": "Logging In"
+  }
 }

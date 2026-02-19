@@ -1,18 +1,21 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { LoginFormComponent } from "@features/auth/pages/login-form-component/login-form-component";
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { ProjectLogoComponent } from "@shared/components/molecules/project-logo-component/project-logo-component";
 import { LanguageSwitcherComponent } from "@shared/components/molecules/language-switcher-component/language-switcher-component";
 import { TranslocoModule } from '@jsverse/transloco';
 import { NgOptimizedImage } from '@angular/common';
-import { AuthPromptComponent } from "@shared/components/atoms/auth-prompt-component/auth-prompt-component";
+import { ActivatedRoute, RouterOutlet } from '@angular/router';
+import { AuthHeaderComponent } from "@shared/components/atoms/auth-header-component/auth-header-component";
 
 @Component({
   selector: 'app-login-layout-component',
-  imports: [LoginFormComponent, ProjectLogoComponent, LanguageSwitcherComponent, TranslocoModule, NgOptimizedImage, AuthPromptComponent],
+  imports: [RouterOutlet, ProjectLogoComponent, LanguageSwitcherComponent, TranslocoModule, NgOptimizedImage, AuthHeaderComponent],
   templateUrl: './login-layout-component.html',
   styleUrl: './login-layout-component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoginLayoutComponent {
+  private route = inject(ActivatedRoute);
 
+  title = computed(() => this.route.snapshot.firstChild?.data['title'] || 'AUTH.WELCOME_TITLE');
+  subtitle = computed(() => this.route.snapshot.firstChild?.data['subtitle'] || 'AUTH.WELCOME_SUBTITLE');
 }
