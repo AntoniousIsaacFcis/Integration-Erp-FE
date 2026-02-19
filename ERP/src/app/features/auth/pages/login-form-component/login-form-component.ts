@@ -5,13 +5,14 @@ import { AppInputComponent } from "@shared/components/atoms/app-input-component/
 import { AppBtnComponent } from "@shared/components/atoms/app-btn-component/app-btn-component";
 import { AuthService } from '@core/auth/services/auth-service';
 import { Router } from '@angular/router';
-import { NgIcon, provideIcons } from '@ng-icons/core';
+import {  provideIcons } from '@ng-icons/core';
 import { lucideOctagonX } from '@ng-icons/lucide';
 import { AuthPromptComponent } from "@shared/components/atoms/auth-prompt-component/auth-prompt-component";
+import { SubmitErrorMessageComponent } from "@shared/components/atoms/submit-error-message-component/submit-error-message-component";
 
 @Component({
   selector: 'app-login-form-component',
-  imports: [ReactiveFormsModule, TranslocoModule, AppInputComponent, AppBtnComponent, NgIcon, AuthPromptComponent],
+  imports: [ReactiveFormsModule, TranslocoModule, AppInputComponent, AppBtnComponent, AuthPromptComponent, SubmitErrorMessageComponent],
   templateUrl: './login-form-component.html',
   styleUrl: './login-form-component.css',
   providers:[provideIcons({lucideOctagonX})],

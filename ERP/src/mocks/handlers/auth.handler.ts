@@ -27,7 +27,7 @@ export const authHandlers = [
       JSON.stringify({
         error: {
           code: 'Volo.Abp:010001',
-          message: 'INVALID_CREDENTIALS', 
+          message: 'INVALID_CREDENTIALS',
         }
       }),
       { status: 401 }
@@ -66,4 +66,31 @@ http.post(`${environment.baseUrl}/api/account/register`, async ({ request }) => 
     });
   }),
 
+  //simulating reset the password
+  // 1. send otp
+  http.post(`${environment.baseUrl}/api/account/send-password-reset-code`, async () => {
+    await delay(1000);
+    return HttpResponse.json({ success: true });
+  }),
+
+  // 2. token verification
+  http.post(`${environment.baseUrl}/api/account/verify-password-reset-token`, async () => {
+    await delay(800);
+    return HttpResponse.json({ success: true });
+  }),
+
+  // 3. assign new password
+  http.post(`${environment.baseUrl}/api/account/reset-password`, async ({ request }) => {
+  const body = await request.json() as any;
+  await delay(1000);
+
+  if (body.newPassword === '123456') { // simulation weak password
+    return new HttpResponse(
+      JSON.stringify({ error: { message: 'PASSWORD_TOO_WEAK' } }),
+      { status: 400 }
+    );
+  }
+
+  return HttpResponse.json({ success: true });
+}),
 ];

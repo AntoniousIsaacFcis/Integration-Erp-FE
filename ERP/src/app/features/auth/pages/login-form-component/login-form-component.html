@@ -7,18 +7,13 @@
     [control]="loginForm.controls.password" [isPassword]="true" [showErrors]="submitted()"></app-app-input-component>
 
   @if (serverError(); as error) {
-  <div
-    class="flex items-center gap-2 p-1 rounded-lg bg-[#FF383C]/10 border border-[#FF383C]/20 text-[#FF383C] animate-fade-in">
-    <ng-icon name="lucideOctagonX" class="size-4 shrink-0"></ng-icon>
-    <span class="text-xs font-medium">
-      {{ t('AUTH.ERRORS.' + error) !== 'AUTH.ERRORS.' + error ? t('AUTH.ERRORS.' + error) : error }}
-    </span>
-  </div>
+  <app-submit-error-message-component
+      [message]="t('AUTH.ERRORS.' + error) !== 'AUTH.ERRORS.' + error ? t('AUTH.ERRORS.' + error) : error">
+    </app-submit-error-message-component>
   }
 
   <app-app-btn-component [label]="isLoading() ? 'AUTH.LOGGING_IN' : 'AUTH.LOGIN'" [disabled]="isLoading()" type="submit"
     class="mt-md text-black"></app-app-btn-component>
-
 
   <app-auth-prompt-component message="AUTH.NO_ACCOUNT" actionText="AUTH.JOINUS" route="/auth/register"
     linkColor="text-[#196FEB]" class="text-sm mt-md">

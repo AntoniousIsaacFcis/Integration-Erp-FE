@@ -27,6 +27,11 @@ export const routes: Routes = [
         data: { title: 'AUTH.RECOVER_ACCESS', subtitle: 'AUTH.RECOVER_SUBTITLE' }
       },
       {
+        path: 'reset-password',
+        loadComponent: () => import('./features/auth/pages/reset-password-component/reset-password-component').then(m => m.ResetPasswordComponent),
+        data: { title: 'AUTH.RESET_PASSWORD_TITLE', subtitle: 'AUTH.RESET_PASSWORD_SUBTITLE' }
+      },
+      {
         path: 'register',
         loadComponent: () => import('./features/auth/pages/register-component/register-component').then(m => m.RegisterComponent)
       },

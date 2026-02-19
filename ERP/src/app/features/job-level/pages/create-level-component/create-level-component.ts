@@ -13,7 +13,7 @@ import { FormSaveButtonComponent } from "@shared/components/molecules/form-save-
 import { FormCancelButtonComponent } from "@shared/components/molecules/form-cancel-button-component/form-cancel-button-component";
 import { JobLevelService } from '@features/job-level/service/job-level-service';
 import { Router } from '@angular/router';
-import { AppValidators } from '@shared/validators/form.validators';
+import { AppValidators } from '@shared/validators/word-limit.validator';
 
 @Component({
   selector: 'app-create-level-component',
