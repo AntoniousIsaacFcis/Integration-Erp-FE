@@ -103,10 +103,12 @@
   --sidebar-icon-size: 24px;
 
   /* Login Button Shadows */
-  --shadow-login-btn: 0px 0.75px 0.75px 0px #2A2A2A14, 0px 2.25px 3px -0.75px #2A2A2A24;
-  --shadow-login-btn-inner: inset 0px -2.25px 2.25px 0px #0000001A, inset 0px 2.25px 2.25px 0px #FFFFFF1A, inset 0px 0px 0px 0.75px #1018283D;
+  --shadow-login-btn: 0px 0.75px 0.75px 0px #2a2a2a14, 0px 2.25px 3px -0.75px #2a2a2a24;
+  --shadow-login-btn-inner:
+    inset 0px -2.25px 2.25px 0px #0000001a, inset 0px 2.25px 2.25px 0px #ffffff1a,
+    inset 0px 0px 0px 0.75px #1018283d;
 
-  --gradient-brand: linear-gradient(90.62deg, #85BB23 0%, #6EA30D 100%);
+  --gradient-brand: linear-gradient(90.62deg, #85bb23 0%, #6ea30d 100%);
 }
 
 /* Dark mode support */
@@ -130,6 +132,11 @@
    ============================================================================ */
 
 @theme inline {
+  --breakpoint-laptop: 1440px; /* الـ Standard Laptop*/
+  --breakpoint-mac: 1512px; /* MacBook Pro 14" */
+  --breakpoint-standard: 1920px; /* Standard Office Monitors */
+  --breakpoint-ultra: 2560px; /* 24-27 inch High-res Monitors */
+
   /* Colors */
   --color-background: var(--color-bg-primary);
   --color-foreground: var(--color-text-primary);
@@ -284,9 +291,31 @@
     border-color: var(--color-border);
   }
 
-  html {
+  html { /*1366px for small laptops*/
     scroll-behavior: smooth;
-    font-size: 16px;
+    font-size: 14px;
+  }
+  @media (min-width: 1440px) {
+    html {
+      scroll-behavior: smooth;
+      font-size: 15px;
+    }
+  }
+  @media (min-width: 1512px) {
+    html {
+      scroll-behavior: smooth;
+      font-size: 16px;
+    }
+  }
+  @media (min-width: 1920px) { /*24 inch screens*/
+    html { font-size: 20px; }
+  }
+
+  @media (min-width: 2560px) { /*27 inch screens*/
+    html {
+      scroll-behavior: smooth;
+      font-size: 22px;
+    }
   }
 
   /* RTL/LTR Direction Support */
@@ -656,20 +685,6 @@
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
-    }
-
-    .text-clamp-2 {
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
-
-    .text-clamp-3 {
-      display: -webkit-box;
-      -webkit-line-clamp: 3;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
     }
 
     .text-pretty {

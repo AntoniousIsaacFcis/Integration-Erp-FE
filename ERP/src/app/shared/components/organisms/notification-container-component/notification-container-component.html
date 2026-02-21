@@ -1,0 +1,44 @@
+<ng-container *transloco="let t">
+  @if (notificationService.notifications().length > 0) {
+  <div class="absolute inset-0 bg-black/40 z-[105] animate-fade-in pointer-events-auto rounded-[20px]">
+  </div>
+  }
+
+  <div class="absolute inset-0 z-[110] flex items-center justify-center pointer-events-none p-4 ">
+    @for (notif of notificationService.notifications(); track notif.id) {
+
+    <div
+      class="gap-6  bg-white rounded-xl shadow-2xl relative pointer-events-auto animate-scale-in border border-gray-100 flex flex-col items-center"
+      [style.width.px]="350"  [style.min-height.px]="263">
+
+      <button (click)="notificationService.dismiss(notif.id)"
+        class="absolute top-[14px] left-[18px] flex items-center justify-center hover:scale-110 transition-transform">
+        <ng-icon name="lucideX" size="24" color="#FF383C"></ng-icon>
+      </button>
+
+      <div
+        class="mt-8 size-[60px] rounded-[49px] border flex items-center justify-center bg-[#537C0F] border-[#537C0F] text-white">
+        <ng-icon [name]="iconName(notif.type)" size="40"></ng-icon>
+      </div>
+
+      <div class="flex-1 flex flex-col items-center justify-center w-full px-6 text-center">
+        <div class="text-md font-bold text-black font-arabic leading-[148%]">
+          {{ t(notif.title) }}
+        </div>
+        @if (notif.message) {
+        <p class="text-[#909091] text-[12px] mt-2 font-arabic leading-[148%]">{{ t(notif.message) }}</p>
+        }
+      </div>
+
+      <div class="mt-auto mb-8 w-full px-[33px]">
+        <button (click)="notificationService.dismiss(notif.id)"
+          class="w-full h-[30px] bg-[#537C0F] text-white rounded-[8px] flex items-center justify-center">
+          <span class="text-[12px] font-medium font-arabic text-white">
+            {{ t(notif.actionLabel) || 'موافق' }}
+          </span>
+        </button>
+      </div>
+    </div>
+    }
+  </div>
+</ng-container>

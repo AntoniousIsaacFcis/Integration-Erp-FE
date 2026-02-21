@@ -2,25 +2,33 @@
   *transloco="let t">
   <main class="flex flex-row w-full h-full gap-[20px] animate-scale-in">
 
-   <section class=" flex-1 flex flex-col items-center bg-white rounded-[24px] border-[4px] border-[#EDF1F1] relative text-black overflow-hidden shadow-sm">
+    <section
+      class=" flex-1 flex flex-col items-center bg-white rounded-[24px] border-[4px] border-[#EDF1F1] relative text-black overflow-hidden shadow-sm">
 
-  <header class="w-full max-w-[700px] h-[40px] mt-[20px] px-[24px] flex flex-row justify-between items-center shrink-0">
-    <app-project-logo-component aboveColor="#000000" textColor="#000000" outlineColor="#FFFFFF" class="h-full"></app-project-logo-component>
-    <app-language-switcher-component variant="toggle"></app-language-switcher-component>
-  </header>
+      <app-notification-container-component></app-notification-container-component>
 
-  <div class="w-full max-w-[400px] flex-1 flex flex-col justify-center gap-[14px] animate-fade-in py-10">
+      <header class="w-full max-w-[700px]
+      laptop:max-w-[700px] mac:max-w-[900px] standard:max-w-[1100px] ultra:max-w-[1400px] mx-auto
+         h-[40px] mt-[20px] px-[24px] flex flex-row justify-between items-center shrink-0">
+        <app-project-logo-component aboveColor="#000000" textColor="#000000" outlineColor="#FFFFFF"
+          class="h-full"></app-project-logo-component>
+        <app-language-switcher-component variant="toggle"></app-language-switcher-component>
+      </header>
 
-   <app-auth-header-component [title]="title()" [subtitle]="subtitle()"></app-auth-header-component>
+      <div
+        class="w-full max-w-[400px] flex-1 flex flex-col justify-center gap-[14px] animate-fade-in py-10 relative z-[60]">
 
-    <router-outlet></router-outlet>
-  </div>
+        <app-auth-header-component [title]="title()" [subtitle]="subtitle()"></app-auth-header-component>
 
-  <footer class="w-full text-center pb-4 pt-2 text-[12px] font-light text-[#909091] tracking-wide shrink-0">
-    {{ t('AUTH.COPYRIGHT') }}
-  </footer>
+        <router-outlet></router-outlet>
 
-</section>
+      </div>
+
+      <footer class="w-full text-center pb-4 pt-2 text-[12px] font-light text-[#909091] tracking-wide shrink-0">
+        {{ t('AUTH.COPYRIGHT') }}
+      </footer>
+
+    </section>
 
     <section class="hidden lg:flex flex-1 flex-col relative rounded-[24px] overflow-hidden bg-[#196FEB]">
       <div class="absolute inset-0 z-0 pointer-events-none">

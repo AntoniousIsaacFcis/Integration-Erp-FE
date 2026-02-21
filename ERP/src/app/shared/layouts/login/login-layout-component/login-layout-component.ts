@@ -5,10 +5,11 @@ import { TranslocoModule } from '@jsverse/transloco';
 import { NgOptimizedImage } from '@angular/common';
 import { ActivatedRoute, RouterOutlet } from '@angular/router';
 import { AuthHeaderComponent } from "@shared/components/atoms/auth-header-component/auth-header-component";
+import { NotificationContainerComponent } from "@shared/components/organisms/notification-container-component/notification-container-component";
 
 @Component({
   selector: 'app-login-layout-component',
-  imports: [RouterOutlet, ProjectLogoComponent, LanguageSwitcherComponent, TranslocoModule, NgOptimizedImage, AuthHeaderComponent],
+  imports: [RouterOutlet, ProjectLogoComponent, LanguageSwitcherComponent, TranslocoModule, NgOptimizedImage, AuthHeaderComponent, NotificationContainerComponent],
   templateUrl: './login-layout-component.html',
   styleUrl: './login-layout-component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

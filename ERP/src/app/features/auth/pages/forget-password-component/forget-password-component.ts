@@ -6,6 +6,7 @@ import { AppBtnComponent } from "@shared/components/atoms/app-btn-component/app-
 import { AuthPromptComponent } from "@shared/components/atoms/auth-prompt-component/auth-prompt-component";
 import { provideIcons } from '@ng-icons/core';
 import { lucideOctagonX } from '@ng-icons/lucide';
+import { NotificationService } from '@core/services/notification-service';
 
 @Component({
   selector: 'app-forget-password-component',
@@ -17,6 +18,7 @@ import { lucideOctagonX } from '@ng-icons/lucide';
 })
 export class ForgetPasswordComponent {
   private fb = inject(NonNullableFormBuilder);
+  private notificationService = inject(NotificationService);
 
   otpInputs = viewChildren<ElementRef<HTMLInputElement>>('otpInput'); //Signal-based ViewChildren
 
@@ -65,10 +67,33 @@ export class ForgetPasswordComponent {
     // server simulation
     setTimeout(() => {
       this.isLoading.set(false);
+
+      this.notificationService.show({
+        type: 'success',
+        isModal: true,
+        title: 'AUTH.SUCCESS_TITLE',
+        // message: 'AUTH.RESET_LINK_SENT_MSG',
+        actionLabel: 'AUTH.LOGGING'
+      });
+
       this.step.set('otp'); // go to next step of otp
       this.submitted.set(false);
     }, 1000);
   }
 
+onPaste(event: ClipboardEvent) {
+  event.preventDefault();
+  const data = event.clipboardData?.getData('text').trim();
+  if (data && /^\d+$/.test(data)) {
+    const chars = data.split('').slice(0, 5);
+    chars.forEach((char, i) => {
+      const input = this.otpInputs()[i]?.nativeElement;
+      if (input) {
+        input.value = char;
+        if (i < 4) this.otpInputs()[i + 1].nativeElement.focus();
+      }
+    });
+  }
+}
 
 }
