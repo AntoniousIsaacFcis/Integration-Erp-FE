@@ -1,0 +1,23 @@
+<div
+  class="flex items-center justify-center w-full max-w-[1013px] mx-auto gap-[20px]  overflow-x-auto scrollbar-none py-4 px-spacing-md"
+  *transloco="let t">
+
+  @for (step of steps; track step.id) {
+  <div class="flex items-center  min-w-max last:flex-none">
+
+    <div [class]="currentStep() === step.id
+          ? 'bg-[#537C0F]/20'
+          : 'bg-transparent border-transparent'"
+      class="flex items-center justify-center w-[149px] h-[40px] px-[20px] py-[8px] rounded-[8px] border transition-all duration-300 ease-in-out">
+      <span [class]="currentStep() === step.id ? 'text-[#537C0F]' : 'text-black'" class="text-base
+ font-medium font-arabic leading-none whitespace-nowrap">
+        {{ t(step.label) }}
+      </span>
+
+      @if (currentStep() > step.id) {
+      <ng-icon name="lucideCheck" size="18" class="ms-2 text-[#537C0F] animate-fade-in"></ng-icon>
+      }
+    </div>
+</div>
+}
+</div>

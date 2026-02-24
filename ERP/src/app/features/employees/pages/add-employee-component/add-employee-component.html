@@ -1,0 +1,29 @@
+<main class="flex justify-center min-h-screen " *transloco="let t">
+
+  <div class="w-full max-w-[1100px] bg-white rounded-[20px] shadow-soft border border-black/5  flex flex-col ">
+
+    <app-stepper-visual-component [currentStep]="currentStep()" class="my-3"/>
+
+    <div class="h-[1px] bg-black/5 w-[90%] mx-auto"></div>
+
+    <div class="animate-fade-in"
+         [class.pointer-events-none]="isLoading()"
+         [class.opacity-50]="isLoading()">
+
+      @switch (currentStep()) {
+        @case (1) {
+          <app-personal-component (next)="onStepComplete($event)" />
+        }
+        @case (2) {
+          <app-job-details-component (next)="onStepComplete($event)" (back)="prevStep()" />
+        }
+        @case (3) {
+          <app-salary-component (next)="onStepComplete($event)" (back)="prevStep()" />
+        }
+        @case (4) {
+          <app-documents-component (submit)="onFinalSubmit($event)" (back)="prevStep()" />
+        }
+      }
+    </div>
+  </div>
+</main>

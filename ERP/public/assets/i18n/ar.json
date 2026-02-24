@@ -41,6 +41,9 @@
     "TOTAL": "الإجمالي",
     "EMPTY_STATE": "لا توجد عناصر",
     "WORDS": "كلمة",
+    "OPTIONAL": "اختياري",
+    "SINGLE": "أعزب",
+    "MARRIED": "متزوج",
     "MESSAGES": {
       "SUCCESS": "تم بنجاح",
       "SUCCESS_MESSAGE": "تمت العملية بنجاح",
@@ -81,8 +84,8 @@
     "ADD_EMPLOYEE": "إضافة موظف",
     "EMPLOYEE_RECORDS": "سجلات الموظفين",
     "ATTENDANCE": "الحضور",
-    "VIEW_LEVELS": "عرض المستويات",
-    "CREATE_LEVEL": "إنشاء مستوى",
+    "VIEW_LEVELS": "جميع المستويات",
+    "CREATE_LEVEL": "إضافة مستوى",
     "LEVEL_MAPPING": "ربط المستويات",
     "SHIFT_SCHEDULE": "جدول الورديات",
     "SHIFT_ASSIGNMENT": "تعيين الورديات",
@@ -92,7 +95,12 @@
     "SYSTEM_CONFIGURATION": "إعدادات النظام",
     "AUDIT_LOG": "سجل التدقيق",
     "SUPPORT": "الدعم",
-    "PRIVACY": "سياسة الخصوصية"
+    "PRIVACY": "سياسة الخصوصية",
+    "ALL_JOB_LEVELS": "جميع المستويات ",
+    "PERSONAL_INFO": "البيانات الشخصية",
+    "JOB_DATA": "البيانات الوظيفية",
+    "SALARY": "الراتب",
+    "DOCUMENTS": "المستندات"
   },
   "BUTTON": {
     "ADD_LEVEL": "إضافة مستوى",
@@ -172,12 +180,14 @@
     "LOGGING": "تسجيل الدخول",
     "RESEND_IN": "Resend Code",
     "RESEND_NOW": "إعادة الإرسال الآن",
-    "INVALID_CODE":"كود التفعيل غير صحيح",
-    "VERIFYING":"جاري الفحص",
-    "OTP_VERIFIED":"تم تاكيد كود ال OTP",
-    "REDIRECTING_TO_RESET":"جاري التحويل لاعادة انشاء كلمة المرور",
-    "CLOSING":"اغلاق",
-    "PASSWORD_RESET_SUCCESS":"تم تغيير كلمة المرور بنجاح !",
+    "INVALID_CODE": "كود التفعيل غير صحيح",
+    "VERIFYING": "جاري الفحص",
+    "OTP_VERIFIED": "تم تاكيد كود ال OTP",
+    "REDIRECTING_TO_RESET": "جاري التحويل لاعادة انشاء كلمة المرور",
+    "CLOSING": "اغلاق",
+    "PASSWORD_RESET_SUCCESS": "تم تغيير كلمة المرور بنجاح !",
+    "ERRORS.PASSWORD_TOO_WEAK": "كلمة السر ضعيفة و سهلة التخمين",
+    "INVALID_PATTERN":"بطاقة الهوية لابد ان تحتوي علي 12-14 رقم",
     "ERRORS": {
       "INVALID_CREDENTIALS": "اسم المستخدم أو كلمة المرور غير صحيحة",
       "UNEXPECTED_ERROR": "خطأ: اسم المستخدم أو كلمة المرور غير صحيحة",
@@ -250,7 +260,7 @@
     "ENTER_EMAIL": "أدخل البريد الإلكتروني",
     "ENTER_PHONE": "أدخل رقم الهاتف",
     "ENTER_ADDRESS": "أدخل العنوان",
-    "ENTER_DESCRIPTION": "الوصف لا يتعدي ال 250 كلمة",
+    "DESCRIPTION_LIMIT": "الوصف لا يتعدي ال 250 كلمة",
     "ENTER_USERNAME": "أدخل اسم المستخدم",
     "ENTER_PASSWORD": "أدخل كلمة المرور",
     "SELECT_OPTION": "اختر خياراً",
@@ -259,7 +269,9 @@
     "ENTER_CODE": "أدخل الكود",
     "SELECT_DEPARTMENT": "أختر قسم",
     "SELECT_LEVEL": "اختر مستوى",
-    "SELECT_TYPE": "اختر نوعاً"
+    "SELECT_TYPE": "اختر نوعاً",
+    "SELECT_GENDER":"النوع",
+    "SELECT_NATIONALITY":"اختر الجنسية"
   },
   "VALIDATION": {
     "REQUIRED_FIELD": "هذا الحقل مطلوب",
@@ -311,9 +323,9 @@
     "INACTIVE": "غير نشط",
     "FULL_NAME": "الاسم الكامل",
     "EMPLOYEE_ID": "رقم الموظف",
-    "NATIONAL_ID": "رقم الهوية الوطنية",
+    "NATIONAL_ID": "الرقم القومي أو جواز السفر",
     "DATE_OF_BIRTH": "تاريخ الميلاد",
-    "GENDER": "الجنس",
+    "GENDER": "النوع",
     "MARITAL_STATUS": "الحالة الاجتماعية",
     "QUALIFICATION": "المؤهل العلمي",
     "EXPERIENCE": "سنوات الخبرة",
@@ -328,7 +340,22 @@
     "EDIT_EMPLOYEE": " تعديل بيانات الموظف",
     "DELETE_EMPLOYEE": "حذف الموظف",
     "EMPLOYEE_DETAILS": "تفاصيل الموظف",
-    "EMPLOYEE_LIST": "قائمة الموظفين"
+    "EMPLOYEE_LIST": "قائمة الموظفين",
+    "FULL_NAME_AR": "الاسم الكامل بالعربي",
+    "FULL_NAME_EN": "الاسم الكامل بالانجليزي",
+    "NATIONALITY": "الجنسية",
+    "BIRTH_DATE": "تاريخ الميلاد",
+    "BIRTH_PLACE ": "محل الميلاد",
+    "ADDRESS": "العنوان",
+    "MALE":"ذكر",
+    "FEMALE":"أنثي"
+  },
+  "NATIONALITIES":{
+    "SAUDI":"سعودي",
+    "EGYPTIAN":"مصري",
+    "JORDANIAN":"أردني",
+    "EMIRATI":"أماراتي",
+    "KUWAITI":"كويتين"
   },
   "SHIFT": {
     "TITLE": "إدارة الورديات",
@@ -433,7 +460,7 @@
     "LEVEL_MAPPING": "ربط المستويات",
     "MAP_TO_DESIGNATION": "ربط بمسمى وظيفي",
     "MAPPED_DESIGNATIONS": "المسميات المرتبطة",
-    "VIEW_LEVELS": "عرض المستويات",
+    "VIEW_LEVELS": "جميع المستويات",
     "CREATE_LEVEL": "إنشاء مستوى"
   },
   "FILTERS": {

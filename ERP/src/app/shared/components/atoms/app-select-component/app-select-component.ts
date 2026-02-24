@@ -1,27 +1,22 @@
-import { ChangeDetectionStrategy, Component, computed, input, signal } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { TranslocoModule } from '@jsverse/transloco';
 import { NgIcon, provideIcons } from '@ng-icons/core';
-import { lucideOctagonX, lucideTriangle } from '@ng-icons/lucide';
-import { merge } from 'rxjs';
+import { lucideChevronDown, lucideOctagonX } from '@ng-icons/lucide';
 
 @Component({
-  selector: 'app-app-input-component',
-  imports: [TranslocoModule, ReactiveFormsModule, NgIcon],
-  templateUrl: './app-input-component.html',
-  styleUrl: './app-input-component.css',
-  providers: [provideIcons({ lucideOctagonX })],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  selector: 'app-app-select-component',
+  imports: [TranslocoModule,ReactiveFormsModule,NgIcon],
+  templateUrl: './app-select-component.html',
+  styleUrl: './app-select-component.css',
+  providers:[provideIcons({lucideOctagonX,lucideChevronDown})],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AppInputComponent {
+export class AppSelectComponent {
   label = input<string>('');
   placeholder = input<string>('');
   control = input.required<FormControl>();
-  isPassword = input<boolean>(false);
-
   showErrors = input<boolean>(false);
-  showPassword = signal<boolean>(false);
 
   requiredErrorKey = input<string>('AUTH.REQUIRED_FIELD')
   emailErrorKey = input<string>('AUTH.INVALID_EMAIL');
@@ -36,9 +31,5 @@ export class AppInputComponent {
       if (ctrl.errors?.['pattern']) return 'AUTH.INVALID_PATTERN';
     }
     return null;
-  }
-
-  togglePassword() {
-    this.showPassword.update(v => !v);
   }
 }

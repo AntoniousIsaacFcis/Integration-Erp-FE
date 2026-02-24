@@ -1,11 +1,8 @@
 <div
-  class="bg-[#FFFFFF] rounded-[20px] shadow-sm border border-[#0000001A] mx-auto font-arabic translate-y-3"
-  [style.width.px]="1013"
-  [style.min-height.px]="587"
-  [style.padding]="'29px 46px'"
+  class=" mx-auto font-arabic px-[46px] w-full max-w-[1100px] mt-xl"
   *transloco="let t"
 >
-  <div class="mb-[37px] text-right text-black">
+  <div class="mb-[42px] text-right text-black">
     <app-page-title-component [title]="title()" />
   </div>
 
@@ -14,7 +11,7 @@
       <ng-content select="[formFields]"></ng-content>
     </div>
 
-    <div class="flex justify-end items-center gap-[16px] mt-auto pt-[32px] ">
+    <div class="flex justify-end items-center gap-[16px]  py-[32px] ">
       <ng-content select="[formActions]"></ng-content>
     </div>
   </form>

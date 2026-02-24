@@ -1,0 +1,32 @@
+<div class="flex flex-col w-full gap-[12px] font-arabic" *transloco="let t">
+      @if (label()) {
+      <label class="text-base font-medium leading-none text-start text-black">
+        {{ t(label()) }}
+      </label>
+      }
+      <div class="relative w-full group">
+        <input
+          type="date"
+          [formControl]="control()"
+          [class.has-value]="control().value"
+          class="custom-date-input w-full h-[44px] px-md bg-white border border-[#0000001A] rounded-md outline-none transition-all text-start text-sm font-normal text-black appearance-none focus:border-primary focus:ring-1 focus:ring-primary/20"
+        />
+        @if (!control().value) {
+          <span class="absolute inset-y-0 start-md flex items-center pointer-events-none text-black/20 text-md font-normal">
+            7-8-2001
+          </span>
+        }
+        <div class="absolute inset-y-0 end-[14px] flex items-center pointer-events-none text-black/40 group-focus-within:text-primary transition-colors">
+          <ng-icon name="lucideCalendar" size="18"></ng-icon>
+        </div>
+      </div>
+
+      @if (errorKey; as key) {
+        <div class="flex items-center gap-xs text-error animate-fade-in">
+          <ng-icon name="lucideOctagonX" size="16" strokeWidth="3"></ng-icon>
+          <span class="text-xs font-medium text-start">
+            {{ t(key) }}
+          </span>
+        </div>
+      }
+    </div>

@@ -12,7 +12,7 @@ export const MENU_ITEMS: INavItem[] = [
     path: '/employees',
     icon: 'lucideUsers',
     children: [
-      { id: '2-1', label: 'MENU.ALL_EMPLOYEES', path: '/employees/list', icon: 'lucideList' },
+      { id: '2-1', label: 'MENU.ALL_EMPLOYEES', path: '/employees/view', icon: 'lucideList' },
       { id: '2-2', label: 'MENU.ADD_EMPLOYEE', path: '/employees/add', icon: 'lucidePlus' },
       { id: '2-3', label: 'MENU.EMPLOYEE_RECORDS', path: '/employees/records', icon: 'lucideFileText' },
       { id: '2-4', label: 'MENU.ATTENDANCE', path: '/employees/attendance', icon: 'lucideClipboardList' }

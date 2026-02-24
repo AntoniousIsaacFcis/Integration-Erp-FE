@@ -6,7 +6,7 @@ export const JOB_LEVEL_ROUTES: Routes = [{
   children: [{
     path: 'view',
     loadComponent: () => import('./pages/view-level-component/view-level-component').then(x => x.ViewLevelComponent),
-    data: { breadcrumb: 'MENU.JOB_LEVELS' }
+    data: { breadcrumb: 'MENU.ALL_JOB_LEVELS' }
   }, {
     path: 'create',
     loadComponent: () => import('./pages/create-level-component/create-level-component').then(x => x.CreateLevelComponent),

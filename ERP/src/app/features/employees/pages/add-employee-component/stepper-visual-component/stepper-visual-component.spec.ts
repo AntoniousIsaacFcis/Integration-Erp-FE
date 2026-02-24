@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { FormInputComponent } from './form-input-component';
+import { StepperVisualComponent } from './stepper-visual-component';
 
-describe('FormInputComponent', () => {
-  let component: FormInputComponent;
-  let fixture: ComponentFixture<FormInputComponent>;
+describe('StepperVisualComponent', () => {
+  let component: StepperVisualComponent;
+  let fixture: ComponentFixture<StepperVisualComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [FormInputComponent]
+      imports: [StepperVisualComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(FormInputComponent);
+    fixture = TestBed.createComponent(StepperVisualComponent);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });

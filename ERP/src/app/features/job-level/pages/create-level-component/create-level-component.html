@@ -1,83 +1,37 @@
-<app-form-container-component *transloco="let t" [title]="t('MENU.CREATE_LEVEL')" (submit)="onSubmit()">
-  <ng-container formFields>
-    <div class="col-span-2">
-      <app-form-input-component [label]="t('JOB_LEVEL.JOB_LEVEL_NAME')" [placeholder]="t('PLACEHOLDER.ENTER_NAME')"
-        [required]="true" [control]="jobLevelForm.controls.nameAr" />
-    </div>
+<div class="w-full max-w-[1100px] bg-white rounded-[20px] shadow-soft border border-black/5 p-spacing-xl flex flex-col gap-spacing-lg mx-auto">
+  <app-form-container-component *transloco="let t" [title]="t('MENU.CREATE_LEVEL')" (submit)="onSubmit()">
+    <ng-container formFields>
+      <div class="col-span-2">
+        <app-app-input-component [label]="t('JOB_LEVEL.JOB_LEVEL_NAME') + ' *'"
+          [placeholder]="t('PLACEHOLDER.ENTER_NAME')" [control]="jobLevelForm.controls.nameAr"
+          [showErrors]="isFormSubmitted()" />
+      </div>
 
-    <div class="flex flex-col gap-[12px] text-right font-arabic">
-      <label class="font-medium text-[16px] text-black">
-        {{ t('TABLES.DEPARTMENT') }} <span class="text-red-500">*</span>
-      </label>
-      <div class="relative group">
-        <select [formControl]="jobLevelForm.controls.departmentId"
-          class="w-full h-[52px] border border-[#0000001A] rounded-[12px] ps-[19px] pe-[44px] outline-none focus:ring-1 focus:ring-[#537C0F] appearance-none bg-transparent transition-all cursor-pointer "
-          [class.text-[#00000033]]="!jobLevelForm.controls.departmentId.value"
-          [class.text-black]="jobLevelForm.controls.departmentId.value">
-          @if (departmentsResource.isLoading()) {
-          <option disabled selected>{{ t('COMMON.LOADING') }}...</option>
-          } @else {
-          <option value="" disabled selected>{{ t('PLACEHOLDER.SELECT_DEPARTMENT') }}</option>
-          @for (dept of departments(); track dept.id) {
-          <option [value]="dept.id">{{ dept.nameAr }}</option>
-          }
-          }
-        </select>
-        <div
-          class="absolute inset-is-end-[19px] top-1/2 -translate-y-1/2 pointer-events-none transition-transform group-focus-within:rotate-180">
-        </div>
-        @let deptCtrl = jobLevelForm.controls.departmentId;
-        @if (deptCtrl.touched && deptCtrl.invalid) {
-        <span class="text-red-500 text-[12px] mt-[4px] block animate-fade-in">
-          {{ t('VALIDATION.REQUIRED') }}
-        </span>
+      <app-app-select-component [label]="t('TABLES.DEPARTMENT') + ' *'"
+        [placeholder]="t('PLACEHOLDER.SELECT_DEPARTMENT')" [control]="jobLevelForm.controls.departmentId"
+        [showErrors]="isFormSubmitted()">
+        @for (dept of departments(); track dept.id) {
+        <option [value]="dept.id">{{ dept.nameAr }}</option>
         }
+      </app-app-select-component>
+
+      <app-app-radio-component [label]="t('COMMON.STATUS')" [required]="true" [control]="jobLevelForm.controls.status"
+        [options]="[
+        { label: 'COMMON.ACTIVE', value: 'active' },
+        { label: 'COMMON.INACTIVE', value: 'inactive' }
+      ]" />
+
+      <div class="col-span-2">
+        <app-app-textarea-component [label]="t('JOB_LEVEL.DESCRIPTION')"
+          [placeholder]="t('PLACEHOLDER.DESCRIPTION_LIMIT')" [control]="jobLevelForm.controls.description" />
       </div>
-    </div>
 
-    <div class="flex flex-col gap-[12px] text-right font-arabic">
-      <label class="font-medium text-[16px] text-black">
-        {{ t('COMMON.STATUS') }} <span class="text-red-500">*</span>
-      </label>
-      <div class="flex items-center gap-[32px] h-[52px]">
-        <label class="flex items-center gap-2 cursor-pointer group">
-          <input type="radio" value="active" [formControl]="jobLevelForm.controls.status"
-            class="w-5 h-5 accent-[#537C0F] cursor-pointer">
-          <span class="text-[15px] text-[#424242] group-hover:text-black transition-colors">{{ t('COMMON.ACTIVE')
-            }}</span>
-        </label>
-        <label class="flex items-center gap-2 cursor-pointer group">
-          <input type="radio" value="inactive" [formControl]="jobLevelForm.controls.status"
-            class="w-5 h-5 accent-[#537C0F] cursor-pointer">
-          <span class="text-[15px] text-[#424242] group-hover:text-black transition-colors">{{ t('COMMON.INACTIVE')
-            }}</span>
-        </label>
-      </div>
-    </div>
+    </ng-container>
 
-    <div class="col-span-2">
-      <app-form-input-component [label]="t('JOB_LEVEL.DESCRIPTION')" [placeholder]="t('PLACEHOLDER.ENTER_DESCRIPTION')"
-        [inputRows]="5" [control]="jobLevelForm.controls.description" />
+    <ng-container formActions >
+      <app-form-cancel-button-component (clicked)="onCancel()" />
+      <app-form-save-button-component [isLoading]="isSubmitting()" [isDisabled]="jobLevelForm.invalid" type="submit" />
+    </ng-container>
 
-      @let descCtrl = jobLevelForm.controls.description;
-      @let rawValue = descCtrl.value ?? '';
-      @let wordCount = rawValue.trim() ? rawValue.trim().split(/\s+/).length : 0;
-
-      <div class="text-[12px] mt-1 text-start transition-all duration-300 min-h-[18px]">
-        @if(wordCount<250){ <span class="text-gray-400 animate-in fade-in">
-          {{ wordCount }} / 250 {{ t('COMMON.WORDS') }}
-          </span>
-          }
-
-
-
-      </div>
-    </div>
-  </ng-container>
-
-  <ng-container formActions class="">
-    <app-form-cancel-button-component (clicked)="onCancel()" />
-    <app-form-save-button-component [isLoading]="isSubmitting()" [isDisabled]="jobLevelForm.invalid" type="submit" />
-  </ng-container>
-
-</app-form-container-component>
+  </app-form-container-component>
+</div>

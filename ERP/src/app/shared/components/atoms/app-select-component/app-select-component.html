@@ -1,0 +1,27 @@
+<div class="flex flex-col w-full gap-[12px] font-arabic" *transloco="let t">
+  @if (label()) {
+  <label class="text-base font-medium leading-none text-start text-black">
+    {{ t(label()) }}
+  </label>
+  }
+  <div class="relative w-full group">
+    <select [formControl]="control()"
+      class="w-full h-[44px] px-md bg-white border border-[#0000001A] rounded-md outline-none transition-all text-sm font-normal text-black appearance-none cursor-pointer focus:border-primary focus:ring-1 focus:ring-primary/20"
+      [class.text-black/20]="!control().value">
+      <option value="" disabled selected>{{ t(placeholder()) }}</option>
+      <ng-content></ng-content>
+    </select>
+    <div
+      class="absolute inset-y-0 end-[14px] flex items-center pointer-events-none transition-transform group-focus-within:rotate-180">
+      <ng-icon name="lucideChevronDown" color="black" size="18"></ng-icon>
+    </div>
+  </div>
+  @if (errorKey; as key) {
+  <div class="flex items-center gap-xs text-error animate-fade-in ">
+    <ng-icon name="lucideOctagonX" size="16" strokeWidth="3"></ng-icon>
+    <span class="text-xs font-medium text-start">
+      {{ t(key) }}
+    </span>
+  </div>
+  }
+</div>

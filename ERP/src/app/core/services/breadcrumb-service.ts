@@ -23,25 +23,23 @@ export class BreadcrumbService {
   );
 
   #recursiveBuild(route: ActivatedRoute, url: string = '', breadcrumbs: IBreadrump[] = []): IBreadrump[] {
-    const child = route.firstChild;
+    const routeURL: string = route.snapshot.url.map(segment => segment.path).join('/');
 
-    if (!child) {
-      return breadcrumbs;
-    }
-
-    const routeURL: string = child.snapshot.url.map(segment => segment.path).join('/');
     const fullUrl = routeURL ? `${url}/${routeURL}` : url;
 
-    const label = child.snapshot.data['breadcrumb'];
+    const label = route.snapshot.data['breadcrumb'];
 
-    // فحص التكرار لضمان نظافة المسار
     if (label && (!breadcrumbs.length || breadcrumbs[breadcrumbs.length - 1].label !== label)) {
-      breadcrumbs.push({
-        label: label,
-        url: fullUrl || '/'
-      });
+        breadcrumbs.push({
+            label: label,
+            url: fullUrl || '/'
+        });
     }
 
-    return this.#recursiveBuild(child, fullUrl, breadcrumbs);
-  }
+    if (route.firstChild) {
+        return this.#recursiveBuild(route.firstChild, fullUrl, breadcrumbs);
+    }
+
+    return breadcrumbs;
+}
 }

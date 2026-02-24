@@ -27,7 +27,6 @@ export class ResetPasswordComponent {
   isLoading = signal(false);
   submitted = signal(false);
 
-  // البيانات القادمة من الخطوات السابقة (يمكن تخزينها في Service أو Route State)
   userData = signal({ userId: '3fa8...', resetToken: 'string' });
 
   resetForm = this.fb.group({
@@ -42,7 +41,7 @@ export class ResetPasswordComponent {
     this.isLoading.set(true);
 
     setTimeout(() => {
-      const isWeakPassword = this.resetForm.getRawValue().password === '12345';
+      const isWeakPassword = this.resetForm.getRawValue().password === '123456';
 
       if (isWeakPassword) {
         this.isLoading.set(false);

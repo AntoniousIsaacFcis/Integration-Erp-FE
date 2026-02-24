@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, PLATF
 import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { FormContainerComponent } from "@shared/components/organisms/form-container-component/form-container-component";
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { FormInputComponent } from "@shared/components/molecules/form-input-component/form-input-component";
 import { HttpClient } from '@angular/common/http';
 import { IDepartment } from '@features/job-level/models/idepartment';
 import { rxResource, takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -14,10 +13,14 @@ import { FormCancelButtonComponent } from "@shared/components/molecules/form-can
 import { JobLevelService } from '@features/job-level/service/job-level-service';
 import { Router } from '@angular/router';
 import { AppValidators } from '@shared/validators/word-limit.validator';
+import { AppInputComponent } from "@shared/components/atoms/app-input-component/app-input-component";
+import { AppSelectComponent } from "@shared/components/atoms/app-select-component/app-select-component";
+import { AppRadioComponent } from "@shared/components/atoms/app-radio-component/app-radio-component";
+import { AppTextareaComponent } from "@shared/components/atoms/app-textarea-component/app-textarea-component";
 
 @Component({
   selector: 'app-create-level-component',
-  imports: [TranslocoModule, FormContainerComponent, FormInputComponent, ReactiveFormsModule, FormSaveButtonComponent, FormCancelButtonComponent],
+  imports: [TranslocoModule, FormContainerComponent, ReactiveFormsModule, FormSaveButtonComponent, FormCancelButtonComponent, AppInputComponent, AppSelectComponent, AppRadioComponent, AppTextareaComponent],
   templateUrl: './create-level-component.html',
   styleUrl: './create-level-component.css',
   changeDetection: ChangeDetectionStrategy.OnPush
