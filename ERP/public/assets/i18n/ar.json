@@ -275,7 +275,15 @@
     "SELECT_TYPE": "اختر نوعاً",
     "SELECT_GENDER": "النوع",
     "SELECT_NATIONALITY": "اختر الجنسية",
-    "ADDRESS": "ادخل العنوان"
+    "ADDRESS": "ادخل العنوان",
+    "REJECTED":"مرفوض",
+    "ARABICNAME":"ادخل الإسم بالكامل بالعربي",
+    "ENGLISHNAME":"ادخل الاسم الكامل بالانجليزي",
+    "PASSPORT":"ادخل الرقم القومي او جواز السفر",
+    "GENDER":"ادخل النوع",
+    "MARITAL_STATUS":"أعزب",
+    "JOB_TITLE":"مبرمج",
+    "DOCUMENTS_TYPE":"pdf"
   },
   "VALIDATION": {
     "REQUIRED_FIELD": "هذا الحقل مطلوب",
@@ -470,7 +478,7 @@
     "NETWORK_ERROR": "خطأ في الشبكة",
     "TIMEOUT_ERROR": "انتهت مهلة الانتظار",
     "UNKNOWN_ERROR": "خطأ غير معروف",
-    "INVALID_PHONE_FORMAT": "يرجى إدخال رقم هاتف صحيح يبدأ بـ 01 يتكون من 11 رقم",
+    "INVALID_PHONE_FORMAT": "رقم الهاتف غير صحيح. يجب أن يتكون من 11 إلى 15 رقماً (يمكن استخدام +)",
     "INVALID_NATIONAL_ID_FORMAT": "بطاقة الهوية لابد ان تحتوي علي 12-14 رقم",
     "MIN_VALUE": "القيمة يجب أن تكون 0 أو أكثر",
     "REQUIRED_FILES":"يجب رفع ملف علي الاقل"

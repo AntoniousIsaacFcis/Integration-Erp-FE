@@ -24,6 +24,10 @@ export class AppInputComponent {
   showErrors = input<boolean>(false);
   showPassword = signal<boolean>(false);
 
+  //for autocomplete
+  name = input<string>('');
+  autocomplete = input<string>('on');
+
   requiredErrorKey = input<string>('AUTH.REQUIRED_FIELD')
   emailErrorKey = input<string>('AUTH.INVALID_EMAIL');
   minLengthErrorKey = input<string>('AUTH.MIN_LENGTH');

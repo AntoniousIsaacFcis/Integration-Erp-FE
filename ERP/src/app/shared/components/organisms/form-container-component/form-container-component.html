@@ -6,7 +6,7 @@
     <app-page-title-component [title]="title()" />
   </div>
 
-  <form  (submit)="$event.preventDefault(); submit.emit()" class="flex flex-col h-full">
+  <form autocomplete="on" (submit)="$event.preventDefault(); submit.emit()" class="flex flex-col h-full">
     <div class="grid grid-cols-2 gap-x-[32px] gap-y-[33px]">
       <ng-content select="[formFields]"></ng-content>
     </div>

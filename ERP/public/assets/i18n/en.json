@@ -468,7 +468,7 @@
     "NETWORK_ERROR": "Network Error",
     "TIMEOUT_ERROR": "Timeout Error",
     "UNKNOWN_ERROR": "Unknown Error",
-    "INVALID_PHONE_FORMAT": "Please enter a valid phone number starting with 01 consisting of 11 digits",
+    "INVALID_PHONE_FORMAT": "Invalid phone number. Must be 11-15 digits (starting with + is allowed)",
     "INVALID_NATIONAL_ID_FORMAT": "National ID must contain 12-14 digits",
     "MIN_VALUE": "Value must be 0 or greater",
     "REQUIRED_FILES": "At least one file must be uploaded"

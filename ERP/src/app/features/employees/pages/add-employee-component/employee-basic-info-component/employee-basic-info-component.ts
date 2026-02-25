@@ -13,13 +13,14 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { startWith } from 'rxjs';
 import { IDocument } from '@shared/models/idocument';
 import { DocumentsComponent } from "@shared/components/organisms/documents-component/documents-component";
+import { fileValidation } from '@shared/validators/file-validation.validator';
 
 @Component({
   selector: 'app-employee-basic-info-component',
   imports: [TranslocoModule, AppInputComponent, AppSelectComponent, AppDateInputComponent, NgIcon, DocumentsComponent],
   templateUrl: './employee-basic-info-component.html',
   styleUrl: './employee-basic-info-component.css',
-  providers: [[provideIcons({ lucideSaudiRiyal,lucideOctagonX })]],
+  providers: [[provideIcons({ lucideSaudiRiyal, lucideOctagonX })]],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EmployeeBasicInfoComponent {
@@ -28,12 +29,23 @@ export class EmployeeBasicInfoComponent {
   private departmentService = inject(DepartmentsService);
   protected nationalitiesService = inject(NationalitiesService);
   protected _employmentTypesService = inject(EmploymentTypesService);
+  phoneRegex = /^\+?([0-9\s\-]{11,15})$/;
 
   constructor() {
     effect(() => {
       const total = this.totalSalaryCalc();
+
+      //remvoe extra spaces and symbols in phone
+      this.getControl('phone').valueChanges.subscribe(value => {
+        if (value && /[\s\-()]/g.test(value)) {
+          const sanitized = value.replace(/[+\s\-()]/g, '');
+          this.getControl('phone').setValue(sanitized, { emitEvent: false });
+        }
+      });
+
     });
   }
+
 
   mainForm = this.fb.nonNullable.group({
     // Personal Info
@@ -44,10 +56,10 @@ export class EmployeeBasicInfoComponent {
     nationality: ['', [Validators.required]],
     maritalStatus: ['', [Validators.required]],
     birthDate: ['', [Validators.required]],
-    phone: ['', [Validators.required, Validators.pattern('^[0-9]{10,15}$')]],
+    phone: ['', [Validators.required, Validators.pattern(this.phoneRegex)]],
     email: ['', [Validators.required, Validators.email]],
     address: ['', [Validators.required, Validators.minLength(10)]],
-    emergencyPhone: ['', [Validators.required, Validators.pattern('^[0-9]{10,15}$')]],
+    emergencyPhone: ['', [Validators.required, Validators.pattern(this.phoneRegex)]],
 
     // Job Details
     jobTitleId: ['', [Validators.required]],
@@ -61,12 +73,12 @@ export class EmployeeBasicInfoComponent {
     basicSalary: ['', [Validators.required, Validators.min(0)]],
     allowances: ['', [Validators.required, Validators.min(0)]],
     deductions: ['', [Validators.required, Validators.min(0)]],
-    totalSalary: [{ value: 0, disabled: true }] ,//calculated
+    totalSalary: [{ value: 0, disabled: true }],//calculated
 
     //Documents
     documentType: ['', [Validators.required]],
     expiryDate: ['', [Validators.required]],
-    attachedFiles: [[] as IDocument[], [Validators.required, Validators.minLength(1)]]
+    attachedFiles: [[] as IDocument[], [Validators.required, Validators.minLength(1),fileValidation(10, ['application/pdf', 'image/jpeg', 'image/png'])]]
   });
 
   handleFilesChange(files: IDocument[]) {

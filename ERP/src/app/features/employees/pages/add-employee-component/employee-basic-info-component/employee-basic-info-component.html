@@ -4,15 +4,17 @@
     <div class="text-lg font-semibold text-black">{{ t('MENU.PERSONAL_INFO') }}</div>
   </div>
 
-  <app-app-input-component [label]="t('EMPLOYEES.FULL_NAME_AR')+ '*'" [control]="getControl('fullNameAr')"
-    [showErrors]="submitted()" />
-  <app-app-input-component [label]="t('EMPLOYEES.FULL_NAME_EN')+ '*'" [control]="getControl('fullNameEn')"
-    [showErrors]="submitted()" />
-  <app-app-input-component [label]="t('EMPLOYEES.NATIONAL_ID')+ '*'" [control]="getControl('nationalId')"
-    [showErrors]="submitted()" [patternErrorKey]="'ERRORS.INVALID_NATIONAL_ID_FORMAT'" />
+  <app-app-input-component [label]="t('EMPLOYEES.FULL_NAME_AR')+ '*'" [control]="getControl('fullNameAr')" [placeholder]="'PLACEHOLDER.ARABICNAME'"
+    [showErrors]="submitted()" autocomplete="name" name="full-name" />
+
+  <app-app-input-component [label]="t('EMPLOYEES.FULL_NAME_EN')+ '*'" [control]="getControl('fullNameEn')" [placeholder]="'PLACEHOLDER.ENGLISHNAME'"
+    [showErrors]="submitted()" name="full-name-en" autocomplete="name" />
+
+  <app-app-input-component [label]="t('EMPLOYEES.NATIONAL_ID')+ '*'" [control]="getControl('nationalId')" [placeholder]="'PLACEHOLDER.PASSPORT'"
+    [showErrors]="submitted()" [patternErrorKey]="'ERRORS.INVALID_NATIONAL_ID_FORMAT'" autocomplete="off" />
 
   <app-app-select-component [label]="t('EMPLOYEES.GENDER')+ '*'" [control]="getControl('gender')"
-    [showErrors]="submitted()">
+    [showErrors]="submitted()" [placeholder]="'PLACEHOLDER.GENDER'">
     <option value="male">{{ t('EMPLOYEES.MALE') }}</option>
     <option value="female">{{ t('EMPLOYEES.FEMALE') }}</option>
   </app-app-select-component>
@@ -31,7 +33,7 @@
   </app-app-select-component>
 
   <app-app-select-component [label]="t('EMPLOYEES.MARITAL_STATUS')+ '*'" [control]="getControl('maritalStatus')"
-    [showErrors]="submitted()">
+    [showErrors]="submitted()"  [placeholder]="'PLACEHOLDER.MARITAL_STATUS'">
     <option value="single">{{ t('EMPLOYEES.SINGLE') }}</option>
     <option value="married">{{ t('EMPLOYEES.MARRIED') }}</option>
     <option value="divorced">{{ t('EMPLOYEES.DIVORCED') }}</option>
@@ -42,16 +44,18 @@
     [showErrors]="submitted()" />
 
   <app-app-input-component [label]="t('EMPLOYEES.PHONE') + '*'" [control]="getControl('phone')"
-    [placeholder]="'012xxxxxxxx'" [showErrors]="submitted()" [patternErrorKey]="'ERRORS.INVALID_PHONE_FORMAT'" />
+    [placeholder]="'012xxxxxxxx'" [showErrors]="submitted()" [patternErrorKey]="'ERRORS.INVALID_PHONE_FORMAT'"
+    autocomplete="tel" name="phone" />
 
   <app-app-input-component [label]="t('EMPLOYEES.EMAIL') + '*'" [control]="getControl('email')"
-    [placeholder]="'example@domain.com'" [showErrors]="submitted()" />
+    [placeholder]="'example@domain.com'" [showErrors]="submitted()" autocomplete="email" name="email" />
 
   <app-app-input-component [label]="t('EMPLOYEES.ADDRESS') + '*'" [control]="getControl('address')"
-    [placeholder]="t('PLACEHOLDER.ADDRESS')" [showErrors]="submitted()" />
+    [placeholder]="t('PLACEHOLDER.ADDRESS')" [showErrors]="submitted()" name="address" autocomplete="street-address" />
 
   <app-app-input-component [label]="t('EMPLOYEES.EMERGENCY_PHONE') + '*'" [control]="getControl('emergencyPhone')"
-    [placeholder]="'012xxxxxxxx'" [showErrors]="submitted()" [patternErrorKey]="'ERRORS.INVALID_PHONE_FORMAT'" />
+    [placeholder]="'012xxxxxxxx'" [showErrors]="submitted()" [patternErrorKey]="'ERRORS.INVALID_PHONE_FORMAT'"
+    name="emergency-phone" autocomplete="tel" />
 
   <!-- job data -->
   <div id="job-section" class="col-span-full mb-2">
@@ -60,7 +64,7 @@
   </div>
 
   <app-app-input-component [label]="t('EMPLOYEES.JOB_TITLE') + '*'" [control]="getControl('jobTitleId')"
-    [showErrors]="submitted()" />
+    [showErrors]="submitted()" [placeholder]="'PLACEHOLDER.JOB_TITLE'"/>
 
   <app-app-select-component [label]="t('EMPLOYEES.DEPARTMENT') + '*'" [control]="getControl('departmentId')"
     [showErrors]="submitted()" [placeholder]="isLoadingDepartments() ? t('COMMON.LOADING') : t('COMMON.PROGRAMMING')">
@@ -92,7 +96,7 @@
     [control]="getControl('probationEndDate')" [showErrors]="submitted()" />
 
   <app-app-select-component [label]="t('EMPLOYEES.EMPLOYMENT_STATUS') + '*'" [control]="getControl('employmentStatus')"
-    [showErrors]="submitted()">
+    [showErrors]="submitted()" [placeholder]="'PLACEHOLDER.REJECTED'">
     <option value="on-boarding">{{ t('EMPLOYEES.STATUS_ONBOARDING') }}</option>
     <option value="active">{{ t('EMPLOYEES.STATUS_ACTIVE') }}</option>
     <option value="probation">{{ t('EMPLOYEES.STATUS_PROBATION') }}</option>
@@ -133,7 +137,7 @@
 
   <div class="col-span-full grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
     <app-app-select-component [label]="t('DOCUMENTS.TYPE') + '*'" [control]="getControl('documentType')"
-      [showErrors]="submitted()">
+      [showErrors]="submitted()" [placeholder]="'PLACEHOLDER.DOCUMENTS_TYPE'">
       <option value="pdf">PDF</option>
       <option value="id_card">{{ t('DOCUMENTS.NATIONAL_ID') }}</option>
       <option value="passport">{{ t('DOCUMENTS.PASSPORT') }}</option>
