@@ -8,7 +8,7 @@ export class NotificationService {
   notifications = signal<INotification[]>([]);
 
   hasActiveModal = computed(() => this.notifications().some(n => n.isModal));
-  
+
   show(notification: Omit<INotification, 'id'>) {
     const id = crypto.randomUUID();
     const newNotification = { ...notification, id };
@@ -23,5 +23,9 @@ export class NotificationService {
 
   dismiss(id: string) {
     this.notifications.update(prev => prev.filter(n => n.id !== id));
+  }
+
+  dismissAll() {
+    this.notifications.set([]);
   }
 }

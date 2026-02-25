@@ -1,12 +1,13 @@
-import { Component, inject, output, Renderer2, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, output, Renderer2, signal } from '@angular/core';
 import { IDocument } from '@shared/models/idocument';
-import { TranslocoDirective, TranslocoModule } from "@jsverse/transloco";
+import { TranslocoModule } from "@jsverse/transloco";
 
 @Component({
   selector: 'app-documents-component',
   imports: [TranslocoModule],
   templateUrl: './documents-component.html',
   styleUrl: './documents-component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DocumentsComponent {
   private renderer = inject(Renderer2);

@@ -1,15 +1,16 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal, viewChild } from '@angular/core';
+import { ResourceStatus , ChangeDetectionStrategy, Component, computed, effect, inject, signal, viewChild } from '@angular/core';
 import { TranslocoModule } from '@jsverse/transloco';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder } from '@angular/forms';
 import { EmployeeBasicInfoComponent } from "./employee-basic-info-component/employee-basic-info-component";
 import { StepperVisualComponent } from "./stepper-visual-component/stepper-visual-component";
 import { FormContainerComponent } from "@shared/components/organisms/form-container-component/form-container-component";
 import { FormSaveButtonComponent } from "@shared/components/molecules/form-save-button-component/form-save-button-component";
-import { DocumentsComponent } from '@shared/components/organisms/documents-component/documents-component';
 import { IEmployeeForm } from '@features/employees/models/iemployee-form';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { of } from 'rxjs';
 import { EmployeeService } from '@features/employees/services/employee-service';
+import { Router } from '@angular/router';
+import { NotificationService } from '@core/services/notification-service';
 
 @Component({
   selector: 'app-add-employee-component',
@@ -19,13 +20,13 @@ import { EmployeeService } from '@features/employees/services/employee-service';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AddEmployeeComponent {
+  private router = inject(Router);
   private fb = inject(FormBuilder);
   private employeeService = inject(EmployeeService);
+  private notificationService = inject(NotificationService);
 
   activeSegment = signal(1);
   private saveTrigger = signal<IEmployeeForm | null>(null);
-
-
   basicInfoComp = viewChild(EmployeeBasicInfoComponent);
 
   saveResource = rxResource({
@@ -37,6 +38,42 @@ export class AddEmployeeComponent {
   });
 
   isLoading = computed(() => this.saveResource.isLoading());
+
+constructor() {
+    effect(() => {
+      const loading = this.isLoading();
+      const response = this.saveResource.value();
+      const error = this.saveResource.error();
+
+      if ( !loading && response && !error) {
+        this.notificationService.show({
+          type: 'success',
+          isModal: true,
+          title: 'EMPLOYEES.SUCCESS_ADD_TITLE',
+          // message: 'EMPLOYEES.SUCCESS_ADD_MSG',
+          actionLabel: 'COMMON.GO_TO_LIST'
+        });
+
+        setTimeout(() => {
+          // this.notificationService.dismissAll();
+          this.router.navigate(['/employees/view']);
+          this.saveTrigger.set(null);
+        }, 1500);
+      }
+
+      if ( !loading && error) {
+        this.notificationService.show({
+          type: 'error',
+          isModal: false,
+          title: 'ERRORS.SAVE_FAILED',
+          message: 'ERRORS.SERVER_ERROR_TRY_AGAIN',
+          actionLabel: 'COMMON.OK'
+        });
+
+        this.saveTrigger.set(null);
+      }
+    });
+  }
 
   onStepperClick(stepId: number) {
     this.activeSegment.set(stepId);

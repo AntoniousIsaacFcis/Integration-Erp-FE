@@ -6,10 +6,11 @@ import { TranslocoModule } from '@jsverse/transloco';
 import { BreadcrumbComponent } from "@shared/components/molecules/breadcrumb-component/breadcrumb-component";
 import { FooterComponent } from "@shared/components/organisms/footer-component/footer-component";
 import { IBreadrump } from '@core/models/ibreadrump';
+import { NotificationContainerComponent } from "@shared/components/organisms/notification-container-component/notification-container-component";
 
 @Component({
   selector: 'app-main-layout-component',
-  imports: [SidebarComponent, HeaderComponent, RouterOutlet, TranslocoModule, BreadcrumbComponent, FooterComponent],
+  imports: [SidebarComponent, HeaderComponent, RouterOutlet, TranslocoModule, BreadcrumbComponent, FooterComponent, NotificationContainerComponent],
   templateUrl: './main-layout-component.html',
   styleUrl: './main-layout-component.css',
   changeDetection: ChangeDetectionStrategy.OnPush

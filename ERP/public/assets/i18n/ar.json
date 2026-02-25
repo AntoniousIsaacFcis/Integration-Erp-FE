@@ -46,6 +46,7 @@
     "MARRIED": "متزوج",
     "PROGRAMMING": "برمجة",
     "SAVE_EMPLOYEE":"إضافة الموظف",
+    "GO_TO_LIST":"اذهب الي قائمة الموظفين" ,
     "MESSAGES": {
       "SUCCESS": "تم بنجاح",
       "SUCCESS_MESSAGE": "تمت العملية بنجاح",
@@ -368,7 +369,8 @@
     "ALLOWANCES": "البدلات",
     "BASIC_SALARY": "الراتب الأساسي",
     "DEDUCTIONS": "الخصومات",
-    "TOTAL_SALARY": "الراتب الإجمالي"
+    "TOTAL_SALARY": "الراتب الإجمالي",
+    "SUCCESS_ADD_TITLE":"تم إضافة الموظف بنجاح"
   },
   "NATIONALITIES": {
     "SAUDI": "سعودي",

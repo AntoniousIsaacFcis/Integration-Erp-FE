@@ -5,7 +5,7 @@
       <app-stepper-visual-component [currentStep]="activeSegment()" (stepClick)="onStepperClick($event)" />
     </div>
 
-    <div class="flex-1 scroll-smooth" id="scrollContainer">
+    <div class="flex-1 scroll-smooth" id="main-content">
       <app-form-container-component [title]="t('EMPLOYEES.ADD_EMPLOYEE')" (submit)="onSaveAll()">
 
         <ng-container formFields>
