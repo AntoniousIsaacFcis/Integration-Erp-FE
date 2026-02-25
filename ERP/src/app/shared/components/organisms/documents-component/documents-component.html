@@ -1,0 +1,39 @@
+<div class="my-4" *transloco="let t">
+  <div
+    (dragover)="$event.preventDefault()"
+    (drop)="onFileDropped($event)"
+    class="relative border-2 border-dashed border-black/10 rounded-[12px] h-[190px] flex flex-col items-center justify-center bg-[#FBFBFB] hover:bg-slate-50 transition-colors cursor-pointer group"
+    (click)="fileInput.click()"
+  >
+    <input #fileInput type="file" multiple class="hidden" (change)="onFileSelected($event)">
+
+    <div class="w-[73px] h-[73.001px] flex-center mb-2">
+      <img src="assets/imgs/upload-icon.png" alt="upload" class="w-full h-full object-contain">
+    </div>
+
+    <div class=" flex items-center justify-center">
+      <span class="font-arabic font-semibold text-base leading-none text-black text-right">
+        {{ t('DOCUMENTS.UPLOAD_TEXT') || 'اضغط لرفع الملفات' }}
+      </span>
+    </div>
+  </div>
+
+  @if (files().length > 0) {
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6 animate-fade-in">
+      @for (doc of files(); track $index) {
+        <div class="flex items-center justify-between p-3 border border-black/5 rounded-[8px] bg-white shadow-sm">
+          <div class="flex items-center space-x-3 rtl:space-x-reverse">
+            <div class="p-2 bg-primary/10 rounded text-primary">📄</div>
+            <div class="flex flex-col">
+              <span class="text-sm font-medium text-black truncate max-w-[150px]">{{ doc.name }}</span>
+              <span class="text-xs text-black/40">{{ (doc.size / 1024).toFixed(2) }} KB</span>
+            </div>
+          </div>
+          <button (click)="removeFile($index)" class="ms-4 text-error hover:bg-error-lighter p-2 rounded-full transition-colors">
+            🗑️
+          </button>
+        </div>
+      }
+    </div>
+  }
+</div>

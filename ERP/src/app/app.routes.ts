@@ -1,6 +1,4 @@
 import { Routes } from '@angular/router';
-import { authGuard } from '@core/auth/guards/auth-guard';
-import { guestGuard } from '@core/auth/guards/guest-guard';
 import { LoginLayoutComponent } from '@shared/layouts/login/login-layout-component/login-layout-component';
 import { MainLayoutComponent } from '@shared/layouts/main/main-layout-component/main-layout-component';
 

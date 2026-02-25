@@ -44,6 +44,8 @@
     "OPTIONAL": "اختياري",
     "SINGLE": "أعزب",
     "MARRIED": "متزوج",
+    "PROGRAMMING": "برمجة",
+    "SAVE_EMPLOYEE":"إضافة الموظف",
     "MESSAGES": {
       "SUCCESS": "تم بنجاح",
       "SUCCESS_MESSAGE": "تمت العملية بنجاح",
@@ -100,7 +102,8 @@
     "PERSONAL_INFO": "البيانات الشخصية",
     "JOB_DATA": "البيانات الوظيفية",
     "SALARY": "الراتب",
-    "DOCUMENTS": "المستندات"
+    "DOCUMENTS": "المستندات",
+    "SALARY_DATA": "الراتب"
   },
   "BUTTON": {
     "ADD_LEVEL": "إضافة مستوى",
@@ -187,7 +190,6 @@
     "CLOSING": "اغلاق",
     "PASSWORD_RESET_SUCCESS": "تم تغيير كلمة المرور بنجاح !",
     "ERRORS.PASSWORD_TOO_WEAK": "كلمة السر ضعيفة و سهلة التخمين",
-    "INVALID_PATTERN":"بطاقة الهوية لابد ان تحتوي علي 12-14 رقم",
     "ERRORS": {
       "INVALID_CREDENTIALS": "اسم المستخدم أو كلمة المرور غير صحيحة",
       "UNEXPECTED_ERROR": "خطأ: اسم المستخدم أو كلمة المرور غير صحيحة",
@@ -270,8 +272,9 @@
     "SELECT_DEPARTMENT": "أختر قسم",
     "SELECT_LEVEL": "اختر مستوى",
     "SELECT_TYPE": "اختر نوعاً",
-    "SELECT_GENDER":"النوع",
-    "SELECT_NATIONALITY":"اختر الجنسية"
+    "SELECT_GENDER": "النوع",
+    "SELECT_NATIONALITY": "اختر الجنسية",
+    "ADDRESS": "ادخل العنوان"
   },
   "VALIDATION": {
     "REQUIRED_FIELD": "هذا الحقل مطلوب",
@@ -347,16 +350,34 @@
     "BIRTH_DATE": "تاريخ الميلاد",
     "BIRTH_PLACE ": "محل الميلاد",
     "ADDRESS": "العنوان",
-    "MALE":"ذكر",
-    "FEMALE":"أنثي"
+    "MALE": "ذكر",
+    "FEMALE": "أنثي",
+    "SINGLE": "أعزب/عزباء",
+    "MARRIED": "متزوج/ة",
+    "DIVORCED": "مطلق/ة",
+    "WIDOWED": "أرمل/ة",
+    "EMERGENCY_PHONE": "رقم هاتف الطوارئ",
+    "JOB_TITLE": "المسمى الوظيفي ",
+    "JOINING_DATE": "تاريخ التعيين",
+    "EMPLOYMENT_TYPE": "نوع التوظيف",
+    "PROBATION_PERIOD_END": "فترة الاختبار",
+    "EMPLOYMENT_STATUS": "حالة التوظيف",
+    "STATUS_ONBOARDING": "مرحلة الاعداد",
+    "STATUS_ACTIVE": "نشط",
+    "STATUS_PROBATION": "مرحلة المراقبة",
+    "ALLOWANCES": "البدلات",
+    "BASIC_SALARY": "الراتب الأساسي",
+    "DEDUCTIONS": "الخصومات",
+    "TOTAL_SALARY": "الراتب الإجمالي"
   },
-  "NATIONALITIES":{
-    "SAUDI":"سعودي",
-    "EGYPTIAN":"مصري",
-    "JORDANIAN":"أردني",
-    "EMIRATI":"أماراتي",
-    "KUWAITI":"كويتين"
+  "NATIONALITIES": {
+    "SAUDI": "سعودي",
+    "EGYPTIAN": "مصري",
+    "JORDANIAN": "أردني",
+    "EMIRATI": "أماراتي",
+    "KUWAITI": "كويتين"
   },
+
   "SHIFT": {
     "TITLE": "إدارة الورديات",
     "SHIFT_NAME": "اسم الوردية",
@@ -446,7 +467,11 @@
     "VALIDATION_ERROR": "خطأ في التحقق",
     "NETWORK_ERROR": "خطأ في الشبكة",
     "TIMEOUT_ERROR": "انتهت مهلة الانتظار",
-    "UNKNOWN_ERROR": "خطأ غير معروف"
+    "UNKNOWN_ERROR": "خطأ غير معروف",
+    "INVALID_PHONE_FORMAT": "يرجى إدخال رقم هاتف صحيح يبدأ بـ 01 يتكون من 11 رقم",
+    "INVALID_NATIONAL_ID_FORMAT": "بطاقة الهوية لابد ان تحتوي علي 12-14 رقم",
+    "MIN_VALUE": "القيمة يجب أن تكون 0 أو أكثر",
+    "REQUIRED_FILES":"يجب رفع ملف علي الاقل"
   },
   "JOB_LEVEL": {
     "TITLE": "المستويات الوظيفية",
@@ -504,6 +529,16 @@
     "FORM_SUBMITTED": "تم إرسال النموذج بنجاح",
     "FORM_SAVED": "تم حفظ النموذج بنجاح",
     "FORM_UPDATED": "تم تحديث النموذج بنجاح"
+  },
+  "DOCUMENTS": {
+    "TYPE": "نوع المستند",
+    "EXPIRY_DATE": "تاريخ الإنتهاء",
+    "JOB_FILES": "ملفات الموظف",
+    "UPLOAD_TEXT":"اضغط لرفع الملفات",
+    "MAX_SIZE":"الحد الاقصي للحجم",
+    "SUPPORTED_FORMATS":"الصيغ المدعومة",
+    "NATIONAL_ID":"بطاقة الهوية",
+    "PASSPORT":"الباسبور"
   },
   "LOGGING_IN": "جاري تسجيل الدخول",
   "SEND_RESET_LINK": "إرسال رابط إعادة التعيين",

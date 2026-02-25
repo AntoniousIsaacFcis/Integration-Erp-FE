@@ -1,51 +1,102 @@
-import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
-import { IEmployeeForm } from '@features/employees/models/iemployee-form';
-import { StepperVisualComponent } from "./stepper-visual-component/stepper-visual-component";
-import { PersonalComponent } from "./personal-component/personal-component";
-import { JobDetailsComponent } from "./job-details-component/job-details-component";
-import { SalaryComponent } from "./salary-component/salary-component";
-import { DocumentsComponent } from "./documents-component/documents-component";
+import { ChangeDetectionStrategy, Component, computed, inject, signal, viewChild } from '@angular/core';
 import { TranslocoModule } from '@jsverse/transloco';
+import { FormBuilder, Validators } from '@angular/forms';
+import { EmployeeBasicInfoComponent } from "./employee-basic-info-component/employee-basic-info-component";
+import { StepperVisualComponent } from "./stepper-visual-component/stepper-visual-component";
+import { FormContainerComponent } from "@shared/components/organisms/form-container-component/form-container-component";
+import { FormSaveButtonComponent } from "@shared/components/molecules/form-save-button-component/form-save-button-component";
+import { DocumentsComponent } from '@shared/components/organisms/documents-component/documents-component';
+import { IEmployeeForm } from '@features/employees/models/iemployee-form';
+import { rxResource } from '@angular/core/rxjs-interop';
+import { of } from 'rxjs';
+import { EmployeeService } from '@features/employees/services/employee-service';
 
 @Component({
   selector: 'app-add-employee-component',
-  imports: [StepperVisualComponent, PersonalComponent, JobDetailsComponent, SalaryComponent, DocumentsComponent,TranslocoModule],
+  imports: [TranslocoModule, EmployeeBasicInfoComponent, StepperVisualComponent, FormContainerComponent, FormSaveButtonComponent],
   templateUrl: './add-employee-component.html',
   styleUrl: './add-employee-component.css',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AddEmployeeComponent {
-  currentStep = signal(1);
-  isLoading = signal(false);
+  private fb = inject(FormBuilder);
+  private employeeService = inject(EmployeeService);
 
-  masterData = signal<Partial<IEmployeeForm>>({});
+  activeSegment = signal(1);
+  private saveTrigger = signal<IEmployeeForm | null>(null);
 
-  steps = [
-    { id: 1, label: 'MENU.PERSONAL_INFO', icon: 'lucideUser' },
-    { id: 2, label: 'MENU.JOB_DATA', icon: 'lucideBriefcase' },
-    { id: 3, label: 'MENU.SALARY', icon: 'lucideBanknote' },
-    { id: 4, label: 'MENU.DOCUMENTS', icon: 'lucideFileText' }
-  ];
 
-  isFirstStep = computed(() => this.currentStep() === 1);
-  isLastStep = computed(() => this.currentStep() === 4);
+  basicInfoComp = viewChild(EmployeeBasicInfoComponent);
 
-  onStepComplete(data: any) {
-    this.masterData.update(prev => ({ ...prev, ...data }));
-    if (this.currentStep() < 4) {
-      this.currentStep.update(s => s + 1);
+  saveResource = rxResource({
+    params: () => this.saveTrigger(),
+    stream: ({ params }) => {
+      if (!params) return of(null);
+      return this.employeeService.createEmployee(params);
+    }
+  });
+
+  isLoading = computed(() => this.saveResource.isLoading());
+
+  onStepperClick(stepId: number) {
+    this.activeSegment.set(stepId);
+
+    const sectionIds = {
+      1: 'personal-section',
+      2: 'job-section',
+      3: 'salary-section',
+      4: 'docs-section'
+    };
+
+    const targetId = sectionIds[stepId as keyof typeof sectionIds];
+    const targetElement = document.getElementById(targetId);
+    const scrollContainer = document.getElementById('main-content');
+
+    if (targetElement && scrollContainer) {
+      const targetPosition = targetElement.offsetTop - 20;
+
+      scrollContainer.scrollTo({
+        top: targetPosition,
+        behavior: 'smooth'
+      });
     }
   }
 
-  prevStep() {
-    this.currentStep.update(s => Math.max(1, s - 1));
+  async onSaveAll() {
+    const basic = this.basicInfoComp();
+    if (!basic) return;
+
+      basic.submitted.set(true);
+
+      if (basic.mainForm.valid) {
+        const rawData = basic.mainForm.getRawValue();
+
+        const finalPayload: IEmployeeForm = {
+        ...rawData,
+        emergencyContact: rawData.emergencyPhone,
+        documents: rawData.attachedFiles,
+        status: rawData.employmentStatus || 'active',
+        probationPeriod: rawData.probationEndDate || ''
+      } as IEmployeeForm;
+
+       console.log('Sending Payload:', finalPayload);
+        this.saveTrigger.set(finalPayload);
+      } else {
+        this.onStepperClick(1);
+        basic.mainForm.markAllAsTouched();
+        console.error('Form is invalid', basic.mainForm.errors);
+      }
+
   }
 
-  async onFinalSubmit(docs: any) {
-    this.isLoading.set(true);
-    const finalPayload = { ...this.masterData(), documents: docs };
+  navItems = [
+    { id: 1, label: 'MENU.BASIC_INFO', anchor: 'basic-info' },
+    { id: 2, label: 'MENU.DOCUMENTS', anchor: 'docs' }
+  ];
 
-    // ملاحظة: هنا سيتم استدعاء rxResource لعمل POST [cite: 2026-01-25]
-    console.log('Sending to Server:', finalPayload);
+  scrollTo(id: string, stepNumber: number) {
+    this.activeSegment.set(stepNumber);
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
+
 }

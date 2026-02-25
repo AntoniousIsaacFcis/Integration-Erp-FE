@@ -18,6 +18,7 @@ export class AppInputComponent {
   label = input<string>('');
   placeholder = input<string>('');
   control = input.required<FormControl>();
+  type = input<string>('text');
   isPassword = input<boolean>(false);
 
   showErrors = input<boolean>(false);
@@ -26,6 +27,8 @@ export class AppInputComponent {
   requiredErrorKey = input<string>('AUTH.REQUIRED_FIELD')
   emailErrorKey = input<string>('AUTH.INVALID_EMAIL');
   minLengthErrorKey = input<string>('AUTH.MIN_LENGTH');
+  patternErrorKey = input<string>('AUTH.INVALID_PATTERN');
+  minErrorKey = input<string>('ERRORS.MIN_VALUE');
 
   get errorKey(): string | null {
     const ctrl = this.control();
@@ -33,7 +36,8 @@ export class AppInputComponent {
       if (ctrl.errors?.['required']) return this.requiredErrorKey();
       if (ctrl.errors?.['email']) return this.emailErrorKey();
       if (ctrl.errors?.['minlength']) return this.minLengthErrorKey();
-      if (ctrl.errors?.['pattern']) return 'AUTH.INVALID_PATTERN';
+      if (ctrl.errors?.['pattern']) return this.patternErrorKey();
+      if (ctrl.errors?.['min']) return this.minErrorKey();
     }
     return null;
   }

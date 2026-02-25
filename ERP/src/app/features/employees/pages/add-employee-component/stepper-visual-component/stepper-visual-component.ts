@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { TranslocoModule } from '@jsverse/transloco';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { lucideCheck } from '@ng-icons/lucide';
@@ -14,11 +14,17 @@ import { lucideCheck } from '@ng-icons/lucide';
 export class StepperVisualComponent {
   currentStep = input.required<number>();
 
+  stepClick = output<number>();
+
   readonly steps = [
-    { id: 1, label: 'MENU.PERSONAL_INFO' },
-    { id: 2, label: 'MENU.JOB_DATA' },
-    { id: 3, label: 'MENU.SALARY' },
-    { id: 4, label: 'MENU.DOCUMENTS' }
+    { id: 1, label: 'MENU.PERSONAL_INFO', anchor: 'personal' },
+    { id: 2, label: 'MENU.JOB_DATA', anchor: 'job' },
+    { id: 3, label: 'MENU.SALARY', anchor: 'salary' },
+    { id: 4, label: 'MENU.DOCUMENTS', anchor: 'docs' }
   ];
 
+  onStepSelect(stepId: number) {
+    this.stepClick.emit(stepId);
+  }
+  
 }

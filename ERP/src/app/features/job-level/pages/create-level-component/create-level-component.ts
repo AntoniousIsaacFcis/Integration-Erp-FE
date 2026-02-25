@@ -17,6 +17,7 @@ import { AppInputComponent } from "@shared/components/atoms/app-input-component/
 import { AppSelectComponent } from "@shared/components/atoms/app-select-component/app-select-component";
 import { AppRadioComponent } from "@shared/components/atoms/app-radio-component/app-radio-component";
 import { AppTextareaComponent } from "@shared/components/atoms/app-textarea-component/app-textarea-component";
+import { DepartmentsService } from '@features/departments/services/departments-service';
 
 @Component({
   selector: 'app-create-level-component',
@@ -30,6 +31,7 @@ export class CreateLevelComponent {
   private http = inject(HttpClient);
   private _jobLevelService = inject(JobLevelService)
   private readonly _translocoService = inject(TranslocoService);
+  private readonly _departmentService = inject(DepartmentsService);
   private readonly router = inject(Router);
   private readonly destroyRef = inject(DestroyRef);//to kill create request if browser closed
   protected platformId = inject(PLATFORM_ID);
@@ -43,9 +45,10 @@ export class CreateLevelComponent {
       return this.http.get<IDepartment[]>(`${environment.baseUrl}/api/departments`);
     }
   });
-  departments = computed(() => this.departmentsResource.value() ?? []);
+  departments = this._departmentService.localizedDepartments;
 
   isSubmitting = signal(false);
+  isLoadingDepartments = this._departmentService.departmentsResource.isLoading;
 
   jobLevelForm = this.fb.group({
     nameAr: ['', [Validators.required]],

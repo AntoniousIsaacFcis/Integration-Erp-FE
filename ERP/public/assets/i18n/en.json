@@ -41,6 +41,11 @@
     "TOTAL": "Total",
     "EMPTY_STATE": "No Items",
     "WORDS": "Word",
+    "OPTIONAL": "Optional",
+    "SINGLE": "Single",
+    "MARRIED": "Married",
+    "PROGRAMMING": "Programming",
+    "SAVE_EMPLOYEE": "Add Employee",
     "MESSAGES": {
       "SUCCESS": "Success",
       "SUCCESS_MESSAGE": "Operation Completed Successfully",
@@ -92,7 +97,13 @@
     "SYSTEM_CONFIGURATION": "System Configuration",
     "AUDIT_LOG": "Audit Log",
     "SUPPORT": "Support",
-    "PRIVACY": "Privacy Policy"
+    "PRIVACY": "Privacy Policy",
+    "ALL_JOB_LEVELS": "All Job Levels",
+    "PERSONAL_INFO": "Personal Information",
+    "JOB_DATA": "Job Data",
+    "SALARY": "Salary",
+    "DOCUMENTS": "Documents",
+    "SALARY_DATA": "Salary Data"
   },
   "BUTTON": {
     "ADD_LEVEL": "Add Level",
@@ -178,6 +189,7 @@
     "SUCCESS_TITLE": "If there is an account associated with this email, a password reset link has been sent",
     "RESET_LINK_SENT_MSG": "If there is an account associated with this email, a password reset link has been sent",
     "LOGGING": "Logging In",
+    "ERRORS.PASSWORD_TOO_WEAK": "Password is too weak and easy to guess",
     "ERRORS": {
       "INVALID_CREDENTIALS": "Invalid username or password",
       "UNEXPECTED_ERROR": "Error: Invalid username or password",
@@ -251,6 +263,7 @@
     "ENTER_PHONE": "Enter Phone Number",
     "ENTER_ADDRESS": "Enter Address",
     "ENTER_DESCRIPTION": "Description does not exceed 250 words",
+    "DESCRIPTION_LIMIT": "Description does not exceed 250 words",
     "ENTER_USERNAME": "Enter Username",
     "ENTER_PASSWORD": "Enter Password",
     "SELECT_OPTION": "Select an option",
@@ -259,7 +272,10 @@
     "ENTER_CODE": "Enter Code",
     "SELECT_DEPARTMENT": "Select Department",
     "SELECT_LEVEL": "Select Level",
-    "SELECT_TYPE": "Select Type"
+    "SELECT_TYPE": "Select Type",
+    "SELECT_GENDER": "Gender",
+    "SELECT_NATIONALITY": "Select Nationality",
+    "ADDRESS": "Enter Address"
   },
   "VALIDATION": {
     "REQUIRED_FIELD": "This field is required",
@@ -328,7 +344,39 @@
     "EDIT_EMPLOYEE": "Edit Employee",
     "DELETE_EMPLOYEE": "Delete Employee",
     "EMPLOYEE_DETAILS": "Employee Details",
-    "EMPLOYEE_LIST": "Employee List"
+    "EMPLOYEE_LIST": "Employee List",
+    "FULL_NAME_AR": "Full Name in Arabic",
+    "FULL_NAME_EN": "Full Name in English",
+    "NATIONALITY": "Nationality",
+    "BIRTH_DATE": "Birth Date",
+    "BIRTH_PLACE": "Birth Place",
+    "ADDRESS": "Address",
+    "MALE": "Male",
+    "FEMALE": "Female",
+    "SINGLE": "Single",
+    "MARRIED": "Married",
+    "DIVORCED": "Divorced",
+    "WIDOWED": "Widowed",
+    "EMERGENCY_PHONE": "Emergency Phone",
+    "JOB_TITLE": "Job Title",
+    "JOINING_DATE": "Joining Date",
+    "EMPLOYMENT_TYPE": "Employment Type",
+    "PROBATION_PERIOD_END": "Probation Period End",
+    "EMPLOYMENT_STATUS": "Employment Status",
+    "STATUS_ONBOARDING": "Onboarding",
+    "STATUS_ACTIVE": "Active",
+    "STATUS_PROBATION": "Probation",
+    "ALLOWANCES": "Allowances",
+    "BASIC_SALARY": "Basic Salary",
+    "DEDUCTIONS": "Deductions",
+    "TOTAL_SALARY": "Total Salary"
+  },
+  "NATIONALITIES": {
+    "SAUDI": "Saudi",
+    "EGYPTIAN": "Egyptian",
+    "JORDANIAN": "Jordanian",
+    "EMIRATI": "Emirati",
+    "KUWAITI": "Kuwaiti"
   },
   "SHIFT": {
     "TITLE": "Shift Management",
@@ -419,7 +467,11 @@
     "VALIDATION_ERROR": "Validation Error",
     "NETWORK_ERROR": "Network Error",
     "TIMEOUT_ERROR": "Timeout Error",
-    "UNKNOWN_ERROR": "Unknown Error"
+    "UNKNOWN_ERROR": "Unknown Error",
+    "INVALID_PHONE_FORMAT": "Please enter a valid phone number starting with 01 consisting of 11 digits",
+    "INVALID_NATIONAL_ID_FORMAT": "National ID must contain 12-14 digits",
+    "MIN_VALUE": "Value must be 0 or greater",
+    "REQUIRED_FILES": "At least one file must be uploaded"
   },
   "JOB_LEVEL": {
     "TITLE": "Job Levels",
@@ -477,6 +529,16 @@
     "FORM_SUBMITTED": "Form Submitted Successfully",
     "FORM_SAVED": "Form Saved Successfully",
     "FORM_UPDATED": "Form Updated Successfully"
+  },
+  "DOCUMENTS": {
+    "TYPE": "Document Type",
+    "EXPIRY_DATE": "Expiry Date",
+    "JOB_FILES": "Employee Files",
+    "UPLOAD_TEXT": "Click to upload files",
+    "MAX_SIZE": "Maximum Size",
+    "SUPPORTED_FORMATS": "Supported Formats",
+    "NATIONAL_ID": "National ID",
+    "PASSPORT": "Passport"
   },
   "LOGGING_IN": "Logging In",
   "SEND_RESET_LINK": "Send Reset Link",

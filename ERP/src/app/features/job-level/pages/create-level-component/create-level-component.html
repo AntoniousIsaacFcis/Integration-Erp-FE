@@ -1,4 +1,4 @@
-<div class="w-full max-w-[1100px] bg-white rounded-[20px] shadow-soft border border-black/5 p-spacing-xl flex flex-col gap-spacing-lg mx-auto">
+<div class="w-full max-w-standard bg-white rounded-[20px] shadow-soft border border-black/5 p-spacing-xl flex flex-col gap-spacing-lg mx-auto">
   <app-form-container-component *transloco="let t" [title]="t('MENU.CREATE_LEVEL')" (submit)="onSubmit()">
     <ng-container formFields>
       <div class="col-span-2">
@@ -11,7 +11,7 @@
         [placeholder]="t('PLACEHOLDER.SELECT_DEPARTMENT')" [control]="jobLevelForm.controls.departmentId"
         [showErrors]="isFormSubmitted()">
         @for (dept of departments(); track dept.id) {
-        <option [value]="dept.id">{{ dept.nameAr }}</option>
+        <option [value]="dept.id">{{ dept.displayName }}</option>
         }
       </app-app-select-component>
 

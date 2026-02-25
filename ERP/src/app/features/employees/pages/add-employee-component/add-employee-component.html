@@ -1,29 +1,24 @@
-<main class="flex justify-center min-h-screen " *transloco="let t">
+<main class="flex justify-center " *transloco="let t">
+  <div class="w-full max-w-standard bg-white rounded-[20px] shadow-soft border border-black/5 flex flex-col ">
 
-  <div class="w-full max-w-[1100px] bg-white rounded-[20px] shadow-soft border border-black/5  flex flex-col ">
+    <div class=" border-b border-black/5 bg-white rounded-t-[20px]">
+      <app-stepper-visual-component [currentStep]="activeSegment()" (stepClick)="onStepperClick($event)" />
+    </div>
 
-    <app-stepper-visual-component [currentStep]="currentStep()" class="my-3"/>
+    <div class="flex-1 scroll-smooth" id="scrollContainer">
+      <app-form-container-component [title]="t('EMPLOYEES.ADD_EMPLOYEE')" (submit)="onSaveAll()">
 
-    <div class="h-[1px] bg-black/5 w-[90%] mx-auto"></div>
+        <ng-container formFields>
+          <section  class="col-span-full">
+            <app-employee-basic-info-component />
+          </section>
+        </ng-container>
 
-    <div class="animate-fade-in"
-         [class.pointer-events-none]="isLoading()"
-         [class.opacity-50]="isLoading()">
+        <ng-container formActions>
+          <app-form-save-button-component [isLoading]="isLoading()" [label]="'COMMON.SAVE_EMPLOYEE'"  type="submit"/>
+        </ng-container>
 
-      @switch (currentStep()) {
-        @case (1) {
-          <app-personal-component (next)="onStepComplete($event)" />
-        }
-        @case (2) {
-          <app-job-details-component (next)="onStepComplete($event)" (back)="prevStep()" />
-        }
-        @case (3) {
-          <app-salary-component (next)="onStepComplete($event)" (back)="prevStep()" />
-        }
-        @case (4) {
-          <app-documents-component (submit)="onFinalSubmit($event)" (back)="prevStep()" />
-        }
-      }
+      </app-form-container-component>
     </div>
   </div>
 </main>

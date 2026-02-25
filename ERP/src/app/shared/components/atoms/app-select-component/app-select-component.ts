@@ -1,8 +1,10 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { TranslocoModule } from '@jsverse/transloco';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { lucideChevronDown, lucideOctagonX } from '@ng-icons/lucide';
+import { startWith } from 'rxjs';
 
 @Component({
   selector: 'app-app-select-component',
@@ -32,4 +34,10 @@ export class AppSelectComponent {
     }
     return null;
   }
+
+  private controlValue = computed(() =>
+    toSignal(this.control().valueChanges.pipe(startWith(this.control().value)))
+  );
+
+  isValueEmpty = computed(() => !this.controlValue()?.());
 }

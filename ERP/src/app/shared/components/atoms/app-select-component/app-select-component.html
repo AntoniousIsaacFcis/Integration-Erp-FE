@@ -6,8 +6,9 @@
   }
   <div class="relative w-full group">
     <select [formControl]="control()"
-      class="w-full h-[44px] px-md bg-white border border-[#0000001A] rounded-md outline-none transition-all text-sm font-normal text-black appearance-none cursor-pointer focus:border-primary focus:ring-1 focus:ring-primary/20"
-      [class.text-black/20]="!control().value">
+      class="w-full h-[44px] px-md bg-white border border-[#0000001A] rounded-md outline-none transition-all text-sm font-normal  appearance-none cursor-pointer focus:border-primary focus:ring-1 focus:ring-primary/20"
+      [class.text-black/20]="control().value === '' || control().value === null" [class.text-black]="control().value !== '' && control().value !== null"
+      [class.!border-error]="showErrors() && control().invalid" [class.!border-2]="showErrors() && control().invalid">
       <option value="" disabled selected>{{ t(placeholder()) }}</option>
       <ng-content></ng-content>
     </select>

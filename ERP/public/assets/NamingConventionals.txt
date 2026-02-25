@@ -1,0 +1,170 @@
+Angular 21 ERP Project Naming Conventions (2026)
+1. Files & Folders
+• Folders: kebab-case (e.g., `product-details`, `user-management`).
+• Files: kebab-case with type suffix (e.g., `auth.service.ts`, `login.component.ts`, `permission.guard.ts`).
+-------
+2. Components
+• Class Name: PascalCase with 'Component' suffix (e.g., `ProductListComponent`).
+• Selector: kebab-case with 'app-' prefix (e.g., `app-product-list`).
+-------
+3. Services & Models
+• Services: PascalCase with 'Service' suffix (e.g., `AuthService`).
+• Interfaces: PascalCase starting with 'I' (e.g., `IUser`, `IOrder`).
+• Types/Enums: PascalCase (e.g., `UserRole`).
+-------
+4. Signals & Variables
+• Signals: camelCase (e.g., `currentUser = signal(...)`).
+• Computed: camelCase (e.g., `isLoggedIn = computed(...)`).
+• Methods: camelCase (e.g., `onSubmit()`).
+-------
+5. Interceptors & Guards
+Interceptors: camelCase (e.g., errorLogger).
+Guards: camelCase (e.g., permissionGuard).
+Resolvers: camelCase (e.g., productDataResolver).
+-------
+6. Directives & Pipes
+Directives:  PascalCase + Directive suffix  (e.g., NumberOnlyDirective).
+Pipes: PascalCase + Pipe suffix (e.g., SaudiRiyalPipe).
+****************************************************
+Folders Structure (Core vs Shared)
+
+ERP-Project/
+├── src/
+    ├── locale/
+│   │         ├── messages.xlf     (MainFile(english))
+│   │         └── messages.ar.xlf  (transliation(arabic))
+│   ├── app/
+│   │   ├── core/                # (The Brain) - Singletons & Global Logic
+│   │   │   ├── auth/            # AuthService, AuthGuard, Interceptors
+│   │   │   ├── services/        # ApiService, ErrorHandler, Notification ,logger , cache
+│   │   │   ├── models/          # Global Interfaces (User, ApiResponse)
+│   │   │   └── tokens/          # Injection Tokens (API_URL)
+│   │   ├── shared/              # (The Toolkit) - Reusable across features
+│   │   │   ├── components/      # Generic UI (Button, Input, Table)
+│   │   │   ├── layouts/         # Page Wrappers (Main, Auth, Print)
+│   │   │   ├── directives/      # Permissions, ClickOutside
+│   │   │   └── pipes/           # Currency, DateFormatter
+│   │   ├── features/            # (The Body) - Business Modules((Dashboard, Inventory, POS)) (Lazy Loaded)(components/, models/ , services/ , module.routes)
+│   │   │   ├── dashboard/
+│   │   │   ├── inventory/
+│   │   │   └── accounting/
+│   │   ├── app.config.ts        # Framework Config (Zoneless, Routing)
+│   │   └── app.routes.ts        # Main Routing Definitions
+│   ├── theme/                   # (The Soul) - Global Design System
+│   │   ├── _variables.scss      # CSS Variables (Single Source of Truth)
+│   │   ├── _typography.scss     # Fonts, Sizes, Line Heights
+│   │   └── _components.scss     # Complex UI Patterns (using @apply)
+│   └── styles.scss              # Entry point (Tailwind Imports + Theme)
+├── tailwind.config.js           # (The Engine) - Design Tokens Mapping
+├── postcss.config.js            # CSS Processing
+├── tsconfig.json                # Path Aliases (@core, @shared)
+└── package.json                 # Dependencies
+
+feature example:
+src/app/features/organization/
+├── components/                 # Shared UI logic within the module (Pure/Dumb)
+│   ├── level-card/             # Job Level visualization
+│   └── unit-tree/              # Organization hierarchy tree
+├── pages/                      # Page Containers (Smart/Routable)
+│   ├── manage-levels/          # Manage Employee Levels
+│   ├── add-level/              # Add Job Level form
+│   ├── manage-departments/     # Manage Departments screen
+│   └── manage-designations/    # Manage Designations screen
+├── services/                   # Business Logic & API Interaction
+│   ├── organization.service.ts # Core service for general org info
+│   └── levels.service.ts       # Specialized service for Job Levels (rxResource)
+├── models/                     # Interfaces mapped to C# Domain Entities
+│   ├── org-unit.model.ts       # Interface IOrganizationUnit
+│   └── org-level.model.ts      # Interface IOrganizationLevel
+└── organization.routes.ts      # Feature-specific route definitions
+
+shared/layouts/
+├── main/
+│   ├── main-layout.component.ts      # الحاوية الرئيسية (Sidebar + Content + Header)
+│   ├── main-layout.component.html
+│   ├── main-layout.component.scss
+│   └── Internal components/                   # /Layout components only
+│       ├── sidebar/
+│       ├── header/
+│       └── breadcrumbs/
+
+src/
+└── mocks/
+    ├── handlers/
+    │   ├── auth.handlers.ts
+    │   ├── employees.handlers.ts
+    │   └── hr.handlers.ts
+    ├── data/
+    │   └── employees.json
+    └── browser.ts
+****************************************************
+Signal-based Architecture:
+0- no more Async (in return url only)
+1-🚦signals =>for any values(status, ...)
+2-📡 rxResource => Data Fetcher => fetch data from HTTP APIs
+3- 🔄 RxJS/Subjects => Event Stream =>Real-time streams(WebSockets) , Event Bus
+
+
+MSW=>for Mocking
+any sever simulation(delay or server break down simulation) => go to MSW handler (no touch service)
+
+localization
+i18n => english =>localize to => arabic
+
+web workers => for complex time consuming process(such as uploading big file or exporting to excel) which take more than 50ms
+
+Service Workers => for offline mode and client cache => use it before production of client mr abdalla wanna it
+
+Use Absolute Imports(alias) => in tsconfig.app.json
+
+Route-level Lazy Loading=> using withPreloadAllModules()
+@defer =>for any component:
+ 1-use external libaray =>charts , Map
+ 2-Below the Viewport
+ 3- Modal, Drawer, Complex Dropdown
+
+@core/services=>
+Global Services(singleton service) : (providedIn: 'root')
+ex:AuthService, ApiService, ThemeService
+
+1-Attribute Directives
+2-Structural Directives(Renderer2 for broswer and server compactability)
+=>hostDirectives => make directive part of compoenent
+
+@features/inventory/services
+local or module Services : in component providers
+=> to be destrcuted when user close the module
+
+=> NgOptimizedImage Not <img> => lazy loading
+
+=> thosusand rows table =>CdkVirtualScrollViewport => draw seen rows only
+
+=>changeDetection: ChangeDetectionStrategy.OnPush for every component (change detection only if input or signal changed)
+
+=>Render Mode=> in app.routes.ts => renderMode: 'server'(dynamic/seo) or 'client'(dashboard/private) or 'preload'(static)
+
+icons => use lucide library as it support tree shake(better peformance) and angular singals(best practise with angular 2026)
+
+ui principle =>any elment repeated => reusable component => in shared/components/
+
+Atomic Decomposition =>
+1-Atoms : smallest pieces => icon or Label
+2-Molecules : two or more atoms => searchBar (input + icon)
+3-Organisms: Big Parts => Header ,Table
+
+transloco => structural directive =>{{ t('...') }} inside *transloco="let t" → default choice
+=>Use pipe only when you cannot use structural directive.
+
+
+responsive =>Desktop Responsive first approch
+Large Desktop: 2560 * 1440
+Standard Desktop : 1920 * 1080 (standard for our design)
+MacBook 14 : 1512*982
+Small Laptop : 1366 * 768
+
+Put the interface in the closest place to where it is used, and move it to the Core only when another module needs it.
+
+Fetch Data => 
+in service =>GET/POST/UPDATE/DELETE => observables
+in component which consumes service => rxResource for get or subscripe(firstValueFrom for delete and show toast or switchmap to process data before displaying it  )
+one exception => GlobalResource such as setting or lang or currentuser can use rxResource or Signal in service to preserve the Shared State
