@@ -1,7 +1,7 @@
 <div class="flex flex-col items-center max-w-standard mx-auto  ">
   <div class="w-full  h-[42px] mb-3 shrink-0 relative z-50">
-    <app-page-header-component [(selectedStatus)]="statusFilter" [actionLabel]="actionLabel()"
-      (actionClicked)="onAdd.emit()" [(searchQuery)]="searchTerm" />
+    <app-page-header-component 
+      (actionClicked)="onAdd.emit()" [(searchQuery)]="searchTerm" [filters]="extraFilters()" [actions]="extraActions()"/>
   </div>
 
   <div class="w-full  min-h-[500px]   shadow-soft  relative mt-5 border rounded-lg">

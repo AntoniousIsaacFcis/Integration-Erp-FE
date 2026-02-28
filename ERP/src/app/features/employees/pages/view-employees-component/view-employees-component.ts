@@ -8,13 +8,16 @@ import { AppBaseTableComponent } from "@shared/components/organisms/app-base-tab
 import { TranslocoModule } from '@jsverse/transloco';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { lucidePencil, lucideSaudiRiyal, lucideTrash2 } from '@ng-icons/lucide';
-import { IEmployeeForm, IEmployeeResponse } from '@features/employees/models/iemployee';
+import { IEmployeeResponse } from '@features/employees/models/iemployee';
 import { TranslationService } from '@core/services/translation-service';
 import { EmploymentTypesService } from '@core/services/employment-types-service';
+import { DateFilterComponent } from "@shared/components/molecules/date-filter-component/date-filter-component";
+import { StatusBadgeComponent } from "@shared/components/molecules/status-badge-component/status-badge-component";
+import { ActionBtnComponent } from "@shared/components/molecules/action-btn-component/action-btn-component";
 
 @Component({
   selector: 'app-view-employees-component',
-  imports: [TranslocoModule, NgIcon, AppBaseTableComponent,DecimalPipe],
+  imports: [TranslocoModule, NgIcon, AppBaseTableComponent, DecimalPipe, DateFilterComponent, ActionBtnComponent],
   templateUrl: './view-employees-component.html',
   styleUrl: './view-employees-component.css',
   providers: [provideIcons({ lucidePencil, lucideTrash2 ,lucideSaudiRiyal})],
@@ -31,11 +34,14 @@ export class ViewEmployeesComponent {
   pageSize = signal(10);
   searchTerm = signal('');
 
+  joiningDate = signal<string>('');
+
   employeesResource = rxResource<IEmployeeResponse, any>({
     params: () => ({
       page: this.currentPage(),
       limit: this.pageSize(),
       search: this.searchTerm(),
+      joiningDate: this.joiningDate()
     }),
     stream: ({ params }) => {
       if (!isPlatformBrowser(this.platformId))
@@ -71,5 +77,9 @@ export class ViewEmployeesComponent {
     this.router.navigate(['/employees/add']);
   }
 
+  handleUpload() {
+    console.log('Open Upload Dialog');
+    // هنا يمكنك استدعاء الـ Modal الخاص بالرفع مستقبلاً
+  }
 
 }

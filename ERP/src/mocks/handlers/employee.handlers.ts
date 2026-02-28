@@ -14,8 +14,9 @@ export const employeeHandlers = [
     // Extract query parameters from rxResource
     const page = Number(url.searchParams.get('page') || 1);
     const limit = Number(url.searchParams.get('limit') || 10);
-    const search = url.searchParams.get('search')?.toLowerCase() || '';
+    const search = url.searchParams.get('search')?.toLowerCase().trim() || '';
     const status = url.searchParams.get('status') || '';
+    const joiningDateFilter = url.searchParams.get('joiningDate') || '';
 
     // Filter Logic
     let filtered = localEmployees.filter(emp => {
@@ -26,7 +27,14 @@ export const employeeHandlers = [
 
       const matchesStatus = !status || emp.employmentStatus === status;
 
-      return matchesSearch && matchesStatus;
+      let matchesDate = true;
+    if (joiningDateFilter) {
+      const filterDate = new Date(joiningDateFilter);
+      const employeeDate = new Date(emp.joiningDate);
+      matchesDate = employeeDate >= filterDate;
+    }
+
+      return matchesSearch && matchesStatus && matchesDate;
     });
 
     // Pagination Logic

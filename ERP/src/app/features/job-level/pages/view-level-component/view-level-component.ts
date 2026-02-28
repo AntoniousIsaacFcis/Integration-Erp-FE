@@ -9,10 +9,13 @@ import { isPlatformBrowser } from '@angular/common';
 import { of } from 'rxjs';
 import { JobLevelService } from '@features/job-level/service/job-level-service';
 import { Router } from '@angular/router';
+import { ActionBtnComponent } from "@shared/components/molecules/action-btn-component/action-btn-component";
+import { DateFilterComponent } from "@shared/components/molecules/date-filter-component/date-filter-component";
+import { StatusBadgeComponent } from "@shared/components/molecules/status-badge-component/status-badge-component";
 
 @Component({
   selector: 'app-view-level-component',
-  imports: [TranslocoModule, AppBaseTableComponent, NgIcon],
+  imports: [TranslocoModule, AppBaseTableComponent, NgIcon, ActionBtnComponent, StatusBadgeComponent],
   templateUrl: './view-level-component.html',
   styleUrl: './view-level-component.css',
   providers: [provideIcons({ lucideTrash2, lucidePencil })],
@@ -28,8 +31,7 @@ export class ViewLevelComponent {
   pageSize = signal(10);
 
   searchTerm = signal('');
-
-    selectedStatus = signal<'active' | 'inactive' | ''>('');
+  selectedStatus = signal<'active' | 'inactive' | ''>('');
 
   levelsResource = rxResource({
     params: () => ({

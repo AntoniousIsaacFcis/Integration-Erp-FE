@@ -1,9 +1,10 @@
 import { ChangeDetectionStrategy, Component, computed, input, model, signal } from '@angular/core';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { lucideCheck, lucideChevronDown, lucideSettings2 } from '@ng-icons/lucide';
+import { TranslocoDirective } from "@jsverse/transloco";
 @Component({
   selector: 'app-status-badge-component',
-  imports: [NgIcon],
+  imports: [NgIcon, TranslocoDirective],
   templateUrl: './status-badge-component.html',
   styleUrl: './status-badge-component.css',
   providers: [provideIcons({ lucideSettings2, lucideChevronDown, lucideCheck })],
@@ -26,9 +27,9 @@ export class StatusBadgeComponent {
   isDropdownOpen = signal(false);
 
   statuses = [
-    { value: '', label: 'الحالة' },
-    { value: 'active', label: 'نشط' },
-    { value: 'inactive', label: 'غير نشط' }
+    { value: '', label: 'FILTERS.STATUS' },
+    { value: 'active', label: 'FILTERS.ACTIVE' },
+    { value: 'inactive', label:'FILTERS.INACTIVE'}
   ] as const;
 
   currentLabel = computed(() => {

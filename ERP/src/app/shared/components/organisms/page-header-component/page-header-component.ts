@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component, computed, inject, input, model, output } from '@angular/core';
+import { NgTemplateOutlet } from '@angular/common';
+import { ChangeDetectionStrategy, Component, computed, inject, input, model, output, TemplateRef } from '@angular/core';
 import { BreadcrumbService } from '@core/services/breadcrumb-service';
 import { TranslocoModule } from '@jsverse/transloco';
 import { PageTitleComponent } from "@shared/components/atoms/page-title-component/page-title-component";
@@ -8,7 +9,7 @@ import { StatusBadgeComponent } from "@shared/components/molecules/status-badge-
 
 @Component({
   selector: 'app-page-header-component',
-  imports: [PageTitleComponent, TranslocoModule, ActionBtnComponent, SearchbarComponent, StatusBadgeComponent],
+  imports: [PageTitleComponent, TranslocoModule, SearchbarComponent, NgTemplateOutlet],
   templateUrl: './page-header-component.html',
   styleUrl: './page-header-component.css',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -21,7 +22,6 @@ export class PageHeaderComponent {
     return items.length > 0 ? items[items.length - 1].label : '';
   });
 
- actionLabel = input.required<string>();
  actionClicked = output<void>();
 
 searchQuery = model<string>('');//modal for twoWay binding
@@ -30,5 +30,7 @@ searchQuery = model<string>('');//modal for twoWay binding
     this.actionClicked.emit();
   }
 
-  selectedStatus = model<'active' | 'inactive' | ''>('');
+
+  filters = input<TemplateRef<any> | null>(null);
+  actions = input<TemplateRef<any> | null>(null);
 }

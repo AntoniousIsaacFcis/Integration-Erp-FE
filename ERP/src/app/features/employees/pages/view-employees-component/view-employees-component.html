@@ -1,6 +1,24 @@
-<app-app-base-table-component [(searchTerm)]="searchTerm" actionLabel="BUTTON.ADD_EMPLOYEE"
-  (onAdd)="handleCreateNavigation()" [totalItems]="totalItems()" [(currentPage)]="currentPage" *transloco="let t"
+<app-app-base-table-component [(searchTerm)]="searchTerm" [totalItems]="totalItems()" [extraFilters]="empFilters"
+  [extraActions]="empActions" (onAdd)="handleCreateNavigation()" [(currentPage)]="currentPage" *transloco="let t"
   class="text-black">
+
+  <ng-template #empFilters>
+    <div class="flex items-center gap-3">
+      <app-date-filter-component [(selectedDate)]="joiningDate" />
+    </div>
+  </ng-template>
+
+  <ng-template #empActions>
+    <div class="flex items-center gap-3">
+      <app-action-btn-component
+        [label]="'FILTERS.LOAD_FILES'"
+        (clicked)="handleUpload()" iconName="lucideCloudUpload" />
+
+      <app-action-btn-component
+        [label]="'FILTERS.ADD_EMPLOYEE'"
+        (clicked)="handleCreateNavigation()" iconName="lucideUserPlus"/>
+    </div>
+  </ng-template>
 
   <div class="w-full">
     @if (employeesResource.isLoading()) {

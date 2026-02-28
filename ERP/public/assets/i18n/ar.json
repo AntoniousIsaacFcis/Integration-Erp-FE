@@ -128,7 +128,10 @@
     "REJECT": "رفض",
     "BACK": "رجوع",
     "SAVE": "حفظ",
-    "CANCEL": "إلغاء"
+    "CANCEL": "إلغاء",
+    "UPLOAD_JOBLEVEL":"إضافة مستوي جديد",
+    "STATUS_FILTER":"الحالة",
+    "DATE_FILTER":"التاريخ"
   },
   "HEADER": {
     "NOTIFICATION": "التنبيهات",
@@ -513,12 +516,17 @@
     "DEPARTMENT": "القسم",
     "DESIGNATION": "المسمى الوظيفي",
     "STATUS": "الحالة",
+    "ACTIVE":"نشط",
+    "INACTIVE":"غير نشط",
     "DATE_FROM": "من التاريخ",
     "DATE_TO": "إلى التاريخ",
     "SEARCH": "بحث",
     "APPLY_FILTERS": "تطبيق التصفية",
     "CLEAR_FILTERS": "مسح التصفية",
-    "ADVANCED_FILTERS": "تصفية متقدمة"
+    "ADVANCED_FILTERS": "تصفية متقدمة",
+    "LOAD_FILES":"تحميل ملفات الموظفين",
+    "ADD_EMPLOYEE":"إضافة موظف",
+    "DATE":"التاريخ"
   },
   "PAGINATION": {
     "FIRST": "الأول",
