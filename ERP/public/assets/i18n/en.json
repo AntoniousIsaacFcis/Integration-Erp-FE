@@ -46,6 +46,7 @@
     "MARRIED": "Married",
     "PROGRAMMING": "Programming",
     "SAVE_EMPLOYEE": "Add Employee",
+    "GO_TO_LIST": "Go to Employee List",
     "MESSAGES": {
       "SUCCESS": "Success",
       "SUCCESS_MESSAGE": "Operation Completed Successfully",
@@ -275,7 +276,16 @@
     "SELECT_TYPE": "Select Type",
     "SELECT_GENDER": "Gender",
     "SELECT_NATIONALITY": "Select Nationality",
-    "ADDRESS": "Enter Address"
+    "ADDRESS": "Enter Address",
+    "REJECTED": "Rejected",
+    "ARABICNAME": "Enter Full Name in Arabic",
+    "ENGLISHNAME": "Enter Full Name in English",
+    "PASSPORT": "Enter National ID or Passport Number",
+    "GENDER": "Enter Gender",
+    "MARITAL_STATUS": "Single",
+    "JOB_TITLE": "Programmer",
+    "DOCUMENTS_TYPE": "pdf",
+    "SELECT_JOB_TITLE": "Select Employment Type"
   },
   "VALIDATION": {
     "REQUIRED_FIELD": "This field is required",
@@ -327,7 +337,7 @@
     "INACTIVE": "Inactive",
     "FULL_NAME": "Full Name",
     "EMPLOYEE_ID": "Employee ID",
-    "NATIONAL_ID": "National ID",
+    "NATIONAL_ID": "National ID or Passport",
     "DATE_OF_BIRTH": "Date of Birth",
     "GENDER": "Gender",
     "MARITAL_STATUS": "Marital Status",
@@ -369,7 +379,16 @@
     "ALLOWANCES": "Allowances",
     "BASIC_SALARY": "Basic Salary",
     "DEDUCTIONS": "Deductions",
-    "TOTAL_SALARY": "Total Salary"
+    "TOTAL_SALARY": "Total Salary",
+    "SUCCESS_ADD_TITLE": "Employee Added Successfully",
+    "TABLE": {
+      "EMPLOYEE_ID": "Employee ID",
+      "EMPLOYEE_NAME": "Employee Name",
+      "EMPLOYEE_JOB_NAME": "Job Title",
+      "EMPLOYEE_STATUS": "Employment Status",
+      "JOB_TYPE": "Employment Type",
+      "BASIC_SALARY": "Basic Salary"
+    }
   },
   "NATIONALITIES": {
     "SAUDI": "Saudi",

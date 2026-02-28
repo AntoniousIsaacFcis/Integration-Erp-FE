@@ -4,14 +4,15 @@
     <div class="text-lg font-semibold text-black">{{ t('MENU.PERSONAL_INFO') }}</div>
   </div>
 
-  <app-app-input-component [label]="t('EMPLOYEES.FULL_NAME_AR')+ '*'" [control]="getControl('fullNameAr')" [placeholder]="'PLACEHOLDER.ARABICNAME'"
-    [showErrors]="submitted()" autocomplete="name" name="full-name" />
+  <app-app-input-component [label]="t('EMPLOYEES.FULL_NAME_AR')+ '*'" [control]="getControl('fullNameAr')"
+    [placeholder]="'PLACEHOLDER.ARABICNAME'" [showErrors]="submitted()" autocomplete="name" name="full-name" />
 
-  <app-app-input-component [label]="t('EMPLOYEES.FULL_NAME_EN')+ '*'" [control]="getControl('fullNameEn')" [placeholder]="'PLACEHOLDER.ENGLISHNAME'"
-    [showErrors]="submitted()" name="full-name-en" autocomplete="name" />
+  <app-app-input-component [label]="t('EMPLOYEES.FULL_NAME_EN')+ '*'" [control]="getControl('fullNameEn')"
+    [placeholder]="'PLACEHOLDER.ENGLISHNAME'" [showErrors]="submitted()" name="full-name-en" autocomplete="name" />
 
-  <app-app-input-component [label]="t('EMPLOYEES.NATIONAL_ID')+ '*'" [control]="getControl('nationalId')" [placeholder]="'PLACEHOLDER.PASSPORT'"
-    [showErrors]="submitted()" [patternErrorKey]="'ERRORS.INVALID_NATIONAL_ID_FORMAT'" autocomplete="off" />
+  <app-app-input-component [label]="t('EMPLOYEES.NATIONAL_ID')+ '*'" [control]="getControl('nationalId')"
+    [placeholder]="'PLACEHOLDER.PASSPORT'" [showErrors]="submitted()"
+    [patternErrorKey]="'ERRORS.INVALID_NATIONAL_ID_FORMAT'" autocomplete="off" />
 
   <app-app-select-component [label]="t('EMPLOYEES.GENDER')+ '*'" [control]="getControl('gender')"
     [showErrors]="submitted()" [placeholder]="'PLACEHOLDER.GENDER'">
@@ -33,7 +34,7 @@
   </app-app-select-component>
 
   <app-app-select-component [label]="t('EMPLOYEES.MARITAL_STATUS')+ '*'" [control]="getControl('maritalStatus')"
-    [showErrors]="submitted()"  [placeholder]="'PLACEHOLDER.MARITAL_STATUS'">
+    [showErrors]="submitted()" [placeholder]="'PLACEHOLDER.MARITAL_STATUS'">
     <option value="single">{{ t('EMPLOYEES.SINGLE') }}</option>
     <option value="married">{{ t('EMPLOYEES.MARRIED') }}</option>
     <option value="divorced">{{ t('EMPLOYEES.DIVORCED') }}</option>
@@ -63,8 +64,17 @@
     <div class="text-lg font-semibold text-black">{{ t('MENU.JOB_DATA') }}</div>
   </div>
 
-  <app-app-input-component [label]="t('EMPLOYEES.JOB_TITLE') + '*'" [control]="getControl('jobTitleId')"
-    [showErrors]="submitted()" [placeholder]="'PLACEHOLDER.JOB_TITLE'"/>
+  <app-app-select-component [label]="t('EMPLOYEES.JOB_TITLE') + '*'" [control]="getControl('jobTitleId')"
+    [showErrors]="submitted()"
+    [placeholder]="isLoadingJobs() ? t('COMMON.LOADING') : t('PLACEHOLDER.SELECT_JOB_TITLE')">
+    @if (_jobTitlesService.resource.error()) {
+    <option disabled class="text-error">⚠️ {{ t('ERRORS.LOAD_FAILED') }}</option>
+    } @else {
+    @for (job of jobTitles(); track job.id) {
+    <option [value]="job.id">{{ job.displayName }}</option>
+    }
+    }
+  </app-app-select-component>
 
   <app-app-select-component [label]="t('EMPLOYEES.DEPARTMENT') + '*'" [control]="getControl('departmentId')"
     [showErrors]="submitted()" [placeholder]="isLoadingDepartments() ? t('COMMON.LOADING') : t('COMMON.PROGRAMMING')">
@@ -84,7 +94,7 @@
     <option disabled class="text-error">⚠️ {{ t('ERRORS.LOAD_FAILED') }}</option>
     } @else {
     @for (type of employmentTypes(); track type.id) {
-    <option [value]="type.id">{{ type.displayName }}</option>
+    <option [value]="type.id">{{ type.EmploymentTypeDisplayName }}</option>
     }
     }
   </app-app-select-component>
@@ -100,6 +110,7 @@
     <option value="on-boarding">{{ t('EMPLOYEES.STATUS_ONBOARDING') }}</option>
     <option value="active">{{ t('EMPLOYEES.STATUS_ACTIVE') }}</option>
     <option value="probation">{{ t('EMPLOYEES.STATUS_PROBATION') }}</option>
+    <option value="probation">{{ t('EMPLOYEES.STATUS_HOLIDAY') }}</option>
   </app-app-select-component>
 
   <!-- salary -->

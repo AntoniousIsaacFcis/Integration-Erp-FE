@@ -283,7 +283,8 @@
     "GENDER":"ادخل النوع",
     "MARITAL_STATUS":"أعزب",
     "JOB_TITLE":"مبرمج",
-    "DOCUMENTS_TYPE":"pdf"
+    "DOCUMENTS_TYPE":"pdf",
+    "SELECT_JOB_TITLE":"ادخل نوع التوظيف"
   },
   "VALIDATION": {
     "REQUIRED_FIELD": "هذا الحقل مطلوب",
@@ -371,14 +372,23 @@
     "EMPLOYMENT_TYPE": "نوع التوظيف",
     "PROBATION_PERIOD_END": "فترة الاختبار",
     "EMPLOYMENT_STATUS": "حالة التوظيف",
-    "STATUS_ONBOARDING": "مرحلة الاعداد",
+    "STATUS_ONBOARDING": "تحت التجربة",
     "STATUS_ACTIVE": "نشط",
-    "STATUS_PROBATION": "مرحلة المراقبة",
+    "STATUS_PROBATION": "مفصول",
+    "STATUS_HOLIDAY":"في الإجازة",
     "ALLOWANCES": "البدلات",
     "BASIC_SALARY": "الراتب الأساسي",
     "DEDUCTIONS": "الخصومات",
     "TOTAL_SALARY": "الراتب الإجمالي",
-    "SUCCESS_ADD_TITLE":"تم إضافة الموظف بنجاح"
+    "SUCCESS_ADD_TITLE":"تم إضافة الموظف بنجاح",
+    "TABLE":{
+      "EMPLOYEE_ID":"الرقم الوظيفي",
+      "EMPLOYEE_NAME":"أسم الموظف",
+      "EMPLOYEE_JOB_NAME":"المسمى الوظيفي",
+      "EMPLOYEE_STATUS":"حالة التوظيف",
+      "JOB_TYPE":"نوع الدوام",
+      "BASIC_SALARY":"الراتب الأساسي"
+    }
   },
   "NATIONALITIES": {
     "SAUDI": "سعودي",

@@ -164,7 +164,16 @@ Small Laptop : 1366 * 768
 
 Put the interface in the closest place to where it is used, and move it to the Core only when another module needs it.
 
-Fetch Data => 
+Fetch Data =>
 in service =>GET/POST/UPDATE/DELETE => observables
 in component which consumes service => rxResource for get or subscripe(firstValueFrom for delete and show toast or switchmap to process data before displaying it  )
 one exception => GlobalResource such as setting or lang or currentuser can use rxResource or Signal in service to preserve the Shared State
+
+transliation
+1-static data (Labels , Sidebar Names) => *transolcoModule with json Files
+2-for dynamic data =>
+  a-text(UserName or JobTitleName) => must make 2 colums in database (NameAr , NameEn) +using computed in component to detemine which according current language
+  c-Dropdown =>
+        1-two columns + computed in service (if has service) (data from backend : mainpulated Data => can POST or DELETE) ex:employmentType and Nationality
+        2-one column + using Keys in <option></option>  (if not serivce as not coming data from api , but static in angular) ex:gender
+  b-email and numbers(quantites , dates) => not translated

@@ -14,6 +14,7 @@ import { startWith } from 'rxjs';
 import { IDocument } from '@shared/models/idocument';
 import { DocumentsComponent } from "@shared/components/organisms/documents-component/documents-component";
 import { fileValidation } from '@shared/validators/file-validation.validator';
+import { JobTitlesService } from '@core/services/job-titles-service';
 
 @Component({
   selector: 'app-employee-basic-info-component',
@@ -29,6 +30,7 @@ export class EmployeeBasicInfoComponent {
   private departmentService = inject(DepartmentsService);
   protected nationalitiesService = inject(NationalitiesService);
   protected _employmentTypesService = inject(EmploymentTypesService);
+  protected _jobTitlesService = inject(JobTitlesService);
   phoneRegex = /^\+?([0-9\s\-]{11,15})$/;
 
   constructor() {
@@ -78,7 +80,7 @@ export class EmployeeBasicInfoComponent {
     //Documents
     documentType: ['', [Validators.required]],
     expiryDate: ['', [Validators.required]],
-    attachedFiles: [[] as IDocument[], [Validators.required, Validators.minLength(1),fileValidation(10, ['application/pdf', 'image/jpeg', 'image/png'])]]
+    attachedFiles: [[] as IDocument[], [Validators.required, Validators.minLength(1), fileValidation(10, ['application/pdf', 'image/jpeg', 'image/png'])]]
   });
 
   handleFilesChange(files: IDocument[]) {
@@ -115,6 +117,9 @@ export class EmployeeBasicInfoComponent {
 
   employmentTypes = this._employmentTypesService.list;
   isLoadingTypes = this._employmentTypesService.resource.isLoading;
+
+  jobTitles = this._jobTitlesService.list;
+  isLoadingJobs = this._jobTitlesService.resource.isLoading;
 
   getControl(name: string): FormControl {
     return this.mainForm.get(name) as FormControl;

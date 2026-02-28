@@ -6,3 +6,10 @@ export interface IEmployeeForm extends IPersonalInfo, IJobDetails, ISalary {
   id?: string;
   documents?: any[];
 }
+
+export interface IEmployeeResponse {
+  data: IEmployeeForm[];
+  total: number;
+  page: number;
+  limit: number;
+}

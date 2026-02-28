@@ -5,7 +5,8 @@ import { departmentHandlers } from './handlers/department.handler';
 import { environment } from '@env/environment.development';
 import { nationalityHandlers } from './handlers/nationalities.handler';
 import { employmentTypeHandlers } from './handlers/employment-types.handler';
-import { AddemployeeFormHandlers } from './handlers/add-employee-Form.handler';
+import { employeeHandlers } from './handlers/employee.handlers';
+import { jobTitlesHandlers } from './handlers/job-titles.handler';
 
 export const worker = setupWorker(
   ...authHandlers,
@@ -13,7 +14,8 @@ export const worker = setupWorker(
   ...departmentHandlers,
   ...nationalityHandlers,
   ...employmentTypeHandlers,
-  ...AddemployeeFormHandlers
+  ...employeeHandlers,
+  ...jobTitlesHandlers
 );
 
 //allowing workwe in development only

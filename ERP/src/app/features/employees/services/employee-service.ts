@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '@env/environment.development';
-import { IEmployeeForm } from '../models/iemployee-form';
+import { IEmployeeForm, IEmployeeResponse } from '../models/iemployee';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -17,5 +17,9 @@ export class EmployeeService {
 
   getEmployeeById(id: string): Observable<IEmployeeForm> {
     return this.http.get<IEmployeeForm>(`${this.API_URL}/${id}`);
+  }
+
+  getEmployees(params: any): Observable<IEmployeeResponse> {
+    return this.http.get<IEmployeeResponse>(this.API_URL, { params });
   }
 }

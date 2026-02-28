@@ -5,37 +5,35 @@ import { rxResource } from '@angular/core/rxjs-interop';
 import { environment } from '@env/environment.development';
 import { catchError, of } from 'rxjs';
 
-export interface IEmploymentType {
+export interface IJobTitle {
   id: string;
-  employmentTypeAr: string;
-  employmentTypeEn: string;
+  nameAr: string;
+  nameEn: string;
 }
 
 @Injectable({
   providedIn: 'root',
 })
-export class EmploymentTypesService {
+export class JobTitlesService {
   private http = inject(HttpClient);
   private translationService = inject(TranslationService);
 
-  resource = rxResource({
-    stream: () => this.http.get<IEmploymentType[]>(`${environment.baseUrl}/api/employment-types`).pipe(
+  resource = rxResource({ //global service so rxResource rather than observable
+    stream: () => this.http.get<IJobTitle[]>(`${environment.baseUrl}/api/job-titles`).pipe(
       catchError(err => {
-        console.error('Failed to load nationalities', err);
+        console.error('Failed to load job titles', err);
         return of([]);
       })
     )
   });
 
-  //live translation according lang
   list = computed(() => {
-    const data = this.resource.value() ?? [];
     const lang = this.translationService.lang();
-
-    return data.map(type => ({
-      id: type.id,
-      EmploymentTypeDisplayName: lang === 'ar' ? type.employmentTypeAr : type.employmentTypeEn
+    const data = this.resource.value() ?? [];
+    return data.map(job => ({
+      ...job,
+      displayName: lang === 'ar' ? job.nameAr : job.nameEn
     }));
   });
-}
 
+}
