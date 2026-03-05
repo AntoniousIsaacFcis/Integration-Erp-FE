@@ -21,6 +21,12 @@ export const EMPLOYEE_ROUTES: Routes = [
           breadcrumb: 'MENU.ADD_EMPLOYEE',
         }
       },
+      {
+        path: 'details/:empId',
+        loadComponent: () => import('./pages/employee-details-component/employee-details-component')
+          .then(m => m.EmployeeDetailsComponent),
+        data: { breadcrumb: 'MENU.EMPLOYEE_DETAILS' }
+      },
       { path: '', redirectTo: 'view', pathMatch: 'full' }
     ]
   }

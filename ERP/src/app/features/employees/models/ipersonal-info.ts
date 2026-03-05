@@ -10,4 +10,5 @@ export interface IPersonalInfo {
   email: string;
   address: string;
   emergencyContact: string;
+  fingerPrintNumber?: string;
 }

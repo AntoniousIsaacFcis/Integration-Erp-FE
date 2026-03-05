@@ -1,0 +1,16 @@
+<div class="flex justify-center items-center gap-4xl overflow-x-auto scrollbar-none " *transloco="let t">
+  @for (tab of tabs(); track tab.id) {
+    <button
+      type="button"
+      (click)="tabClick.emit(tab.id)"
+      [class]="activeId() === tab.id
+        ? 'text-[#537C0F] font-medium  bg-[#537C0F33] rounded-sm'
+        : 'text-black/60 hover:text-black '"
+      class="px-3 py-2 transition-all duration-300 whitespace-nowrap flex items-center  group outline-none"
+    >
+      <span class="text-base font-medium font-arabic">
+        {{ t(tab.label) }}
+      </span>
+    </button>
+  }
+</div>

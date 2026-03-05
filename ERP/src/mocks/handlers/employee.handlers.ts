@@ -28,11 +28,11 @@ export const employeeHandlers = [
       const matchesStatus = !status || emp.employmentStatus === status;
 
       let matchesDate = true;
-    if (joiningDateFilter) {
-      const filterDate = new Date(joiningDateFilter);
-      const employeeDate = new Date(emp.joiningDate);
-      matchesDate = employeeDate >= filterDate;
-    }
+      if (joiningDateFilter) {
+        const filterDate = new Date(joiningDateFilter);
+        const employeeDate = new Date(emp.joiningDate);
+        matchesDate = employeeDate >= filterDate;
+      }
 
       return matchesSearch && matchesStatus && matchesDate;
     });
@@ -50,6 +50,16 @@ export const employeeHandlers = [
       page: page,
       limit: limit
     });
+  }),
+
+
+  http.get(`${environment.baseUrl}/api/employees/:id`, async ({ params }) => {
+    const { id } = params;
+    const employee = localEmployees.find(e => e.id === id);
+
+    await delay(400);
+    if (!employee) return new HttpResponse(null, { status: 404 });
+    return HttpResponse.json(employee);
   }),
 
   // 2. POST Method: Create Employee

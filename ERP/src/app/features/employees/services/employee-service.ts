@@ -3,6 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { environment } from '@env/environment.development';
 import { IEmployeeForm, IEmployeeResponse } from '../models/iemployee';
 import { Observable } from 'rxjs';
+import { IAttendanceDay } from '../models/iattendance-day';
 
 @Injectable({
   providedIn: 'root',
@@ -22,4 +23,6 @@ export class EmployeeService {
   getEmployees(params: any): Observable<IEmployeeResponse> {
     return this.http.get<IEmployeeResponse>(this.API_URL, { params });
   }
+
+
 }

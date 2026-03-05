@@ -292,31 +292,41 @@
   * {
     border-color: var(--color-border);
   }
-
-  html { /*1366px for small laptops*/
+  /* 16px=100% is default font size for most modern browsers */
+  html {
+    /*1366px for small laptops*/
     scroll-behavior: smooth;
-    font-size: 14px;
+    /* font-size: 14px; */
+    font-size: 87.5%;
   }
   @media (min-width: 1440px) {
     html {
       scroll-behavior: smooth;
-      font-size: 15px;
+      /* font-size: 15px; */
+      font-size: 93.75%;
     }
   }
   @media (min-width: 1512px) {
     html {
       scroll-behavior: smooth;
-      font-size: 16px;
+      /* font-size: 16px; */
+      font-size: 100%;
     }
   }
-  @media (min-width: 1920px) { /*24 inch screens*/
-    html { font-size: 20px; }
+  @media (min-width: 1920px) {
+    /*24 inch screens*/
+    html {
+      /* font-size: 16px; */
+      font-size: 100%;
+    }
   }
 
-  @media (min-width: 2560px) { /*27 inch screens*/
+  @media (min-width: 2560px) {
+    /*27 inch screens*/
     html {
       scroll-behavior: smooth;
-      font-size: 22px;
+      /* font-size: 18px; */
+      font-size: 112.5%;
     }
   }
 
@@ -360,7 +370,7 @@
   }
 
   /* Firefox */
-  input[type="number"] {
+  input[type='number'] {
     -moz-appearance: textfield;
     appearance: textfield;
   }

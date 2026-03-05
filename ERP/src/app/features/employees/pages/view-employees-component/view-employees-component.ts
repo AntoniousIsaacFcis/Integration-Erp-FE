@@ -12,7 +12,6 @@ import { IEmployeeResponse } from '@features/employees/models/iemployee';
 import { TranslationService } from '@core/services/translation-service';
 import { EmploymentTypesService } from '@core/services/employment-types-service';
 import { DateFilterComponent } from "@shared/components/molecules/date-filter-component/date-filter-component";
-import { StatusBadgeComponent } from "@shared/components/molecules/status-badge-component/status-badge-component";
 import { ActionBtnComponent } from "@shared/components/molecules/action-btn-component/action-btn-component";
 
 @Component({
@@ -81,5 +80,9 @@ export class ViewEmployeesComponent {
     console.log('Open Upload Dialog');
     // هنا يمكنك استدعاء الـ Modal الخاص بالرفع مستقبلاً
   }
+
+  navigateToDetails(id: string | undefined) {
+  if (id) this.router.navigate(['/employees/details', id]);
+}
 
 }

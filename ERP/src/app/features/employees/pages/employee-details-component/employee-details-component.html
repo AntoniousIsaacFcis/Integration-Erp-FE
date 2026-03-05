@@ -1,0 +1,72 @@
+<div class="min-h-screen  font-arabic " *transloco="let t">
+  <div class="flex flex-col lg:flex-row gap-6 items-start">
+
+    <main class=" w-full lg:flex-[3] bg-white rounded-[20px] p-6 shadow-sm border border-[#F4F4F4]">
+      <app-tab-switcher-component [tabs]="tabs" [activeId]="activeTab()" (tabClick)="activeTab.set($event)" />
+
+      <div class="col-span-full h-[1px] bg-[#0000001A] mt-4 mb-8"></div>
+
+      <div class="animate-in fade-in duration-500 mt-6">
+        @switch (activeTab()) {
+
+        @case ('attendance') {
+        <div>
+          <div class="flex flex-col md:flex-row items-center justify-between  mb-4">
+            <div class="text-right">
+              <h3 class="text-xl font-semibold text-black">{{ t('EMPLOYEES.ATTENDANCE.DATE_TITLE') }}</h3>
+              <p class="text-base font-normal text-[#797979]">{{ t('EMPLOYEES.ATTENDANCE.SUBTITLE') }}</p>
+            </div>
+
+            <div class="flex gap-4">
+              <app-select-btn-component [options]="availableMonths()" [value]="selectedMonth()" borderColor="#537C0F"
+                textColor="#537C0F" iconColor="#537C0F" (change)="onFilterChange('month', $event)" />
+
+              <app-select-btn-component [options]="years()" [value]="selectedYear()" borderColor="#333333"
+                (change)="onFilterChange('year', $event)" />
+            </div>
+          </div>
+
+          @if (attendanceResource.isLoading()) {
+          <div class="grid grid-cols-3 xl:grid-cols-5 2xl:grid-cols-7 gap-x-7 gap-y-5 px-lg  animate-pulse">
+            @for (i of [1,2,3,4,5,6,7]; track $index) {
+            <div class="h-[100px] bg-gray-100 rounded-xl"></div>
+            }
+          </div>
+          } @else if (attendanceResource.value(); as days) {
+          <div class="grid grid-cols-3 xl:grid-cols-5 2xl:grid-cols-7 gap-x-7 gap-y-5 px-lg ">
+            @for (day of days; track day.dayNumber) {
+            <app-attendance-day-card-component [dayNumber]="day.dayNumber" [dayName]="day.dayName" [isWorkDay]="day.isWorkDay" [checkIn]="day.checkIn"
+              [checkOut]="day.checkOut" [statusText]="day.statusText" class="animate-in zoom-in duration-300"/>
+            }
+          </div>
+          } @else if (attendanceResource.error()) {
+          <div class="p-4 text-red-500 bg-red-50 rounded-lg">
+            {{ t('MESSAGES.ERROR_LOADING_ATTENDANCE') }}
+          </div>
+          }
+        </div>
+        }
+
+        @case ('vacations') {
+        <div class="p-20 text-center text-[#797979] border-2 border-dashed border-gray-100 rounded-xl">
+          {{ t('COMMON.COMING_SOON') }}
+        </div>
+        }
+
+        @case ('salary') {
+        <div class="p-20 text-center text-[#797979]">قريباً: تفاصيل الراتب</div>
+        }
+        }
+      </div>
+    </main>
+
+    <aside class="w-full lg:flex-[1] ">
+      @if (employeeResource.isLoading()) {
+      <div class="h-[600px]  bg-gray-100 animate-pulse rounded-[20px] shadow-sm border border-[#F4F4F4]"></div>
+      } @else if (employeeResource.value(); as emp) {
+      <app-employee-info-sidebar-component [emp]="emp" />
+      }
+    </aside>
+
+  </div>
+</div>

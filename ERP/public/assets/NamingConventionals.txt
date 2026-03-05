@@ -177,3 +177,5 @@ transliation
         1-two columns + computed in service (if has service) (data from backend : mainpulated Data => can POST or DELETE) ex:employmentType and Nationality
         2-one column + using Keys in <option></option>  (if not serivce as not coming data from api , but static in angular) ex:gender
   b-email and numbers(quantites , dates) => not translated
+
+//to read params form url => withComponentInputBinding() => not legacy ActivatedRoute

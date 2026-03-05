@@ -45,8 +45,12 @@
     "SINGLE": "أعزب",
     "MARRIED": "متزوج",
     "PROGRAMMING": "برمجة",
-    "SAVE_EMPLOYEE":"إضافة الموظف",
-    "GO_TO_LIST":"اذهب الي قائمة الموظفين" ,
+    "SAVE_EMPLOYEE": "إضافة الموظف",
+    "GO_TO_LIST": "اذهب الي قائمة الموظفين",
+    "COMING_SOON": "قريباً...",
+    "CURRENCY": {
+      "SAR": "ر.س"
+    },
     "MESSAGES": {
       "SUCCESS": "تم بنجاح",
       "SUCCESS_MESSAGE": "تمت العملية بنجاح",
@@ -104,7 +108,8 @@
     "JOB_DATA": "البيانات الوظيفية",
     "SALARY": "الراتب",
     "DOCUMENTS": "المستندات",
-    "SALARY_DATA": "الراتب"
+    "SALARY_DATA": "الراتب",
+    "EMPLOYEE_DETAILS": "تفاصيل الموظف"
   },
   "BUTTON": {
     "ADD_LEVEL": "إضافة مستوى",
@@ -129,9 +134,9 @@
     "BACK": "رجوع",
     "SAVE": "حفظ",
     "CANCEL": "إلغاء",
-    "UPLOAD_JOBLEVEL":"إضافة مستوي جديد",
-    "STATUS_FILTER":"الحالة",
-    "DATE_FILTER":"التاريخ"
+    "UPLOAD_JOBLEVEL": "إضافة مستوي جديد",
+    "STATUS_FILTER": "الحالة",
+    "DATE_FILTER": "التاريخ"
   },
   "HEADER": {
     "NOTIFICATION": "التنبيهات",
@@ -279,15 +284,15 @@
     "SELECT_GENDER": "النوع",
     "SELECT_NATIONALITY": "اختر الجنسية",
     "ADDRESS": "ادخل العنوان",
-    "REJECTED":"مرفوض",
-    "ARABICNAME":"ادخل الإسم بالكامل بالعربي",
-    "ENGLISHNAME":"ادخل الاسم الكامل بالانجليزي",
-    "PASSPORT":"ادخل الرقم القومي او جواز السفر",
-    "GENDER":"ادخل النوع",
-    "MARITAL_STATUS":"أعزب",
-    "JOB_TITLE":"مبرمج",
-    "DOCUMENTS_TYPE":"pdf",
-    "SELECT_JOB_TITLE":"ادخل نوع التوظيف"
+    "REJECTED": "مرفوض",
+    "ARABICNAME": "ادخل الإسم بالكامل بالعربي",
+    "ENGLISHNAME": "ادخل الاسم الكامل بالانجليزي",
+    "PASSPORT": "ادخل الرقم القومي او جواز السفر",
+    "GENDER": "ادخل النوع",
+    "MARITAL_STATUS": "أعزب",
+    "JOB_TITLE": "مبرمج",
+    "DOCUMENTS_TYPE": "pdf",
+    "SELECT_JOB_TITLE": "ادخل نوع التوظيف"
   },
   "VALIDATION": {
     "REQUIRED_FIELD": "هذا الحقل مطلوب",
@@ -378,19 +383,35 @@
     "STATUS_ONBOARDING": "تحت التجربة",
     "STATUS_ACTIVE": "نشط",
     "STATUS_PROBATION": "مفصول",
-    "STATUS_HOLIDAY":"في الإجازة",
+    "STATUS_HOLIDAY": "في الإجازة",
     "ALLOWANCES": "البدلات",
     "BASIC_SALARY": "الراتب الأساسي",
     "DEDUCTIONS": "الخصومات",
     "TOTAL_SALARY": "الراتب الإجمالي",
-    "SUCCESS_ADD_TITLE":"تم إضافة الموظف بنجاح",
-    "TABLE":{
-      "EMPLOYEE_ID":"الرقم الوظيفي",
-      "EMPLOYEE_NAME":"أسم الموظف",
-      "EMPLOYEE_JOB_NAME":"المسمى الوظيفي",
-      "EMPLOYEE_STATUS":"حالة التوظيف",
-      "JOB_TYPE":"نوع الدوام",
-      "BASIC_SALARY":"الراتب الأساسي"
+    "SUCCESS_ADD_TITLE": "تم إضافة الموظف بنجاح",
+    "TABLE": {
+      "EMPLOYEE_ID": "الرقم الوظيفي",
+      "EMPLOYEE_NAME": "أسم الموظف",
+      "EMPLOYEE_JOB_NAME": "المسمى الوظيفي",
+      "EMPLOYEE_STATUS": "حالة التوظيف",
+      "JOB_TYPE": "نوع الدوام",
+      "BASIC_SALARY": "الراتب الأساسي"
+    },
+    "ATTENDANCE": {
+      "DATE_TITLE": "التاريخ",
+      "SUBTITLE": "جدول تسجيل الحضور والانصرف"
+    },"PERSONAL":{
+      "PERSONAL_INFO":"المعلومات الشخصية",
+      "PHONE":"رقم الهاتف",
+      "EMAIL":"البريد الالكتروني",
+      "NATIONAL_ID":"رقم الهوية الوطنية",
+      "NATIONALITY":"الجنسية",
+      "JOINING_DATE":"تاريخ الانضمام",
+      "MARITAL_STATUS":"الحالة الاجتماعية",
+      "GENDER":"النوع",
+      "EXTRA_INFO":"معلومات اضافية",
+      "BIRTH_DATE":"تاريخ الميلاد",
+      "FINGER_PRINT":"رقم البصمة"
     }
   },
   "NATIONALITIES": {
@@ -494,7 +515,7 @@
     "INVALID_PHONE_FORMAT": "رقم الهاتف غير صحيح. يجب أن يتكون من 11 إلى 15 رقماً (يمكن استخدام +)",
     "INVALID_NATIONAL_ID_FORMAT": "بطاقة الهوية لابد ان تحتوي علي 12-14 رقم",
     "MIN_VALUE": "القيمة يجب أن تكون 0 أو أكثر",
-    "REQUIRED_FILES":"يجب رفع ملف علي الاقل"
+    "REQUIRED_FILES": "يجب رفع ملف علي الاقل"
   },
   "JOB_LEVEL": {
     "TITLE": "المستويات الوظيفية",
@@ -516,17 +537,17 @@
     "DEPARTMENT": "القسم",
     "DESIGNATION": "المسمى الوظيفي",
     "STATUS": "الحالة",
-    "ACTIVE":"نشط",
-    "INACTIVE":"غير نشط",
+    "ACTIVE": "نشط",
+    "INACTIVE": "غير نشط",
     "DATE_FROM": "من التاريخ",
     "DATE_TO": "إلى التاريخ",
     "SEARCH": "بحث",
     "APPLY_FILTERS": "تطبيق التصفية",
     "CLEAR_FILTERS": "مسح التصفية",
     "ADVANCED_FILTERS": "تصفية متقدمة",
-    "LOAD_FILES":"تحميل ملفات الموظفين",
-    "ADD_EMPLOYEE":"إضافة موظف",
-    "DATE":"التاريخ"
+    "LOAD_FILES": "تحميل ملفات الموظفين",
+    "ADD_EMPLOYEE": "إضافة موظف",
+    "DATE": "التاريخ"
   },
   "PAGINATION": {
     "FIRST": "الأول",
@@ -562,11 +583,31 @@
     "TYPE": "نوع المستند",
     "EXPIRY_DATE": "تاريخ الإنتهاء",
     "JOB_FILES": "ملفات الموظف",
-    "UPLOAD_TEXT":"اضغط لرفع الملفات",
-    "MAX_SIZE":"الحد الاقصي للحجم",
-    "SUPPORTED_FORMATS":"الصيغ المدعومة",
-    "NATIONAL_ID":"بطاقة الهوية",
-    "PASSPORT":"الباسبور"
+    "UPLOAD_TEXT": "اضغط لرفع الملفات",
+    "MAX_SIZE": "الحد الاقصي للحجم",
+    "SUPPORTED_FORMATS": "الصيغ المدعومة",
+    "NATIONAL_ID": "بطاقة الهوية",
+    "PASSPORT": "الباسبور"
+  },
+  "TABS": {
+    "ATTENDANCE": "جدول الحضور والانصراف",
+    "VACATIONS": "الإجازات",
+    "SALARY": "الراتب",
+    "DOCUMENTS": "المستندات"
+  },
+  "DAYS": {
+    "FRIDAY": "الجمعة",
+    "SATURDAY": "السبت",
+    "SUNDAY": "الأحد",
+    "MONDAY": "الاثنين",
+    "TUESDAY": "الثلاثاء",
+    "WEDNESDAY": "الأربعاء",
+    "THURSDAY":"الخميس"
+  },
+  "STATUS": {
+    "WEEKEND": "يوم إجازة",
+    "WORK": "يوم عمل",
+    "FORMAL_HOLIDAY":"إجازة رسمية"
   },
   "LOGGING_IN": "جاري تسجيل الدخول",
   "SEND_RESET_LINK": "إرسال رابط إعادة التعيين",

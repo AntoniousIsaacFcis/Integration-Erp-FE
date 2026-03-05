@@ -5,7 +5,7 @@ import { lucideCheck } from '@ng-icons/lucide';
 
 @Component({
   selector: 'app-stepper-visual-component',
-  imports: [TranslocoModule, NgIcon],
+  imports: [TranslocoModule, NgIcon,TranslocoModule],
   templateUrl: './stepper-visual-component.html',
   styleUrl: './stepper-visual-component.css',
   providers: [provideIcons({ lucideCheck })],
@@ -26,5 +26,5 @@ export class StepperVisualComponent {
   onStepSelect(stepId: number) {
     this.stepClick.emit(stepId);
   }
-  
+
 }
