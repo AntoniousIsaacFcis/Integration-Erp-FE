@@ -48,6 +48,8 @@
     "SAVE_EMPLOYEE": "إضافة الموظف",
     "GO_TO_LIST": "اذهب الي قائمة الموظفين",
     "COMING_SOON": "قريباً...",
+    "DAYS_PLURAL":"أيام",
+     "DAYS_SINGLE":"يوم",
     "CURRENCY": {
       "SAR": "ر.س"
     },
@@ -389,6 +391,21 @@
     "DEDUCTIONS": "الخصومات",
     "TOTAL_SALARY": "الراتب الإجمالي",
     "SUCCESS_ADD_TITLE": "تم إضافة الموظف بنجاح",
+    "VACATIONS": {
+      "HISTORY": "التاريخ",
+      "VACATIONS_TABLE": "جدول الاجازات",
+      "STATS_ANNUAL": "رصيد الاجازات السنوي",
+      "STATS_SICK": "رصيد الاجازات المرضي",
+      "STATS_REMAINING": "الرصيد المتبقي",
+      "APPROVED":"مقبولة",
+      "PENDING":"معلقة",
+      "REJECTED":"مرفوضة",
+      "VACATION_TYPE":"نوع الاجازة",
+      "VACATION_START_Date":"تاريخ الاجازة",
+      "VACATION_END_DATE":"تاريخ العودة",
+      "VACATIN_STATUS":"حالة الاجازة",
+      "VACATION_REASON":"سبب الاجازة"
+    },
     "TABLE": {
       "EMPLOYEE_ID": "الرقم الوظيفي",
       "EMPLOYEE_NAME": "أسم الموظف",
@@ -400,18 +417,19 @@
     "ATTENDANCE": {
       "DATE_TITLE": "التاريخ",
       "SUBTITLE": "جدول تسجيل الحضور والانصرف"
-    },"PERSONAL":{
-      "PERSONAL_INFO":"المعلومات الشخصية",
-      "PHONE":"رقم الهاتف",
-      "EMAIL":"البريد الالكتروني",
-      "NATIONAL_ID":"رقم الهوية الوطنية",
-      "NATIONALITY":"الجنسية",
-      "JOINING_DATE":"تاريخ الانضمام",
-      "MARITAL_STATUS":"الحالة الاجتماعية",
-      "GENDER":"النوع",
-      "EXTRA_INFO":"معلومات اضافية",
-      "BIRTH_DATE":"تاريخ الميلاد",
-      "FINGER_PRINT":"رقم البصمة"
+    },
+    "PERSONAL": {
+      "PERSONAL_INFO": "المعلومات الشخصية",
+      "PHONE": "رقم الهاتف",
+      "EMAIL": "البريد الالكتروني",
+      "NATIONAL_ID": "رقم الهوية الوطنية",
+      "NATIONALITY": "الجنسية",
+      "JOINING_DATE": "تاريخ الانضمام",
+      "MARITAL_STATUS": "الحالة الاجتماعية",
+      "GENDER": "النوع",
+      "EXTRA_INFO": "معلومات اضافية",
+      "BIRTH_DATE": "تاريخ الميلاد",
+      "FINGER_PRINT": "رقم البصمة"
     }
   },
   "NATIONALITIES": {
@@ -602,12 +620,12 @@
     "MONDAY": "الاثنين",
     "TUESDAY": "الثلاثاء",
     "WEDNESDAY": "الأربعاء",
-    "THURSDAY":"الخميس"
+    "THURSDAY": "الخميس"
   },
   "STATUS": {
     "WEEKEND": "يوم إجازة",
     "WORK": "يوم عمل",
-    "FORMAL_HOLIDAY":"إجازة رسمية"
+    "FORMAL_HOLIDAY": "إجازة رسمية"
   },
   "LOGGING_IN": "جاري تسجيل الدخول",
   "SEND_RESET_LINK": "إرسال رابط إعادة التعيين",

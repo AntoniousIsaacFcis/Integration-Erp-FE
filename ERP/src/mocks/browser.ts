@@ -8,6 +8,7 @@ import { employmentTypeHandlers } from './handlers/employment-types.handler';
 import { employeeHandlers } from './handlers/employee.handlers';
 import { jobTitlesHandlers } from './handlers/job-titles.handler';
 import { attendanceHandlers } from './handlers/attendance.handlers';
+import { vacationHandlers } from './handlers/vacation.handlers';
 
 export const worker = setupWorker(
   ...authHandlers,
@@ -17,7 +18,8 @@ export const worker = setupWorker(
   ...employmentTypeHandlers,
   ...employeeHandlers,
   ...jobTitlesHandlers,
-  ...attendanceHandlers
+  ...attendanceHandlers,
+  ...vacationHandlers
 );
 
 //allowing workwe in development only

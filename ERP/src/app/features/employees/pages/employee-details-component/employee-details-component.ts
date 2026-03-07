@@ -1,16 +1,19 @@
-import { ChangeDetectionStrategy, Component, computed, effect, inject, input, linkedSignal, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, input, linkedSignal, signal, untracked } from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { EmployeeService } from '@features/employees/services/employee-service';
 import { TranslocoModule } from '@jsverse/transloco';
-import { provideIcons } from '@ng-icons/core';
+import { NgIcon, provideIcons } from '@ng-icons/core';
 import { EmployeeInfoSidebarComponent } from "./employee-info-sidebar-component/employee-info-sidebar-component";
-import { lucideChevronLeft, lucideChevronRight } from '@ng-icons/lucide';
+import { lucideChevronLeft, lucideChevronRight, lucidePencilLine } from '@ng-icons/lucide';
 import { AttendanceDayCardComponent } from "@shared/components/molecules/attendance-day-card-component/attendance-day-card-component";
 import { ITabItem, TabSwitcherComponent } from '@shared/components/molecules/tab-switcher-component/tab-switcher-component';
 import { ISelectOption, SelectBtnComponent } from '@shared/components/atoms/select-btn-component/select-btn-component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MOCK_ATTENDANCE_DATA } from '@mocks/data/attendance.data';
 import { AttendanceService } from '@features/attendance/services/attendance-service';
+import { AppBaseTableComponent } from "@shared/components/organisms/app-base-table-component/app-base-table-component";
+import { IVacationResponse, VacationStatus } from '@features/vacations/models/ivacation';
+import { DatePipe } from '@angular/common';
 
 interface YearFilterSource {
   url: string;
@@ -19,10 +22,10 @@ interface YearFilterSource {
 
 @Component({
   selector: 'app-employee-details-component',
-  imports: [TranslocoModule, EmployeeInfoSidebarComponent, AttendanceDayCardComponent, TabSwitcherComponent, SelectBtnComponent],
+  imports: [TranslocoModule, EmployeeInfoSidebarComponent, AttendanceDayCardComponent, TabSwitcherComponent, SelectBtnComponent, NgIcon, AppBaseTableComponent, DatePipe],
   templateUrl: './employee-details-component.html',
   styleUrl: './employee-details-component.css',
-  providers: [provideIcons({ lucideChevronLeft, lucideChevronRight })],
+  providers: [provideIcons({ lucideChevronLeft, lucideChevronRight, lucidePencilLine })],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EmployeeDetailsComponent {
@@ -36,63 +39,70 @@ export class EmployeeDetailsComponent {
   month = input<string>('10');
 
   selectedMonth = linkedSignal<string[], string>({
-  source: () => this.availableMonths().map(m => m.value), // يراقب مصفوفة القيم فقط
-  computation: (months, previous) => {
-    const urlMonth = this.month();
+    source: () => this.availableMonths().map(m => m.value), // يراقب مصفوفة القيم فقط
+    computation: (months, previous) => {
+      const urlMonth = this.month();
 
-    if (urlMonth && months.includes(urlMonth)) return urlMonth;
+      if (urlMonth && months.includes(urlMonth)) return urlMonth;
 
-    return months[0] ?? '1';
-  }
-});
+      return months[0] ?? '1';
+    }
+  });
 
   activeTab = signal<string>('attendance');
 
- onFilterChange(key: 'month' | 'year', value: any) {
-  const safeValue = (value instanceof Event || typeof value === 'object')
-    ? (value.target as any)?.value
-    : value;
+  onFilterChange(key: 'month' | 'year', value: any) {
+    const safeValue = (value instanceof Event || typeof value === 'object')
+      ? (value.target as any)?.value
+      : value;
 
-  if (!safeValue) return;
+    if (!safeValue) return;
 
-  this.router.navigate([], {
-    relativeTo: this.route,
-    queryParams: { [key]: safeValue.toString() },
-    queryParamsHandling: 'merge',
-    replaceUrl: true
-  });
-}
-
-yearsResource = rxResource({
-  stream: () => this.attendanceService.getAvailableYears()
-});
-years = computed(() => this.yearsResource.value() || []);
-
-selectedYear = linkedSignal<YearFilterSource, string>({
-  source: () => ({
-    url: this.year(),
-    api: this.years()
-  }),
-  computation: (source, previous) => {
-    if (source.url ) return String(source.url);
-
-    if (source.api.length > 0) return String(source.api[0].value);
-
-    return previous?.value ?? '2025';
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { [key]: safeValue.toString() },
+      queryParamsHandling: 'merge',
+      replaceUrl: true
+    });
   }
-});
+
+  yearsResource = rxResource({
+    stream: () => this.attendanceService.getAvailableYears()
+  });
+  years = computed(() => this.yearsResource.value() || []);
+
+  selectedYear = linkedSignal<YearFilterSource, string>({
+    source: () => ({
+      url: this.year(),
+      api: this.years()
+    }),
+    computation: (source, previous) => {
+      if (source.url) return String(source.url);
+
+      if (source.api.length > 0) return String(source.api[0].value);
+
+      return previous?.value ?? '2025';
+    }
+  });
+
   availableMonths = computed(() => {
-  const yearKey = this.selectedYear();
+    const employeeId = this.empId(); // for router url
+    const yearKey = this.selectedYear();
 
-  const data = (MOCK_ATTENDANCE_DATA as Record<string, any>)[yearKey] || {};
+    const employeeData = (MOCK_ATTENDANCE_DATA as any)[employeeId] || {};
+    const yearData = employeeData[yearKey] || {};
 
-  return Object.keys(data)
-    .sort((a, b) => Number(a) - Number(b))
-    .map(m => ({
-      label: this.getMonthName(m.padStart(2, '0')),
-      value: m
-    }));
-});
+    const months = Object.keys(yearData)
+      .sort((a, b) => Number(a) - Number(b))
+      .map(m => ({
+        label: this.getMonthName(m.padStart(2, '0')),
+        value: m
+      }));
+
+    console.log('Available Months for Emp:', employeeId, months); // للتأكد في الـ Console
+    return months;
+  });
+
   private getMonthName(month: string): string {
     const monthNames: Record<string, string> = {
       '01': 'يناير',
@@ -122,6 +132,12 @@ selectedYear = linkedSignal<YearFilterSource, string>({
         if (!monthExists) {
           this.onFilterChange('month', months[0].value.toString());
         }
+      }
+    });
+
+    effect(() => {
+      if (this.activeTab() === 'vacations') {
+        this.currentPage.set(1);
       }
     });
   }
@@ -163,4 +179,58 @@ selectedYear = linkedSignal<YearFilterSource, string>({
     }
   });
 
+  //------------------ vacations
+  vacationsResource = rxResource<IVacationResponse, any>({
+    params: () => {
+    const page = this.currentPage();
+    const pageSize = this.vacationPageSize();
+    const year = this.selectedYear();
+    const id = this.empId();
+
+    if (!id || this.activeTab() !== 'vacations') return undefined;
+
+    return { employeeId: id, year: year, page: page, limit: pageSize };
+  },
+    stream: ({ params }) => {
+      return this.attendanceService.getVacations(params);
+    }
+  });
+
+  vacationStats = computed(() => this.vacationsResource.value()?.stats);
+  vacationList = computed(() => this.vacationsResource.value()?.data || []);
+
+  vacationStatsCards = computed(() => {
+    const stats = this.vacationStats();
+    return [
+      {
+        key: 'EMPLOYEES.VACATIONS.STATS_ANNUAL',
+        value: stats?.annualBalance ?? 0,
+        unitKey: 'COMMON.DAYS_SINGLE', // "يوم"
+        valueClass: '',
+      },
+      {
+        key: 'EMPLOYEES.VACATIONS.STATS_SICK',
+        value: stats?.sickBalance ?? 0,
+        unitKey: 'COMMON.DAYS_PLURAL', // "أيام"
+      },
+      {
+        key: 'EMPLOYEES.VACATIONS.STATS_REMAINING',
+        value: stats?.remainingBalance ?? 0,
+        unitKey: 'COMMON.DAYS_PLURAL',
+      }
+    ];
+  });
+
+  statusClasses: Record<VacationStatus, string> = {
+    'EMPLOYEES.VACATIONS.APPROVED': 'bg-[#00A3891A] text-[#00A389]',
+    'EMPLOYEES.VACATIONS.PENDING': 'bg-[#FFF3E6] text-[#FF8400]',
+    'EMPLOYEES.VACATIONS.REJECTED': 'bg-[#FFEDEE] text-[#FF4A55]'
+  };
+  //pagination
+  currentPage = signal<number>(1);
+  vacationPageSize = signal<number>(10);
+  vacationTotal = computed(() => {
+    const res = this.vacationsResource.value();
+    return res?.total ?? res?.data?.length ?? 0;
+  });
 }

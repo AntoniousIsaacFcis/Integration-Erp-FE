@@ -1,12 +1,12 @@
 <div class="min-h-screen  font-arabic " *transloco="let t">
   <div class="flex flex-col lg:flex-row gap-6 items-start">
 
-    <main class=" w-full lg:flex-[3] bg-white rounded-[20px] p-6 shadow-sm border border-[#F4F4F4]">
+    <main class=" w-full lg:flex-[3] bg-white rounded-[20px] p-6 shadow-sm border border-[#F4F4F4] px-2xl">
       <app-tab-switcher-component [tabs]="tabs" [activeId]="activeTab()" (tabClick)="activeTab.set($event)" />
 
-      <div class="col-span-full h-[1px] bg-[#0000001A] mt-4 mb-8"></div>
+      <div class="col-span-full h-[1px] bg-[#0000001A] mt-4 "></div>
 
-      <div class="animate-in fade-in duration-500 mt-6">
+      <div class="animate-in fade-in duration-500 mt-2 ">
         @switch (activeTab()) {
 
         @case ('attendance') {
@@ -27,16 +27,17 @@
           </div>
 
           @if (attendanceResource.isLoading()) {
-          <div class="grid grid-cols-3 xl:grid-cols-5 2xl:grid-cols-7 gap-x-7 gap-y-5 px-lg  animate-pulse">
+          <div class="grid grid-cols-3 xl:grid-cols-5 2xl:grid-cols-7 gap-x-7 gap-y-5  animate-pulse">
             @for (i of [1,2,3,4,5,6,7]; track $index) {
             <div class="h-[100px] bg-gray-100 rounded-xl"></div>
             }
           </div>
           } @else if (attendanceResource.value(); as days) {
-          <div class="grid grid-cols-3 xl:grid-cols-5 2xl:grid-cols-7 gap-x-7 gap-y-5 px-lg ">
+          <div class="grid grid-cols-3 xl:grid-cols-5 2xl:grid-cols-7 gap-x-7 gap-y-5 ">
             @for (day of days; track day.dayNumber) {
-            <app-attendance-day-card-component [dayNumber]="day.dayNumber" [dayName]="day.dayName" [isWorkDay]="day.isWorkDay" [checkIn]="day.checkIn"
-              [checkOut]="day.checkOut" [statusText]="day.statusText" class="animate-in zoom-in duration-300"/>
+            <app-attendance-day-card-component [dayNumber]="day.dayNumber" [dayName]="day.dayName"
+              [isWorkDay]="day.isWorkDay" [checkIn]="day.checkIn" [checkOut]="day.checkOut"
+              [statusText]="day.statusText" class="animate-in zoom-in duration-300" />
             }
           </div>
           } @else if (attendanceResource.error()) {
@@ -48,8 +49,77 @@
         }
 
         @case ('vacations') {
-        <div class="p-20 text-center text-[#797979] border-2 border-dashed border-gray-100 rounded-xl">
-          {{ t('COMMON.COMING_SOON') }}
+        <div class="animate-in fade-in slide-in-from-bottom-4 duration-500 min-h-[720px] pb-12">
+          <div class="flex flex-col md:flex-row items-center justify-between mb-2">
+            <div class="text-right">
+              <h3 class="text-xl font-semibold text-black">{{t('EMPLOYEES.VACATIONS.HISTORY')}}</h3>
+              <p class="text-base font-normal text-[#797979]">{{t('EMPLOYEES.VACATIONS.VACATIONS_TABLE')}}</p>
+            </div>
+            <div class="flex gap-4 ">
+              <app-select-btn-component [options]="availableMonths()" [value]="selectedMonth()" borderColor="#333333"
+                textColor="#333333" iconColor="#333333" />
+              <app-select-btn-component [options]="years()" [value]="selectedYear()" borderColor="#333333" />
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-lg mb-2">
+            @for (card of vacationStatsCards(); track card.key) {
+            <div
+              [class]="'px-lg py-sm rounded-2xl border border-[#F4F4F4] flex justify-between items-center transition-all hover:shadow-sm '">
+
+              <span class="max-w-[60%] text-base text-black font-medium ">
+                {{ t(card.key) }}
+              </span>
+
+              <span [class]="'text-2xl font-semibold text-[#9fcd3d]' ">
+                {{ card.value }}
+
+                <small class="text-sm text-black font-normal">
+                  {{ t(card.unitKey) }}
+                </small>
+              </span>
+
+            </div>
+            }
+          </div>
+
+          <app-app-base-table-component [totalItems]="vacationTotal()" [(currentPage)]="currentPage" [showHeader]="false">
+            <table class="w-full text-start font-arabic">
+              <thead class="bg-[#F4F4F4] text-black text-sm font-medium">
+                <tr>
+                  <th class="py-4 ps-9 pe-6 ">{{t('EMPLOYEES.VACATIONS.VACATION_TYPE')}}</th>
+                  <th class="py-4 px-6 ">{{t('EMPLOYEES.VACATIONS.VACATION_START_Date')}}</th>
+                  <th class="py-4 px-6 ">{{t('EMPLOYEES.VACATIONS.VACATION_END_DATE')}}</th>
+                  <th class="py-4 px-6 ">{{t('EMPLOYEES.VACATIONS.VACATIN_STATUS')}}</th>
+                  <th class="py-4 px-6 ">{{t('EMPLOYEES.VACATIONS.VACATION_REASON')}}</th>
+                  <th class="py-4 px-6"></th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-[#F4F4F4">
+                @for (vac of vacationList(); track vac.id) {
+                <tr class="hover:bg-gray-50 transition-colors text-center">
+                  <td class="py-4 ps-9 pe-6 text-sm text-black font-medium">{{ vac.typeAr }}</td>
+                  <td class="py-4 px-6 text-sm text-black font-medium">{{ vac.startDate | date: 'dd/MM/yyyy' }}</td>
+                  <td class="py-4 px-6 text-sm text-black font-medium">{{ vac.endDate | date: 'dd/MM/yyyy' }}</td>
+                  <td class="py-4 px-6 text-xs font-semibold">
+                    <span [class]="statusClasses[vac.status] + ' px-3 py-1 rounded-sm text-xs font-medium'">
+                      {{ t(vac.status) }}
+                    </span>
+                  </td>
+                  <td class="py-4 px-6 text-xs text-[#878787] max-w-[200px] truncate">{{ vac.reason }}</td>
+                  <td class="py-4 px-6">
+                    <button
+                      class="p-2 flex items-center justify-center  bg-[#0000001A] hover:bg-[#00000026] transition-colors"
+                      style="border-radius: 232px; border: none; outline: none;">
+                      <ng-icon name="lucidePencilLine" class="flex items-center justify-center" size="16" color="black">
+                      </ng-icon>
+                    </button>
+                  </td>
+                </tr>
+                }
+              </tbody>
+            </table>
+          </app-app-base-table-component>
         </div>
         }
 

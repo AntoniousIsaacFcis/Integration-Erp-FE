@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '@env/environment.development';
 import { IAttendanceDay } from '@features/employees/models/iattendance-day';
+import { IVacation, IVacationResponse, IVacationStats } from '@features/vacations/models/ivacation';
 import { ISelectOption } from '@shared/components/atoms/select-btn-component/select-btn-component';
 import { Observable } from 'rxjs';
 
@@ -22,6 +23,13 @@ export class AttendanceService {
   }
 
   getAvailableYears(): Observable<ISelectOption[]> {
-  return this.http.get<ISelectOption[]>(`${this.API_URL}/attendance/available-years`);
-}
+    return this.http.get<ISelectOption[]>(`${this.API_URL}/attendance/available-years`);
+  }
+
+  getVacations(params: any): Observable<IVacationResponse> {
+    return this.http.get<IVacationResponse>(
+      `${this.API_URL}/employees/${params.employeeId}/vacations`,
+      { params }
+    );
+  }
 }

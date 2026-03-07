@@ -10,6 +10,8 @@ import { PaginagtionComponent } from "../paginagtion-component/paginagtion-compo
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AppBaseTableComponent {
+  showHeader = input<boolean>(true);
+
   totalItems = input<number>(0);
   currentPage = model<number>(1); //for twoWayBinding [(currentPage)]
 onAdd = output<void>();
