@@ -12,6 +12,7 @@ export const vacationHandlers = [
     const page = parseInt(url.searchParams.get('page') || '1', 10);
     const limit = parseInt(url.searchParams.get('limit') || '10', 10);
     const year = url.searchParams.get('year');
+    const month = url.searchParams.get('month');
 
     await delay(600);
 
@@ -23,6 +24,20 @@ export const vacationHandlers = [
     if (year) {
       allVacations = allVacations.filter(v => v.startDate.startsWith(year));
     }
+
+    if (year && month) {
+      const formattedMonth = month.padStart(2, '0');
+      const selectedDate = new Date(`${year}-${formattedMonth}-01`);
+
+      allVacations = allVacations.filter(v => {
+        const vacationStart = new Date(v.startDate);
+        return vacationStart >= selectedDate;
+      });
+    } else if (year) {
+      allVacations = allVacations.filter(v => v.startDate.startsWith(year));
+    }
+
+    allVacations.sort((a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime());
 
     // Pagination Logic
     const startIndex = (page - 1) * limit;

@@ -182,15 +182,18 @@ export class EmployeeDetailsComponent {
   //------------------ vacations
   vacationsResource = rxResource<IVacationResponse, any>({
     params: () => {
-    const page = this.currentPage();
-    const pageSize = this.vacationPageSize();
-    const year = this.selectedYear();
-    const id = this.empId();
+      const id = this.empId();
+      const page = this.currentPage();
+      const pageSize = this.vacationPageSize();
+      const year = this.selectedYear();
+      const month = this.selectedMonth();
 
-    if (!id || this.activeTab() !== 'vacations') return undefined;
+      if (!id || this.activeTab() !== 'vacations') return undefined;
 
-    return { employeeId: id, year: year, page: page, limit: pageSize };
-  },
+      const cleanMonth = month?.startsWith('0') ? month.replace(/^0+/, '') : month;
+
+      return { employeeId: id, month: cleanMonth, year: year, page: page, limit: pageSize };
+    },
     stream: ({ params }) => {
       return this.attendanceService.getVacations(params);
     }

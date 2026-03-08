@@ -26,7 +26,7 @@ export class AttendanceService {
     return this.http.get<ISelectOption[]>(`${this.API_URL}/attendance/available-years`);
   }
 
-  getVacations(params: any): Observable<IVacationResponse> {
+  getVacations(params: { employeeId: string; year: string; month?: string; page: number; limit: number }): Observable<IVacationResponse> {
     return this.http.get<IVacationResponse>(
       `${this.API_URL}/employees/${params.employeeId}/vacations`,
       { params }

@@ -57,8 +57,8 @@
             </div>
             <div class="flex gap-4 ">
               <app-select-btn-component [options]="availableMonths()" [value]="selectedMonth()" borderColor="#333333"
-                textColor="#333333" iconColor="#333333" />
-              <app-select-btn-component [options]="years()" [value]="selectedYear()" borderColor="#333333" />
+                textColor="#333333" iconColor="#333333" (change)="onFilterChange('month', $event)"/>
+              <app-select-btn-component [options]="years()" [value]="selectedYear()" borderColor="#333333" (change)="onFilterChange('year', $event)"/>
             </div>
           </div>
 
