@@ -4,7 +4,7 @@ import { EmployeeService } from '@features/employees/services/employee-service';
 import { TranslocoModule } from '@jsverse/transloco';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { EmployeeInfoSidebarComponent } from "./employee-info-sidebar-component/employee-info-sidebar-component";
-import { lucideChevronLeft, lucideChevronRight, lucidePencilLine } from '@ng-icons/lucide';
+import { lucideChevronLeft, lucideChevronRight, lucideEye, lucideFileText, lucidePencilLine, lucideSaudiRiyal } from '@ng-icons/lucide';
 import { AttendanceDayCardComponent } from "@shared/components/molecules/attendance-day-card-component/attendance-day-card-component";
 import { ITabItem, TabSwitcherComponent } from '@shared/components/molecules/tab-switcher-component/tab-switcher-component';
 import { ISelectOption, SelectBtnComponent } from '@shared/components/atoms/select-btn-component/select-btn-component';
@@ -14,6 +14,8 @@ import { AttendanceService } from '@features/attendance/services/attendance-serv
 import { AppBaseTableComponent } from "@shared/components/organisms/app-base-table-component/app-base-table-component";
 import { IVacationResponse, VacationStatus } from '@features/vacations/models/ivacation';
 import { DatePipe } from '@angular/common';
+import { SalaryService } from '@features/salary/services/salary-service';
+import { MOCK_SALARY_STORE } from '@mocks/data/salary.data';
 
 interface YearFilterSource {
   url: string;
@@ -25,7 +27,7 @@ interface YearFilterSource {
   imports: [TranslocoModule, EmployeeInfoSidebarComponent, AttendanceDayCardComponent, TabSwitcherComponent, SelectBtnComponent, NgIcon, AppBaseTableComponent, DatePipe],
   templateUrl: './employee-details-component.html',
   styleUrl: './employee-details-component.css',
-  providers: [provideIcons({ lucideChevronLeft, lucideChevronRight, lucidePencilLine })],
+  providers: [provideIcons({ lucideChevronLeft, lucideChevronRight, lucidePencilLine, lucideSaudiRiyal, lucideFileText, lucideEye })],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EmployeeDetailsComponent {
@@ -67,7 +69,14 @@ export class EmployeeDetailsComponent {
   }
 
   yearsResource = rxResource({
-    stream: () => this.attendanceService.getAvailableYears()
+    params: () => ({ id: this.empId(), tab: this.activeTab() }),
+    stream: ({ params }) => {
+      if (params.tab === 'salary') {
+        return this.salaryService.getAvailableYears(params.id);
+      } else {
+        return this.attendanceService.getAvailableYears();
+      }
+    }
   });
   years = computed(() => this.yearsResource.value() || []);
 
@@ -86,10 +95,12 @@ export class EmployeeDetailsComponent {
   });
 
   availableMonths = computed(() => {
-    const employeeId = this.empId(); // for router url
+    const employeeId = this.empId();
     const yearKey = this.selectedYear();
+    const tab = this.activeTab();
 
-    const employeeData = (MOCK_ATTENDANCE_DATA as any)[employeeId] || {};
+    const dataSource = tab === 'salary' ? MOCK_SALARY_STORE : MOCK_ATTENDANCE_DATA;
+    const employeeData = (dataSource as any)[employeeId] || {};
     const yearData = employeeData[yearKey] || {};
 
     const months = Object.keys(yearData)
@@ -99,7 +110,6 @@ export class EmployeeDetailsComponent {
         value: m
       }));
 
-    console.log('Available Months for Emp:', employeeId, months); // للتأكد في الـ Console
     return months;
   });
 
@@ -236,4 +246,31 @@ export class EmployeeDetailsComponent {
     const res = this.vacationsResource.value();
     return res?.total ?? res?.data?.length ?? 0;
   });
+
+  //----salary section
+  private readonly salaryService = inject(SalaryService);
+  salaryResource = rxResource({
+    params: () => {
+      const id = this.empId();
+      const year = this.selectedYear();
+      const month = this.selectedMonth();
+      if (!id || this.activeTab() !== 'salary') return undefined;
+
+      return { employeeId: id, year, month, page: 1, limit: 10 };
+    },
+    stream: ({ params }) => this.salaryService.getSalaryDetails(params)
+  });
+
+  salaryData = computed(() => this.salaryResource.value());
+
+  //-------documents section
+  onDownloadDoc(doc: any) {
+    // If the doc is a File object (from the upload) or a URL
+    if (doc.file instanceof File) {
+      const url = URL.createObjectURL(doc.file);
+      window.open(url, '_blank');
+    } else if (typeof doc.url === 'string') {
+      window.open(doc.url, '_blank');
+    }
+  }
 }

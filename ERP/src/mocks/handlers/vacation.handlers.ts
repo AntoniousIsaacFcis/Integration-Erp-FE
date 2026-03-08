@@ -39,9 +39,11 @@ export const vacationHandlers = [
 
     allVacations.sort((a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime());
 
+
     // Pagination Logic
     const startIndex = (page - 1) * limit;
     const paginatedData = allVacations.slice(startIndex, startIndex + limit);
+
 
     return HttpResponse.json({
       data: paginatedData,

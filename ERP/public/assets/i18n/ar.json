@@ -50,6 +50,7 @@
     "COMING_SOON": "قريباً...",
     "DAYS_PLURAL":"أيام",
      "DAYS_SINGLE":"يوم",
+     "PREVIEW":"معاينة",
     "CURRENCY": {
       "SAR": "ر.س"
     },
@@ -340,7 +341,6 @@
     "DEPARTMENT": "القسم",
     "DESIGNATION": "المسمى الوظيفي",
     "HIRE_DATE": "تاريخ التعيين",
-    "SALARY": "الراتب",
     "STATUS": "الحالة",
     "ACTIVE": "نشط",
     "INACTIVE": "غير نشط",
@@ -391,6 +391,20 @@
     "DEDUCTIONS": "الخصومات",
     "TOTAL_SALARY": "الراتب الإجمالي",
     "SUCCESS_ADD_TITLE": "تم إضافة الموظف بنجاح",
+    "DOCUMENTS":{
+    "TITLE":"الملفات والعقود",
+    "NO_DOCUMENTS":"لا يوجد أي مستندات"
+    },
+    "SALARY":{
+      "DATE":"التاريخ",
+      "DETAILS_SUBTITLE":"تفاصيل راتب الشهر ",
+      "MONTHLY_TOTAL":"الراتب الشهري",
+      "STATUS_LABEL":"حالة الراتب",
+      "ITEM_NAME":"اسم المعاملة",
+      "DAYS_COUNT":"عدد الايام",
+      "HOURS_COUNT":"عدد الساعات",
+      "VALUE":"القيمة"
+    },
     "VACATIONS": {
       "HISTORY": "التاريخ",
       "VACATIONS_TABLE": "جدول الاجازات",
