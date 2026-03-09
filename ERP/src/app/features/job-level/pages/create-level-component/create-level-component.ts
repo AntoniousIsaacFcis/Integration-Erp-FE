@@ -59,6 +59,8 @@ export class CreateLevelComponent {
 
   isFormSubmitted = signal(false);
   onSubmit() {
+    if (this.isSubmitting()) return;
+    
     this.isFormSubmitted.set(true);
     this.jobLevelForm.updateValueAndValidity();
 

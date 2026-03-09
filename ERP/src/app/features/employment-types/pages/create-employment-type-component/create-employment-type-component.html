@@ -1,0 +1,47 @@
+<div class="p-6 bg-white rounded-xl shadow-sm border border-gray-100 font-arabic" [formGroup]="EmployeeTypesForm" *transloco="let t">
+  <h2 class="text-xl font-bold mb-8 text-right">{{ t('JOB_LEVEL.ADD_TYPE') }}</h2>
+
+  <div class="space-y-8">
+    <div class="flex flex-col gap-2">
+      <label class="text-sm font-bold text-gray-700 text-right">
+        {{ t('JOB_LEVEL.TYPE_NAME') }} <span class="text-red-500">*</span>
+      </label>
+      <input
+        formControlName="employmentTypeAr"
+        [placeholder]="t('JOB_LEVEL.TYPE_NAME')"
+        class="w-full h-[48px] px-4 border border-gray-200 rounded-lg text-right focus:outline-[#6EA30D]"
+      />
+    </div>
+
+    <app-app-radio-component
+      [label]="'JOB_LEVEL.STATUS'"
+      [required]="true"
+      [control]="$any(EmployeeTypesForm.get('status'))"
+      [options]="[
+        { label: 'COMMON.ACTIVE', value: 'active' },
+        { label: 'COMMON.INACTIVE', value: 'inactive' }
+      ]"
+    />
+
+    <div class="flex flex-col gap-2">
+      <label class="text-sm font-bold text-gray-700 text-right">{{ t('JOB_LEVEL.DESCRIPTION') }}</label>
+      <textarea
+        formControlName="description"
+        [placeholder]="t('JOB_LEVEL.DESCRIPTION_PLACEHOLDER')"
+        class="w-full min-h-[120px] p-4 border border-gray-200 rounded-lg text-right resize-none focus:outline-[#6EA30D]"
+      ></textarea>
+    </div>
+
+    <div class="flex gap-4 pt-4">
+       <app-action-btn-component
+        [label]="'COMMON.SAVE'"
+        [isLoading]="isSubmitting()"
+        (clicked)="handleSave()"
+        class="bg-[#6EA30D] !text-white w-32"
+      />
+      <button type="button" (click)="cancel()" class="px-8 h-[42px] border border-gray-300 rounded-lg font-bold text-gray-600">
+        {{ t('COMMON.CANCEL') }}
+      </button>
+    </div>
+  </div>
+</div>

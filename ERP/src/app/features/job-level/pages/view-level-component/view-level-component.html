@@ -29,16 +29,16 @@
     <table class="w-full text-right font-arabic text-black border border-[#F4F4F4]/50 rounded-xl overflow-hidden">
       <thead class="text-sm sticky top-0 bg-[#F4F4F4] z-10">
         <tr>
-          <th class="py-4 ps-12 text-start">المستوى الوظيفي</th>
-          <th class="py-4 pe-26">عدد الموظفين</th>
-          <th class="py-4 pe-60 ">الحالة</th>
-          <th class="py-4 px-10 text-center">العمليات</th>
+          <th class="py-4 ps-24 text-start">{{t('JOB_LEVEL.JOB_LEVEL')}}</th>
+          <th class="py-4 pe-26">{{t('JOB_LEVEL.EMPLOYEES_NUMBER')}}</th>
+          <th class="py-4 pe-60 ">{{t('JOB_LEVEL.STATUS')}}</th>
+          <th class="py-4 px-20 text-center"></th>
         </tr>
       </thead>
       <tbody>
         @for (level of levelsList(); track level.id) {
         <tr class="bg-white hover:bg-gray-50/50 transition-all border-b border-gray-100">
-          <td class="py-4 ps-12 font-normal text-sm">{{ level.nameAr }}</td>
+          <td class="py-4 ps-24 font-normal text-sm">{{ level.nameAr }}</td>
           <td class="py-4 pe-26 text-sm">{{ level.employeeCount }} موظف</td>
 
           <td class="py-3 pe-60">
@@ -51,7 +51,7 @@
             </div>
           </td>
 
-          <td class="py-4 px-10">
+          <td class="py-4 px-20">
             <div class="flex gap-4 justify-end">
               <button
                 class="flex size-[30px] items-center justify-center rounded-full bg-[#0000001A] transition-colors hover:bg-[#00000033]"><ng-icon

@@ -10,9 +10,9 @@ import { NgIcon, provideIcons } from '@ng-icons/core';
 import { lucidePencil, lucideSaudiRiyal, lucideTrash2 } from '@ng-icons/lucide';
 import { IEmployeeResponse } from '@features/employees/models/iemployee';
 import { TranslationService } from '@core/services/translation-service';
-import { EmploymentTypesService } from '@core/services/employment-types-service';
 import { DateFilterComponent } from "@shared/components/molecules/date-filter-component/date-filter-component";
 import { ActionBtnComponent } from "@shared/components/molecules/action-btn-component/action-btn-component";
+import { EmploymentTypesService } from '@features/employment-types/services/employment-types-service';
 
 @Component({
   selector: 'app-view-employees-component',
@@ -54,7 +54,7 @@ export class ViewEmployeesComponent {
   employeesList = computed(() => {
     const response = this.employeesResource.value()?.data ?? [];
     const lang = this.translationService.lang();
-    const employmentTypes = this.employmentTypeService.list();
+    const employmentTypes = this.employmentTypeService.lookupList();
 
     return response.map(emp => {
       const typeMatch = employmentTypes.find(t => t.id === emp.employmentType);
@@ -67,7 +67,7 @@ export class ViewEmployeesComponent {
           ? (emp.jobTitleAr || emp.jobTitleEn)
           : (emp.jobTitleEn || emp.jobTitleAr),
 
-        displayEmploymentType: typeMatch?.EmploymentTypeDisplayName || emp.employmentType
+        displayEmploymentType: typeMatch?.displayName || emp.employmentType
       };
     });
   });

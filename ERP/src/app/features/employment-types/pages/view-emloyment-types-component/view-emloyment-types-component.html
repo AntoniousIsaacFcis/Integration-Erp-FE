@@ -1,0 +1,37 @@
+<app-app-base-table-component [(searchTerm)]="searchTerm"
+      [totalItems]="totalItems()" [(currentPage)]="currentPage"
+      [extraActions]="actions" *transloco="let t">
+
+      <ng-template #actions>
+        <app-action-btn-component [label]="'JOB_LEVEL.ADD_TYPE'" (clicked)="goToCreate()" />
+      </ng-template>
+
+      <table class="w-full text-right font-arabic border-t">
+        <thead class="bg-[#F4F4F4] text-sm">
+          <tr>
+            <th class="py-4 px-6">{{t('JOB_LEVEL.TYPE_NAME')}}</th>
+            <th class="py-4 px-6">{{t('JOB_LEVEL.EMPLOYEE_COUNT')}}</th>
+            <th class="py-4 px-6">{{t('JOB_LEVEL.STATUS')}}</th>
+            <th class="py-4 px-6"></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (type of typesList(); track type.id) {
+            <tr class="border-b hover:bg-gray-50">
+              <td class="py-4 px-6">{{ type.employmentTypeAr }}</td>
+              <td class="py-4 px-6">{{ type.employeeCount }} {{t('JOB_LEVEL.EMPLOYEES')}}</td>
+              <td class="py-4 px-6">
+                <span [class]="type.status === 'active' ? 'text-green-600 bg-green-50' : 'text-red-600 bg-red-50'"
+                      class="px-3 py-1 rounded-full text-xs font-bold">
+                  {{ type.status === 'active' ? t('COMMON.ACTIVE') : t('COMMON.INACTIVE') }}
+                </span>
+              </td>
+              <td class="py-4 px-6 flex gap-2 justify-end">
+                <button class="p-2 bg-gray-100 rounded-full"><ng-icon name="lucidePencil" size="14"/></button>
+                <button class="p-2 bg-gray-100 rounded-full text-red-500"><ng-icon name="lucideTrash2" size="14"/></button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </app-app-base-table-component>

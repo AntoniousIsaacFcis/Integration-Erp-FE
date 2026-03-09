@@ -100,6 +100,8 @@ export class AddEmployeeComponent {
   }
 
   async onSaveAll() {
+    if (this.isLoading()) return;
+
     const basic = this.basicInfoComp();
     if (!basic) return;
 

@@ -6,7 +6,6 @@ import { AppDateInputComponent } from "@shared/components/atoms/app-date-input-c
 import { TranslocoModule } from '@jsverse/transloco';
 import { DepartmentsService } from '@features/departments/services/departments-service';
 import { NationalitiesService } from '@core/services/nationalities-service';
-import { EmploymentTypesService } from '@core/services/employment-types-service';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { lucideOctagonX, lucideSaudiRiyal } from '@ng-icons/lucide';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -15,6 +14,7 @@ import { IDocument } from '@shared/models/idocument';
 import { DocumentsComponent } from "@shared/components/organisms/documents-component/documents-component";
 import { fileValidation } from '@shared/validators/file-validation.validator';
 import { JobTitlesService } from '@core/services/job-titles-service';
+import { EmploymentTypesService } from '@features/employment-types/services/employment-types-service';
 
 @Component({
   selector: 'app-employee-basic-info-component',
@@ -115,8 +115,8 @@ export class EmployeeBasicInfoComponent {
   nationalities = this.nationalitiesService.localizedNationalities;
   isLoadingNationalities = this.nationalitiesService.nationalitiesResource.isLoading;
 
-  employmentTypes = this._employmentTypesService.list;
-  isLoadingTypes = this._employmentTypesService.resource.isLoading;
+  employmentTypes = this._employmentTypesService.lookupList;
+  isLoadingTypes = this._employmentTypesService.lookupResource.isLoading;
 
   jobTitles = this._jobTitlesService.list;
   isLoadingJobs = this._jobTitlesService.resource.isLoading;

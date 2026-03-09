@@ -90,11 +90,11 @@
   <app-app-select-component [label]="t('EMPLOYEES.EMPLOYMENT_TYPE') + '*'" [control]="getControl('employmentType')"
     [showErrors]="submitted()" [placeholder]="isLoadingTypes() ? t('COMMON.LOADING') : t('PLACEHOLDER.SELECT_TYPE')">
 
-    @if (_employmentTypesService.resource.error()) {
+    @if (_employmentTypesService.lookupResource.error()) {
     <option disabled class="text-error">⚠️ {{ t('ERRORS.LOAD_FAILED') }}</option>
     } @else {
     @for (type of employmentTypes(); track type.id) {
-    <option [value]="type.id">{{ type.EmploymentTypeDisplayName }}</option>
+    <option [value]="type.id">{{ type.displayName }}</option>
     }
     }
   </app-app-select-component>
