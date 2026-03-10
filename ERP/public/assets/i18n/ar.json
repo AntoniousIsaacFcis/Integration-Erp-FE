@@ -87,7 +87,7 @@
     "DESIGNATIONS": "المسميات الوظيفية",
     "LEVELS": "المستويات",
     "JOB_LEVELS": "المستويات الوظيفية",
-    "SHIFT_TYPES": "أنواع الورديات",
+    "EMPLOYMENT_TYPES": "أنواع الدوام",
     "SHIFT_MANAGEMENT": "إدارة الورديات",
     "SETTINGS": "الإعدادات",
     "ALL_EMPLOYEES": "جميع الموظفين",
@@ -112,7 +112,9 @@
     "SALARY": "الراتب",
     "DOCUMENTS": "المستندات",
     "SALARY_DATA": "الراتب",
-    "EMPLOYEE_DETAILS": "تفاصيل الموظف"
+    "EMPLOYEE_DETAILS": "تفاصيل الموظف",
+    "VIEW_TYPES": "انواع الدوام",
+    "CREATE_TYPE": "اضافة دوام وظيفي"
   },
   "BUTTON": {
     "ADD_LEVEL": "إضافة مستوى",
@@ -221,7 +223,9 @@
     "DEPARTMENTS": "الأقسام",
     "DESIGNATIONS": "المسميات الوظيفية",
     "ATTENDANCE": "الحضور",
-    "TRANSFER_BETWEEN_PAGES": "تنقّل بين صفحات الموظفين بسهولة"
+    "TRANSFER_BETWEEN_PAGES": "تنقّل بين صفحات الموظفين بسهولة",
+    "TYPES_TABLE":"جدول أنواع الدوام",
+    "ADD_TYPE":"إضافة دوام جديد"
   },
   "TABLES": {
     "ADD_EMPLOYEE": "إضافة موظف جديد",

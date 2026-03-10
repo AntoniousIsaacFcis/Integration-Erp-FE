@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, input, output } from '@angular/core
 import { INavItem } from '@core/models/inav-item';
 import { TranslocoModule } from '@jsverse/transloco';
 import { NgIcon, provideIcons } from '@ng-icons/core';
-import { lucideAlignEndVertical, lucideAlignVerticalSpaceAround, lucideBookmark, lucideBuilding2, lucideCalendar, lucideChevronDown, lucideChevronLeft, lucideChevronRight, lucideClock3, lucideLayoutDashboard, lucideSettings, lucideUsers } from '@ng-icons/lucide';
+import { lucideAlignEndVertical, lucideAlignVerticalSpaceAround, lucideBookmark, lucideBuilding2, lucideCalendar, lucideChevronDown, lucideChevronLeft, lucideChevronRight, lucideClock3, lucideLayoutDashboard, lucideList, lucidePlus, lucideSettings, lucideUsers } from '@ng-icons/lucide';
 
 @Component({
   selector: 'app-sidebar-item-component',
@@ -19,7 +19,9 @@ import { lucideAlignEndVertical, lucideAlignVerticalSpaceAround, lucideBookmark,
     lucideBuilding2,
     lucideAlignEndVertical,
     lucideClock3,
-    lucideCalendar
+    lucideCalendar,
+    lucideList,
+    lucidePlus
   })],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

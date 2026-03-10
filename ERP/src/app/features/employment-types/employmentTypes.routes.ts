@@ -4,17 +4,22 @@ import { ViewEmloymentTypesComponent } from "./pages/view-emloyment-types-compon
 export const EMPLOYMENT_TYPES_ROUTES: Routes = [
   {
     path: '',
-    data: { breadcrumb: 'JOB_LEVEL.EMPLOYMENT_TYPES' },
+    data: { breadcrumb: 'MENU.EMPLOYMENT_TYPES' },
     children: [
       {
         path: 'view',
         component: ViewEmloymentTypesComponent,
-        data: { breadcrumb: 'JOB_LEVEL.TYPES_TABLE' }
+        data: { breadcrumb: 'BREADCRUMB.TYPES_TABLE' }
       },
       {
         path: 'create',
-        // component: CreateEmploymentTypeComponent,
-        data: { breadcrumb: 'JOB_LEVEL.ADD_TYPE' }
+        loadComponent: () => import('./pages/create-employment-type-component/create-employment-type-component').then(x => x.CreateEmploymentTypeComponent),
+        data: { breadcrumb: 'BREADCRUMB.ADD_TYPE' }
+      }
+      , {
+        path: '',
+        redirectTo: 'view',
+        pathMatch: 'full'
       }
     ]
   }

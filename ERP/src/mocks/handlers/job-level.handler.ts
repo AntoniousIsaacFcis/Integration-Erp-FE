@@ -1,5 +1,5 @@
 // features/job-levels/mocks/job-level.handlers.ts
-import { http, HttpResponse } from 'msw';
+import { delay, http, HttpResponse } from 'msw';
 import { environment } from '@env/environment.development';
 import { JOB_LEVELS_MOCK_DATA } from '@mocks/data/job-level.data';
 import { IJobLevel } from '@features/job-level/models/ijob-level';
@@ -7,7 +7,7 @@ import { IJobLevel } from '@features/job-level/models/ijob-level';
 let currentDb = [...JOB_LEVELS_MOCK_DATA];
 
 export const jobLevelHandlers = [
-  http.get(`${environment.baseUrl}/api/job-levels`, ({ request }) => {
+  http.get(`${environment.baseUrl}/api/job-levels`, async ({ request }) => {
     const url = new URL(request.url);
     const page = parseInt(url.searchParams.get('page') || '1');
     const limit = parseInt(url.searchParams.get('limit') || '10');
@@ -33,6 +33,7 @@ export const jobLevelHandlers = [
     // استخدام البيانات المستوردة لعمل الـ Slice
     const paginatedData = filteredResults.slice(startIndex, endIndex);
 
+    await delay(600);
     return HttpResponse.json({
       data: paginatedData,
       total: filteredResults.length,

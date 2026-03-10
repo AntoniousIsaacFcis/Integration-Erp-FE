@@ -15,12 +15,13 @@ export class EmploymentTypesService {
   private readonly API_URL = `${environment.baseUrl}/api/employment-types`;
 
   // 1. Resource for Management Table (Paginated/Filtered)
-getManagementData(params: { page: number; limit: number; search?: string }) {
+getManagementData(params: { page: number; limit: number; search?: string;status?: string }) {
     return this.http.get<IEmploymentTypeResponse>(this.API_URL, {
       params: {
         page: params.page,
         limit: params.limit,
-        ...(params.search && { q: params.search })
+        ...(params.search && { q: params.search }),
+        ...(params.status && { status: params.status })
       }
     });
   }

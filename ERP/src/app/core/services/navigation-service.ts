@@ -40,7 +40,16 @@ export const MENU_ITEMS: INavItem[] = [
       { id: '4-3', label: 'MENU.LEVEL_MAPPING', path: '/job-levels/mapping', icon: 'lucideLink' }
     ]
   },
-  { id: '5', label: 'MENU.SHIFT_TYPES', path: '/shift-types', icon: 'lucideClock3' },
+  {
+    id: '5',
+    label: 'MENU.EMPLOYMENT_TYPES',
+    path: '/employment-types',
+    icon: 'lucideClock3',
+    children: [
+      {id: '5-1',label: 'MENU.VIEW_TYPES',path: '/employment-types/view',icon: 'lucideList'},
+      {id: '5-2',label: 'MENU.CREATE_TYPE',path: '/employment-types/create',icon: 'lucidePlus'}
+    ]
+  },
   {
     id: '6',
     label: 'MENU.SHIFT_MANAGEMENT',
