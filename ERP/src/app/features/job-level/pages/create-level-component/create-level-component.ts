@@ -4,7 +4,7 @@ import { FormContainerComponent } from "@shared/components/organisms/form-contai
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { IDepartment } from '@features/job-level/models/idepartment';
-import { rxResource, takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { rxResource, takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { isPlatformBrowser } from '@angular/common';
 import { delay, finalize, of } from 'rxjs';
 import { environment } from '@env/environment.development';
@@ -56,11 +56,23 @@ export class CreateLevelComponent {
     status: ['active', [Validators.required]],
     description: ['', [AppValidators.wordLimit(250)]]
   });
+  // 1. Capture the description value as a signal
+  private descriptionValue = toSignal(
+    this.jobLevelForm.controls.description.valueChanges,
+    { initialValue: '' }
+  );
+  // 2. 
+  wordCount = computed(() => {
+    const text = this.descriptionValue() ?? '';
+    return text.trim().split(/\s+/).filter(w => w.length > 0).length;
+  });
+  // 3.
+  isOverLimit = computed(() => this.wordCount() > 250);
 
   isFormSubmitted = signal(false);
   onSubmit() {
     if (this.isSubmitting()) return;
-    
+
     this.isFormSubmitted.set(true);
     this.jobLevelForm.updateValueAndValidity();
 
