@@ -2,7 +2,7 @@
 import { http, HttpResponse, delay } from 'msw';
 import { environment } from '@env/environment.development';
 import { MOCK_ATTENDANCE_DATA } from '@mocks/data/attendance.data';
-import { MOCK_VACATIONS_STORE } from '@mocks/data/vacations.data';
+
 
 export const attendanceHandlers = [
   http.get(`${environment.baseUrl}/api/attendance/available-years`, async () => {
@@ -13,7 +13,7 @@ export const attendanceHandlers = [
     return HttpResponse.json(years.map(y => ({ label: y, value: y })));
   }),
 
-  http.get(`${environment.baseUrl}/api/employees/:id/attendance`, async ({ params, request }) => {
+  http.get(`${environment.baseUrl}/api/attendance/:id`, async ({ params, request }) => {
     const id = params['id'] as string;
     const url = new URL(request.url);
     const year = url.searchParams.get('year') || '2025';

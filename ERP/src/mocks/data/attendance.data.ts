@@ -1,4 +1,4 @@
-import { IAttendanceDay } from "@features/employees/models/iattendance-day";
+import { IAttendanceDay } from "@features/shifts/models/iattendance";
 
 export const MOCK_ATTENDANCE_DATA: Record<string, Record<string, Record<string, IAttendanceDay[]>>> = {
   "1": {

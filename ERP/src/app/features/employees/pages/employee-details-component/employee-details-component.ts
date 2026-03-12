@@ -10,12 +10,12 @@ import { ITabItem, TabSwitcherComponent } from '@shared/components/molecules/tab
 import { ISelectOption, SelectBtnComponent } from '@shared/components/atoms/select-btn-component/select-btn-component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MOCK_ATTENDANCE_DATA } from '@mocks/data/attendance.data';
-import { AttendanceService } from '@features/attendance/services/attendance-service';
 import { AppBaseTableComponent } from "@shared/components/organisms/app-base-table-component/app-base-table-component";
 import { IVacationResponse, VacationStatus } from '@features/vacations/models/ivacation';
 import { DatePipe } from '@angular/common';
 import { SalaryService } from '@features/salary/services/salary-service';
 import { MOCK_SALARY_STORE } from '@mocks/data/salary.data';
+import { AttendanceService } from '@features/shifts/services/attendance-service';
 
 interface YearFilterSource {
   url: string;

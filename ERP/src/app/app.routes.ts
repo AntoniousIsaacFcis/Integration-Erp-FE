@@ -35,6 +35,11 @@ export const routes: Routes = [
         // canMatch: [() => inject(AuthService).hasPermission('MyProject.employment-types')],
         loadChildren: () => import('./features/employment-types/employmentTypes.routes').then(m => m.EMPLOYMENT_TYPES_ROUTES),
       },
+      {
+        path: 'shifts',
+        // canMatch: [() => inject(AuthService).hasPermission('MyProject.employment-types')],
+        loadChildren: () => import('./features/shifts/attendance.route').then(m => m.ATTENDANCE_ROUTES),
+      },
       // ... باقي الميزات بنفس النمط
     ]
   },

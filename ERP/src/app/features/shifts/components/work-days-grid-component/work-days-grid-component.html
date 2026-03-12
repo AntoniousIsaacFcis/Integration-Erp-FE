@@ -1,0 +1,30 @@
+<div class="w-full border border-black/5 rounded-xl overflow-hidden bg-white shadow-soft">
+      <table class="w-full text-right border-collapse">
+        <thead>
+          <tr class="bg-gray-50/50 border-b border-black/5">
+            <th class="p-4 text-base font-normal text-black">اليوم</th>
+            <th class="text-center text-base font-normal text-black">يوم عمل</th>
+            <th class="p-4 text-xs font-bold text-black/40 text-center">احتساب الحضور في أيام الإجازة</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (day of gridData(); track day.day; let i = $index) {
+            <tr class="border-b border-black/5 last:border-0 hover:bg-gray-50/30 transition-colors">
+              <td class="p-4 text-sm font-medium text-black/60">{{ day.label }}</td>
+              <td class="p-4 text-center">
+                <input type="checkbox"
+                       [checked]="day.isWorkDay"
+                       (change)="toggle(i, 'isWorkDay')"
+                       class="w-5 h-5 rounded-[6px] border-black/10 text-primary focus:ring-primary/20 cursor-pointer">
+              </td>
+              <td class="p-4 text-center">
+                <input type="checkbox"
+                       [checked]="day.calculateOnHoliday"
+                       (change)="toggle(i, 'calculateOnHoliday')"
+                       class="w-5 h-5 rounded-[6px] border-black/10 text-primary focus:ring-primary/20 cursor-pointer">
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>

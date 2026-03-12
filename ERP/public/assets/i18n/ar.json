@@ -97,7 +97,8 @@
     "VIEW_LEVELS": "جميع المستويات",
     "CREATE_LEVEL": "إضافة مستوى",
     "LEVEL_MAPPING": "ربط المستويات",
-    "SHIFT_SCHEDULE": "جدول الورديات",
+    "VIEW_SHIFTS": "اعداد الورديات",
+    "CREATE_SHIFT":"اضافة وردية جديدة",
     "SHIFT_ASSIGNMENT": "تعيين الورديات",
     "SHIFT_REPORTS": "تقارير الورديات",
     "GENERAL_SETTINGS": "الإعدادات العامة",
@@ -477,7 +478,13 @@
     "EDIT_SHIFT": " تعديل الوردية",
     "DELETE_SHIFT": "حذف الوردية",
     "ASSIGNED_EMPLOYEES": "الموظفون المعينون",
-    "EMPLOYEE_COUNT": "عدد الموظفين"
+    "EMPLOYEE_COUNT": "عدد الموظفين",
+    "ADD_NEW_SHIFT":"اضافة وردية جديدة",
+    "SELECT_WORK_DAYS":"تحديد أيام العمل",
+    "WORK_START":"وقت بداية العمل",
+    "WORK_END":"وقت نهاية العمل",
+    "CHECKIN_START":"بداية وقت تسجيل الحضور",
+    "CHECKIN_END":"نهاية وقت تسجيل الحضور"
   },
   "ATTENDANCE": {
     "TITLE": "الحضور والغياب",
