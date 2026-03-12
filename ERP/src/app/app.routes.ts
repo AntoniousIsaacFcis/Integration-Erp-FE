@@ -1,4 +1,8 @@
+import { inject } from '@angular/core';
 import { Routes } from '@angular/router';
+import { authGuard } from '@core/auth/guards/auth-guard';
+import { guestGuard } from '@core/auth/guards/guest-guard';
+import { AuthService } from '@core/auth/services/auth-service';
 import { LoginLayoutComponent } from '@shared/layouts/login/login-layout-component/login-layout-component';
 import { MainLayoutComponent } from '@shared/layouts/main/main-layout-component/main-layout-component';
 
@@ -7,13 +11,13 @@ export const routes: Routes = [
   {
     path: 'auth',
     component: LoginLayoutComponent,
-    // canActivate: [guestGuard],
+    canActivate: [guestGuard], // Prevents logged-in users from seeing login page
     loadChildren: () => import('./features/auth/auth.route').then(m => m.AUTH_ROUTES)
   },
   {
     path: '',
     component: MainLayoutComponent,
-    // canActivate: [authGuard],
+    canActivate: [authGuard], // Protects all internal pages
     data: { breadcrumb: 'MENU.DASHBOARD' },
     children: [
       {
@@ -27,7 +31,7 @@ export const routes: Routes = [
       },
       {
         path: 'job-levels',
-        // canMatch: [() => inject(AuthService).hasPermission('MyProject.JobLevels')],
+        canActivate: [() => inject(AuthService).hasPermission('Organization.Levels')],// Example: Only allow if user has the specific ABP permission
         loadChildren: () => import('./features/job-level/job-level.routes').then(m => m.JOB_LEVEL_ROUTES),
       },
       {

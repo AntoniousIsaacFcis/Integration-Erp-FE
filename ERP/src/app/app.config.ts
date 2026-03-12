@@ -8,16 +8,11 @@ import { provideTranslocoLocale } from '@jsverse/transloco-locale';
 import { provideTranslocoPersistLang, cookiesStorage } from '@jsverse/transloco-persist-lang';
 import { authInterceptor } from '@core/auth/interceptors/auth-interceptor';
 import { AUTH_STORAGE } from '@core/auth/tokens/auth-storage.token';
-import { LocalAuthStorageService } from '@core/auth/services/local-auth-storage-service';
-import { xsrfInterceptor } from '@core/auth/interceptors/xsrf-interceptor';
 import { errorInterceptor } from '@core/interceptors/error-interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZonelessChangeDetection(),
-
-    //Decoupling => tell angular when use AUTH_STORAGE to use LocalAuthStorageService class
-    { provide: AUTH_STORAGE, useClass: LocalAuthStorageService },
 
     provideRouter(routes,
       withComponentInputBinding(),//change url params to signals (instead of activatedRouter)
@@ -29,7 +24,6 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(
       withFetch(),//improve peformance
       withInterceptors([
-        xsrfInterceptor,//to add xsrf token with every request
         authInterceptor, //to add auth token with every request,
         errorInterceptor
       ])

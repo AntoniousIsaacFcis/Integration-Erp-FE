@@ -3,18 +3,22 @@ import { bootstrapApplication } from '@angular/platform-browser';
 import { appConfig } from './app/app.config';
 import { isDevMode } from '@angular/core';
 import { App } from './app/app';
+import { environment } from '@env/environment.development';
 
 async function prepareApp() {
-  if (isDevMode()) {
+  if (isDevMode() && environment.useMocks) {
     const { worker } = await import('./mocks/browser');
     return worker.start({
-      onUnhandledRequest: 'bypass',
+      onUnhandledRequest: 'bypass', // Keeps the console clean for real API calls
     });
   }
   return Promise.resolve();
 }
 
-prepareApp().then(() => {  //this line make smw work and if commented live api work
-  bootstrapApplication(App, appConfig)
-    .catch((err) => console.error(err));
-});
+
+// prepareApp().then(() => {
+//   bootstrapApplication(App, appConfig)
+//     .catch((err) => console.error(err));
+// });
+
+bootstrapApplication(App, appConfig).catch(err => console.error(err));

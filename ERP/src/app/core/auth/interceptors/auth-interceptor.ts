@@ -1,42 +1,28 @@
-import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
-import { inject, Injector } from '@angular/core';
-import { catchError, throwError } from 'rxjs';
-import { AuthService } from '../services/auth-service';
-import { Router } from '@angular/router';
-import { AUTH_STORAGE } from '../tokens/auth-storage.token';
+import {HttpHeaders, HttpInterceptorFn } from '@angular/common/http';
+
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
-  const injector = inject(Injector);
-  const router = inject(Router);
 
-  const storage = injector.get(AUTH_STORAGE);
-  const token = storage.getToken();
+  // 1. Precise Cookie Reader
+  const getCookie = (name: string): string | null => {
+    const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]*)(;|$)'));
+    return match ? decodeURIComponent(match[2]) : null;
+  };
 
-  //except login from Authorization headers
-  if (req.url.includes('/login') || req.url.includes('/application-configuration')) {
-    return next(req);
+  const token = getCookie('XSRF-TOKEN');
+
+  let headers = new HttpHeaders()
+    .set('X-Requested-With', 'XMLHttpRequest')
+    .set('Accept', 'application/json');
+
+ if (token && ['POST', 'PUT', 'DELETE', 'PATCH'].includes(req.method)) {
+    headers = headers.set('RequestVerificationToken', token);
   }
 
-  //add an Authorization token in header without touching localStorage => protectation against XSS
-  let clonedReq = req;
-  if (token && token !== 'null') {
-    clonedReq = req.clone({
-      setHeaders: {
-        Authorization: `Bearer ${token}`
-      }
-    });
-  }
+  const clonedReq = req.clone({
+    headers,
+    withCredentials: true
+  });
 
-  return next(clonedReq).pipe(
-    catchError((error: HttpErrorResponse) => {
-      if (error.status === 401) {
-        console.warn('⚠️ 401 Unauthorized - Logging out...');
-        const authService = injector.get(AuthService);
-        authService.logout().subscribe();
-        router.navigate(['/auth/login']);
-      }
-
-      return throwError(() => error);
-    })
-  );
+  return next(clonedReq);
 };

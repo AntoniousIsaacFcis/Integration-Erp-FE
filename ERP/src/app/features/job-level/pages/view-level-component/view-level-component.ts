@@ -10,12 +10,12 @@ import { of } from 'rxjs';
 import { JobLevelService } from '@features/job-level/service/job-level-service';
 import { Router } from '@angular/router';
 import { ActionBtnComponent } from "@shared/components/molecules/action-btn-component/action-btn-component";
-import { DateFilterComponent } from "@shared/components/molecules/date-filter-component/date-filter-component";
 import { StatusBadgeComponent } from "@shared/components/molecules/status-badge-component/status-badge-component";
+import { HasPermissionDirective } from '@shared/directives/has-permission-directive';
 
 @Component({
   selector: 'app-view-level-component',
-  imports: [TranslocoModule, AppBaseTableComponent, NgIcon, ActionBtnComponent, StatusBadgeComponent],
+  imports: [TranslocoModule, AppBaseTableComponent, NgIcon, ActionBtnComponent, StatusBadgeComponent,HasPermissionDirective],
   templateUrl: './view-level-component.html',
   styleUrl: './view-level-component.css',
   providers: [provideIcons({ lucideTrash2, lucidePencil })],

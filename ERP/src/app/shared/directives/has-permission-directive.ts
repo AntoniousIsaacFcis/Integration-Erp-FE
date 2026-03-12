@@ -1,27 +1,27 @@
-import { Directive, effect, ElementRef, inject, input, Renderer2 } from '@angular/core';
+import { Directive, effect, ElementRef, inject, input, Renderer2, TemplateRef, ViewContainerRef } from '@angular/core';
 import { AuthService } from '@core/auth/services/auth-service';
 
 @Directive({
-  selector: '[appHasPermissionDirective]',
+  selector: '[appHasPermission]',
 })
 export class HasPermissionDirective {
   private authService = inject(AuthService);
-  private readonly el = inject(ElementRef);
-  private readonly renderer = inject(Renderer2);
+  private vcr = inject(ViewContainerRef);
+  private templateRef = inject(TemplateRef);
 
+  // Use the modern signal input
   permission = input.required<string>({ alias: 'appHasPermission' });
 
   constructor() {
     effect(() => {
-      const policies = this.authService.grantedPolicies();
-      const hasAccess = !!policies[this.permission()];
+      const hasAccess = this.authService.hasPermission(this.permission());
 
+      this.vcr.clear();
       if (hasAccess) {
-        this.renderer.setStyle(this.el.nativeElement, 'display', '');
-      } else {
-        this.renderer.setStyle(this.el.nativeElement, 'display', 'none'); 
+        this.vcr.createEmbeddedView(this.templateRef);
       }
     });
   }
-
 }
+
+

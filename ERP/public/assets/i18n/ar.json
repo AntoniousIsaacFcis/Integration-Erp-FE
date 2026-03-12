@@ -209,7 +209,7 @@
       "INVALID_CREDENTIALS": "اسم المستخدم أو كلمة المرور غير صحيحة",
       "UNEXPECTED_ERROR": "خطأ: اسم المستخدم أو كلمة المرور غير صحيحة",
       "PERMISSION_DENIED": "ليس لديك صلاحية للقيام بهذا الإجراء",
-      "PASSWORD_MISMATCH": "كلمة السر  يجب ان تكون متطابقة"
+      "PASSWORD_MISMATCH": "كلمة السر  يجب ان تكون متطابقة",  "InvalidUserNameOrPassword": "اسم المستخدم أو كلمة المرور غير صحيحة"
     }
   },
   "BREADCRUMB": {

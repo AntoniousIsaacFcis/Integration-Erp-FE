@@ -9,10 +9,8 @@ export interface ILoginCredentials {
 }
 
 export interface ILoginResponse {
-  result: {
     result: number; // 1 = Success, 2 = InvalidCredentials , etc
     description?: string;
-  };
 }
 
 export interface ICurrentUser {
