@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { computed, inject, Injectable, Injector, signal } from '@angular/core';
 import { IAuthResponse, ILoginDTO, IUser } from '@core/models/iuser';
 import { environment } from '@env/environment.development';
-import { catchError, filter, skip, switchMap, take, tap, throwError, timeout } from 'rxjs';
+import { catchError, filter, of, skip, switchMap, take, tap, throwError, timeout } from 'rxjs';
 import { rxResource, toObservable } from '@angular/core/rxjs-interop';
 import { ILoginResponse } from '@core/models/iauth-model';
 
@@ -14,7 +14,12 @@ export class AuthService {
   private readonly injector = inject(Injector);
 
   readonly configResource = rxResource({
-    stream: () => this.http.get<any>(`${environment.baseUrl}/api/abp/application-configuration`)
+    stream: () => this.http.get<any>(`${environment.baseUrl}/api/abp/application-configuration`).pipe(
+      catchError(err => {
+        console.error('ABP Config Load Failed', err);
+        return of({auth: { grantedPolicies: {} }});
+      })
+    )
   });
 
   currentUser = computed(() => this.configResource.value()?.currentUser);
@@ -34,7 +39,7 @@ export class AuthService {
       rememberMe: true
     }).pipe(
       tap((response) => {
-        if (response.result !== 1) {  
+        if (response.result !== 1) {
           throw response.description || 'LOGIN_FAILED';
         }
         this.configResource.reload();

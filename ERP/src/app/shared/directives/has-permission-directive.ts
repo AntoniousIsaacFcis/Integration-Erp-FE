@@ -11,14 +11,18 @@ export class HasPermissionDirective {
 
   // Use the modern signal input
   permission = input.required<string>({ alias: 'appHasPermission' });
+  elseTemplate = input<TemplateRef<any>>();
 
   constructor() {
+    const authService = inject(AuthService);
+    const vcr = inject(ViewContainerRef);
+    const templateRef = inject(TemplateRef);
     effect(() => {
-      const hasAccess = this.authService.hasPermission(this.permission());
-
-      this.vcr.clear();
-      if (hasAccess) {
-        this.vcr.createEmbeddedView(this.templateRef);
+      vcr.clear();
+      if (authService.hasPermission(this.permission())) {
+        vcr.createEmbeddedView(templateRef);
+      } else if (this.elseTemplate()) {
+        vcr.createEmbeddedView(this.elseTemplate()!);
       }
     });
   }

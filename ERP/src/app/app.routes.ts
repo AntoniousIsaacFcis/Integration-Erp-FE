@@ -1,5 +1,5 @@
 import { inject } from '@angular/core';
-import { Routes } from '@angular/router';
+import { Routes, Router } from '@angular/router';
 import { authGuard } from '@core/auth/guards/auth-guard';
 import { guestGuard } from '@core/auth/guards/guest-guard';
 import { AuthService } from '@core/auth/services/auth-service';
@@ -7,7 +7,7 @@ import { LoginLayoutComponent } from '@shared/layouts/login/login-layout-compone
 import { MainLayoutComponent } from '@shared/layouts/main/main-layout-component/main-layout-component';
 
 export const routes: Routes = [
-  { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+  { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
   {
     path: 'auth',
     component: LoginLayoutComponent,
@@ -17,7 +17,7 @@ export const routes: Routes = [
   {
     path: '',
     component: MainLayoutComponent,
-    canActivate: [authGuard], // Protects all internal pages
+    canActivateChild: [authGuard], // Protects all internal pages
     data: { breadcrumb: 'MENU.DASHBOARD' },
     children: [
       {
@@ -31,8 +31,8 @@ export const routes: Routes = [
       },
       {
         path: 'job-levels',
-        canActivate: [() => inject(AuthService).hasPermission('Organization.Levels')],// Example: Only allow if user has the specific ABP permission
-        loadChildren: () => import('./features/job-level/job-level.routes').then(m => m.JOB_LEVEL_ROUTES),
+        canMatch: [() => inject(AuthService).hasPermission('Organization.Levels')],
+        loadChildren: () => import('./features/job-level/job-level.routes').then(m => m.JOB_LEVEL_ROUTES)
       },
       {
         path: 'employment-types',
@@ -44,10 +44,16 @@ export const routes: Routes = [
         // canMatch: [() => inject(AuthService).hasPermission('MyProject.employment-types')],
         loadChildren: () => import('./features/shifts/attendance.route').then(m => m.ATTENDANCE_ROUTES),
       },
-      // ... باقي الميزات بنفس النمط
+      {
+        path: '403',
+        loadComponent: () => import('@shared/pages/access-denied-component/access-denied-component').then(m => m.AccessDeniedComponent),
+        data: { breadcrumb: 'Access Denied' }
+      },
+      {
+        path: '**',
+        loadComponent: () => import('@shared/pages/not-found-component/not-found-component').then(x => x.NotFoundComponent),
+        data: { breadcrumb: 'Not Found' }
+      }
     ]
-  },
-
-  //redirect wrong routing
-  // { path: '**', redirectTo: 'auth/login' }
+  }
 ];

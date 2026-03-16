@@ -1,6 +1,7 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { NavigationEnd, RouterEvent, Router } from '@angular/router';
+import { AuthService } from '@core/auth/services/auth-service';
 import { INavItem } from '@core/models/inav-item';
 import { filter, map } from 'rxjs';
 
@@ -34,6 +35,7 @@ export const MENU_ITEMS: INavItem[] = [
     label: 'MENU.JOB_LEVELS',
     path: '/job-levels',
     icon: 'lucideAlignEndVertical',
+    requiredPolicy: 'Organization.Levels',
     children: [
       { id: '4-1', label: 'MENU.VIEW_LEVELS', path: '/job-levels/view', icon: 'lucideEye' },
       { id: '4-2', label: 'MENU.CREATE_LEVEL', path: '/job-levels/create', icon: 'lucidePlus' },
@@ -46,8 +48,8 @@ export const MENU_ITEMS: INavItem[] = [
     path: '/employment-types',
     icon: 'lucideClock3',
     children: [
-      {id: '5-1',label: 'MENU.VIEW_TYPES',path: '/employment-types/view',icon: 'lucideList'},
-      {id: '5-2',label: 'MENU.CREATE_TYPE',path: '/employment-types/create',icon: 'lucidePlus'}
+      { id: '5-1', label: 'MENU.VIEW_TYPES', path: '/employment-types/view', icon: 'lucideList' },
+      { id: '5-2', label: 'MENU.CREATE_TYPE', path: '/employment-types/create', icon: 'lucidePlus' }
     ]
   },
   {
@@ -82,7 +84,24 @@ export const MENU_ITEMS: INavItem[] = [
 
 export class NavigationService {
   private readonly router = inject(Router);
-  readonly menuItems = signal<INavItem[]>(MENU_ITEMS);
+  private authService = inject(AuthService);
+
+  readonly filteredMenuItems = computed(() => {
+    const policies = this.authService.grantedPolicies();
+    return this.filterNavItems(MENU_ITEMS, policies);
+  });
+
+  private filterNavItems(items: INavItem[], policies: Record<string, boolean>): INavItem[] {
+    return items
+      .filter(item => !item.requiredPolicy || !!policies[item.requiredPolicy])
+      .map(item => {
+        if (item.children) {
+          return { ...item, children: this.filterNavItems(item.children, policies) };
+        }
+        return item;
+      })
+      .filter(item => !item.children || item.children.length > 0 || item.path);
+  }
 
   readonly currentUrl = toSignal(
     this.router.events.pipe(

@@ -30,7 +30,7 @@ export class SidebarComponent {
 
   toggle = output<void>();
 
-  protected readonly menuItems = this.navService.menuItems;
+  protected readonly menuItems = this.navService.filteredMenuItems;
   protected readonly isRtl = signal(this.document.documentElement.dir === 'rtl');
 
   protected readonly openItemId = linkedSignal<string | null>(() => {
@@ -42,7 +42,7 @@ export class SidebarComponent {
 
   protected readonly activeSubId = computed(() => {
     const url = this.navService.currentUrl();
-    for (const item of this.navService.menuItems()) {
+    for (const item of this.navService.filteredMenuItems()) {
       const activeChild = item.children?.find((child: INavItem) => child.path === url);
       if (activeChild) return activeChild.id;
     }

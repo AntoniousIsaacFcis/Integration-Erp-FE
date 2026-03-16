@@ -19,7 +19,7 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
           userFriendlyMessage = error.error.error_description;
         }
         // 3. Fallback to generic code
-         else {
+        else {
           userFriendlyMessage = 'INVALID_CREDENTIALS';
         }
       } else if (error.status === 403) {
@@ -29,8 +29,7 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
       // Toast can be used here
       console.error(`[API Error]: ${userFriendlyMessage}`, errorBody?.error?.details);
 
-      return throwError(
-        () => String(userFriendlyMessage) // Return ONLY the string
+      return throwError(() => new Error(userFriendlyMessage, { cause: errorBody?.error?.details })
       );
     })
   );
