@@ -10,7 +10,7 @@ export const JOB_LEVEL_ROUTES: Routes = [{
     },
     {
       path: 'view',
-      canActivate: [permissionGuard('Organization.Levels.View')],
+      canActivate: [permissionGuard('Organization.Levels')],
       loadComponent: () => import('./pages/view-level-component/view-level-component')
         .then(x => x.ViewLevelComponent),
       data: { breadcrumb: 'MENU.ALL_JOB_LEVELS' }

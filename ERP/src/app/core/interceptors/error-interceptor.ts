@@ -9,7 +9,10 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
 
       let userFriendlyMessage = 'UNEXPECTED_ERROR';
 
-      if (error.status === 400 || error.status === 401) {
+      if (error.status === 0) {
+        userFriendlyMessage = 'SERVER_UNREACHABLE_OR_CORS';
+      }
+      else if (error.status === 400 || error.status === 401) {
         // 1. Check standard ABP wrapper: error.error.error.message
         if (error.error?.error?.message) {
           userFriendlyMessage = error.error.error.message;
@@ -27,7 +30,7 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
       }
 
       // Toast can be used here
-      console.error(`[API Error]: ${userFriendlyMessage}`, errorBody?.error?.details);
+      console.error(`Status: ${error.status}, Message: ${userFriendlyMessage}`);
 
       return throwError(() => new Error(userFriendlyMessage, { cause: errorBody?.error?.details })
       );

@@ -17,7 +17,7 @@ export class AuthService {
     stream: () => this.http.get<any>(`${environment.baseUrl}/api/abp/application-configuration`).pipe(
       catchError(err => {
         console.error('ABP Config Load Failed', err);
-        return of({auth: { grantedPolicies: {} }});
+        return of(null);
       })
     )
   });
@@ -67,4 +67,6 @@ export class AuthService {
   hasPermission(policy: string): boolean {
     return !!this.grantedPolicies()[policy];
   }
+
+readonly isConfigLoading$ = toObservable(this.configResource.isLoading);
 }

@@ -5,6 +5,7 @@ import { guestGuard } from '@core/auth/guards/guest-guard';
 import { AuthService } from '@core/auth/services/auth-service';
 import { LoginLayoutComponent } from '@shared/layouts/login/login-layout-component/login-layout-component';
 import { MainLayoutComponent } from '@shared/layouts/main/main-layout-component/main-layout-component';
+import { filter, map, take } from 'rxjs';
 
 export const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
@@ -28,10 +29,24 @@ export const routes: Routes = [
       {
         path: 'employees',
         loadChildren: () => import('./features/employees/employees.route').then(m => m.EMPLOYEE_ROUTES),
-      },
-      {
+      },{
         path: 'job-levels',
-        canMatch: [() => inject(AuthService).hasPermission('Organization.Levels')],
+        canMatch: [() => {
+          const authService = inject(AuthService);
+          const router = inject(Router);
+
+          // Return an observable that waits for the permissions to load
+          return authService.isConfigLoading$.pipe(
+            filter(loading => loading === false), // Wait until laoading ends (be false)
+            take(1),
+            map(() => {
+              if (authService.hasPermission('Organization.Levels')) {
+                return true;
+              }
+              return router.parseUrl('/403');
+            })
+          );
+        }],
         loadChildren: () => import('./features/job-level/job-level.routes').then(m => m.JOB_LEVEL_ROUTES)
       },
       {
@@ -47,12 +62,12 @@ export const routes: Routes = [
       {
         path: '403',
         loadComponent: () => import('@shared/pages/access-denied-component/access-denied-component').then(m => m.AccessDeniedComponent),
-        data: { breadcrumb: 'Access Denied' }
+        data: { breadcrumb: 'MENU.ACEESS_DENIED' }
       },
       {
         path: '**',
         loadComponent: () => import('@shared/pages/not-found-component/not-found-component').then(x => x.NotFoundComponent),
-        data: { breadcrumb: 'Not Found' }
+        data: { breadcrumb: 'MENU.NOT_FOUND' }
       }
     ]
   }
