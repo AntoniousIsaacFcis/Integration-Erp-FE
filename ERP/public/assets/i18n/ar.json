@@ -493,7 +493,14 @@
     "WORK_DAY":"يوم عمل",
     "CALCULTING_ATTENDACE_IN_HOLIDAY":"احتساب الحضور في أيام الإجازة",
     "CHECKOUT_START":"فترة السماح للتأخير (بالدقائق) ",
-    "CHECKOUT_END":"احتساب التأخير يبدأ من"
+    "CHECKOUT_END":"احتساب التأخير يبدأ من",
+    "TABLE":{
+      "NAME":"اسم الوردية",
+      "TYPE":"النوع",
+      "DAYS_COUNT":"عدد الايام",
+      "STATUS":"الحالة",
+      "CREATED_AT":"تاريخ الانشاء"
+    }
   },
   "ATTENDANCE": {
     "TITLE": "الحضور والغياب",

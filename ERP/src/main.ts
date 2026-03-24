@@ -16,9 +16,9 @@ async function prepareApp() {
 }
 
 
-// prepareApp().then(() => {
-//   bootstrapApplication(App, appConfig)
-//     .catch((err) => console.error(err));
-// });
+prepareApp().then(() => {//2-comment prepareApp if wanna endpoints and uncomment it if wanna msw
+  bootstrapApplication(App, appConfig)
+    .catch((err) => console.error(err));
+});
 
 bootstrapApplication(App, appConfig).catch(err => console.error(err));

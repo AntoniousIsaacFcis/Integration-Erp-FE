@@ -4,7 +4,7 @@ import { environment } from '@env/environment.development';
 import { IVacation, IVacationResponse, IVacationStats } from '@features/vacations/models/ivacation';
 import { ISelectOption } from '@shared/components/atoms/select-btn-component/select-btn-component';
 import { Observable } from 'rxjs';
-import { IAttendanceDay, IAttendanceResponse, IShift } from '../models/iattendance';
+import { IAttendanceDay, IAttendanceResponse, IShift, IShiftListResponse } from '../models/iattendance';
 
 @Injectable({
   providedIn: 'root',
@@ -15,7 +15,7 @@ export class AttendanceService {
 
   getAttendance(empId: string, year: string, month: string): Observable<IAttendanceDay[]> {
     return this.http.get<IAttendanceDay[]>(`${this.API_URL}/attendance/${empId}`, {
-      params: {  year: year.toString(),  month: month.toString() }
+      params: { year: year.toString(), month: month.toString() }
     });
   }
 
@@ -23,8 +23,22 @@ export class AttendanceService {
     return this.http.get<IAttendanceResponse>(`${this.API_URL}/attendance/all`, { params });
   }
 
-  getShifts() {
-    return this.http.get<IShift[]>(`${this.API_URL}/shifts`);
+  getShifts(params: {
+    page: number;
+    limit: number;
+    search?: string;
+    status?: string;
+    createdAt?: string;
+  }): Observable<IShiftListResponse> {
+    return this.http.get<IShiftListResponse>(`${this.API_URL}/shifts`, {
+      params: {
+        page: params.page.toString(),
+        limit: params.limit.toString(),
+        ...(params.search && { search: params.search }),
+        ...(params.status && { status: params.status }),
+        ...(params.createdAt && { createdAt: params.createdAt })
+      }
+    });
   }
 
   getAvailableYears(): Observable<ISelectOption[]> {

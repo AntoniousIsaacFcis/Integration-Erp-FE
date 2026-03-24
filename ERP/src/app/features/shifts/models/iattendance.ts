@@ -63,3 +63,20 @@ export interface IShiftPayload {
   checkInEnd: string;
   gracePeriod?: number;
 }
+
+//for view page
+export interface IShiftListItem {
+  id: string;
+  nameAr: string;
+  nameEn: string;
+  type: string; // مثل 'ليلي' أو 'صباحي'
+  daysCount: number;
+  status: 'active' | 'inactive';
+  createdAt: string;
+}
+export interface IShiftListResponse {
+  data: IShiftListItem[];
+  total: number;
+  page: number;
+  limit: number;
+}
