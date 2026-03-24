@@ -16,17 +16,17 @@ export const ATTENDANCE_ROUTES: Routes = [
         loadComponent: () => import('./pages/create-shift-component/create-shift-component').then(x => x.CreateShiftComponent),
         data: { breadcrumb: 'MENU.CREATE_SHIFT' }
       }
-      // ,
+      ,
       // {
       //   path: 'assignment',
       //   // loadComponent: () => import('./pages/permissions/permissions.component')
       //   data: { breadcrumb: 'MENU.SHIFT_ASSIGNMENT' }
       // },
-      // {
-      //   path: 'reports',
-      //   // loadComponent: () => import('./pages/shift-reports/shift-reports.component')
-      //   data: { breadcrumb: 'MENU.SHIFT_REPORTS' }
-      // }
+      {
+        path: 'special-create',  
+        loadComponent: () => import('./pages/create-special-shift-component/create-special-shift-component').then(x => x.CreateSpecialShiftComponent),
+        data: { breadcrumb: 'MENU.CREATE_SPECIAL_SHIFT' }
+      }
       , {
         path: '',
         redirectTo: 'view',

@@ -80,3 +80,15 @@ export interface IShiftListResponse {
   page: number;
   limit: number;
 }
+
+export interface ICustomShiftForm {
+  shiftName: string;
+  startDate: string;
+  endDate: string;
+  assignedShiftId: string;
+  status: 'active' | 'inactive';
+  assignmentMethod: 'rules' | 'manual';
+  departmentId: string;
+  jobTitleId: string;
+  excludedEmployeeIds: string[];
+}

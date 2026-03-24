@@ -118,7 +118,8 @@
     "VIEW_TYPES": "انواع الدوام",
     "CREATE_TYPE": "اضافة دوام وظيفي",
     "ACEESS_DENIED":"لا تمتلك صلاحية",
-    "NOT_FOUND":"الصفحة غير موجودة"
+    "NOT_FOUND":"الصفحة غير موجودة",
+    "CREATE_SPECIAL_SHIFT":"إضافة وردية متخصصة"
   },
   "BUTTON": {
     "ADD_LEVEL": "إضافة مستوى",
@@ -253,7 +254,7 @@
     "LEVEL_NAME": "اسم المستوى",
     "SORT_ORDER": "ترتيب الفرز",
     "DEPARTMENT_NAME": "اسم القسم",
-    "DESIGNATION_NAME": "اسم المسمى الوظيفي",
+    "DESIGNATION_NAME": "المسمى الوظيفي",
     "EMPLOYEE_NAME": "اسم الموظف",
     "EMPLOYEE_ID": "رقم الموظف",
     "EMAIL": "البريد الإلكتروني",
@@ -304,7 +305,11 @@
     "MARITAL_STATUS": "أعزب",
     "JOB_TITLE": "مبرمج",
     "DOCUMENTS_TYPE": "pdf",
-    "SELECT_JOB_TITLE": "ادخل نوع التوظيف"
+    "SELECT_JOB_TITLE": "ادخل نوع التوظيف",
+    "EnTER_SHIFTNAME":"ادخل اسم الوردية",
+    "NIGHTSHIFT":"ليلي",
+    "PROGRAMMING":"برمجة",
+    "SEARCH_EMPLOYEE":"ابحث عن موظف"
   },
   "VALIDATION": {
     "REQUIRED_FIELD": "هذا الحقل مطلوب",
@@ -494,6 +499,14 @@
     "CALCULTING_ATTENDACE_IN_HOLIDAY":"احتساب الحضور في أيام الإجازة",
     "CHECKOUT_START":"فترة السماح للتأخير (بالدقائق) ",
     "CHECKOUT_END":"احتساب التأخير يبدأ من",
+    "NAME":"اسم الوردية",
+    "START_DATE":"تاريخ البداية",
+    "ASSIGNED_TO":"تاريخ النهاية",
+    "END_DATE":"الوردية المراد تعيينها",
+    "EXCLUDED_EMPLOYEES":"الموظفون المستبعدون",
+    "ASSIGNMENT_METHOD":"اختيار طريقة التعيين",
+    "MANUAL":"اختيار الموظفين يدويًا",
+    "RULES":"التعيين حسب القواعد",
     "TABLE":{
       "NAME":"اسم الوردية",
       "TYPE":"النوع",
@@ -578,7 +591,8 @@
     "INVALID_TIME_RANGE": "وقت النهاية يجب أن يكون بعد وقت البداية",
     "ACCESS_DENIED_TITLE": "ليس لديك صلاحية الوصول",
     "ACCESS_DENIED_SUB": "يبدو أنك لا تملك الصلاحيات اللازمة لعرض هذه الصفحة حالياً. إذا كنت تعتقد أن هذا خطأ، يمكنك التواصل مع مسؤول النظام.",
-    "CONTACT_US": "تواصل معنا"
+    "CONTACT_US": "تواصل معنا",
+    "START_DATE_MUST_BE_BEFORE_END_DATE":"تاريخ البداية يجب أن يكون قبل تاريخ النهاية"
   },
   "JOB_LEVEL": {
     "TITLE": "المستويات الوظيفية",
