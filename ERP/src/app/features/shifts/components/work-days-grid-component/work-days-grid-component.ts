@@ -1,10 +1,11 @@
 import { Component, input, OnInit, signal } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { DayConfig } from '@features/shifts/models/iattendance';
+import { TranslocoModule } from '@jsverse/transloco';
 
 @Component({
   selector: 'app-work-days-grid-component',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule,TranslocoModule],
   templateUrl: './work-days-grid-component.html',
   styleUrl: './work-days-grid-component.css',
 })

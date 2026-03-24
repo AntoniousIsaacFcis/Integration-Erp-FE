@@ -51,6 +51,7 @@
     "DAYS_PLURAL": "أيام",
     "DAYS_SINGLE": "يوم",
     "PREVIEW": "معاينة",
+    "TIME_SUFFIX":"صباحا",
     "CURRENCY": {
       "SAR": "ر.س"
     },
@@ -277,7 +278,8 @@
     "POSTAL_CODE": "الرمز البريدي"
   },
   "PLACEHOLDER": {
-    "ENTER_NAME": "مدير عام",
+    "GENERAL_MANAGER":"مدير عام",
+    "NIGHT": "ليلي",
     "ENTER_EMAIL": "أدخل البريد الإلكتروني",
     "ENTER_PHONE": "أدخل رقم الهاتف",
     "ENTER_ADDRESS": "أدخل العنوان",
@@ -486,7 +488,12 @@
     "WORK_START":"وقت بداية العمل",
     "WORK_END":"وقت نهاية العمل",
     "CHECKIN_START":"بداية وقت تسجيل الحضور",
-    "CHECKIN_END":"نهاية وقت تسجيل الحضور"
+    "CHECKIN_END":"نهاية وقت تسجيل الحضور",
+    "DAY":"اليوم",
+    "WORK_DAY":"يوم عمل",
+    "CALCULTING_ATTENDACE_IN_HOLIDAY":"احتساب الحضور في أيام الإجازة",
+    "CHECKOUT_START":"فترة السماح للتأخير (بالدقائق) ",
+    "CHECKOUT_END":"احتساب التأخير يبدأ من"
   },
   "ATTENDANCE": {
     "TITLE": "الحضور والغياب",
@@ -561,6 +568,7 @@
     "INVALID_NATIONAL_ID_FORMAT": "بطاقة الهوية لابد ان تحتوي علي 12-14 رقم",
     "MIN_VALUE": "القيمة يجب أن تكون 0 أو أكثر",
     "REQUIRED_FILES": "يجب رفع ملف علي الاقل",
+    "INVALID_TIME_RANGE": "وقت النهاية يجب أن يكون بعد وقت البداية",
     "ACCESS_DENIED_TITLE": "ليس لديك صلاحية الوصول",
     "ACCESS_DENIED_SUB": "يبدو أنك لا تملك الصلاحيات اللازمة لعرض هذه الصفحة حالياً. إذا كنت تعتقد أن هذا خطأ، يمكنك التواصل مع مسؤول النظام.",
     "CONTACT_US": "تواصل معنا"

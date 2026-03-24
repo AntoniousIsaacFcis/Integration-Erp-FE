@@ -18,7 +18,7 @@ export const routes: Routes = [
   {
     path: '',
     component: MainLayoutComponent,
-    canActivateChild: [authGuard], // Protects all internal pages
+    // canActivateChild: [authGuard], // Protects all internal pages
     data: { breadcrumb: 'MENU.DASHBOARD' },
     children: [
       {

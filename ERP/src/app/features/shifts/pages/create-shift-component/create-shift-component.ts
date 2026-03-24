@@ -14,6 +14,7 @@ import { Router } from '@angular/router';
 import { AppSelectComponent } from "@shared/components/atoms/app-select-component/app-select-component";
 import { WorkDaysGridComponent } from "@features/shifts/components/work-days-grid-component/work-days-grid-component";
 import { TimeInputComponent } from "@shared/components/atoms/time-input-component/time-input-component";
+import { timeRangeValidator } from '@shared/validators/time-range.validator';
 
 @Component({
   selector: 'app-create-shift-component',
@@ -27,7 +28,7 @@ import { TimeInputComponent } from "@shared/components/atoms/time-input-componen
     AppSelectComponent,
     WorkDaysGridComponent,
     TimeInputComponent
-],
+  ],
   templateUrl: './create-shift-component.html',
   styleUrl: './create-shift-component.css',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -37,6 +38,7 @@ export class CreateShiftComponent {
   private fb = inject(FormBuilder);
   private shiftService = inject(AttendanceService);
   private notification = inject(NotificationService);
+  submitted = signal(false);
 
   shiftTypeOptions = [
     { label: 'SHIFTS.TYPES.DAILY', value: 'daily' },
@@ -45,13 +47,21 @@ export class CreateShiftComponent {
 
   shiftForm = this.fb.group({
     name: ['', Validators.required],
-    type: ['daily', Validators.required],
+    type: ['', Validators.required],
     workDays: [[]], // Array of day objects
-    workStart: ['09:00', Validators.required],
-    workEnd: ['17:00', Validators.required],
-    checkInStart: ['08:00'],
-    checkInEnd: ['10:00'],
+    workStart: ['', Validators.required],
+    workEnd: ['', Validators.required],
+    checkInStart: ['', Validators.required],
+    checkInEnd: ['', Validators.required],
+    checkOutStart: ['', Validators.required],
+    checkOutEnd: ['', Validators.required],
     gracePeriod: [10]
+  }, {
+    validators: [
+      timeRangeValidator('workStart', 'workEnd'),
+      timeRangeValidator('checkInStart', 'checkInEnd'),
+      timeRangeValidator('checkOutStart', 'checkOutEnd')
+    ] //to ensure workStart  not befor workEnd
   });
 
   private saveTrigger = signal<any | null>(null);
@@ -82,7 +92,10 @@ export class CreateShiftComponent {
     });
   }
 
+
   onSave() {
+    this.submitted.set(true);
+
     if (this.shiftForm.valid) {
       this.saveTrigger.set(this.shiftForm.getRawValue());
     } else {

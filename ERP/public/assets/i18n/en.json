@@ -51,6 +51,7 @@
     "DAYS_PLURAL": "Days",
     "DAYS_SINGLE": "Day",
     "PREVIEW": "Preview",
+    "TIME_SUFFIX": "AM",
     "CURRENCY": {
       "SAR": "SAR"
     },
@@ -558,7 +559,8 @@
     "INVALID_PHONE_FORMAT": "Invalid phone format. Must contain 11-15 digits (+ can be used)",
     "INVALID_NATIONAL_ID_FORMAT": "National ID must contain 12-14 digits",
     "MIN_VALUE": "Value must be 0 or greater",
-    "REQUIRED_FILES": "At least one file must be uploaded"
+    "REQUIRED_FILES": "At least one file must be uploaded",
+    "INVALID_TIME_RANGE": "End time must be after start time"
   },
   "JOB_LEVEL": {
     "TITLE": "Job Levels",
