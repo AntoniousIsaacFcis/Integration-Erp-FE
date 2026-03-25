@@ -63,6 +63,8 @@ private fb = inject(FormBuilder);
       const payload = rawData as unknown as ICustomShiftForm;
 
       this.saveTrigger.set(payload);
+
+      this.router.navigate(['shifts/special']);
     }
   }
 
@@ -85,6 +87,6 @@ private fb = inject(FormBuilder);
   }
 
   onCancel() {
-    this.router.navigate(['/shifts']);
+    this.router.navigate(['shifts/special']);
   }
 }

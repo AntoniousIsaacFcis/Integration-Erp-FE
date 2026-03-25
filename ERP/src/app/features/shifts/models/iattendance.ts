@@ -92,3 +92,31 @@ export interface ICustomShiftForm {
   jobTitleId: string;
   excludedEmployeeIds: string[];
 }
+
+export interface ISpecificShiftDetails extends ICustomShiftForm {
+  id: string;
+  createdAt: string;
+  departmentNameAr?: string;
+  departmentNameEn?: string;
+  jobTitleAr?: string;
+  jobTitleEn?: string;
+  excludedEmployees: Array<{ id: string; name: string }>;
+}
+
+export interface ISpecialShiftListItem {
+  id: string;
+  nameAr: string;
+  nameEn: string;
+  startDate: string;
+  endDate: string;
+  departmentAr: string;
+  status: 'active' | 'inactive';
+  type: string;
+}
+
+export interface ISpecialShiftListResponse {
+  data: ISpecialShiftListItem[];
+  total: number;
+  page: number;
+  limit: number;
+}

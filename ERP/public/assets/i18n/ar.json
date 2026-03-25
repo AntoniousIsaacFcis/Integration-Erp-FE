@@ -51,7 +51,7 @@
     "DAYS_PLURAL": "أيام",
     "DAYS_SINGLE": "يوم",
     "PREVIEW": "معاينة",
-    "TIME_SUFFIX":"صباحا",
+    "TIME_SUFFIX": "صباحا",
     "CURRENCY": {
       "SAR": "ر.س"
     },
@@ -99,7 +99,7 @@
     "CREATE_LEVEL": "إضافة مستوى",
     "LEVEL_MAPPING": "ربط المستويات",
     "VIEW_SHIFTS": "اعداد الورديات",
-    "CREATE_SHIFT":"اضافة وردية جديدة",
+    "CREATE_SHIFT": "اضافة وردية جديدة",
     "SHIFT_ASSIGNMENT": "تعيين الورديات",
     "SHIFT_REPORTS": "تقارير الورديات",
     "GENERAL_SETTINGS": "الإعدادات العامة",
@@ -117,9 +117,10 @@
     "EMPLOYEE_DETAILS": "تفاصيل الموظف",
     "VIEW_TYPES": "انواع الدوام",
     "CREATE_TYPE": "اضافة دوام وظيفي",
-    "ACEESS_DENIED":"لا تمتلك صلاحية",
-    "NOT_FOUND":"الصفحة غير موجودة",
-    "CREATE_SPECIAL_SHIFT":"إضافة وردية متخصصة"
+    "ACEESS_DENIED": "لا تمتلك صلاحية",
+    "NOT_FOUND": "الصفحة غير موجودة",
+    "CREATE_SPECIAL_SHIFT": "إضافة وردية متخصصة",
+    "VIEW_SPECIAL_SHIFTS": "الورديات المخصصة"
   },
   "BUTTON": {
     "ADD_LEVEL": "إضافة مستوى",
@@ -213,7 +214,8 @@
       "INVALID_CREDENTIALS": "اسم المستخدم أو كلمة المرور غير صحيحة",
       "UNEXPECTED_ERROR": "خطأ: اسم المستخدم أو كلمة المرور غير صحيحة",
       "PERMISSION_DENIED": "ليس لديك صلاحية للقيام بهذا الإجراء",
-      "PASSWORD_MISMATCH": "كلمة السر  يجب ان تكون متطابقة",  "InvalidUserNameOrPassword": "اسم المستخدم أو كلمة المرور غير صحيحة"
+      "PASSWORD_MISMATCH": "كلمة السر  يجب ان تكون متطابقة",
+      "InvalidUserNameOrPassword": "اسم المستخدم أو كلمة المرور غير صحيحة"
     }
   },
   "BREADCRUMB": {
@@ -229,8 +231,8 @@
     "DESIGNATIONS": "المسميات الوظيفية",
     "ATTENDANCE": "الحضور",
     "TRANSFER_BETWEEN_PAGES": "تنقّل بين صفحات الموظفين بسهولة",
-    "TYPES_TABLE":"جدول أنواع الدوام",
-    "ADD_TYPE":"إضافة دوام جديد"
+    "TYPES_TABLE": "جدول أنواع الدوام",
+    "ADD_TYPE": "إضافة دوام جديد"
   },
   "TABLES": {
     "ADD_EMPLOYEE": "إضافة موظف جديد",
@@ -279,7 +281,7 @@
     "POSTAL_CODE": "الرمز البريدي"
   },
   "PLACEHOLDER": {
-    "GENERAL_MANAGER":"مدير عام",
+    "GENERAL_MANAGER": "مدير عام",
     "NIGHT": "ليلي",
     "ENTER_EMAIL": "أدخل البريد الإلكتروني",
     "ENTER_PHONE": "أدخل رقم الهاتف",
@@ -306,10 +308,10 @@
     "JOB_TITLE": "مبرمج",
     "DOCUMENTS_TYPE": "pdf",
     "SELECT_JOB_TITLE": "ادخل نوع التوظيف",
-    "EnTER_SHIFTNAME":"ادخل اسم الوردية",
-    "NIGHTSHIFT":"ليلي",
-    "PROGRAMMING":"برمجة",
-    "SEARCH_EMPLOYEE":"ابحث عن موظف"
+    "EnTER_SHIFTNAME": "ادخل اسم الوردية",
+    "NIGHTSHIFT": "ليلي",
+    "PROGRAMMING": "برمجة",
+    "SEARCH_EMPLOYEE": "ابحث عن موظف"
   },
   "VALIDATION": {
     "REQUIRED_FIELD": "هذا الحقل مطلوب",
@@ -488,31 +490,31 @@
     "DELETE_SHIFT": "حذف الوردية",
     "ASSIGNED_EMPLOYEES": "الموظفون المعينون",
     "EMPLOYEE_COUNT": "عدد الموظفين",
-    "ADD_NEW_SHIFT":"اضافة وردية جديدة",
-    "SELECT_WORK_DAYS":"تحديد أيام العمل",
-    "WORK_START":"وقت بداية العمل",
-    "WORK_END":"وقت نهاية العمل",
-    "CHECKIN_START":"بداية وقت تسجيل الحضور",
-    "CHECKIN_END":"نهاية وقت تسجيل الحضور",
-    "DAY":"اليوم",
-    "WORK_DAY":"يوم عمل",
-    "CALCULTING_ATTENDACE_IN_HOLIDAY":"احتساب الحضور في أيام الإجازة",
-    "CHECKOUT_START":"فترة السماح للتأخير (بالدقائق) ",
-    "CHECKOUT_END":"احتساب التأخير يبدأ من",
-    "NAME":"اسم الوردية",
-    "START_DATE":"تاريخ البداية",
-    "ASSIGNED_TO":"تاريخ النهاية",
-    "END_DATE":"الوردية المراد تعيينها",
-    "EXCLUDED_EMPLOYEES":"الموظفون المستبعدون",
-    "ASSIGNMENT_METHOD":"اختيار طريقة التعيين",
-    "MANUAL":"اختيار الموظفين يدويًا",
-    "RULES":"التعيين حسب القواعد",
-    "TABLE":{
-      "NAME":"اسم الوردية",
-      "TYPE":"النوع",
-      "DAYS_COUNT":"عدد الايام",
-      "STATUS":"الحالة",
-      "CREATED_AT":"تاريخ الانشاء"
+    "ADD_NEW_SHIFT": "اضافة وردية جديدة",
+    "SELECT_WORK_DAYS": "تحديد أيام العمل",
+    "WORK_START": "وقت بداية العمل",
+    "WORK_END": "وقت نهاية العمل",
+    "CHECKIN_START": "بداية وقت تسجيل الحضور",
+    "CHECKIN_END": "نهاية وقت تسجيل الحضور",
+    "DAY": "اليوم",
+    "WORK_DAY": "يوم عمل",
+    "CALCULTING_ATTENDACE_IN_HOLIDAY": "احتساب الحضور في أيام الإجازة",
+    "CHECKOUT_START": "فترة السماح للتأخير (بالدقائق) ",
+    "CHECKOUT_END": "احتساب التأخير يبدأ من",
+    "NAME": "اسم الوردية",
+    "START_DATE": "تاريخ البداية",
+    "ASSIGNED_TO": "تاريخ النهاية",
+    "END_DATE": "تاريخ النهاية",
+    "EXCLUDED_EMPLOYEES": "الموظفون المستبعدون",
+    "ASSIGNMENT_METHOD": "اختيار طريقة التعيين",
+    "MANUAL": "اختيار الموظفين يدويًا",
+    "RULES": "التعيين حسب القواعد",
+    "TABLE": {
+      "NAME": "اسم الوردية",
+      "TYPE": "النوع",
+      "DAYS_COUNT": "عدد الايام",
+      "STATUS": "الحالة",
+      "CREATED_AT": "تاريخ الانشاء"
     }
   },
   "ATTENDANCE": {
@@ -592,7 +594,7 @@
     "ACCESS_DENIED_TITLE": "ليس لديك صلاحية الوصول",
     "ACCESS_DENIED_SUB": "يبدو أنك لا تملك الصلاحيات اللازمة لعرض هذه الصفحة حالياً. إذا كنت تعتقد أن هذا خطأ، يمكنك التواصل مع مسؤول النظام.",
     "CONTACT_US": "تواصل معنا",
-    "START_DATE_MUST_BE_BEFORE_END_DATE":"تاريخ البداية يجب أن يكون قبل تاريخ النهاية"
+    "START_DATE_MUST_BE_BEFORE_END_DATE": "تاريخ البداية يجب أن يكون قبل تاريخ النهاية"
   },
   "JOB_LEVEL": {
     "TITLE": "المستويات الوظيفية",

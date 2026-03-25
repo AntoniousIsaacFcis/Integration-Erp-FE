@@ -4,12 +4,15 @@ import { environment } from '@env/environment.development';
 import { IVacation, IVacationResponse, IVacationStats } from '@features/vacations/models/ivacation';
 import { ISelectOption } from '@shared/components/atoms/select-btn-component/select-btn-component';
 import { Observable } from 'rxjs';
-import { IAttendanceDay, IAttendanceResponse, IShift, IShiftListResponse } from '../models/iattendance';
+import { IAttendanceDay, IAttendanceResponse, IShift, IShiftListResponse, ISpecialShiftListResponse } from '../models/iattendance';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AttendanceService {
+  getShiftById(params: any): Observable<unknown> {
+    throw new Error('Method not implemented.');
+  }
   private http = inject(HttpClient);
   private readonly API_URL = `${environment.baseUrl}/api`;
 
@@ -54,5 +57,23 @@ export class AttendanceService {
       `${this.API_URL}/employees/${params.employeeId}/vacations`,
       { params }
     );
+  }
+
+  getSpecialShifts(params: {
+    page: number;
+    limit?: number;
+    search?: string;
+    fromDate?: string;
+    toDate?: string;
+  }): Observable<ISpecialShiftListResponse> {
+    return this.http.get<ISpecialShiftListResponse>(`${this.API_URL}/special-shifts`, {
+      params: {
+        page: params.page.toString(),
+        limit: (params.limit || 10).toString(),
+        ...(params.search && { search: params.search }),
+        ...(params.fromDate && { fromDate: params.fromDate }),
+        ...(params.toDate && { toDate: params.toDate })
+      }
+    });
   }
 }

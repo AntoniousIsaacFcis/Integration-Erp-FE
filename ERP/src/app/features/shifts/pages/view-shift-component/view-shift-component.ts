@@ -5,7 +5,7 @@ import { AttendanceService } from '@features/shifts/services/attendance-service'
 import { TranslationService } from '@core/services/translation-service';
 import { TranslocoModule } from '@jsverse/transloco';
 import { NgIcon, provideIcons } from '@ng-icons/core';
-import { lucidePencil, lucideTrash2, lucidePlus } from '@ng-icons/lucide';
+import { lucidePencil, lucideTrash2, lucidePlus, lucideCirclePlus } from '@ng-icons/lucide';
 import { AppBaseTableComponent } from "@shared/components/organisms/app-base-table-component/app-base-table-component";
 import { ActionBtnComponent } from "@shared/components/molecules/action-btn-component/action-btn-component";
 import { DatePipe } from '@angular/common';
@@ -18,7 +18,7 @@ import { DateFilterComponent } from "@shared/components/molecules/date-filter-co
   imports: [TranslocoModule, NgIcon, AppBaseTableComponent, ActionBtnComponent, DatePipe, DateFilterComponent],
   templateUrl: './view-shift-component.html',
   styleUrl: './view-shift-component.css',
-  providers: [provideIcons({ lucidePencil, lucideTrash2, lucidePlus })],
+  providers: [provideIcons({ lucidePencil, lucideTrash2, lucideCirclePlus })],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ViewShiftComponent {
@@ -56,7 +56,7 @@ export class ViewShiftComponent {
     }));
   });
 
-  
+
   handleCreateNavigation() {
     this.router.navigate(['/shifts/create']);
   }
