@@ -94,7 +94,7 @@
     "ALL_EMPLOYEES": "جميع الموظفين",
     "ADD_EMPLOYEE": "إضافة موظف",
     "EMPLOYEE_RECORDS": "سجلات الموظفين",
-    "ATTENDANCE": "الحضور",
+    "ATTENDANCE": "إدارة الورديات",
     "VIEW_LEVELS": "جميع المستويات",
     "CREATE_LEVEL": "إضافة مستوى",
     "LEVEL_MAPPING": "ربط المستويات",
@@ -120,7 +120,8 @@
     "ACEESS_DENIED": "لا تمتلك صلاحية",
     "NOT_FOUND": "الصفحة غير موجودة",
     "CREATE_SPECIAL_SHIFT": "إضافة وردية متخصصة",
-    "VIEW_SPECIAL_SHIFTS": "الورديات المخصصة"
+    "VIEW_SPECIAL_SHIFTS": "الورديات المخصصة",
+    "EDIT_ATTENDANCE_DAY": "تعديل يوم حضور"
   },
   "BUTTON": {
     "ADD_LEVEL": "إضافة مستوى",
@@ -311,7 +312,9 @@
     "EnTER_SHIFTNAME": "ادخل اسم الوردية",
     "NIGHTSHIFT": "ليلي",
     "PROGRAMMING": "برمجة",
-    "SEARCH_EMPLOYEE": "ابحث عن موظف"
+    "SEARCH_EMPLOYEE": "ابحث عن موظف",
+    "EMPLOYEE_NAME": "احمد علي",
+    "SELECT_STATUS": "نشط"
   },
   "VALIDATION": {
     "REQUIRED_FIELD": "هذا الحقل مطلوب",
@@ -537,7 +540,16 @@
     "ATTENDANCE_REPORT": "تقرير الحضور",
     "ATTENDANCE_SUMMARY": "ملخص الحضور",
     "MARK_ATTENDANCE": "تسجيل الحضور",
-    "VIEW_REPORT": "عرض التقرير"
+    "VIEW_REPORT": "عرض التقرير",
+    "EMPLOYEE_NAME": "اسم الموظف",
+    "DATE": "تاريخ الحضور",
+    "STATUS_LABEL": "حالة الحضور",
+    "SHIFT_START": "وقت بداية الوردية",
+    "SHIFT_END": "وقت نهاية الوردية",
+    "STATUS_PRESENT":"حضور",
+    "STATUS_ABSENT":"غياب",
+    "STATUS_LATE":"تاخير",
+    "STATUS_EXCUSED":"عذر"
   },
   "SETTINGS": {
     "TITLE": "الإعدادات",

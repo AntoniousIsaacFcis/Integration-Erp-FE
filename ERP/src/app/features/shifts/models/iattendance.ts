@@ -52,6 +52,18 @@ export interface IAttendanceResponse {
   page: number;
   limit: number;
 }
+export interface IEditAttendanceDay {
+  id: string;
+  employeeName: string; // غالباً للعرض فقط
+  date: string;
+  status: 'present' | 'absent' | 'late' | 'excused';
+  shiftStart: string;
+  shiftEnd: string;
+  checkIn: string | null;
+  checkOut: string | null;
+}
+
+export type IUpdateAttendancePayload = Omit<IEditAttendanceDay, 'employeeName'>;
 
 export interface IShiftPayload {
   name: string;
@@ -120,3 +132,4 @@ export interface ISpecialShiftListResponse {
   page: number;
   limit: number;
 }
+

@@ -4,7 +4,7 @@ import { environment } from '@env/environment.development';
 import { IVacation, IVacationResponse, IVacationStats } from '@features/vacations/models/ivacation';
 import { ISelectOption } from '@shared/components/atoms/select-btn-component/select-btn-component';
 import { Observable } from 'rxjs';
-import { IAttendanceDay, IAttendanceResponse, IShift, IShiftListResponse, ISpecialShiftListResponse } from '../models/iattendance';
+import { IAttendanceDay, IAttendanceResponse, IEditAttendanceDay, IShift, IShiftListResponse, ISpecialShiftListResponse, IUpdateAttendancePayload } from '../models/iattendance';
 
 @Injectable({
   providedIn: 'root',
@@ -75,5 +75,13 @@ export class AttendanceService {
         ...(params.toDate && { toDate: params.toDate })
       }
     });
+  }
+
+  getAttendanceById(id: string): Observable<IEditAttendanceDay> {
+    return this.http.get<IEditAttendanceDay>(`${this.API_URL}/attendance/details/${id}`);
+  }
+
+  updateAttendance(id: string, payload: IUpdateAttendancePayload): Observable<void> {
+    return this.http.put<void>(`${this.API_URL}/attendance/${id}`, payload);
   }
 }

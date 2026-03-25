@@ -61,7 +61,8 @@ export const MENU_ITEMS: INavItem[] = [
       { id: '6-1', label: 'MENU.VIEW_SHIFTS', path: '/shifts/view', icon: 'lucideCalendarDays' },
       { id: '6-2', label: 'MENU.CREATE_SHIFT', path: '/shifts/create', icon: 'lucidePlus' },
       { id: '6-3', label: 'MENU.VIEW_SPECIAL_SHIFTS', path: '/shifts/special', icon: 'lucideUsers' },
-      { id: '6-4', label: 'MENU.CREATE_SPECIAL_SHIFT', path: '/shifts/special-create', icon: 'lucideBarChart3' }
+      { id: '6-4', label: 'MENU.CREATE_SPECIAL_SHIFT', path: '/shifts/special-create', icon: 'lucideBarChart3' }, { id: '6-5', label: 'MENU.EDIT_ATTENDANCE_DAY', path: '/shifts/edit-attendance-day', icon: 'lucidePencil' }
+
     ]
   },
   {

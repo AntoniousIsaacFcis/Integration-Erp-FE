@@ -1,0 +1,63 @@
+<main class="flex justify-center" *transloco="let t">
+  <div class="w-full max-w-standard bg-white rounded-[20px] shadow-soft border border-black/5 flex flex-col mx-auto">
+
+    <app-form-container-component [title]="t('MENU.EDIT_ATTENDANCE_DAY')" (submit)="onSave()">
+
+      <ng-container formFields>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6 col-span-full">
+          <app-app-input-component
+            [label]="t('ATTENDANCE.EMPLOYEE_NAME') + ' *'"
+            [control]="attendanceForm.controls.employeeName"
+            [placeholder]="t('PLACEHOLDER.EMPLOYEE_NAME')" />
+
+          <app-app-date-input-component
+            [label]="t('ATTENDANCE.DATE') + ' *'"
+            [control]="attendanceForm.controls.date"
+            [showErrors]="submitted()" />
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6 col-span-full mt-6">
+          <app-app-select-component class="col-span-full"
+            [label]="t('ATTENDANCE.STATUS_LABEL') + ' *'"
+            [control]="attendanceForm.controls.status"
+            [placeholder]="t('PLACEHOLDER.SELECT_STATUS')"
+            [showErrors]="submitted()">
+            @for (opt of statusOptions; track opt.value) {
+              <option [value]="opt.value">{{ t(opt.label) }}</option>
+            }
+          </app-app-select-component>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6 col-span-full mt-6">
+          <app-time-input-component
+            [label]="t('ATTENDANCE.SHIFT_START')"
+            [control]="attendanceForm.controls.shiftStart"
+            [showErrors]="submitted()" />
+
+          <app-time-input-component
+            [label]="t('ATTENDANCE.SHIFT_END')"
+            [control]="attendanceForm.controls.shiftEnd"
+            [showErrors]="submitted()" />
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6 col-span-full mt-6">
+          <app-time-input-component
+            [label]="t('ATTENDANCE.CHECK_IN_TIME')"
+            [control]="attendanceForm.controls.checkIn"
+            [showErrors]="submitted()" />
+
+          <app-time-input-component
+            [label]="t('ATTENDANCE.CHECK_OUT_TIME')"
+            [control]="attendanceForm.controls.checkOut"
+            [showErrors]="submitted()" />
+        </div>
+      </ng-container>
+
+      <ng-container formActions>
+        <app-form-cancel-button-component (click)="onCancel()" />
+        <app-form-save-button-component  [label]="'COMMON.SAVE'" type="submit" />
+      </ng-container>
+
+    </app-form-container-component>
+  </div>
+</main>
