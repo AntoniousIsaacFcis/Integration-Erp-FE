@@ -94,7 +94,7 @@ export class ViewAttendanceDaysComponent {
   }
 
   handleViewDetails(id: string) {
-    this.router.navigate(['/shifts/attendance/details', id]);
+    this.router.navigate(['/shifts/attendance-log-details', id]);
   }
 
   handleEdit(id: string) {

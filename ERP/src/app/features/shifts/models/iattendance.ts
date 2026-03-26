@@ -62,6 +62,11 @@ export interface IEditAttendanceDay {
   checkIn: string | null;
   checkOut: string | null;
 }
+//for attendnce-log-page(readonly)
+export interface IAttendanceDetails extends IEditAttendanceDay {
+  sessionNumber?: string;
+  source?: string;
+}
 
 export type IUpdateAttendancePayload = Omit<IEditAttendanceDay, 'employeeName'>;
 

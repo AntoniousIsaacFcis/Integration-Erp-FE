@@ -67,4 +67,25 @@ export const attendanceDaysHandlers = [
       limit: limit
     });
   }),
+
+  //for attendanceLogDetails page
+  http.get(`${environment.baseUrl}/api/attendance/details/:id`, async ({ params }) => {
+    const id = params['id'] as string;
+    const log = localAttendanceLogs.find(item => item.id === id);
+
+    if (!log) {
+      return HttpResponse.json({ error: 'Not found' }, { status: 404 });
+    }
+
+    return HttpResponse.json({
+      id: log.id,
+      employeeName: log.employeeName,
+      date: log.date,
+      status: log.status,
+      checkIn: log.checkIn,
+      checkOut: log.checkOut,
+      sessionNumber: `Session-${log.id}`,
+      source: log.employeeName
+    });
+  }),
 ];
