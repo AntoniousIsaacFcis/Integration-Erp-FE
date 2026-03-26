@@ -13,10 +13,11 @@ import { TranslationService } from '@core/services/translation-service';
 import { DateFilterComponent } from "@shared/components/molecules/date-filter-component/date-filter-component";
 import { ActionBtnComponent } from "@shared/components/molecules/action-btn-component/action-btn-component";
 import { EmploymentTypesService } from '@features/employment-types/services/employment-types-service';
+import { TableStatusBadgeComponent } from "@shared/components/atoms/table-status-badge-component/table-status-badge-component";
 
 @Component({
   selector: 'app-view-employees-component',
-  imports: [TranslocoModule, NgIcon, AppBaseTableComponent, DecimalPipe, DateFilterComponent, ActionBtnComponent],
+  imports: [TranslocoModule, NgIcon, AppBaseTableComponent, DecimalPipe, DateFilterComponent, ActionBtnComponent, TableStatusBadgeComponent],
   templateUrl: './view-employees-component.html',
   styleUrl: './view-employees-component.css',
   providers: [provideIcons({ lucidePencil, lucideTrash2 ,lucideSaudiRiyal})],

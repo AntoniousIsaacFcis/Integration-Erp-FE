@@ -38,17 +38,8 @@
           <td class="py-4 px-4 text-center text-sm">{{ shift.type }}</td>
           <td class="py-4 px-4 text-center text-sm">{{ shift.daysCount }}</td>
 
-          <td class="py-4 px-4">
-            <div class="flex justify-center">
-
-               @let isActive = shift.status === 'active';
-              <div class="flex items-center justify-center rounded-[8px] w-[65px] h-[32px]"
-                [class]="isActive ? 'bg-[#00A3891A]' : 'bg-[#EF44441A]'">
-                <span class="font-semibold text-sm" [class]="isActive ? 'text-[#00A389]' : 'text-[#EF4444]'">
-                  {{ isActive ? t('COMMON.ACTIVE') : t('COMMON.INACTIVE') }}
-                </span>
-              </div>
-            </div>
+          <td class="py-4 px-4 flex justify-center">
+            <app-table-status-badge-component [status]="shift.status" translationPrefix="ATTENDANCE.STATUS" />
           </td>
 
           <td class="py-4 px-4 text-center text-sm">

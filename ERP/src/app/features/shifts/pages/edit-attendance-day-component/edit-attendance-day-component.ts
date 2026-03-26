@@ -34,10 +34,10 @@ export class EditAttendanceDayComponent {
   submitted = signal(false);
 
   statusOptions = [
-    { label: 'ATTENDANCE.STATUS_PRESENT', value: 'present' },
-    { label: 'ATTENDANCE.STATUS_ABSENT', value: 'absent' },
-    { label: 'ATTENDANCE.STATUS_LATE', value: 'late' },
-    { label: 'ATTENDANCE.STATUS_EXCUSED', value: 'excused' },
+    { label: 'ATTENDANCE.STATUS.PRESENT', value: 'present' },
+    { label: 'ATTENDANCE.STATUS.ABSENT', value: 'absent' },
+    { label: 'ATTENDANCE.STATUS.LATE', value: 'late' },
+    { label: 'ATTENDANCE.STATUS.EXCUSED', value: 'excused' },
   ];
 
   detailsResource = rxResource({

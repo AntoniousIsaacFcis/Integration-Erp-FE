@@ -10,13 +10,11 @@
 
   <ng-template #empActions>
     <div class="flex items-center gap-3">
-      <app-action-btn-component
-        [label]="'FILTERS.LOAD_FILES'"
-        (clicked)="handleUpload()" iconName="lucideCloudUpload" />
+      <app-action-btn-component [label]="'FILTERS.LOAD_FILES'" (clicked)="handleUpload()"
+        iconName="lucideCloudUpload" />
 
-      <app-action-btn-component
-        [label]="'FILTERS.ADD_EMPLOYEE'"
-        (clicked)="handleCreateNavigation()" iconName="lucideUserPlus"/>
+      <app-action-btn-component [label]="'FILTERS.ADD_EMPLOYEE'" (clicked)="handleCreateNavigation()"
+        iconName="lucideUserPlus" />
     </div>
   </ng-template>
 
@@ -47,14 +45,7 @@
           <td class="py-4  font-normal text-center text-sm ">{{ emp.displayJobTitle }}</td>
           <td class="py-4 px-4">
             <div class="flex justify-center">
-              @let statusKey = emp.employmentStatus.toUpperCase();
-              <div class="flex items-center justify-center rounded-[8px] px-4 py-2"
-                [class]="statusKey === 'STATUS_PROBATION' ? 'bg-[#FF4A551A]' : 'bg-[#8181811A]'">
-                <span class="font-semibold text-sm"
-                  [class]="statusKey === 'STATUS_PROBATION' ? 'text-[#FF4A55]' : 'text-[#818181]'">
-                  {{ t('EMPLOYEES.' + statusKey) }}
-                </span>
-              </div>
+              <app-table-status-badge-component [status]="emp.employmentStatus" translationPrefix="EMPLOYEES" />
             </div>
           </td>
           <td class="py-4 px-4 font-normal text-center text-sm">{{ emp.displayEmploymentType }}</td>

@@ -52,7 +52,7 @@
     "DAYS_SINGLE": "يوم",
     "PREVIEW": "معاينة",
     "TIME_SUFFIX": "صباحا",
-    "HOURS":"ساعات",
+    "HOURS": "ساعات",
     "CURRENCY": {
       "SAR": "ر.س"
     },
@@ -123,7 +123,7 @@
     "CREATE_SPECIAL_SHIFT": "إضافة وردية متخصصة",
     "VIEW_SPECIAL_SHIFTS": "الورديات المخصصة",
     "EDIT_ATTENDANCE_DAY": "تعديل يوم حضور",
-    "VIEW_ATTENDANCE_DAYS":"أيام الحضور"
+    "VIEW_ATTENDANCE_DAYS": "أيام الحضور"
   },
   "BUTTON": {
     "ADD_LEVEL": "إضافة مستوى",
@@ -528,7 +528,6 @@
     "CHECK_OUT": "الانصراف",
     "CHECK_IN_TIME": "وقت الحضور",
     "CHECK_OUT_TIME": "وقت الانصراف",
-    "STATUS": "الحالة",
     "PRESENT": "حاضر",
     "ABSENT": "غائب",
     "LATE": "متأخر",
@@ -548,18 +547,22 @@
     "STATUS_LABEL": "حالة الحضور",
     "SHIFT_START": "وقت بداية الوردية",
     "SHIFT_END": "وقت نهاية الوردية",
-    "STATUS_PRESENT":"حضور",
-    "STATUS_ABSENT":"غياب",
-    "STATUS_LATE":"تاخير",
-    "STATUS_EXCUSED":"عذر",
-    "IMPORT":"استيراد",
-    "DAILY_REGISTRATION":"تسجيل الحضور",
-    "TABLE_EMPLOYEE_NAME":"اسم الموظف",
-    "TABLE_DATE":"التاريخ",
-    "TABLE_CHECK_IN":"وقت الحضور",
-    "TABLE_CHECK_OUT":"وقت الانصراف",
-    "TABLE_TOTAL_HOURS":"إجمالي ساعات العمل",
-    "TABLE_STATUS":"الحالة"
+    "IMPORT": "استيراد",
+    "DAILY_REGISTRATION": "تسجيل الحضور",
+    "TABLE_EMPLOYEE_NAME": "اسم الموظف",
+    "TABLE_DATE": "التاريخ",
+    "TABLE_CHECK_IN": "وقت الحضور",
+    "TABLE_CHECK_OUT": "وقت الانصراف",
+    "TABLE_TOTAL_HOURS": "إجمالي ساعات العمل",
+    "TABLE_STATUS": "الحالة",
+    "STATUS": {
+      "PRESENT": "حضور",
+      "ABSENT": "غياب",
+      "LATE": "تاخير",
+      "EXCUSED": "عذر",
+      "ACTIVE":"نشط",
+      "INACTIVE":"غير نشط"
+    }
   },
   "SETTINGS": {
     "TITLE": "الإعدادات",
@@ -659,7 +662,7 @@
     "LOAD_FILES": "تحميل ملفات الموظفين",
     "ADD_EMPLOYEE": "إضافة موظف",
     "DATE": "التاريخ",
-    "ALL":"الكل"
+    "ALL": "الكل"
   },
   "PAGINATION": {
     "FIRST": "الأول",

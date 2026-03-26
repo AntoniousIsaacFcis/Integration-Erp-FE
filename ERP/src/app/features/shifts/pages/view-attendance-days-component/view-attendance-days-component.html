@@ -4,7 +4,8 @@
   <ng-template #attendanceFilters>
     <div class="flex items-center gap-3">
       <app-date-filter-component [(selectedDate)]="fromDate" labelKey="SHIFT.START_DATE" />
-      <app-status-badge-component label="MENU.CATEGORY" [(selectedStatus)]="statusFilter" [options]="attendanceStatusOptions"/>
+      <app-status-badge-component label="MENU.CATEGORY" [(selectedStatus)]="statusFilter"
+        [options]="attendanceStatusOptions" />
       <!-- <app-date-filter-component [(selectedDate)]="toDate" labelKey="SHIFT.END_DATE" /> -->
 
     </div>
@@ -49,9 +50,7 @@
             <span class="text-sm">{{ t('COMMON.HOURS') }}</span>
           </td>
           <td class="py-4 px-4 text-center">
-            <span [class]="getStatusClasses(log.status)" class="px-3 py-1 rounded-full text-xs font-medium">
-              {{ t('ATTENDANCE.STATUS_' + log.status.toUpperCase()) }}
-            </span>
+            <app-table-status-badge-component [status]="log.status" translationPrefix="ATTENDANCE.STATUS" />
           </td>
           <td class="py-4 pe-12">
             <div class="flex gap-3 justify-end">

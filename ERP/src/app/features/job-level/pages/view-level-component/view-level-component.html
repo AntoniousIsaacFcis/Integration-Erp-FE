@@ -41,13 +41,7 @@
           <td class="py-4 ps-24 font-normal text-sm">{{ level.nameAr }}</td>
           <td class="py-4 pe-26 text-sm">{{ level.employeeCount }} موظف</td>
           <td class="py-3 pe-60 flex justify-center">
-            @let isActive = level.status === 'active';
-            <div class="flex items-center justify-center rounded-[8px] w-[65px] h-[32px]"
-              [class]="isActive ? 'bg-[#00A3891A]' : 'bg-[#EF44441A]'">
-              <span class="font-semibold text-sm" [class]="isActive ? 'text-[#00A389]' : 'text-[#EF4444]'">
-                {{ isActive ? t('COMMON.ACTIVE') : t('COMMON.INACTIVE') }}
-              </span>
-            </div>
+           <app-table-status-badge-component [status]="level.status" />
           </td>
 
           <td class="py-4 px-20">

@@ -11,11 +11,12 @@ import { ActionBtnComponent } from "@shared/components/molecules/action-btn-comp
 import { DatePipe } from '@angular/common';
 import { IShift, IShiftListItem } from '@features/shifts/models/iattendance';
 import { DateFilterComponent } from "@shared/components/molecules/date-filter-component/date-filter-component";
+import { TableStatusBadgeComponent } from "@shared/components/atoms/table-status-badge-component/table-status-badge-component";
 
 @Component({
   selector: 'app-view-shift-component',
   standalone: true,
-  imports: [TranslocoModule, NgIcon, AppBaseTableComponent, ActionBtnComponent, DatePipe, DateFilterComponent],
+  imports: [TranslocoModule, NgIcon, AppBaseTableComponent, ActionBtnComponent, DatePipe, DateFilterComponent, TableStatusBadgeComponent],
   templateUrl: './view-shift-component.html',
   styleUrl: './view-shift-component.css',
   providers: [provideIcons({ lucidePencil, lucideTrash2, lucideCirclePlus })],
