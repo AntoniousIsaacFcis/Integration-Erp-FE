@@ -35,7 +35,7 @@ export const MENU_ITEMS: INavItem[] = [
     label: 'MENU.JOB_LEVELS',
     path: '/job-levels',
     icon: 'lucideAlignEndVertical',
-    requiredPolicy: 'Organization.Levels',
+    // requiredPolicy: 'Organization.Levels',
     children: [
       { id: '4-1', label: 'MENU.VIEW_LEVELS', path: '/job-levels/view', icon: 'lucideEye' },
       { id: '4-2', label: 'MENU.CREATE_LEVEL', path: '/job-levels/create', icon: 'lucidePlus' },
@@ -61,7 +61,8 @@ export const MENU_ITEMS: INavItem[] = [
       { id: '6-1', label: 'MENU.VIEW_SHIFTS', path: '/shifts/view', icon: 'lucideCalendarDays' },
       { id: '6-2', label: 'MENU.CREATE_SHIFT', path: '/shifts/create', icon: 'lucidePlus' },
       { id: '6-3', label: 'MENU.VIEW_SPECIAL_SHIFTS', path: '/shifts/special', icon: 'lucideUsers' },
-      { id: '6-4', label: 'MENU.CREATE_SPECIAL_SHIFT', path: '/shifts/special-create', icon: 'lucideBarChart3' }, { id: '6-5', label: 'MENU.EDIT_ATTENDANCE_DAY', path: '/shifts/edit-attendance-day', icon: 'lucidePencil' }
+      { id: '6-4', label: 'MENU.CREATE_SPECIAL_SHIFT', path: '/shifts/special-create', icon: 'lucideBarChart3' }, { id: '6-5', label: 'MENU.EDIT_ATTENDANCE_DAY', path: '/shifts/edit-attendance-day', icon: 'lucidePencil' },
+       { id: '6-6', label: 'MENU.VIEW_ATTENDANCE_DAYS', path: '/shifts/view-attendance-days', icon: 'lucideCheckCircle' }
 
     ]
   },

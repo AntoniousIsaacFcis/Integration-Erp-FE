@@ -2,7 +2,7 @@
   [totalItems]="totalItems()" [(currentPage)]="currentPage"  [extraFilters]="empFilters" [extraActions]="empActions" *transloco="let t">
 
   <ng-template #empFilters>
-     <app-status-badge-component label="'FILTERS.STATUS" [(selectedStatus)]="selectedStatus" ></app-status-badge-component>
+     <app-status-badge-component label="FILTERS.STATUS" [(selectedStatus)]="selectedStatus" [options]="statusOptions"></app-status-badge-component>
   </ng-template>
 
   <ng-template #empActions>

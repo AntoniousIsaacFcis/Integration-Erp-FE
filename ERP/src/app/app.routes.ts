@@ -12,7 +12,7 @@ export const routes: Routes = [
   {
     path: 'auth',
     component: LoginLayoutComponent,
-    canActivate: [guestGuard], // Prevents logged-in users from seeing login page
+    // canActivate: [guestGuard], // Prevents logged-in users from seeing login page
     loadChildren: () => import('./features/auth/auth.route').then(m => m.AUTH_ROUTES)
   },
   {
@@ -31,22 +31,22 @@ export const routes: Routes = [
         loadChildren: () => import('./features/employees/employees.route').then(m => m.EMPLOYEE_ROUTES),
       },{
         path: 'job-levels',
-        canMatch: [() => {
-          const authService = inject(AuthService);
-          const router = inject(Router);
+        // canMatch: [() => {
+        //   const authService = inject(AuthService);
+        //   const router = inject(Router);
 
-          // Return an observable that waits for the permissions to load
-          return authService.isConfigLoading$.pipe(
-            filter(loading => loading === false), // Wait until laoading ends (be false)
-            take(1),
-            map(() => {
-              if (authService.hasPermission('Organization.Levels')) {
-                return true;
-              }
-              return router.parseUrl('/403');
-            })
-          );
-        }],
+        //   // Return an observable that waits for the permissions to load
+        //   return authService.isConfigLoading$.pipe(
+        //     filter(loading => loading === false), // Wait until laoading ends (be false)
+        //     take(1),
+        //     map(() => {
+        //       if (authService.hasPermission('Organization.Levels')) {
+        //         return true;
+        //       }
+        //       return router.parseUrl('/403');
+        //     })
+        //   );
+        // }],
         loadChildren: () => import('./features/job-level/job-level.routes').then(m => m.JOB_LEVEL_ROUTES)
       },
       {

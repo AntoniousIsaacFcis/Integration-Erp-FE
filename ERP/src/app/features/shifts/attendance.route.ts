@@ -31,6 +31,11 @@ export const ATTENDANCE_ROUTES: Routes = [
         path: 'edit-attendance-day',
         loadComponent: () => import('./pages/edit-attendance-day-component/edit-attendance-day-component').then(x => x.EditAttendanceDayComponent),
         data: { breadcrumb: 'MENU.EDIT_ATTENDANCE_DAY' }
+      },
+      {
+        path: 'view-attendance-days',
+        loadComponent: () => import('./pages/view-attendance-days-component/view-attendance-days-component').then(x => x.ViewAttendanceDaysComponent),
+        data: { breadcrumb: 'MENU.VIEW_ATTENDANCE_DAYS' }
       }
       , {
         path: '',

@@ -22,9 +22,28 @@ export class AttendanceService {
     });
   }
 
-  getAllAttendance(params: { date: string; departmentId?: string; page: number }) {
-    return this.http.get<IAttendanceResponse>(`${this.API_URL}/attendance/all`, { params });
-  }
+ getAllAttendance(params: {
+  page: number;
+  limit: number;
+  search?: string;
+  fromDate?: string;
+  toDate?: string;
+  status?: string;
+}): Observable<IAttendanceResponse> {
+  let httpParams: any = {
+    page: params.page.toString(),
+    limit: params.limit.toString(),
+  };
+
+  if (params.search) httpParams.search = params.search;
+  if (params.fromDate) httpParams.fromDate = params.fromDate;
+  if (params.toDate) httpParams.toDate = params.toDate;
+  if (params.status) httpParams.status = params.status;
+
+  return this.http.get<IAttendanceResponse>(`${this.API_URL}/attendance/all`, {
+    params: httpParams
+  });
+}
 
   getShifts(params: {
     page: number;

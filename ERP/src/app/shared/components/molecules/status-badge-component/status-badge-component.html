@@ -18,15 +18,16 @@
                 animate-in fade-in zoom-in-95 duration-150 origin-top
                 top-full">
 
-    @for (status of statuses; track status.value) {
-    <button (click)="selectStatus(status.value); $event.stopPropagation()"
-      class="flex items-center justify-between w-full px-4 py-2 text-[13px] hover:bg-primary/5 hover:text-primary transition-colors text-black border-b last:border-none border-gray-50">
-      <span class="flex-1 text-start">{{ t(status.label) }}</span>
-      @if (selectedStatus() === status.value) {
+    @for (option of options(); track option.value) {
+  <button (click)="selectStatus(option.value); $event.stopPropagation()"
+    class="flex items-center justify-between w-full px-4 py-2 text-[13px] hover:bg-primary/5 hover:text-primary transition-colors text-black border-b last:border-none border-gray-50">
+    <span class="flex-1 text-start">{{ t(option.label) }}</span>
+
+    @if (selectedStatus() === option.value) {
       <ng-icon name="lucideCheck" class="text-green-600" size="14"></ng-icon>
-      }
-    </button>
     }
+  </button>
+}
   </div>
 
   <div class="fixed inset-0 z-[90] bg-transparent" (click)="isDropdownOpen.set(false); $event.stopPropagation()"></div>

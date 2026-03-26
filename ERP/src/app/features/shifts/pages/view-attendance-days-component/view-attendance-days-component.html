@@ -1,0 +1,78 @@
+<app-app-base-table-component [(searchTerm)]="searchTerm" [totalItems]="totalItems()" [(currentPage)]="currentPage"
+  [extraFilters]="attendanceFilters" [extraActions]="attendanceActions" *transloco="let t">
+
+  <ng-template #attendanceFilters>
+    <div class="flex items-center gap-3">
+      <app-date-filter-component [(selectedDate)]="fromDate" labelKey="SHIFT.START_DATE" />
+      <app-status-badge-component label="MENU.CATEGORY" [(selectedStatus)]="statusFilter" [options]="attendanceStatusOptions"/>
+      <!-- <app-date-filter-component [(selectedDate)]="toDate" labelKey="SHIFT.END_DATE" /> -->
+
+    </div>
+  </ng-template>
+
+  <ng-template #attendanceActions>
+    <div class="flex items-center gap-3">
+      <app-action-btn-component [label]="'ATTENDANCE.IMPORT'" (clicked)="handleImport()" iconName="lucideCloudUpload" />
+
+      <app-action-btn-component [label]="'ATTENDANCE.DAILY_REGISTRATION'" (clicked)="handleDailyRegistration()"
+        iconName="lucideCheckCircle" />
+    </div>
+  </ng-template>
+
+  <div class="w-full overflow-x-auto">
+    @if (attendanceResource.isLoading()) {
+    <div class="flex justify-center py-20 text-gray-400">{{ t('COMMON.LOADING') }}</div>
+    }
+
+    @if (attendanceResource.value()) {
+    <table class="w-full text-right font-arabic border border-[#F4F4F4]/50 rounded-xl overflow-hidden">
+      <thead class="text-sm bg-[#F4F4F4] sticky top-0">
+        <tr>
+          <th class="py-4 ps-16">{{ t('ATTENDANCE.TABLE_EMPLOYEE_NAME') }}</th>
+          <th class="py-4 px-4 text-center">{{ t('ATTENDANCE.TABLE_DATE') }}</th>
+          <th class="py-4 px-4 text-center">{{ t('ATTENDANCE.TABLE_CHECK_IN') }}</th>
+          <th class="py-4 px-4 text-center">{{ t('ATTENDANCE.TABLE_CHECK_OUT') }}</th>
+          <th class="py-4 px-4 text-center">{{ t('ATTENDANCE.TABLE_TOTAL_HOURS') }}</th>
+          <th class="py-4 px-4 text-center">{{ t('ATTENDANCE.TABLE_STATUS') }}</th>
+          <th class="py-4 pe-9"></th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (log of attendanceLogs(); track log.id) {
+        <tr class="bg-white border-b border-gray-200 hover:bg-gray-50/50 transition-all">
+          <td class="py-4 ps-16 font-medium text-sm text-black">{{ log.employeeName }}</td>
+          <td class="py-4 px-4 text-center text-sm">{{ log.date | date:'dd/MM/yyyy' }}</td>
+          <td class="py-4 px-4 text-center text-sm">{{ log.checkIn || '--:--' }}</td>
+          <td class="py-4 px-4 text-center text-sm">{{ log.checkOut || '--:--' }}</td>
+          <td class="py-4 px-4 text-center text-sm">
+            {{ calculateTotalHours(log.checkIn, log.checkOut) }}
+            <span class="text-sm">{{ t('COMMON.HOURS') }}</span>
+          </td>
+          <td class="py-4 px-4 text-center">
+            <span [class]="getStatusClasses(log.status)" class="px-3 py-1 rounded-full text-xs font-medium">
+              {{ t('ATTENDANCE.STATUS_' + log.status.toUpperCase()) }}
+            </span>
+          </td>
+          <td class="py-4 pe-12">
+            <div class="flex gap-3 justify-end">
+              <button (click)="handleEdit(log.id)"
+                class="flex size-[32px] items-center justify-center rounded-full bg-[#0000001A] hover:bg-red-50 transition-colors">
+                <ng-icon name="lucidePencil" size="16" />
+              </button>
+              <button (click)="handleViewDetails(log.id)"
+                class="flex size-[32px] items-center justify-center rounded-full bg-[#61BDDC33] hover:bg-gray-100 transition-colors">
+                <ng-icon name="lucideEye" size="16" color="#61BDDC" />
+              </button>
+            </div>
+          </td>
+        </tr>
+        } @empty {
+        <tr>
+          <td colspan="7" class="py-20 text-center text-gray-400">{{ t('COMMON.NO_DATA') }}</td>
+        </tr>
+        }
+      </tbody>
+    </table>
+    }
+  </div>
+</app-app-base-table-component>

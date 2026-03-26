@@ -2,7 +2,7 @@
   [extraFilters]="empTypesFilters" [extraActions]="empTypesActions" *transloco="let t">
 
   <ng-template #empTypesFilters>
-    <app-status-badge-component label="t('FILTERS.STATUS')"
+    <app-status-badge-component label="t('FILTERS.STATUS')" [options]="statusOptions"
       [(selectedStatus)]="selectedStatus"></app-status-badge-component>
   </ng-template>
 

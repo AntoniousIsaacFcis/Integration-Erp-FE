@@ -27,6 +27,12 @@ export class ViewLevelComponent {
   private readonly jobService = inject(JobLevelService);
   private readonly router = inject(Router);
 
+  statusOptions = [
+    { value: '', label: 'FILTERS.ALL' },
+    { value: 'active', label: 'COMMON.ACTIVE' },
+    { value: 'inactive', label: 'COMMON.INACTIVE' }
+  ];
+
   currentPage = signal(1);
   pageSize = signal(10);
 

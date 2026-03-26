@@ -10,14 +10,14 @@ export const JOB_LEVEL_ROUTES: Routes = [{
     },
     {
       path: 'view',
-      canActivate: [permissionGuard('Organization.Levels')],
+      // canActivate: [permissionGuard('Organization.Levels')],
       loadComponent: () => import('./pages/view-level-component/view-level-component')
         .then(x => x.ViewLevelComponent),
       data: { breadcrumb: 'MENU.ALL_JOB_LEVELS' }
     },
     {
       path: 'create',
-      canActivate: [permissionGuard('Organization.Levels.Create')],
+      // canActivate: [permissionGuard('Organization.Levels.Create')],
       loadComponent: () => import('./pages/create-level-component/create-level-component')
         .then(x => x.CreateLevelComponent),
       data: { breadcrumb: 'MENU.CREATE_LEVEL' }

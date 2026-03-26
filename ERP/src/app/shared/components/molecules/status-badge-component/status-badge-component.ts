@@ -22,18 +22,13 @@ export class StatusBadgeComponent {
 
   label = input.required<string>();
 
-  selectedStatus = model<'active' | 'inactive' | ''>('');
+  options = input.required<{value: string, label: string}[]>();
+  selectedStatus = model<string>('');
 
   isDropdownOpen = signal(false);
 
-  statuses = [
-    { value: '', label: 'FILTERS.STATUS' },
-    { value: 'active', label: 'FILTERS.ACTIVE' },
-    { value: 'inactive', label:'FILTERS.INACTIVE'}
-  ] as const;
-
   currentLabel = computed(() => {
-    const status = this.statuses.find(s => s.value === this.selectedStatus());
+    const status = this.options().find(s => s.value === this.selectedStatus());
     return status ? status.label : this.label();
   });
 
@@ -41,7 +36,7 @@ export class StatusBadgeComponent {
     this.isDropdownOpen.update(v => !v);
   }
 
-  selectStatus(value: 'active' | 'inactive' | '') {
+  selectStatus(value: string) {
     this.selectedStatus.set(value);
     this.isDropdownOpen.set(false); //close the dropdown list when choose
   }

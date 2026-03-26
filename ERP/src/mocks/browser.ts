@@ -12,9 +12,10 @@ import { salaryHandlers } from './handlers/salary.handlers';
 import { employmentTypesHandlers } from './handlers/employment-types.handler';
 import { shiftsHandlers } from './handlers/shifts.handlers';
 import { specialShiftHandlers } from './handlers/special-shifts.handlers';
+import { attendanceDaysHandlers } from './handlers/attendance.days.handler';
 
 export const worker = setupWorker(
-  ...authHandlers,
+  ...attendanceDaysHandlers,
   ...jobLevelHandlers,
   ...departmentHandlers,
   ...nationalityHandlers,
@@ -25,6 +26,7 @@ export const worker = setupWorker(
   ...salaryHandlers,
   ...employmentTypesHandlers,
   ...shiftsHandlers,
+  ...authHandlers,
   ...specialShiftHandlers
 );
 

@@ -52,6 +52,7 @@
     "DAYS_SINGLE": "يوم",
     "PREVIEW": "معاينة",
     "TIME_SUFFIX": "صباحا",
+    "HOURS":"ساعات",
     "CURRENCY": {
       "SAR": "ر.س"
     },
@@ -121,7 +122,8 @@
     "NOT_FOUND": "الصفحة غير موجودة",
     "CREATE_SPECIAL_SHIFT": "إضافة وردية متخصصة",
     "VIEW_SPECIAL_SHIFTS": "الورديات المخصصة",
-    "EDIT_ATTENDANCE_DAY": "تعديل يوم حضور"
+    "EDIT_ATTENDANCE_DAY": "تعديل يوم حضور",
+    "VIEW_ATTENDANCE_DAYS":"أيام الحضور"
   },
   "BUTTON": {
     "ADD_LEVEL": "إضافة مستوى",
@@ -549,7 +551,15 @@
     "STATUS_PRESENT":"حضور",
     "STATUS_ABSENT":"غياب",
     "STATUS_LATE":"تاخير",
-    "STATUS_EXCUSED":"عذر"
+    "STATUS_EXCUSED":"عذر",
+    "IMPORT":"استيراد",
+    "DAILY_REGISTRATION":"تسجيل الحضور",
+    "TABLE_EMPLOYEE_NAME":"اسم الموظف",
+    "TABLE_DATE":"التاريخ",
+    "TABLE_CHECK_IN":"وقت الحضور",
+    "TABLE_CHECK_OUT":"وقت الانصراف",
+    "TABLE_TOTAL_HOURS":"إجمالي ساعات العمل",
+    "TABLE_STATUS":"الحالة"
   },
   "SETTINGS": {
     "TITLE": "الإعدادات",
@@ -648,7 +658,8 @@
     "ADVANCED_FILTERS": "تصفية متقدمة",
     "LOAD_FILES": "تحميل ملفات الموظفين",
     "ADD_EMPLOYEE": "إضافة موظف",
-    "DATE": "التاريخ"
+    "DATE": "التاريخ",
+    "ALL":"الكل"
   },
   "PAGINATION": {
     "FIRST": "الأول",

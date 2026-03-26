@@ -39,5 +39,11 @@ export class ViewEmloymentTypesComponent {
   typesList = computed(() => this.empTypesResource.value()?.data ?? []);
   totalItems = computed(() => this.empTypesResource.value()?.total ?? 0);
 
+  statusOptions = [
+    { value: '', label: 'FILTERS.ALL' },
+    { value: 'active', label: 'COMMON.ACTIVE' },
+    { value: 'inactive', label: 'COMMON.INACTIVE' }
+  ];
+
   goToCreate() { this.router.navigate(['/employment-types/create']); }
 }

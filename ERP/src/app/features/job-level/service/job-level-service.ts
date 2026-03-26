@@ -9,8 +9,8 @@ import { map, catchError } from 'rxjs';
 })
 export class JobLevelService {
   private http = inject(HttpClient);
-  // private readonly API_URL = `${environment.baseUrl}/api/job-levels`; //for msw
-  private readonly API_URL = `${environment.baseUrl}/api/organization/organization-level`;
+  private readonly API_URL = `${environment.baseUrl}/api/job-levels`; //for msw
+  // private readonly API_URL = `${environment.baseUrl}/api/organization/organization-level`; //for real api
 
   getLevels(params: GetLevelsParams) {
     // Map frontend format to backend format
@@ -18,7 +18,8 @@ export class JobLevelService {
       page: params.page,
       limit: params.limit,
       ...(params.search && { q: params.search }),  // Check if backend wants 'q' or 'search'
-      ...(params.status && { isDeleted: params.status === 'inactive' })  // Convert to boolean
+      // ...(params.status && { isDeleted: params.status === 'inactive' })  //for real API
+      ...(params.status && { status: params.status })//for msw
     };
 
     return this.http.get<IJobLevelApiListResponse>(this.API_URL, { params: queryParams })
@@ -32,18 +33,40 @@ export class JobLevelService {
       );
   }
 
-  private mapApiResponse(response: IJobLevelApiListResponse, params: GetLevelsParams): IJobLevelResponse {
+  //for real api
+  // private mapApiResponse(response: IJobLevelApiListResponse, params: GetLevelsParams): IJobLevelResponse {
+  //   return {
+  //     data: response.items.map(item => ({
+  //       id: item.id,
+  //       nameAr: item.name,
+  //       employeeCount: 0,
+  //       departmentId: '',
+  //       status: item.isDeleted ? 'inactive' : 'active' as const,
+  //       description: '',
+  //       createdAt: item.creationTime
+  //     })),
+  //     total: response.totalCount,
+  //     page: params.page,
+  //     limit: params.limit
+  //   };
+  // }
+
+  //for msw
+  private mapApiResponse(response: any, params: GetLevelsParams): IJobLevelResponse {
+    const items = response.items || response.data || [];
+    const total = response.totalCount || response.total || 0;
+
     return {
-      data: response.items.map(item => ({
+      data: items.map((item: any) => ({
         id: item.id,
-        nameAr: item.name,
-        employeeCount: 0,
-        departmentId: '',
-        status: item.isDeleted ? 'inactive' : 'active' as const,
-        description: '',
-        createdAt: item.creationTime
+        nameAr: item.name || item.nameAr,
+        employeeCount: item.employeeCount || 0,
+        departmentId: item.departmentId || '',
+        status: (item.status === 'inactive' || item.isDeleted) ? 'inactive' : 'active',
+        description: item.description || '',
+        createdAt: item.creationTime || item.createdAt
       })),
-      total: response.totalCount,
+      total: total,
       page: params.page,
       limit: params.limit
     };
