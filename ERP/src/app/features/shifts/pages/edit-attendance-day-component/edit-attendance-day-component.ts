@@ -51,8 +51,8 @@ export class EditAttendanceDayComponent {
     status: ['', Validators.required],
     shiftStart: ['', Validators.required],
     shiftEnd: ['', Validators.required],
-    checkIn: [''],
-    checkOut: [''],
+    checkIn: ['', Validators.required],
+    checkOut: ['', Validators.required],
   }, {
     validators: [
       timeRangeValidator('shiftStart', 'shiftEnd'),
@@ -94,12 +94,14 @@ export class EditAttendanceDayComponent {
       } as IUpdateAttendancePayload;
 
       this.updateTrigger.set(payload);
+
+      this.router.navigate(['/shifts/view-attendance-days']);
     } else {
       this.attendanceForm.markAllAsTouched();
     }
   }
 
   onCancel() {
-    this.router.navigate(['/attendance/list']);
+    this.router.navigate(['/shifts/view-attendance-days']);
   }
 }
