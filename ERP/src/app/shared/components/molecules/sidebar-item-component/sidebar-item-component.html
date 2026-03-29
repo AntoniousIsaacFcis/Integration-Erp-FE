@@ -1,0 +1,26 @@
+<div (click)="handleToggle()"
+     [class.bg-white/20]="isActive()"
+     class="group flex items-center h-[var(--sidebar-item-height)]   rounded-md transition-all duration-200 cursor-pointer hover:bg-white/5 relative mx-5"
+     *transloco="let t">
+
+  <div class="flex items-center gap-3 flex-1">
+    <ng-icon [name]="item().icon"
+             class="text-[#999999] group-hover:text-[#B2E742] transition-colors"
+             [class.text-[#B2E742]]="isActive()" size="22">
+    </ng-icon>
+
+    @if (isExpanded()) {
+      <span class="text-[14px] font-arabic text-white animate-fade-in">{{ t(item().label) }}</span>
+    }
+  </div>
+
+  @if (isExpanded()) {
+    @if (item().children?.length) {
+      <ng-icon
+        name="lucideChevronLeft"
+        class="text-white/50 transition-transform duration-300"
+        [class.-rotate-90]="isActive()"> </ng-icon>
+    } @else {
+      }
+  }
+</div>

@@ -1,0 +1,21 @@
+<form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="flex flex-col w-[450px] gap-md animate-fade-in"
+  *transloco="let t">
+  <app-app-input-component [label]="'AUTH.EMAIL_LABEL'" [placeholder]="'AUTH.EMAIL_PLACEHOLDER'"
+    [control]="loginForm.controls.email" [showErrors]="submitted()"></app-app-input-component>
+
+  <app-app-input-component [label]="'AUTH.PASSWORD_LABEL'" [placeholder]="'AUTH.PASSWORD_PLACEHOLDER'"
+    [control]="loginForm.controls.password" [isPassword]="true" [showErrors]="submitted()"></app-app-input-component>
+
+  @if (serverError(); as error) {
+  <app-submit-error-message-component
+      [message]="t('AUTH.ERRORS.' + error) !== 'AUTH.ERRORS.' + error ? t('AUTH.ERRORS.' + error) : error">
+    </app-submit-error-message-component>
+  }
+
+  <app-app-btn-component [label]="isLoading() ? 'AUTH.LOGGING_IN' : 'AUTH.LOGIN'" [disabled]="isLoading()" type="submit"
+    class="mt-md text-black"></app-app-btn-component>
+
+  <app-auth-prompt-component message="AUTH.NO_ACCOUNT" actionText="AUTH.JOINUS" route="/auth/register"
+    linkColor="text-[#196FEB]" class="text-sm mt-md">
+  </app-auth-prompt-component>
+</form>

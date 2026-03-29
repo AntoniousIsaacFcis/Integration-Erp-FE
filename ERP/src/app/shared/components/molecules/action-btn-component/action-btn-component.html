@@ -1,0 +1,23 @@
+<button
+  (click)="clicked.emit()"
+  class="group flex items-center justify-center  h-[42px] px-sm py-sm gap-[10px] bg-[#6EA30D33] border border-[#6EA30D] rounded-[8px] transition-all  active:scale-97" *transloco="let t"
+>
+  <div class="flex items-center justify-between  h-[22px] gap-sm">
+   <div class="flex items-center justify-center w-[22px] h-[20px] text-[#6EA30D] rounded-t-[104px] rounded-br-[97px] rounded-bl-[104px]  overflow-hidden transition-colors group-hover:scale-110  ">
+      @if (isLoading()) {
+        <span class="animate-spin text-[10px]">...</span>
+      } @else {
+        <ng-icon
+          [name]="iconName()"
+          size="18"
+          strokeWidth="3"
+        ></ng-icon>
+      }
+    </div>
+
+      <span class=" h-[14px] text-black font-bold text-[14px] font-arabic leading-none text-right whitespace-nowrap">
+      {{ t(label()) }}
+    </span>
+
+  </div>
+</button>

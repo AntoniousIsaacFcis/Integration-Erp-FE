@@ -1,0 +1,39 @@
+<div
+  class="w-full max-w-standard bg-white rounded-[20px] shadow-soft border border-black/5 p-spacing-xl flex flex-col gap-spacing-lg mx-auto">
+  <app-form-container-component *transloco="let t" [title]="t('JOB_LEVEL.ADD_TYPE')" (submit)="onSubmit()">
+
+    <ng-container formFields [formGroup]="EmployeeTypesForm">
+
+      <div class="col-span-2">
+        <app-app-input-component [label]="t('JOB_LEVEL.TYPE_NAME') + ' *'" [placeholder]="t('JOB_LEVEL.TYPE_NAME')"
+          [control]="EmployeeTypesForm.controls.employmentTypeAr" [showErrors]="isFormSubmitted()" />
+      </div>
+
+      <app-app-radio-component [label]="t('JOB_LEVEL.STATUS')" [required]="true"
+        [control]="EmployeeTypesForm.controls.status" [options]="[
+          { label: 'COMMON.ACTIVE', value: 'active' },
+          { label: 'COMMON.INACTIVE', value: 'inactive' }
+        ]" />
+
+      <div class="col-span-2">
+        <app-app-textarea-component [label]="t('JOB_LEVEL.DESCRIPTION')"
+          [placeholder]="t('JOB_LEVEL.DESCRIPTION_PLACEHOLDER')" [control]="EmployeeTypesForm.controls.description" />
+
+        <div class="p-2">
+          <span class="text-xs font-medium transition-colors duration-200 "
+            [class]="isOverLimit() ? 'text-red-500' : 'text-gray-400'">
+            {{ wordCount() }} / 250 {{ t('COMMON.WORDS') }}
+          </span>
+        </div>
+      </div>
+
+    </ng-container>
+
+    <ng-container formActions>
+      <app-form-cancel-button-component (clicked)="onCancel()" />
+      <app-form-save-button-component [isLoading]="isSubmitting()" [isDisabled]="EmployeeTypesForm.invalid"
+        type="submit" />
+    </ng-container>
+
+  </app-form-container-component>
+</div>

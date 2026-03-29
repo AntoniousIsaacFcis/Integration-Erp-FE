@@ -1,0 +1,33 @@
+
+
+.custom-time-input::-webkit-datetime-edit {
+  color: transparent;
+  display: inline-flex !important;
+  width: 100%;
+  justify-content: flex-center;
+}
+
+:host-context([dir="rtl"]) .custom-time-input {
+  text-align: right !important;
+}
+
+:host-context([dir="rtl"]) .custom-time-input::-webkit-datetime-edit {
+  direction: rtl;
+  justify-content: flex-start;
+}
+
+.custom-time-input.has-value::-webkit-datetime-edit {
+  color: black;
+}
+
+.custom-time-input::-webkit-calendar-picker-indicator,
+.custom-time-input::-webkit-inner-spin-button {
+  appearance: none;
+  background: transparent;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}
+

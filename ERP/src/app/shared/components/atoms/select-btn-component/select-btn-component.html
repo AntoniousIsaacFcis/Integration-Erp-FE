@@ -1,0 +1,12 @@
+<div class="relative inline-block w-full">
+  <select .value="value()" (change)="change.emit($any($event.target).value)" [style.border-color]="borderColor()"
+    [style.color]="textColor()"
+    class="appearance-none h-[39px] ps-4 pe-8 text-center rounded-sm border outline-none font-arabic text-base cursor-pointer transition-all">
+    @for (option of options(); track option.value) {
+    <option [value]="option.value" [selected]="option.value === value()">{{ option.label }}</option>
+    }
+  </select>
+  <ng-icon class="absolute top-1/2 -translate-y-1/2 translate-x-6 pointer-events-none" name="lucideChevronDown"
+    [color]="iconColor() || borderColor()" size="16"></ng-icon>
+
+</div>

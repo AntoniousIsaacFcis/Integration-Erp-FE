@@ -1,0 +1,8 @@
+<button
+      *transloco="let t"
+      type="button"
+      (click)="clicked.emit()"
+      class="w-[180px] h-[52px] border border-[#537C0F] text-[#537C0F] rounded-[12px] flex items-center justify-center font-arabic font-semibold text-base leading-none transition-all hover:bg-gray-50 active:scale-95"
+    >
+      {{ t(label()) }}
+    </button>

@@ -1,0 +1,53 @@
+<div class="flex items-center gap-[8px] h-[30px] cursor-pointer
+              hover-lift hover:shadow-sm transition-all duration-200" >
+
+  <div class="relative flex items-center justify-center w-[36px] h-[30px]">
+    <div class="flex items-center justify-center w-[20px] h-[24.375px]">
+      <ng-icon
+        name="lucideCalendarDays"
+        size="20"
+        color="#FFFFFF"
+        strokeWidth="2">
+      </ng-icon>
+    </div>
+
+    @if (calendarCount() > 0) {
+      <div
+        class="absolute flex items-center justify-center
+               w-[19px] h-[19px] rounded-[9.5px]
+               bg-[#B2E742] border-[2px] border-[#191919]
+               z-10"
+        [style.top.px]="-2.81"
+        [style.left.px]="17"> <span class="text-[10px] font-[400] leading-none text-[#191919] font-arabic">
+          {{ calendarCount() }}
+        </span>
+      </div>
+    }
+  </div>
+
+  <div class="relative flex items-center justify-center w-[36px] h-[30px]">
+    <div class="flex items-center justify-center w-[20px] h-[24.375px]">
+      <ng-icon
+        name="lucideBell"
+        size="20"
+        color="#FFFFFF"
+        strokeWidth="2">
+      </ng-icon>
+    </div>
+
+    @if (bellCount() > 0) {
+      <div
+        class="absolute flex items-center justify-center
+               w-[19px] h-[19px] rounded-[9.5px]
+               bg-[#B2E742] border-[2px] border-[#191919]
+               z-10"
+        [style.top.px]="-2.81"
+        [style.left.px]="17">
+        <span class="text-[10px] font-[400] leading-none text-[#191919] font-arabic">
+          {{ bellCount() }}
+        </span>
+      </div>
+    }
+  </div>
+
+</div>

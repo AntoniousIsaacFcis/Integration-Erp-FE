@@ -1,0 +1,24 @@
+<main class="flex justify-center " *transloco="let t">
+  <div class="w-full max-w-standard bg-white rounded-[20px] shadow-soft border border-black/5 flex flex-col ">
+
+    <div class=" border-b border-black/5 bg-white rounded-t-[20px]">
+      <app-stepper-visual-component [currentStep]="activeSegment()" (stepClick)="onStepperClick($event)" />
+    </div>
+
+    <div class="flex-1 scroll-smooth" id="main-content">
+      <app-form-container-component [title]="t('EMPLOYEES.ADD_EMPLOYEE')" (submit)="onSaveAll()">
+
+        <ng-container formFields>
+          <section  class="col-span-full">
+            <app-employee-basic-info-component />
+          </section>
+        </ng-container>
+
+        <ng-container formActions>
+          <app-form-save-button-component [isLoading]="isLoading()" [label]="'COMMON.SAVE_EMPLOYEE'"  type="submit"/>
+        </ng-container>
+
+      </app-form-container-component>
+    </div>
+  </div>
+</main>

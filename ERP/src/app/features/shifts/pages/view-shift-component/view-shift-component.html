@@ -1,0 +1,67 @@
+<app-app-base-table-component [(searchTerm)]="searchTerm" [totalItems]="totalItems()" [extraFilters]="shiftFilters"
+  [extraActions]="shiftActions" [(currentPage)]="currentPage" (onAdd)="handleCreateNavigation()" *transloco="let t">
+
+  <ng-template #shiftFilters>
+    <div class="flex items-center gap-3">
+      <app-date-filter-component [(selectedDate)]="selectedDate" />
+    </div>
+  </ng-template>
+
+  <ng-template #shiftActions>
+    <app-action-btn-component [label]="'SHIFT.ADD_NEW_SHIFT'" (clicked)="handleCreateNavigation()"
+      iconName="lucideCirclePlus" />
+  </ng-template>
+
+  <div class="w-full">
+    @if (shiftsResource.isLoading()) {
+    <div class="flex justify-center py-20 text-gray-400">
+      {{ t('COMMON.MESSAGES.LOADING_DATA') }}
+    </div>
+    }
+
+    @if (shiftsResource.value()) {
+    <table class="w-full text-right font-arabic border border-[#F4F4F4]/50 rounded-xl overflow-hidden">
+      <thead class="text-sm bg-[#F4F4F4] sticky top-0 z-10">
+        <tr>
+          <th class="py-4 ps-6 text-center">{{ t('SHIFT.TABLE.NAME') }}</th>
+          <th class="py-4 px-4 text-center">{{ t('SHIFT.TABLE.TYPE') }}</th>
+          <th class="py-4 px-4 text-center">{{ t('SHIFT.TABLE.DAYS_COUNT') }}</th>
+          <th class="py-4 px-4 text-center">{{ t('SHIFT.TABLE.STATUS') }}</th>
+          <th class="py-4 px-4 text-center">{{ t('SHIFT.TABLE.CREATED_AT') }}</th>
+          <th class="py-4 pe-6 text"></th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (shift of shiftsList(); track shift.id) {
+        <tr class="bg-white border-b border-gray-200 hover:bg-gray-50/50 transition-all">
+          <td class="py-4 ps-6 text-center font-medium text-sm text-black">{{ shift.displayName }}</td>
+          <td class="py-4 px-4 text-center text-sm">{{ shift.type }}</td>
+          <td class="py-4 px-4 text-center text-sm">{{ shift.daysCount }}</td>
+
+          <td class="py-4 px-4 flex justify-center">
+            <app-table-status-badge-component [status]="shift.status" translationPrefix="ATTENDANCE.STATUS" />
+          </td>
+
+          <td class="py-4 px-4 text-center text-sm">
+            {{ shift.createdAt | date:'dd/MM/yyyy' }}
+          </td>
+
+          <td class="py-4 pe-12">
+            <div class="flex gap-3 justify-end">
+              <button (click)="handleEdit(shift.id)"
+                class="flex size-[32px] items-center justify-center rounded-full bg-[#F4F4F4] hover:bg-gray-200 transition-colors">
+                <ng-icon name="lucidePencil" size="16px" color="black" />
+              </button>
+              <button (click)="handleDelete(shift.id)"
+                class="flex size-[32px] items-center justify-center rounded-full bg-[#F4F4F4] hover:bg-red-50 transition-colors">
+                <ng-icon name="lucideTrash2" size="16px" color="#F40552" />
+              </button>
+            </div>
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+    }
+  </div>
+</app-app-base-table-component>

@@ -1,0 +1,253 @@
+<div class="min-h-screen  font-arabic " *transloco="let t">
+  <div class="flex flex-col lg:flex-row gap-6 items-start">
+
+    <main class=" w-full lg:flex-[3] bg-white rounded-[20px] p-6 shadow-sm border border-[#F4F4F4] px-2xl">
+      <app-tab-switcher-component [tabs]="tabs" [activeId]="activeTab()" (tabClick)="activeTab.set($event)" />
+
+      <div class="col-span-full h-[1px] bg-[#0000001A] mt-4 "></div>
+
+      <div class="animate-in fade-in duration-500 mt-2 ">
+        @switch (activeTab()) {
+
+        @case ('attendance') {
+        <div>
+          <div class="flex flex-col md:flex-row items-center justify-between  mb-2">
+            <div class="text-right">
+              <h3 class="text-xl font-semibold text-black">{{ t('EMPLOYEES.ATTENDANCE.DATE_TITLE') }}</h3>
+              <p class="text-base font-normal text-[#797979]">{{ t('EMPLOYEES.ATTENDANCE.SUBTITLE') }}</p>
+            </div>
+
+            <div class="flex gap-4">
+              <app-select-btn-component [options]="availableMonths()" [value]="selectedMonth()" borderColor="#537C0F"
+                textColor="#537C0F" iconColor="#537C0F" (change)="onFilterChange('month', $event)" />
+
+              <app-select-btn-component [options]="years()" [value]="selectedYear()" borderColor="#333333"
+                (change)="onFilterChange('year', $event)" />
+            </div>
+          </div>
+
+          @if (attendanceResource.isLoading()) {
+          <div class="grid grid-cols-3 xl:grid-cols-5 2xl:grid-cols-7 gap-x-7 gap-y-5  animate-pulse">
+            @for (i of [1,2,3,4,5,6,7]; track $index) {
+            <div class="h-[100px] bg-gray-100 rounded-xl"></div>
+            }
+          </div>
+          } @else if (attendanceResource.value(); as days) {
+          <div class="grid grid-cols-3 xl:grid-cols-5 2xl:grid-cols-7 gap-x-7 gap-y-5 ">
+            @for (day of days; track day.dayNumber) {
+            <app-attendance-day-card-component [dayNumber]="day.dayNumber" [dayName]="day.dayName"
+              [isWorkDay]="day.isWorkDay" [checkIn]="day.checkIn" [checkOut]="day.checkOut"
+              [statusText]="day.statusText" class="animate-in zoom-in duration-300" />
+            }
+          </div>
+          } @else if (attendanceResource.error()) {
+          <div class="p-4 text-red-500 bg-red-50 rounded-lg">
+            {{ t('MESSAGES.ERROR_LOADING_ATTENDANCE') }}
+          </div>
+          }
+        </div>
+        }
+
+        @case ('vacations') {
+        <div class="animate-in fade-in slide-in-from-bottom-4 duration-500 min-h-[720px] pb-12">
+          <div class="flex flex-col md:flex-row items-center justify-between mb-2">
+            <div class="text-right">
+              <h3 class="text-xl font-semibold text-black">{{t('EMPLOYEES.VACATIONS.HISTORY')}}</h3>
+              <p class="text-base font-normal text-[#797979]">{{t('EMPLOYEES.VACATIONS.VACATIONS_TABLE')}}</p>
+            </div>
+            <div class="flex gap-4 ">
+              <app-select-btn-component [options]="availableMonths()" [value]="selectedMonth()" borderColor="#333333"
+                textColor="#333333" iconColor="#333333" (change)="onFilterChange('month', $event)" />
+              <app-select-btn-component [options]="years()" [value]="selectedYear()" borderColor="#333333"
+                (change)="onFilterChange('year', $event)" />
+            </div>
+          </div>
+
+          @if (vacationsResource.isLoading()) {
+          <div class="h-64 bg-gray-50 animate-pulse rounded-xl"></div>
+          }
+          @else {
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-lg mb-2">
+            @for (card of vacationStatsCards(); track card.key) {
+            <div
+              [class]="'px-lg py-sm rounded-2xl border border-[#F4F4F4] flex justify-between items-center transition-all hover:shadow-sm '">
+
+              <span class="max-w-[60%] text-base text-black font-medium ">
+                {{ t(card.key) }}
+              </span>
+
+              <span [class]="'text-2xl font-semibold text-[#9fcd3d]' ">
+                {{ card.value }}
+
+                <small class="text-sm text-black font-normal">
+                  {{ t(card.unitKey) }}
+                </small>
+              </span>
+
+            </div>
+            }
+          </div>
+          }
+          <app-app-base-table-component [totalItems]="vacationTotal()" [(currentPage)]="currentPage"
+            [showHeader]="false">
+            <table class="w-full text-start font-arabic">
+              <thead class="bg-[#F4F4F4] text-black text-sm font-medium">
+                <tr>
+                  <th class="py-4 ps-9 pe-6 ">{{t('EMPLOYEES.VACATIONS.VACATION_TYPE')}}</th>
+                  <th class="py-4 px-6 ">{{t('EMPLOYEES.VACATIONS.VACATION_START_Date')}}</th>
+                  <th class="py-4 px-6 ">{{t('EMPLOYEES.VACATIONS.VACATION_END_DATE')}}</th>
+                  <th class="py-4 px-6 ">{{t('EMPLOYEES.VACATIONS.VACATIN_STATUS')}}</th>
+                  <th class="py-4 px-6 ">{{t('EMPLOYEES.VACATIONS.VACATION_REASON')}}</th>
+                  <th class="py-4 px-6"></th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-[#F4F4F4]">
+                @for (vac of vacationList(); track vac.id) {
+                <tr class="hover:bg-gray-50 transition-colors text-center">
+                  <td class="py-4 ps-9 pe-6 text-sm text-black font-medium">{{ vac.typeAr }}</td>
+                  <td class="py-4 px-6 text-sm text-black font-medium">{{ vac.startDate | date: 'dd/MM/yyyy' }}</td>
+                  <td class="py-4 px-6 text-sm text-black font-medium">{{ vac.endDate | date: 'dd/MM/yyyy' }}</td>
+                  <td class="py-4 px-6 text-xs font-semibold">
+                    <span [class]="statusClasses[vac.status] + ' px-3 py-1 rounded-sm text-xs font-medium'">
+                      {{ t(vac.status) }}
+                    </span>
+                  </td>
+                  <td class="py-4 px-6 text-xs text-[#878787] max-w-[200px] truncate">{{ vac.reason }}</td>
+                  <td class="py-4 px-6">
+                    <button
+                      class="p-2 flex items-center justify-center  bg-[#0000001A] hover:bg-[#00000026] transition-colors"
+                      style="border-radius: 232px; border: none; outline: none;">
+                      <ng-icon name="lucidePencilLine" class="flex items-center justify-center" size="16" color="black">
+                      </ng-icon>
+                    </button>
+                  </td>
+                </tr>
+                }
+              </tbody>
+            </table>
+          </app-app-base-table-component>
+        </div>
+        }
+
+        @case ('salary') {
+        <div class="animate-in fade-in slide-in-from-bottom-4 duration-500 min-h-[720px] pb-12 ">
+          <div class="flex flex-col md:flex-row items-center justify-between mb-2">
+            <div class="text-right">
+              <h3 class="text-xl font-semibold text-black">{{ t('EMPLOYEES.SALARY.DATE') }}</h3>
+              <p class="text-base font-normal text-[#797979]">{{ t('EMPLOYEES.SALARY.DETAILS_SUBTITLE') }}</p>
+            </div>
+            <div class="flex gap-4">
+              <app-select-btn-component [options]="availableMonths()" [value]="selectedMonth()"
+                (change)="onFilterChange('month', $event)" />
+              <app-select-btn-component [options]="years()" [value]="selectedYear()"
+                (change)="onFilterChange('year', $event)" />
+            </div>
+          </div>
+
+          @if (salaryResource.isLoading()) {
+          <div class="h-64 bg-gray-50 animate-pulse rounded-xl"></div>
+          }
+          @else if (salaryData(); as data) {
+          <div class="flex flex-col md:flex-row gap-6 mb-2">
+
+            <div
+              class="max-w-[33%] mx-auto p-5 flex-1  border border-[#F4F4F4] rounded-2xl flex justify-between items-center transition-all hover:shadow-sm">
+
+              <span class="max-w-[60%] text-base text-black font-medium">{{ t('EMPLOYEES.SALARY.MONTHLY_TOTAL')
+                }}</span>
+
+              <div class="flex items-center gap-1">
+                <ng-icon name="lucideSaudiRiyal" size="16" color="#231F20"></ng-icon>
+                <span class="text-2xl font-semibold text-[#9fcd3d]">{{ data.summary.monthlySalary }}</span>
+              </div>
+            </div>
+
+            <div
+              class="flex-1 p-5 border border-[#F4F4F4] rounded-2xl flex justify-between items-center transition-all hover:shadow-sm">
+
+              <span class="text-lg text-black">{{ t('EMPLOYEES.SALARY.STATUS_LABEL') }}</span>
+              <span class="bg-[#00A3891A] text-[#00A389] px-4 py-1 rounded text-sm font-medium">تم التحويل</span>
+            </div>
+          </div>
+
+          <app-app-base-table-component [showHeader]="false" [totalItems]="data.elements.length">
+            <table class="w-full text-center font-arabic">
+              <thead class="bg-[#F4F4F4] text-black text-sm font-medium">
+                <tr>
+                  <th class="py-4 px-6 ">{{ t('EMPLOYEES.SALARY.ITEM_NAME') }}</th>
+                  <th class="py-4 px-6">{{ t('EMPLOYEES.SALARY.DAYS_COUNT') }}</th>
+                  <th class="py-4 px-6">{{ t('EMPLOYEES.SALARY.HOURS_COUNT') }}</th>
+                  <th class="py-4 ps-16 justify-start flex">{{ t('EMPLOYEES.SALARY.VALUE') }}</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-[#F4F4F4]">
+                @for (item of data.elements; track item.nameAr) {
+                <tr class="hover:bg-gray-50 transition-colors font-medium">
+                  <td class="py-4 px-6 text-sm text-black">{{ item.nameAr }}</td>
+                  <td class="py-4 px-6 text-sm text-black">{{ item.days ? item.days + ' يوم' : '-' }}</td>
+                  <td class="py-4 px-6 text-sm text-black">{{ item.hours ? item.hours + ' ساعة' : '-' }}</td>
+                  <td class="py-4 ps-16 text-sm  text-black justify-start align-items flex gap-1">
+                    <ng-icon name="lucideSaudiRiyal" size="16" color="black"></ng-icon>
+                    {{ item.value }}
+                  </td>
+                </tr>
+                }
+              </tbody>
+            </table>
+          </app-app-base-table-component>
+          }
+        </div>
+        }
+        @case ('docs') {
+        <div class="animate-in fade-in slide-in-from-bottom-4 duration-500  pb-12">
+          <div class="flex flex-col md:flex-row items-center justify-between mb-6">
+            <div class="text-right">
+              <h3 class="text-xl font-semibold text-black">{{ t('EMPLOYEES.DOCUMENTS.TITLE') }}</h3>
+            </div>
+          </div>
+
+          <div class="flex flex-col gap-4">
+            @if (employeeResource.value()?.documents; as docs) {
+            @if (docs.length > 0) {
+            @for (doc of docs; track doc.name) {
+            <div
+              class="flex items-center justify-between p-4 lg:px-8  border border-[#F4F4F4] rounded-xl hover:shadow-sm transition-all bg-white">
+              <div class="flex items-center gap-4">
+                <div class="w-10 h-10 rounded-lg  flex items-center justify-center">
+                  <ng-icon name="lucideFileText" size="20" color="black"></ng-icon>
+                </div>
+                <span class="text-base font-medium text-black">{{ doc.name || t('EMPLOYEES.DOCUMENTS.UNNAMED_FILE')
+                  }}</span>
+              </div>
+
+              <button (click)="onDownloadDoc(doc)"
+                class="flex items-center gap-2 px-4 py-2 bg-[#0000001A] hover:bg-[#00000026] rounded-lg transition-colors text-sm font-medium text-black border border-[#F4F4F4]">
+                <ng-icon name="lucideEye" size="16"></ng-icon>
+                {{ t('COMMON.PREVIEW') }}
+              </button>
+            </div>
+            }
+            } @else {
+            <div
+              class="flex flex-col items-center justify-center py-15 bg-[#FBFBFB] rounded-2xl border-2 border-dashed border-[#EEEEEE]">
+              <p class="text-[#878787]">{{ t('EMPLOYEES.DOCUMENTS.NO_DOCUMENTS') }}</p>
+            </div>
+            }
+            }
+          </div>
+        </div>
+        }
+        }
+      </div>
+    </main>
+
+    <aside class="w-full lg:flex-[1] ">
+      @if (employeeResource.isLoading()) {
+      <div class="h-[600px]  bg-gray-100 animate-pulse rounded-[20px] shadow-sm border border-[#F4F4F4]"></div>
+      } @else if (employeeResource.value(); as emp) {
+      <app-employee-info-sidebar-component [emp]="emp" />
+      }
+    </aside>
+
+  </div>
+</div>

@@ -1,0 +1,36 @@
+<div class="flex flex-col w-full gap-sm" *transloco="let t">
+  @if (label()) {
+  <label class="text-base font-medium leading-none text-start text-black">
+    {{ t(label()) }}
+  </label>
+  }
+
+  <div class="relative w-full mt-2">
+
+    <div class="absolute inset-y-0 end-[14px] flex items-center pointer-events-none text-[#231F20] group-focus-within:text-primary transition-colors">
+      <ng-content></ng-content>
+    </div>
+
+    <input [formControl]="control()" [type]="isPassword() && !showPassword() ? 'password' : type()"
+      [placeholder]="t(placeholder())" [name]="name()"
+  [autocomplete]="autocomplete()"
+      class="w-full h-[44px] px-md  bg-white border border-[#0000001A] rounded-md outline-none transition-all text-sm text-start text-black placeholder:text-black/20 placeholder:font-normal focus:border-primary  focus:ring-1 focus:ring-primary/20"
+      [class.!border-error]="showErrors() && control().invalid"
+      [class.!border-2]="showErrors() && control().invalid" [class.pe-xl]="isPassword()" />
+
+    @if (isPassword()) {
+    <button type="button" (click)="togglePassword()"
+      class="absolute inset-y-0 right-0 flex items-center text-black/40 hover:text-black transition-fast pe-[--spacing-sm]">
+    </button>
+    }
+  </div>
+
+  @if (errorKey; as key) {
+    <div class="flex items-center gap-xs text-error animate-fade-in ">
+      <ng-icon name="lucideOctagonX" size="16" strokeWidth="3"></ng-icon>
+      <span class="text-xs font-medium text-start">
+        {{ t(key) }}
+      </span>
+    </div>
+  }
+</div>

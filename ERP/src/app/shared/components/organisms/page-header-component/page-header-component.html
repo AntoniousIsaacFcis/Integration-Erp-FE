@@ -1,0 +1,21 @@
+<header class="flex justify-between items-center w-full min-h-[42px]  text-black " *transloco="let t">
+
+  <div class="flex justify-start">
+    <app-page-title-component [title]="t(autoTitle())" class="mb-5" />
+  </div>
+
+  <div class="flex justify-center ">
+    <app-searchbar-component variant="table" [(searchQuery)]="searchQuery" />
+
+  </div>
+
+  <div class="flex items-center gap-4 justify-end">
+    @if (filters()) {
+      <ng-container [ngTemplateOutlet]="filters()!"></ng-container>
+    }
+    @if (actions()) {
+      <ng-container [ngTemplateOutlet]="actions()!"></ng-container>
+    }
+  </div>
+
+</header>

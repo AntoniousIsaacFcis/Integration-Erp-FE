@@ -1,0 +1,24 @@
+<div class="flex w-full items-center justify-center bg-[#F8F8F8]" *transloco="let t">
+  <div class="flex flex-col gap-7 items-center text-center">
+
+    <div class="mt-15 mb-2 flex h-[200px] w-[200px] items-center justify-center rounded-full  bg-white shadow-sm">
+      <img src="assets/imgs/NoAccess.png" alt="Access Denied" class="mx-auto" width="100px">
+    </div>
+
+    <h1 class=" flex items-center justify-center text-4xl
+ font-semibold leading-none text-black font-arabic">
+      {{ t('ERRORS.ACCESS_DENIED_TITLE') }}
+    </h1>
+
+    <p class="mx-auto flex max-w-[90%] items-center justify-center text-xl font-normal leading-none text-[#808080] font-arabic">
+      {{ t('ERRORS.ACCESS_DENIED_SUB') }}
+    </p>
+
+    <button class="flex h-[52px] w-[490px] items-center justify-center gap-3 rounded-[12px] bg-[#537C0F] text-white transition-opacity hover:opacity-90">
+      <span class="flex h-[24px] w-[72px] items-center justify-end text-[16px] font-semibold leading-none font-arabic">
+        {{ t('ERRORS.CONTACT_US') }}
+      </span>
+    </button>
+
+  </div>
+</div>

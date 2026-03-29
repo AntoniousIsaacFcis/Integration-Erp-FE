@@ -1,0 +1,46 @@
+
+/* الحالة الافتراضية (English / LTR) */
+.custom-date-input {
+  direction: ltr;
+  text-align: left; /* القيمة الافتراضية لليسار */
+}
+
+.custom-date-input::-webkit-datetime-edit {
+  color: transparent;
+  display: inline-flex !important;
+  width: 100%;
+  justify-content: flex-start; /* دفع النص لليسار في الإنجليزية */
+}
+
+/* حالة العربية (Arabic / RTL) */
+:host-context([dir="rtl"]) .custom-date-input {
+  text-align: right !important;
+}
+
+:host-context([dir="rtl"]) .custom-date-input::-webkit-datetime-edit {
+  flex-direction: row-reverse; /* عكس ترتيب (يوم-شهر-سنة) للعربي */
+  justify-content: flex-end; /* دفع النص لليمين في العربية */
+}
+
+.custom-date-input.has-value::-webkit-datetime-edit {
+  color: black;
+}
+
+.custom-date-input::-webkit-calendar-picker-indicator,
+.custom-date-input::-webkit-inner-spin-button {
+  appearance: none;
+  background: transparent;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}
+/* توحيد الحاوية الداخلية */
+.custom-date-input::-webkit-datetime-edit-fields-wrapper {
+  display: flex;
+  width: 100%;
+  justify-content: inherit;
+}
+
+

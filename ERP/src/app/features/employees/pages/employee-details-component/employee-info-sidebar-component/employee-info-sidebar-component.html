@@ -1,0 +1,80 @@
+<div
+  class="bg-white rounded-[20px] pt-[30px] pb-[30px] px-[30px] border border-[#F2F2F2] shadow-sm font-arabic flex flex-col items-center"
+  *transloco="let t">
+
+  <div
+    class="w-[250px] h-[180px] rounded-lg border border-[#F2F2F2] flex items-center justify-center mb-sm overflow-hidden">
+    <img ngSrc='assets/imgs/emp_pic.jpg' width="200" height="150" class="object-cover" [alt]="emp().fullNameAr">
+  </div>
+
+  <div class="w-full text-start">
+    <div class="text-base font-semibold leading-[100%] text-black my-[8px]">
+      {{ emp().fullNameAr }}
+    </div>
+    <p class="text-base font-normal leading-[100%] text-[#797979]">
+      {{ emp().jobTitleAr }}
+    </p>
+  </div>
+
+<div class="w-full h-[1px] bg-[#0000001A] mb-1"></div>
+
+  <div class="w-full  my-[10px]">
+    <div class="text-sm font-semibold leading-[100%] text-black text-right mb-[12px]">
+      {{ t('EMPLOYEES.PERSONAL.PERSONAL_INFO') }}
+    </div>
+
+    <div class="flex flex-col gap-sm">
+      @for (item of personalFields(); track item.label) {
+      <div class="flex items-center gap-3 w-full group">
+
+        <div class="flex items-center justify-center min-w-[20px]">
+          <ng-icon [name]="item.icon" size="18" color="#797979"></ng-icon>
+        </div>
+
+        <div class="flex flex-col gap-[4px] border-b border-[#F2F2F2] my-[4px]">
+
+          <div class="flex items-center justify-start gap-[6px]">
+            <span class="text-xs font-medium text-black ">{{ t(item.label) }}
+            </span>
+          </div>
+
+          <span class="text-xs font-normal text-[#797979] text-right p-[1px]">{{ item.value }}
+          </span>
+
+        </div>
+      </div>
+      }
+    </div>
+  </div>
+
+<div class="w-full h-[1px] bg-[#0000001A] mb-1"></div>
+
+  <div class="w-full  my-[10px]">
+    <div class="text-sm font-semibold leading-[100%] text-black text-right mb-[12px]">
+      {{ t('EMPLOYEES.PERSONAL.EXTRA_INFO') }}
+    </div>
+
+    <div class="flex flex-col gap-sm">
+      @for (item of extraFields(); track item.label) {
+      <div class="flex items-center gap-3 w-full group">
+
+        <div class="flex items-center justify-center min-w-[20px]">
+          <ng-icon [name]="item.icon" size="18" color="#797979"></ng-icon>
+        </div>
+
+        <div class="flex flex-col gap-[4px] border-b border-[#F2F2F2] my-[4px]">
+
+          <div class="flex items-center justify-start gap-[6px]">
+            <span class="text-xs font-medium text-black ">{{ t(item.label) }}
+            </span>
+          </div>
+
+          <span class="text-xs font-normal text-[#797979] text-right p-[1px]">{{ item.value }}
+          </span>
+
+        </div>
+      </div>
+      }
+    </div>
+  </div>
+</div>

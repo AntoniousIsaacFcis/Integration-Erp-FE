@@ -1,0 +1,35 @@
+<div class="relative inline-block font-arabic" *transloco="let t">
+
+  <div [class]="containerClasses()" (click)="toggle(); $event.stopPropagation()">
+    <ng-icon name="lucideSettings2" size="16"  color="#bbbbbb" strokeWidth="3"></ng-icon>
+
+    <span class="text-[14px] font-[700]  leading-none flex-1 text-center ">
+      {{ t(currentLabel()) }}
+    </span>
+
+    <ng-icon name="lucideChevronDown" size="16" strokeWidth="3" [class.rotate-180]="isDropdownOpen()"
+      class="transition-transform duration-250">
+    </ng-icon>
+  </div>
+
+  @if (isDropdownOpen()) {
+  <div class="absolute z-[100] mt-1 w-full left-0 right-0
+                bg-white border border-gray-200 rounded-lg shadow-xl overflow-hidden
+                animate-in fade-in zoom-in-95 duration-150 origin-top
+                top-full">
+
+    @for (option of options(); track option.value) {
+  <button (click)="selectStatus(option.value); $event.stopPropagation()"
+    class="flex items-center justify-between w-full px-4 py-2 text-[13px] hover:bg-primary/5 hover:text-primary transition-colors text-black border-b last:border-none border-gray-50">
+    <span class="flex-1 text-start">{{ t(option.label) }}</span>
+
+    @if (selectedStatus() === option.value) {
+      <ng-icon name="lucideCheck" class="text-green-600" size="14"></ng-icon>
+    }
+  </button>
+}
+  </div>
+
+  <div class="fixed inset-0 z-[90] bg-transparent" (click)="isDropdownOpen.set(false); $event.stopPropagation()"></div>
+  }
+</div>

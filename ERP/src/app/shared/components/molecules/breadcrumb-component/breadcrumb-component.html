@@ -1,0 +1,36 @@
+<nav
+  aria-label="breadcrumb"
+  class="flex items-center justify-start w-full h-[30px] overflow-hidden select-none font-arabic"
+  [attr.dir]="dir()" *transloco="let t">
+  <ol class="flex items-center flex-wrap list-none p-0 m-0">
+    @for (crumb of items(); track crumb.url; let isLast = $last) {
+      <li class="flex items-center">
+
+        @if (!isLast) {
+          <a
+            [routerLink]="crumb.url"
+            class="text-black font-medium text-[20px] leading-none transition-opacity hover:opacity-100 whitespace-nowrap"
+          >
+            {{ t(crumb.label) }}
+          </a>
+
+          <span class="inline-flex items-center justify-center px-2 text-[20px] font-medium font-arabic text-black  leading-none select-none">
+             <ng-icon
+                [name]="dir() === 'rtl' ? 'lucideChevronLeft' : 'lucideChevronRight'"
+                class="size-5"
+             />
+          </span>
+        } @else {
+          <span
+            class="text-black font-medium text-[20px] leading-none whitespace-nowrap"
+          >
+            {{ t(crumb.label) }}
+          </span>
+        }
+
+      </li>
+    } @empty {
+      <li class="text-gray-400 italic">—</li>
+    }
+  </ol>
+</nav>

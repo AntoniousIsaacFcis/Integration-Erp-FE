@@ -1,0 +1,21 @@
+//added for ssr
+/* Configuration for Server-Side Rendering (SSR)
+  Targeting Angular 21 (2026) standards
+*/
+{
+  "extends": "./tsconfig.app.json", //as server has copy of application but with node properties
+  "compilerOptions": {
+    "outDir": "./out-tsc/server",
+    "target": "ES2022",
+    "types": [
+      "node"
+    ]
+  },
+  "files": [
+    "src/main.server.ts",
+    "server.ts"
+  ],
+  "angularCompilerOptions": {
+    "entryPoint": "src/main.server.ts"
+  }
+}

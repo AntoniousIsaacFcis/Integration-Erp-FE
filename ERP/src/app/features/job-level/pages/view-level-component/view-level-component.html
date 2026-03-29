@@ -1,0 +1,63 @@
+<app-app-base-table-component [(searchTerm)]="searchTerm" actionLabel="BUTTON.ADD_LEVEL"
+  [totalItems]="totalItems()" [(currentPage)]="currentPage"  [extraFilters]="empFilters" [extraActions]="empActions" *transloco="let t">
+
+  <ng-template #empFilters>
+     <app-status-badge-component label="FILTERS.STATUS" [(selectedStatus)]="selectedStatus" [options]="statusOptions"></app-status-badge-component>
+  </ng-template>
+
+  <ng-template #empActions>
+    <app-action-btn-component [label]="'BUTTON.UPLOAD_JOBLEVEL'" (clicked)="handleCreateNavigation()" />
+  </ng-template>
+
+  <div class="w-full ">
+    @if (levelsResource.isLoading()) {
+      <div class="flex justify-center py-20 text-gray-400">
+        {{ t('COMMON.MESSAGES.LOADING_DATA') }}
+      </div>
+    }
+
+    @if (levelsResource.error()) {
+    <div class="bg-red-50 text-red-600 p-6 rounded-xl text-center border border-red-100">
+      <p>فشل الاتصال بالنظام</p>
+      <button (click)="levelsResource.reload()" class="mt-3 px-4 py-2 bg-red-600 text-white rounded-lg">
+        إعادة المحاولة
+      </button>
+    </div>
+    }
+
+    @if (levelsResource.value()) {
+    <table class="w-full text-right font-arabic text-black border border-[#F4F4F4]/50 rounded-xl overflow-hidden">
+      <thead class="text-sm sticky top-0 bg-[#F4F4F4] z-10">
+        <tr>
+          <th class="py-4 ps-24 text-start">{{t('JOB_LEVEL.JOB_LEVEL')}}</th>
+          <th class="py-4 pe-26">{{t('JOB_LEVEL.EMPLOYEES_NUMBER')}}</th>
+          <th class="py-4 pe-60 text-center">{{t('JOB_LEVEL.STATUS')}}</th>
+          <th class="py-4 px-20 text-center"></th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (level of levelsList(); track level.id) {
+        <tr class="bg-white hover:bg-gray-50/50 transition-all border-b border-gray-100">
+          <td class="py-4 ps-24 font-normal text-sm">{{ level.nameAr }}</td>
+          <td class="py-4 pe-26 text-sm">{{ level.employeeCount }} موظف</td>
+          <td class="py-3 pe-60 flex justify-center">
+           <app-table-status-badge-component [status]="level.status" />
+          </td>
+
+          <td class="py-4 px-20">
+            <div class="flex gap-5 justify-end">
+              <button
+                class="flex size-[30px] items-center justify-center rounded-full bg-[#0000001A] transition-colors hover:bg-[#00000033]"><ng-icon
+                  name="lucidePencil" size="16px" color="black" /></button>
+              <button *appHasPermission="'Organization.Levels.Create'"
+                class="flex size-[30px] items-center justify-center rounded-full bg-[#0000001A] transition-colors hover:bg-[#00000033]"><ng-icon
+                  name="lucideTrash2" size="16px" color="#F40552" /></button>
+            </div>
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+    }
+  </div>
+</app-app-base-table-component>

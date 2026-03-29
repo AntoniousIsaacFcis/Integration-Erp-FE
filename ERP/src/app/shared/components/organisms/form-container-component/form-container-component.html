@@ -1,0 +1,18 @@
+<div
+  class=" mx-auto font-arabic px-[46px] w-full max-w-standard mt-xl"
+  *transloco="let t"
+>
+  <div class="mb-[42px] text-right text-black">
+    <app-page-title-component [title]="title()" />
+  </div>
+
+  <form autocomplete="on" (submit)="$event.preventDefault(); submit.emit()" class="flex flex-col h-full">
+    <div class="grid grid-cols-2 gap-x-[32px] gap-y-[33px]">
+      <ng-content select="[formFields]"></ng-content>
+    </div>
+
+    <div class="flex justify-end items-center gap-[16px]  py-[32px] ">
+      <ng-content select="[formActions]"></ng-content>
+    </div>
+  </form>
+</div>

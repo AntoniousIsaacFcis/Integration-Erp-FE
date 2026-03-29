@@ -1,0 +1,182 @@
+<div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6" *transloco="let t">
+
+  <div id="personal-section" class="col-span-full mb-2">
+    <div class="text-lg font-semibold text-black">{{ t('MENU.PERSONAL_INFO') }}</div>
+  </div>
+
+  <app-app-input-component [label]="t('EMPLOYEES.FULL_NAME_AR')+ '*'" [control]="getControl('fullNameAr')"
+    [placeholder]="'PLACEHOLDER.ARABICNAME'" [showErrors]="submitted()" autocomplete="name" name="full-name" />
+
+  <app-app-input-component [label]="t('EMPLOYEES.FULL_NAME_EN')+ '*'" [control]="getControl('fullNameEn')"
+    [placeholder]="'PLACEHOLDER.ENGLISHNAME'" [showErrors]="submitted()" name="full-name-en" autocomplete="name" />
+
+  <app-app-input-component [label]="t('EMPLOYEES.NATIONAL_ID')+ '*'" [control]="getControl('nationalId')"
+    [placeholder]="'PLACEHOLDER.PASSPORT'" [showErrors]="submitted()"
+    [patternErrorKey]="'ERRORS.INVALID_NATIONAL_ID_FORMAT'" autocomplete="off" />
+
+  <app-app-select-component [label]="t('EMPLOYEES.GENDER')+ '*'" [control]="getControl('gender')"
+    [showErrors]="submitted()" [placeholder]="'PLACEHOLDER.GENDER'">
+    <option value="male">{{ t('EMPLOYEES.MALE') }}</option>
+    <option value="female">{{ t('EMPLOYEES.FEMALE') }}</option>
+  </app-app-select-component>
+
+  <app-app-select-component [label]="t('EMPLOYEES.NATIONALITY')+ '*'" [control]="getControl('nationality')"
+    [showErrors]="submitted()"
+    [placeholder]="isLoadingNationalities() ? t('COMMON.LOADING') : t('PLACEHOLDER.SELECT_NATIONALITY')"
+    class="col-span-full">
+    @if (nationalitiesService.nationalitiesResource.error()) {
+    <div class="text-error text-xs">⚠️ فشل تحميل البيانات، يرجى تحديث الصفحة</div>
+    } @else {
+    @for (n of nationalities(); track n.code) {
+    <option [value]="n.code">{{ t(n.displayName) }}</option>
+    }
+    }
+  </app-app-select-component>
+
+  <app-app-select-component [label]="t('EMPLOYEES.MARITAL_STATUS')+ '*'" [control]="getControl('maritalStatus')"
+    [showErrors]="submitted()" [placeholder]="'PLACEHOLDER.MARITAL_STATUS'">
+    <option value="single">{{ t('EMPLOYEES.SINGLE') }}</option>
+    <option value="married">{{ t('EMPLOYEES.MARRIED') }}</option>
+    <option value="divorced">{{ t('EMPLOYEES.DIVORCED') }}</option>
+    <option value="widowed">{{ t('EMPLOYEES.WIDOWED') }}</option>
+  </app-app-select-component>
+
+  <app-app-date-input-component [label]="t('EMPLOYEES.BIRTH_DATE')" [control]="getControl('birthDate')"
+    [showErrors]="submitted()" />
+
+  <app-app-input-component [label]="t('EMPLOYEES.PHONE') + '*'" [control]="getControl('phone')"
+    [placeholder]="'012xxxxxxxx'" [showErrors]="submitted()" [patternErrorKey]="'ERRORS.INVALID_PHONE_FORMAT'"
+    autocomplete="tel" name="phone" />
+
+  <app-app-input-component [label]="t('EMPLOYEES.EMAIL') + '*'" [control]="getControl('email')"
+    [placeholder]="'example@domain.com'" [showErrors]="submitted()" autocomplete="email" name="email" />
+
+  <app-app-input-component [label]="t('EMPLOYEES.ADDRESS') + '*'" [control]="getControl('address')"
+    [placeholder]="t('PLACEHOLDER.ADDRESS')" [showErrors]="submitted()" name="address" autocomplete="street-address" />
+
+  <app-app-input-component [label]="t('EMPLOYEES.EMERGENCY_PHONE') + '*'" [control]="getControl('emergencyPhone')"
+    [placeholder]="'012xxxxxxxx'" [showErrors]="submitted()" [patternErrorKey]="'ERRORS.INVALID_PHONE_FORMAT'"
+    name="emergency-phone" autocomplete="tel" />
+
+  <!-- job data -->
+  <div id="job-section" class="col-span-full mb-2">
+    <div class="col-span-full h-[1px] bg-black/30 mt-4 mb-8"></div>
+    <div class="text-lg font-semibold text-black">{{ t('MENU.JOB_DATA') }}</div>
+  </div>
+
+  <app-app-select-component [label]="t('EMPLOYEES.JOB_TITLE') + '*'" [control]="getControl('jobTitleId')"
+    [showErrors]="submitted()"
+    [placeholder]="isLoadingJobs() ? t('COMMON.LOADING') : t('PLACEHOLDER.SELECT_JOB_TITLE')">
+    @if (_jobTitlesService.resource.error()) {
+    <option disabled class="text-error">⚠️ {{ t('ERRORS.LOAD_FAILED') }}</option>
+    } @else {
+    @for (job of jobTitles(); track job.id) {
+    <option [value]="job.id">{{ job.displayName }}</option>
+    }
+    }
+  </app-app-select-component>
+
+  <app-app-select-component [label]="t('EMPLOYEES.DEPARTMENT') + '*'" [control]="getControl('departmentId')"
+    [showErrors]="submitted()" [placeholder]="isLoadingDepartments() ? t('COMMON.LOADING') : t('COMMON.PROGRAMMING')">
+
+    @for (dept of departments(); track dept.id) {
+    <option [value]="dept.id">
+      {{ dept.displayName }}
+    </option>
+    }
+  </app-app-select-component>
+
+
+  <app-app-select-component [label]="t('EMPLOYEES.EMPLOYMENT_TYPE') + '*'" [control]="getControl('employmentType')"
+    [showErrors]="submitted()" [placeholder]="isLoadingTypes() ? t('COMMON.LOADING') : t('PLACEHOLDER.SELECT_TYPE')">
+
+    @if (_employmentTypesService.lookupResource.error()) {
+    <option disabled class="text-error">⚠️ {{ t('ERRORS.LOAD_FAILED') }}</option>
+    } @else {
+    @for (type of employmentTypes(); track type.id) {
+    <option [value]="type.id">{{ type.displayName }}</option>
+    }
+    }
+  </app-app-select-component>
+
+  <app-app-date-input-component [label]="t('EMPLOYEES.JOINING_DATE') + '*'" [control]="getControl('joiningDate')"
+    [showErrors]="submitted()" />
+
+  <app-app-date-input-component [label]="t('EMPLOYEES.PROBATION_PERIOD_END') + '*'"
+    [control]="getControl('probationEndDate')" [showErrors]="submitted()" />
+
+  <app-app-select-component [label]="t('EMPLOYEES.EMPLOYMENT_STATUS') + '*'" [control]="getControl('employmentStatus')"
+    [showErrors]="submitted()" [placeholder]="'PLACEHOLDER.REJECTED'">
+    <option value="on-boarding">{{ t('EMPLOYEES.STATUS_ONBOARDING') }}</option>
+    <option value="active">{{ t('EMPLOYEES.STATUS_ACTIVE') }}</option>
+    <option value="probation">{{ t('EMPLOYEES.STATUS_PROBATION') }}</option>
+    <option value="probation">{{ t('EMPLOYEES.STATUS_HOLIDAY') }}</option>
+  </app-app-select-component>
+
+  <!-- salary -->
+  <div id="salary-section" class="col-span-full mb-2">
+    <div class="col-span-full h-[1px] bg-black/30 mt-4 mb-8"></div>
+    <div class="text-lg font-semibold text-black">{{ t('MENU.SALARY_DATA') }}</div>
+  </div>
+
+  <app-app-input-component [label]="t('EMPLOYEES.BASIC_SALARY') + '*'" [control]="getControl('basicSalary')"
+    [placeholder]="'3000'" [type]="'number'" [showErrors]="submitted()">
+    <ng-icon name="lucideSaudiRiyal" size="16"></ng-icon>
+  </app-app-input-component>
+
+  <app-app-input-component [label]="t('EMPLOYEES.ALLOWANCES') + '*'" [control]="getControl('allowances')"
+    [placeholder]="'3000'" [type]="'number'" [showErrors]="submitted()">
+    <ng-icon name="lucideSaudiRiyal" size="16"></ng-icon>
+  </app-app-input-component>
+
+  <app-app-input-component [label]="t('EMPLOYEES.DEDUCTIONS') + ' *'" [control]="getControl('deductions')"
+    [placeholder]="'3000'" [type]="'number'" [showErrors]="submitted()">
+    <ng-icon name="lucideSaudiRiyal" size="16" class="text-error/70"></ng-icon>
+  </app-app-input-component>
+
+  <app-app-input-component [label]="t('EMPLOYEES.TOTAL_SALARY') + '*'" [control]="getControl('totalSalary')"
+    [placeholder]="totalSalaryCalc().toString()" [type]="'number'" [showErrors]="submitted()"
+    class="font-bold pointer-events-none opacity-60  transition-all"> <ng-icon name="lucideSaudiRiyal"
+      size="18"></ng-icon>
+  </app-app-input-component>
+
+  <!------------------------------- Documents -->
+  <div id="docs-section" class="col-span-full mb-2">
+    <div class="col-span-full h-[1px] bg-black/30 mt-4 mb-8"></div>
+    <div class="text-lg font-semibold text-black">{{ t('MENU.DOCUMENTS') }}</div>
+  </div>
+
+  <div class="col-span-full grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+    <app-app-select-component [label]="t('DOCUMENTS.TYPE') + '*'" [control]="getControl('documentType')"
+      [showErrors]="submitted()" [placeholder]="'PLACEHOLDER.DOCUMENTS_TYPE'">
+      <option value="pdf">PDF</option>
+      <option value="id_card">{{ t('DOCUMENTS.NATIONAL_ID') }}</option>
+      <option value="passport">{{ t('DOCUMENTS.PASSPORT') }}</option>
+    </app-app-select-component>
+
+    <app-app-date-input-component [label]="t('DOCUMENTS.EXPIRY_DATE') + '*'" [control]="getControl('expiryDate')"
+      [showErrors]="submitted()" />
+
+    <div class="col-span-full ">
+      <label class="text-sm font-medium text-black">
+        {{ t('DOCUMENTS.JOB_FILES') }} <span class="text-red-500">*</span>
+      </label>
+
+      <app-documents-component (onFilesChanged)="handleFilesChange($event)" />
+
+      @if (submitted() && getControl('attachedFiles').invalid) {
+      <div class="flex items-center gap-xs text-error animate-fade-in ">
+        <ng-icon name="lucideOctagonX" size="16" strokeWidth="3"></ng-icon>
+        <span class="text-xs font-medium text-start">
+          {{ t('ERRORS.REQUIRED_FILES') }}
+        </span>
+      </div>
+      }
+
+      <div class="flex justify-between text-sm text-black  px-2 font-normal ">
+        <span>{{ t('DOCUMENTS.SUPPORTED_FORMATS') }}: PDF, JPG, PNG</span>
+        <span>{{ t('DOCUMENTS.MAX_SIZE') }}: 10MB</span>
+      </div>
+    </div>
+
+  </div>

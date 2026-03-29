@@ -2,7 +2,8 @@
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "version": 1,
   "cli": {
-    "packageManager": "npm"
+    "packageManager": "npm",
+    "analytics": false
   },
   "newProjectRoot": "projects",
   "projects": {
@@ -18,53 +19,54 @@
           "options": {
             "browser": "src/main.ts",
             "tsConfig": "tsconfig.app.json",
+            "outputPath": "dist/ERP",
             "assets": [
               {
                 "glob": "**/*",
                 "input": "public"
               }
             ],
-            "styles": [
-              "src/styles.css"
-            ],
-            "server": "src/main.server.ts",
-            "outputMode": "server",
-            "ssr": {
-              "entry": "src/server.ts"
-            }
+            "styles": ["src/styles.css"],
+            "ssr": false,
+            "prerender": false,
+            "polyfills": []
           },
           "configurations": {
             "production": {
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "500kB",
-                  "maximumError": "1MB"
-                },
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "4kB",
-                  "maximumError": "8kB"
-                }
-              ],
+              "budgets": [{ "type": "initial", "maximumWarning": "500kB", "maximumError": "1MB" }],
               "outputHashing": "all"
             },
             "development": {
               "optimization": false,
               "extractLicenses": false,
-              "sourceMap": true
+              "sourceMap": true,
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.development.ts"
+                }
+              ]
             }
           },
           "defaultConfiguration": "production"
         },
         "serve": {
           "builder": "@angular/build:dev-server",
+          "options": {
+            "ssl": true
+          },
           "configurations": {
             "production": {
               "buildTarget": "ERP:build:production"
             },
             "development": {
               "buildTarget": "ERP:build:development"
+            },
+            "ar": {
+              "buildTarget": "ERP:build:development,ar"
+            },
+            "en": {
+              "buildTarget": "ERP:build:development,en"
             }
           },
           "defaultConfiguration": "development"

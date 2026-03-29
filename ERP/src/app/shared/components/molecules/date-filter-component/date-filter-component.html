@@ -1,0 +1,31 @@
+<div class="relative inline-block font-arabic" *transloco="let t">
+
+  <div [class]="containerClasses()" (click)="toggle()">
+    <ng-icon name="lucideCalendar" size="16" color="#bbbbbb" strokeWidth="3"></ng-icon>
+
+    <span class="text-sm font-bold  leading-none  text-black">
+     @if (selectedDate()) {
+        {{ selectedDate() | date:'dd/MM/yyyy' }}
+      } @else {
+        {{t(labelKey()) }}
+      }
+    </span>
+
+    <ng-icon
+      name="lucideChevronDown"
+      size="16"
+      strokeWidth="3"
+      [class.rotate-180]="isExpanded()"
+      class="transition-transform duration-250 ms-1">
+    </ng-icon>
+
+    <input
+      #picker
+      type="date"
+      [value]="selectedDate()"
+      (input)="onDateChange($event)"
+      (blur)="isExpanded.set(false)"
+      class="absolute inset-0 opacity-0 pointer-events-none w-full h-full z-[-1]"
+    />
+  </div>
+</div>

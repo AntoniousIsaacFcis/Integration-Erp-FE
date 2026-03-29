@@ -1,0 +1,76 @@
+<app-app-base-table-component [(searchTerm)]="searchTerm" [totalItems]="totalItems()" [extraFilters]="empFilters"
+  [extraActions]="empActions" (onAdd)="handleCreateNavigation()" [(currentPage)]="currentPage" *transloco="let t"
+  class="text-black">
+
+  <ng-template #empFilters>
+    <div class="flex items-center gap-3">
+      <app-date-filter-component [(selectedDate)]="joiningDate" />
+    </div>
+  </ng-template>
+
+  <ng-template #empActions>
+    <div class="flex items-center gap-3">
+      <app-action-btn-component [label]="'FILTERS.LOAD_FILES'" (clicked)="handleUpload()"
+        iconName="lucideCloudUpload" />
+
+      <app-action-btn-component [label]="'FILTERS.ADD_EMPLOYEE'" (clicked)="handleCreateNavigation()"
+        iconName="lucideUserPlus" />
+    </div>
+  </ng-template>
+
+  <div class="w-full">
+    @if (employeesResource.isLoading()) {
+    <div class="flex justify-center py-20 text-gray-400">
+      {{ t('COMMON.MESSAGES.LOADING_DATA') }}
+    </div>
+    }
+
+    @if (employeesResource.value()) {
+    <table class="w-full text-right font-arabic border border-[#F4F4F4]/50 rounded-xl overflow-hidden">
+      <thead class="text-sm bg-[#F4F4F4] sticky top-0 z-10">
+        <tr>
+          <th class="py-4 ps-6 text-start">{{ t('EMPLOYEES.TABLE.EMPLOYEE_ID') }}</th>
+          <th class="py-4 pe-4 text-center">{{ t('EMPLOYEES.TABLE.EMPLOYEE_NAME') }}</th>
+          <th class="py-4 px-4 text-center">{{ t('EMPLOYEES.TABLE.EMPLOYEE_JOB_NAME') }}</th>
+          <th class="py-4 px-4 text-center">{{ t('EMPLOYEES.TABLE.EMPLOYEE_STATUS') }}</th>
+          <th class="py-4 px-4 text-center">{{ t('EMPLOYEES.TABLE.JOB_TYPE') }}</th>
+          <th class="py-4 pe-6 text-center">{{ t('EMPLOYEES.TABLE.BASIC_SALARY') }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (emp of employeesList(); track emp.id) {
+        <tr class="bg-white border-b border-gray-200 hover:bg-gray-50/50 transition-all ">
+          <td class="py-4 ps-12  text-start font-normal text-sm  ">{{ emp.jobTitleId }}</td>
+          <td class="py-4 pe-4 font-normal text-center text-sm  ">{{ emp.displayName }}</td>
+          <td class="py-4  font-normal text-center text-sm ">{{ emp.displayJobTitle }}</td>
+          <td class="py-4 px-4">
+            <div class="flex justify-center">
+              <app-table-status-badge-component [status]="emp.employmentStatus" translationPrefix="EMPLOYEES" />
+            </div>
+          </td>
+          <td class="py-4 px-4 font-normal text-center text-sm">{{ emp.displayEmploymentType }}</td>
+          <td class="py-4 px-4 text-sm font-normal ">
+            <div class="flex items-center  gap-x-1">
+              <ng-icon name="lucideSaudiRiyal" size="14px" [title]="t('COMMON.CURRENCY.SAR')" />
+              <span> {{ emp.basicSalary | number:'1.0-0' }}</span>
+            </div>
+          </td>
+          <td class="py-4 pe-6">
+            <div class="flex gap-4 justify-end">
+              <button (click)="navigateToDetails(emp.id)"
+                class="flex size-[30px] items-center justify-center rounded-full bg-[#0000001A] hover:bg-[#00000033]">
+                <ng-icon name="lucidePencil" size="16px" color="black" />
+              </button>
+              <button
+                class="flex size-[30px] items-center justify-center rounded-full bg-[#0000001A] hover:bg-[#00000033]">
+                <ng-icon name="lucideTrash2" size="16px" color="#F40552" />
+              </button>
+            </div>
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+    }
+  </div>
+</app-app-base-table-component>

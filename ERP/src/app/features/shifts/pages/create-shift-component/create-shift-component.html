@@ -1,0 +1,48 @@
+<main class="flex justify-center" *transloco="let t">
+  <div
+    class="w-full max-w-standard bg-white rounded-[20px] shadow-soft border border-black/5 flex flex-col gap-spacing-lg mx-auto">
+
+    <div class="flex-1 scroll-smooth" id="main-content">
+      <app-form-container-component [title]="t('SHIFT.ADD_NEW_SHIFT')" (submit)="onSave()">
+
+        <ng-container formFields>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6 col-span-full">
+            <app-app-input-component [label]="t('SHIFT.SHIFT_NAME')+ ' *'" [control]="shiftForm.controls.name"
+              [placeholder]="t('PLACEHOLDER.GENERAL_MANAGER')" [showErrors]="submitted()" />
+
+            <app-app-select-component [label]="t('SHIFT.SHIFT_TYPE')+ ' *'" [control]="shiftForm.controls.type"
+              [placeholder]="t('PLACEHOLDER.NIGHT')" [showErrors]="submitted()"/>
+          </div>
+
+          <section class="col-span-full">
+            <h3 class="text-base font-medium mb-4 text-black ">{{ t('SHIFT.SELECT_WORK_DAYS') }} *</h3>
+            <app-work-days-grid-component [control]="shiftForm.controls.workDays" />
+          </section>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 col-span-full mt-6">
+            <app-time-input-component [label]="t('SHIFT.WORK_START')" [control]="shiftForm.controls.workStart"
+              [showErrors]="submitted()" />
+            <app-time-input-component [label]="t('SHIFT.WORK_END')" [control]="shiftForm.controls.workEnd"
+              [showErrors]="submitted()" />
+
+            <app-time-input-component [label]="t('SHIFT.CHECKIN_START')" [control]="shiftForm.controls.checkInStart"
+              [showErrors]="submitted()" />
+            <app-time-input-component [label]="t('SHIFT.CHECKIN_END')" [control]="shiftForm.controls.checkInEnd"
+              [showErrors]="submitted()" />
+
+            <app-time-input-component [label]="t('SHIFT.CHECKOUT_START')" [control]="shiftForm.controls.checkOutStart"
+              [showErrors]="submitted()" />
+            <app-time-input-component [label]="t('SHIFT.CHECKOUT_END')" [control]="shiftForm.controls.checkOutEnd"
+              [showErrors]="submitted()" />
+          </div>
+        </ng-container>
+
+        <ng-container formActions>
+          <app-form-cancel-button-component (click)="onCancel()" />
+          <app-form-save-button-component [isLoading]="isLoading()" [label]="'COMMON.SAVE'" type="submit" />
+        </ng-container>
+
+      </app-form-container-component>
+    </div>
+  </div>
+</main>

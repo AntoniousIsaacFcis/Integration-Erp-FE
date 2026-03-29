@@ -1,0 +1,20 @@
+<footer class="w-full pt-1  border-t border-black/50 flex items-center justify-between text-[13px] font-arabic text-black/50" *transloco="let t">
+
+  <div class="flex items-center gap-1">
+    <span class="font-medium text-black/70">{{ t('COMMON.PROJECT_NAME') }}</span>
+    <span>&copy; 2026</span>
+    <span class="hidden md:inline">. {{ t('COMMON.ALL_RIGHTS_RESERVED') }}</span>
+  </div>
+
+  <div class="flex items-center gap-4">
+    <div class="flex items-center gap-1.5 opacity-80">
+      <span class="size-1.5 rounded-full bg-primary"></span>
+      <span>v1.0.4-beta</span>
+    </div>
+
+    <nav class="hidden sm:flex items-center gap-3 border-s border-black/10 ps-4">
+      <a href="#" class="hover:text-black transition-colors">{{ t('MENU.SUPPORT') }}</a>
+      <a href="#" class="hover:text-black transition-colors">{{ t('MENU.PRIVACY') }}</a>
+    </nav>
+  </div>
+</footer>

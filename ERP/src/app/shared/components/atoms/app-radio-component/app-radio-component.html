@@ -1,0 +1,22 @@
+<div class="flex flex-col w-full gap-[12px] font-arabic" *transloco="let t">
+      @if (label()) {
+        <label class="text-base font-medium leading-none text-start text-black">
+          {{ t(label()) }} @if(required()) { <span class="text-error">*</span> }
+        </label>
+      }
+
+      <div class="flex items-center gap-[32px] h-[44px]">
+        @for (option of options(); track option.value) {
+          <label class="flex items-center gap-[8px] cursor-pointer group">
+            <div class="relative flex items-center justify-center">
+              <input type="radio" [value]="option.value" [formControl]="control()"
+                class="peer appearance-none w-[20px] h-[20px] border border-[#0000001A] rounded-full checked:border-primary transition-all cursor-pointer">
+              <div class="absolute w-[10px] h-[10px] rounded-full scale-0 peer-checked:scale-100 peer-checked:bg-primary transition-transform"></div>
+            </div>
+            <span class="text-[16px] font-medium text-black transition-colors group-hover:text-primary">
+              {{ t(option.label) }}
+            </span>
+          </label>
+        }
+      </div>
+    </div>
