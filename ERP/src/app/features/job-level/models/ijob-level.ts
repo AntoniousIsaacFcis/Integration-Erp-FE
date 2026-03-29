@@ -7,7 +7,6 @@ export interface IJobLevel {
   description?: string;
   createdAt?: string;
 }
-export type CreateJobLevelDTO = Omit<IJobLevel, 'id' | 'employeeCount' | 'createdAt'>;
 
 export interface IJobLevelResponse {
   data: IJobLevel[];
@@ -17,10 +16,9 @@ export interface IJobLevelResponse {
 }
 
 export interface IJobLevelForm {
-  nameAr: string;
-  departmentId: number | null;
-  status: 'active' | 'inactive';
-  description?: string;
+  levelOrder: number | null;
+  name: string;
+  description: string;
 }
 interface GetLevelsParams {
   page: number;
@@ -32,12 +30,13 @@ interface GetLevelsParams {
 interface ApiQueryParams {
   page: number;
   limit: number;
-  q?: string;           // or whatever your backend expects
-  isDeleted?: boolean;  // convert status to isDeleted
+  q?: string; // or whatever your backend expects
+  isDeleted?: boolean; // convert status to isDeleted
 }
 export interface IJobLevelApiResponse {
   levelOrder: number;
   name: string;
+  description?: string;
   isDeleted: boolean;
   deleterId: string | null;
   deletionTime: string | null;

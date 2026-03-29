@@ -1,70 +1,64 @@
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, PLATFORM_ID, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  DestroyRef,
+  inject,
+  signal,
+} from '@angular/core';
 import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
-import { FormContainerComponent } from "@shared/components/organisms/form-container-component/form-container-component";
+import { FormContainerComponent } from '@shared/components/organisms/form-container-component/form-container-component';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
-import { IDepartment } from '@features/job-level/models/idepartment';
-import { rxResource, takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
-import { isPlatformBrowser } from '@angular/common';
-import { delay, finalize, of } from 'rxjs';
-import { environment } from '@env/environment.development';
-import { FormSaveButtonComponent } from "@shared/components/molecules/form-save-button-component/form-save-button-component";
-import { FormCancelButtonComponent } from "@shared/components/molecules/form-cancel-button-component/form-cancel-button-component";
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
+import { FormSaveButtonComponent } from '@shared/components/molecules/form-save-button-component/form-save-button-component';
+import { FormCancelButtonComponent } from '@shared/components/molecules/form-cancel-button-component/form-cancel-button-component';
 import { JobLevelService } from '@features/job-level/service/job-level-service';
 import { Router } from '@angular/router';
 import { AppValidators } from '@shared/validators/word-limit.validator';
-import { AppInputComponent } from "@shared/components/atoms/app-input-component/app-input-component";
-import { AppSelectComponent } from "@shared/components/atoms/app-select-component/app-select-component";
-import { AppRadioComponent } from "@shared/components/atoms/app-radio-component/app-radio-component";
-import { AppTextareaComponent } from "@shared/components/atoms/app-textarea-component/app-textarea-component";
-import { DepartmentsService } from '@features/departments/services/departments-service';
+import { AppInputComponent } from '@shared/components/atoms/app-input-component/app-input-component';
+import { AppTextareaComponent } from '@shared/components/atoms/app-textarea-component/app-textarea-component';
+import { ICreateOrganizationLevel } from '@features/organization/models/iorganization-level';
 
 @Component({
   selector: 'app-create-level-component',
-  imports: [TranslocoModule, FormContainerComponent, ReactiveFormsModule, FormSaveButtonComponent, FormCancelButtonComponent, AppInputComponent, AppSelectComponent, AppRadioComponent, AppTextareaComponent],
+  imports: [
+    TranslocoModule,
+    FormContainerComponent,
+    ReactiveFormsModule,
+    FormSaveButtonComponent,
+    FormCancelButtonComponent,
+    AppInputComponent,
+    AppTextareaComponent,
+  ],
   templateUrl: './create-level-component.html',
   styleUrl: './create-level-component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CreateLevelComponent {
   private readonly fb = inject(FormBuilder);
-  private http = inject(HttpClient);
-  private _jobLevelService = inject(JobLevelService)
+  private _jobLevelService = inject(JobLevelService);
   private readonly _translocoService = inject(TranslocoService);
-  private readonly _departmentService = inject(DepartmentsService);
   private readonly router = inject(Router);
-  private readonly destroyRef = inject(DestroyRef);//to kill create request if browser closed
-  protected platformId = inject(PLATFORM_ID);
-
-  departmentsResource = rxResource({
-    params: () => ({}),
-    stream: () => {
-      if (!isPlatformBrowser(this.platformId)) {
-        return of([]);
-      }
-      return this.http.get<IDepartment[]>(`${environment.baseUrl}/api/departments`);
-    }
-  });
-  departments = this._departmentService.localizedDepartments;
+  private readonly destroyRef = inject(DestroyRef); // to kill create request if browser closed
 
   isSubmitting = signal(false);
-  isLoadingDepartments = this._departmentService.departmentsResource.isLoading;
 
   jobLevelForm = this.fb.group({
-    nameAr: ['', [Validators.required]],
-    departmentId: ['', [Validators.required]],
-    status: ['active', [Validators.required]],
-    description: ['', [AppValidators.wordLimit(250)]]
+    levelOrder: this.fb.control<number | null>(null, [Validators.required, Validators.min(0)]),
+    name: this.fb.nonNullable.control('', [Validators.required]),
+    description: this.fb.nonNullable.control('', [AppValidators.wordLimit(250)]),
   });
   // 1. Capture the description value as a signal
-  private descriptionValue = toSignal(
-    this.jobLevelForm.controls.description.valueChanges,
-    { initialValue: '' }
-  );
-  // 2. 
+  private descriptionValue = toSignal(this.jobLevelForm.controls.description.valueChanges, {
+    initialValue: '',
+  });
+  // 2.
   wordCount = computed(() => {
     const text = this.descriptionValue() ?? '';
-    return text.trim().split(/\s+/).filter(w => w.length > 0).length;
+    return text
+      .trim()
+      .split(/\s+/)
+      .filter((w) => w.length > 0).length;
   });
   // 3.
   isOverLimit = computed(() => this.wordCount() > 250);
@@ -85,10 +79,16 @@ export class CreateLevelComponent {
     this.isSubmitting.set(true);
 
     const formData = this.jobLevelForm.getRawValue();
+    const description = formData.description?.trim();
+    const payload: ICreateOrganizationLevel = {
+      levelOrder: formData.levelOrder!,
+      name: formData.name.trim(),
+      ...(description ? { description } : {}),
+    };
 
-    this._jobLevelService.create(formData as any)
-      .pipe(
-        takeUntilDestroyed(this.destroyRef))
+    this._jobLevelService
+      .create(payload)
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: async (response) => {
           const successMsg = this._translocoService.translate('COMMON.SUCCESS_MESSAGE');
@@ -107,15 +107,15 @@ export class CreateLevelComponent {
           this.isSubmitting.set(false);
           console.error('Submission Error:', error);
           // هنا يفضل استدعاء ToastService لإظهار الخطأ
-        }
+        },
       });
   }
   onCancel() {
     this.isFormSubmitted.set(false);
     this.jobLevelForm.reset({
-      status: 'active',
-      departmentId: '',
-      description: ''
+      levelOrder: null,
+      name: '',
+      description: '',
     });
   }
 }
