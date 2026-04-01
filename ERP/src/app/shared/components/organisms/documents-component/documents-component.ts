@@ -44,17 +44,7 @@ export class DocumentsComponent {
   private processFiles(fileList: FileList) {
     const fileArray = Array.from(fileList);
 
-    const validFiles = fileArray.filter(file => {
-      const isAllowedType = this.ALLOWED_TYPES.includes(file.type);
-      const isAllowedSize = file.size <= this.MAX_SIZE_MB * 1024 * 1024;
-
-      if (!isAllowedType) console.error(`File type ${file.type} not allowed`);
-      if (!isAllowedSize) console.error(`File ${file.name} exceeds ${this.MAX_SIZE_MB}MB`);
-
-      return isAllowedType && isAllowedSize;
-    });
-
-    const newFiles: IDocument[] = validFiles.map(file => ({
+    const newFiles: IDocument[] = fileArray.map(file => ({
       file,
       name: file.name,
       size: file.size,
@@ -63,11 +53,16 @@ export class DocumentsComponent {
     }));
 
     if (newFiles.length > 0) {
+      // نقوم بإضافة كل الملفات (حتى غير الصالحة) ليتمكن المستخدم من إدارتها
       this.files.update(prev => [...prev, ...newFiles]);
       this.onFilesChanged.emit(this.files());
-    } else {
-      // يمكنك إظهار Toast هنا للمستخدم يخبره أن الملفات المرفوضة لن تضاف
     }
+  }
+
+  isInvalid(doc: IDocument): boolean {
+    const isAllowedType = this.ALLOWED_TYPES.includes(doc.type);
+    const isAllowedSize = doc.size <= this.MAX_SIZE_MB * 1024 * 1024;
+    return !isAllowedType || !isAllowedSize;
   }
 
   removeFile(index: number) {

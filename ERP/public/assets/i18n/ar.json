@@ -124,7 +124,8 @@
     "VIEW_SPECIAL_SHIFTS": "الورديات المخصصة",
     "EDIT_ATTENDANCE_DAY": "تعديل يوم حضور",
     "VIEW_ATTENDANCE_DAYS": "أيام الحضور",
-    "VIEW_ATTENDANCE_LOG_DETAILS":"معلومات سجل الحضور"
+    "VIEW_ATTENDANCE_LOG_DETAILS":"معلومات سجل الحضور",
+    "ADD_ATTENDANCE_PERMISSION":"إضافة إذن حضور"
   },
   "BUTTON": {
     "ADD_LEVEL": "إضافة مستوى",
@@ -282,7 +283,13 @@
     "COUNTRY": "الدولة",
     "CITY": "المدينة",
     "STATE": "الحالة",
-    "POSTAL_CODE": "الرمز البريدي"
+    "POSTAL_CODE": "الرمز البريدي",
+    "CALENDER_TYPE":"نوع التاريخ",
+    "FROM_DATE":"من تاريخ",
+    "TO_DATE":"الى تاريخ",
+    "LEAVE_TYPE":"نوع الإجازة",
+    "APPLAY_DATE":"تاريخ التقديم ",
+    "NOTES":"ملاحظات"
   },
   "PLACEHOLDER": {
     "GENERAL_MANAGER": "مدير عام",
@@ -317,7 +324,11 @@
     "PROGRAMMING": "برمجة",
     "SEARCH_EMPLOYEE": "ابحث عن موظف",
     "EMPLOYEE_NAME": "احمد علي",
-    "SELECT_STATUS": "نشط"
+    "SELECT_STATUS": "نشط",
+    "CALENDER_TYPE":"ميلادي",
+    "SELECT_ABSENCE_TYPE":"اجازة",
+    "SELECT_LEAVE_TYPE":"اجازة مرضية",
+    "ENTER_NOTES":"ادخل الملاحظات"
   },
   "VALIDATION": {
     "REQUIRED_FIELD": "هذا الحقل مطلوب",
@@ -623,7 +634,10 @@
     "ACCESS_DENIED_TITLE": "ليس لديك صلاحية الوصول",
     "ACCESS_DENIED_SUB": "يبدو أنك لا تملك الصلاحيات اللازمة لعرض هذه الصفحة حالياً. إذا كنت تعتقد أن هذا خطأ، يمكنك التواصل مع مسؤول النظام.",
     "CONTACT_US": "تواصل معنا",
-    "START_DATE_MUST_BE_BEFORE_END_DATE": "تاريخ البداية يجب أن يكون قبل تاريخ النهاية"
+    "START_DATE_MUST_BE_BEFORE_END_DATE": "تاريخ البداية يجب أن يكون قبل تاريخ النهاية",
+    "MAX_WORDS":"الحد الاقصي للكلمات",
+    "INVALID_FILE":"ملف غير صالح",
+    "INVALID_FILE_OR_SIZE":"خطا في الصيغة او حجم الملف"
   },
   "JOB_LEVEL": {
     "TITLE": "المستويات الوظيفية",
@@ -706,7 +720,8 @@
     "MAX_SIZE": "الحد الاقصي للحجم",
     "SUPPORTED_FORMATS": "الصيغ المدعومة",
     "NATIONAL_ID": "بطاقة الهوية",
-    "PASSPORT": "الباسبور"
+    "PASSPORT": "الباسبور",
+    "ATTACHMENTS":"مرفقات "
   },
   "TABS": {
     "ATTENDANCE": "جدول الحضور والانصراف",
@@ -734,5 +749,20 @@
   "ENTER_CODE_SENT": "أدخل الكود التحقق المرسل إلى بريدك الإلكتروني",
   "RECOVER_ACCESS": "استعادة الوصول إلى حسابك",
   "RECOVER_SUBTITLE": "أدخل بريدك المسجّل وسنرسل لك خطوات إعادة تعيين كلمة المرور.",
-  "REMEMBER_PASSWORD": "هل تذكّرت كلمة المرور؟"
+  "REMEMBER_PASSWORD": "هل تذكّرت كلمة المرور؟",
+  "CALENDER":{
+    "GREGORIAN":"الميلادي",
+    "ISLAMIC":"الهجري"
+
+  },
+  "ABSENCE_TYPE":{
+    "ABSENCE":"غياب",
+    "HOLIDAY":"اجازة",
+    "EXCUSE":"اذن"
+  },
+  "LEAVE_TYPE":{
+    "ANNUAL":"سنوية",
+    "SICK":"مرضية"
+  }
+
 }

@@ -1,0 +1,85 @@
+<main class="flex justify-center" *transloco="let t">
+  <div class="w-full max-w-standard bg-white rounded-[20px] shadow-soft border border-black/5">
+
+    <app-form-container-component [title]="t('MENU.ADD_ATTENDANCE_PERMISSION')" (submit)="onSave()">
+
+      <ng-container formFields>
+        <app-app-input-component [label]="t('LABEL.EMPLOYEE_NAME') + ' *'" [control]="getControl('employeeId')"
+          [showErrors]="submitted()" [placeholder]="'PLACEHOLDER.EMPLOYEE_NAME'">
+        </app-app-input-component>
+
+        <app-app-select-component [label]="t('LABEL.CALENDER_TYPE') + ' *'" [control]="getControl('calender')"
+          [showErrors]="submitted()" [placeholder]="'PLACEHOLDER.CALENDER_TYPE'">
+          <option value="holiday">{{ t('CALENDER.GREGORIAN') }}</option>
+          <option value="excuse">{{ t('CALENDER.ISLAMIC') }}</option>
+        </app-app-select-component>
+
+        <app-app-date-input-component [label]="t('LABEL.FROM_DATE') + ' *'" [control]="getControl('fromDate')"
+          [showErrors]="submitted()" />
+
+        <app-app-date-input-component [label]="t('LABEL.TO_DATE') + ' *'" [control]="getControl('toDate')"
+          [showErrors]="submitted()" />
+
+        <app-app-select-component [label]="t('LABEL.TYPE') + ' *'" [control]="getControl('type')"
+          [showErrors]="submitted()" [placeholder]="'PLACEHOLDER.SELECT_ABSENCE_TYPE'">
+          <option value="permission">{{ t('ABSENCE_TYPE.ABSENCE') }}</option>
+          <option value="holiday">{{ t('ABSENCE_TYPE.HOLIDAY') }}</option>
+          <option value="excuse">{{ t('ABSENCE_TYPE.EXCUSE') }}</option>
+        </app-app-select-component>
+
+        @if (isHoliday()) {
+        <app-app-select-component [label]="t('LABEL.LEAVE_TYPE') + ' *'" [control]="getControl('leaveType')"
+          [showErrors]="submitted()" [placeholder]="'PLACEHOLDER.SELECT_LEAVE_TYPE'">
+          <option value="annual">{{t('LEAVE_TYPE.ANNUAL')}}</option>
+          <option value="sick">{{t('LEAVE_TYPE.SICK')}}</option>
+        </app-app-select-component>
+        }
+
+        <app-app-date-input-component [label]="t('LABEL.APPLAY_DATE') + ' *'" [control]="getControl('applayDate')"
+          [showErrors]="submitted()" />
+
+        <div>
+          <app-app-input-component [label]="t('LABEL.NOTES')" [control]="getControl('notes')" [showErrors]="submitted()"
+            [placeholder]="'PLACEHOLDER.ENTER_NOTES'">
+          </app-app-input-component>
+
+          @if (submitted() && getControl('notes').hasError('maxWords')) {
+          <p class="text-red-500 text-xs mt-1 px-2">
+            {{ t('ERRORS.MAX_WORDS') }}: {{ getControl('notes').errors?.['maxWords'].limit }}
+            (الحالي: {{ getControl('notes').errors?.['maxWords'].actual }})
+          </p>
+          }
+        </div>
+
+        <div class="col-span-full">
+          <label class="text-sm font-medium text-black">
+            {{ t('DOCUMENTS.ATTACHMENTS') }} <span class="text-slate-400 text-xs">({{ t('COMMON.OPTIONAL') }})</span>
+          </label>
+
+          <app-documents-component (onFilesChanged)="handleFilesChange($event)" />
+
+          @if (getControl('attachedFiles').hasError('invalidFiles')) {
+          <div class="flex items-center gap-2 text-error animate-fade-in mt-2">
+            <ng-icon name="lucideOctagonX" size="16"></ng-icon>
+            <span class="text-xs font-medium">
+              {{ t('ERRORS.INVALID_FILE_OR_SIZE') }}
+            </span>
+          </div>
+          }
+
+          <div class="flex justify-between text-[11px] text-slate-400 mt-2 px-1">
+            <span>{{ t('DOCUMENTS.SUPPORTED_FORMATS') }}: PDF, JPG, PNG</span>
+            <span>{{ t('DOCUMENTS.MAX_SIZE') }}: 10MB</span>
+          </div>
+        </div>
+      </ng-container>
+
+
+      <ng-container formActions>
+        <app-form-cancel-button-component (click)="onCancel()" />
+        <app-form-save-button-component [isLoading]="saveResource.isLoading()" [label]="'COMMON.SAVE'" type="submit" />
+      </ng-container>
+
+    </app-form-container-component>
+  </div>
+</main>

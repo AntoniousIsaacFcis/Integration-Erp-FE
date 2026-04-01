@@ -41,6 +41,11 @@ export const ATTENDANCE_ROUTES: Routes = [
         path: 'attendance-log-details/:id',
         loadComponent: () => import('./pages/attendance-log-details-component/attendance-log-details-component').then(x => x.AttendanceLogDetailsComponent),
         data: { breadcrumb: 'MENU.VIEW_ATTENDANCE_LOG_DETAILS' }
+      },
+      {
+        path: 'add-permission',
+        loadComponent: () => import('./pages/add-permission-component/add-permission-component').then(x => x.AddPermissionComponent),
+        data: { breadcrumb: 'MENU.ADD_ATTENDANCE_PERMISSION' }
       }
       , {
         path: '',
