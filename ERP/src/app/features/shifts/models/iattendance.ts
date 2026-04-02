@@ -29,7 +29,7 @@ export interface IShift {
 export interface IPermission {
   id: string;
   employeeId: string;
-  type: 'late' | 'early_leave' | 'excuse';
+  type: 'holiday' | 'permission' | 'excuse';
   date: string;
   reason: string;
   status: 'pending' | 'approved' | 'rejected';

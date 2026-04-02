@@ -53,6 +53,10 @@
     "PREVIEW": "معاينة",
     "TIME_SUFFIX": "صباحا",
     "HOURS": "ساعات",
+    "ALL_STATUS": "تصنيف",
+    "STATUS_PENDING": "تحت الطلب",
+    "STATUS_APPROVED": "مقبول",
+    "STATUS_REJECTED": "مرفوض",
     "CURRENCY": {
       "SAR": "ر.س"
     },
@@ -124,8 +128,9 @@
     "VIEW_SPECIAL_SHIFTS": "الورديات المخصصة",
     "EDIT_ATTENDANCE_DAY": "تعديل يوم حضور",
     "VIEW_ATTENDANCE_DAYS": "أيام الحضور",
-    "VIEW_ATTENDANCE_LOG_DETAILS":"معلومات سجل الحضور",
-    "ADD_ATTENDANCE_PERMISSION":"إضافة إذن حضور"
+    "VIEW_ATTENDANCE_LOG_DETAILS": "معلومات سجل الحضور",
+    "ADD_ATTENDANCE_PERMISSION": "إضافة إذن حضور",
+    "VIEW_PERMISSIONS": "أذونات الحضور"
   },
   "BUTTON": {
     "ADD_LEVEL": "إضافة مستوى",
@@ -284,12 +289,12 @@
     "CITY": "المدينة",
     "STATE": "الحالة",
     "POSTAL_CODE": "الرمز البريدي",
-    "CALENDER_TYPE":"نوع التاريخ",
-    "FROM_DATE":"من تاريخ",
-    "TO_DATE":"الى تاريخ",
-    "LEAVE_TYPE":"نوع الإجازة",
-    "APPLAY_DATE":"تاريخ التقديم ",
-    "NOTES":"ملاحظات"
+    "CALENDER_TYPE": "نوع التاريخ",
+    "FROM_DATE": "من تاريخ",
+    "TO_DATE": "الى تاريخ",
+    "LEAVE_TYPE": "نوع الإجازة",
+    "APPLAY_DATE": "تاريخ التقديم ",
+    "NOTES": "ملاحظات"
   },
   "PLACEHOLDER": {
     "GENERAL_MANAGER": "مدير عام",
@@ -325,10 +330,10 @@
     "SEARCH_EMPLOYEE": "ابحث عن موظف",
     "EMPLOYEE_NAME": "احمد علي",
     "SELECT_STATUS": "نشط",
-    "CALENDER_TYPE":"ميلادي",
-    "SELECT_ABSENCE_TYPE":"اجازة",
-    "SELECT_LEAVE_TYPE":"اجازة مرضية",
-    "ENTER_NOTES":"ادخل الملاحظات"
+    "CALENDER_TYPE": "ميلادي",
+    "SELECT_ABSENCE_TYPE": "اجازة",
+    "SELECT_LEAVE_TYPE": "اجازة مرضية",
+    "ENTER_NOTES": "ادخل الملاحظات"
   },
   "VALIDATION": {
     "REQUIRED_FIELD": "هذا الحقل مطلوب",
@@ -567,16 +572,16 @@
     "TABLE_CHECK_OUT": "وقت الانصراف",
     "TABLE_TOTAL_HOURS": "إجمالي ساعات العمل",
     "TABLE_STATUS": "الحالة",
-    "CREATE_DATE":"تاريخ الإنشاء",
-    "SOURCE":"المصدر",
-    "SESSION_NUMBER":"رقم الجلسة",
+    "CREATE_DATE": "تاريخ الإنشاء",
+    "SOURCE": "المصدر",
+    "SESSION_NUMBER": "رقم الجلسة",
     "STATUS": {
       "PRESENT": "حضور",
       "ABSENT": "غياب",
       "LATE": "تاخير",
       "EXCUSED": "عذر",
-      "ACTIVE":"نشط",
-      "INACTIVE":"غير نشط"
+      "ACTIVE": "نشط",
+      "INACTIVE": "غير نشط"
     }
   },
   "SETTINGS": {
@@ -635,9 +640,9 @@
     "ACCESS_DENIED_SUB": "يبدو أنك لا تملك الصلاحيات اللازمة لعرض هذه الصفحة حالياً. إذا كنت تعتقد أن هذا خطأ، يمكنك التواصل مع مسؤول النظام.",
     "CONTACT_US": "تواصل معنا",
     "START_DATE_MUST_BE_BEFORE_END_DATE": "تاريخ البداية يجب أن يكون قبل تاريخ النهاية",
-    "MAX_WORDS":"الحد الاقصي للكلمات",
-    "INVALID_FILE":"ملف غير صالح",
-    "INVALID_FILE_OR_SIZE":"خطا في الصيغة او حجم الملف"
+    "MAX_WORDS": "الحد الاقصي للكلمات",
+    "INVALID_FILE": "ملف غير صالح",
+    "INVALID_FILE_OR_SIZE": "خطا في الصيغة او حجم الملف"
   },
   "JOB_LEVEL": {
     "TITLE": "المستويات الوظيفية",
@@ -721,7 +726,7 @@
     "SUPPORTED_FORMATS": "الصيغ المدعومة",
     "NATIONAL_ID": "بطاقة الهوية",
     "PASSPORT": "الباسبور",
-    "ATTACHMENTS":"مرفقات "
+    "ATTACHMENTS": "مرفقات "
   },
   "TABS": {
     "ATTENDANCE": "جدول الحضور والانصراف",
@@ -750,19 +755,32 @@
   "RECOVER_ACCESS": "استعادة الوصول إلى حسابك",
   "RECOVER_SUBTITLE": "أدخل بريدك المسجّل وسنرسل لك خطوات إعادة تعيين كلمة المرور.",
   "REMEMBER_PASSWORD": "هل تذكّرت كلمة المرور؟",
-  "CALENDER":{
-    "GREGORIAN":"الميلادي",
-    "ISLAMIC":"الهجري"
-
+  "CALENDER": {
+    "GREGORIAN": "الميلادي",
+    "ISLAMIC": "الهجري"
   },
-  "ABSENCE_TYPE":{
-    "ABSENCE":"غياب",
-    "HOLIDAY":"اجازة",
-    "EXCUSE":"اذن"
+  "ABSENCE_TYPE": {
+    "ABSENCE": "غياب",
+    "HOLIDAY": "اجازة",
+    "EXCUSE": "اذن"
   },
-  "LEAVE_TYPE":{
-    "ANNUAL":"سنوية",
-    "SICK":"مرضية"
+  "LEAVE_TYPE": {
+    "ANNUAL": "سنوية",
+    "SICK": "مرضية"
+  },
+  "PERMISSIONS": {
+    "ADD_NEW": "إضافة إذن جديد",
+    "TYPE_LABEL": "نوع الاجازة",
+    "STATUS_LABEL": "تصنيف",
+    "ALL_TYPES": "الكل",
+    "TYPE_HOLIDAY": "إجازة",
+    "TYPE_PERMISSION": "اجازة باذن",
+    "TYPE_EXCUSE": "اجازة بعذر",
+    "TABLE_EMPLOYEE_NAME": "اسم الموظف",
+    "TABLE_DATE": "التاريخ",
+    "TABLE_PERMISSION_ID": "رقم إذن الحضور",
+    "TABLE_HOLIDAY_TYPE": "النوع",
+    "TYPE_LATE": "تاخير",
+    "TYPE_EARLY_LEAVE": "غادر قبل انتهاء العمل"
   }
-
 }

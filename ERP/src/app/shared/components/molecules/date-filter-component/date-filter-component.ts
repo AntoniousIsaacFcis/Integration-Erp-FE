@@ -13,7 +13,7 @@ import { lucideCalendar, lucideChevronDown } from '@ng-icons/lucide';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DateFilterComponent {
-selectedDate = model<string>('FILTERS.DATE') ;
+selectedDate = model<string>('') ;
 labelKey = input<string>('FILTERS.DATE');
 isExpanded = signal(false);
 dateInput = viewChild<ElementRef<HTMLInputElement>>('picker');

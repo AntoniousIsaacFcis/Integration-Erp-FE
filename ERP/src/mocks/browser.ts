@@ -13,6 +13,7 @@ import { employmentTypesHandlers } from './handlers/employment-types.handler';
 import { shiftsHandlers } from './handlers/shifts.handlers';
 import { specialShiftHandlers } from './handlers/special-shifts.handlers';
 import { attendanceDaysHandlers } from './handlers/attendance.days.handler';
+import { permissionsHandlers } from './handlers/permissions.handler';
 
 export const worker = setupWorker(
   ...attendanceDaysHandlers,
@@ -27,7 +28,8 @@ export const worker = setupWorker(
   ...employmentTypesHandlers,
   ...shiftsHandlers,
   ...authHandlers,
-  ...specialShiftHandlers
+  ...specialShiftHandlers,
+  ...permissionsHandlers
 );
 
 //allowing workwe in development only

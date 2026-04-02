@@ -2,8 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@a
 import { rxResource, toSignal } from '@angular/core/rxjs-interop';
 import { FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { ICreatePermissionRequest, PermissionType } from '@features/shifts/models/ipermissions';
-import { AttendanceService } from '@features/shifts/services/attendance-service';
+import { ICreatePermissionRequest } from '@features/shifts/models/ipermissions';
 import { TranslocoModule } from '@jsverse/transloco';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { lucideFileText, lucideSearch } from '@ng-icons/lucide';
@@ -14,7 +13,6 @@ import { AppDateInputComponent } from "@shared/components/atoms/app-date-input-c
 import { AppInputComponent } from "@shared/components/atoms/app-input-component/app-input-component";
 import { FormCancelButtonComponent } from "@shared/components/molecules/form-cancel-button-component/form-cancel-button-component";
 import { FormSaveButtonComponent } from "@shared/components/molecules/form-save-button-component/form-save-button-component";
-import { IPermission } from '@features/shifts/models/iattendance';
 import { PermissionService } from '@features/shifts/services/permission-service';
 import { dateRangeValidator } from '@shared/validators/date-range.validator';
 import { AppValidators } from '@shared/validators/word-limit.validator';
@@ -79,11 +77,11 @@ export class AddPermissionComponent {
     if (this.mainForm.valid) {
       const payload = this.mainForm.getRawValue() as ICreatePermissionRequest;
       this.saveTrigger.set(payload);
-      this.router.navigate(['shifts/permissions']);
+      this.router.navigate(['shifts/view-permissions']);
     }
   }
 
   onCancel() {
-    this.router.navigate(['shifts/permissions']);
+    this.router.navigate(['shifts/view-permissions']);
   }
 }

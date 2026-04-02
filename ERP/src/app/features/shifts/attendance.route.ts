@@ -46,6 +46,11 @@ export const ATTENDANCE_ROUTES: Routes = [
         path: 'add-permission',
         loadComponent: () => import('./pages/add-permission-component/add-permission-component').then(x => x.AddPermissionComponent),
         data: { breadcrumb: 'MENU.ADD_ATTENDANCE_PERMISSION' }
+      },
+      {
+        path: 'view-permissions',
+        loadComponent: () => import('./pages/view-permissions-component/view-permissions-component').then(x => x.ViewPermissionsComponent),
+        data: { breadcrumb: 'MENU.VIEW_PERMISSIONS' }
       }
       , {
         path: '',
