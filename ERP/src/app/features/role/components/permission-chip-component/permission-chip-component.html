@@ -1,0 +1,5 @@
+<button type="button" (click)="toggle.emit()"
+  [class]="isActive() ? 'bg-primary text-white' : 'bg-gray-100 text-black/40'"
+  class="px-4 py-1.5 rounded-full text-xs font-medium transition-all hover:scale-105 active:scale-95">
+  {{ label() }}
+</button>

@@ -562,6 +562,9 @@
     "REQUIRED_FILES": "At least one file must be uploaded",
     "INVALID_TIME_RANGE": "End time must be after start time"
   },
+  "errors": {
+    "failed_to_load_permissions": "Failed to load permissions. Please try again."
+  },
   "JOB_LEVEL": {
     "TITLE": "Job Levels",
     "JOB_LEVEL_NAME": "Job Level Name",
@@ -670,4 +673,22 @@
   "RECOVER_ACCESS": "Recover Your Account",
   "RECOVER_SUBTITLE": "Enter your registered email and we'll send you password reset instructions.",
   "REMEMBER_PASSWORD": "Remember your password?"
+  ,
+  "ROLES": {
+    "ADD_ROLE": "Add Role",
+    "ROLE_NAME": "Role Name",
+    "ROLE_NAME_PLACEHOLDER": "Enter role name",
+    "ROLE_TYPE": "Role Type",
+    "SELECT_ROLE_TYPE": "Select role type",
+    "TYPE_MANAGER": "Manager",
+    "TYPE_EMPLOYEE": "Employee",
+    "TYPE_SUPERVISOR": "Supervisor",
+    "DESCRIPTION": "Role Description",
+    "DESCRIPTION_PLACEHOLDER": "Description should not exceed 100 words",
+    "DESC_LIMIT_HINT": "Description should not exceed",
+    "STATUS": "Status",
+    "CHOOSE_PERMISSIONS": "Choose Permissions",
+    "SELECTED_PERMISSIONS": "selected",
+    "PERMISSIONS_REQUIRED": "Please select at least one permission"
+  }
 }

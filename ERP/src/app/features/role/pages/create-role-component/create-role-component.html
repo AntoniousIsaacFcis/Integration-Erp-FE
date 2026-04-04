@@ -1,0 +1,135 @@
+<div
+  class="w-full max-w-standard bg-white rounded-[20px] shadow-soft border border-black/5 p-spacing-xl flex flex-col gap-spacing-lg mx-auto"
+>
+  <app-form-container-component
+    *transloco="let t"
+    [title]="t('role.add_new_role')"
+    (submit)="onSubmit()"
+  >
+    <!-- Form Fields -->
+    <ng-container formFields>
+      <!-- Name Field -->
+      <div class="col-span-2">
+        <app-app-input-component
+          [label]="t('role.name') + ' *'"
+          [placeholder]="t('PLACEHOLDER.ENTER_NAME')"
+          [control]="nameControl"
+          [showErrors]="isFormSubmitted()"
+        />
+      </div>
+
+      <!-- Type Field -->
+      <app-app-select-component
+        [label]="t('role.type') + ' *'"
+        [placeholder]="t('role.select_type')"
+        [control]="typeControl"
+        [showErrors]="isFormSubmitted()"
+      >
+        <option value="admin">{{ t('role.admin') }}</option>
+        <option value="user">{{ t('role.user') }}</option>
+      </app-app-select-component>
+
+      <!-- Status Field -->
+      <app-app-select-component
+        [label]="t('role.status') + ' *'"
+        [placeholder]="t('role.select_status')"
+        [control]="statusControl"
+        [showErrors]="isFormSubmitted()"
+      >
+        <option value="active">{{ t('COMMON.ACTIVE') }}</option>
+        <option value="inactive">{{ t('COMMON.INACTIVE') }}</option>
+      </app-app-select-component>
+
+      <!-- Description Field -->
+      <div class="col-span-2">
+        <app-app-textarea-component
+          [label]="t('role.description')"
+          [placeholder]="t('PLACEHOLDER.ENTER_DESCRIPTION')"
+          [control]="descriptionControl"
+        />
+        <div class="p-2">
+          <span
+            class="text-xs font-medium transition-colors duration-200"
+            [class]="isDescriptionOverLimit() ? 'text-red-500' : 'text-gray-400'"
+          >
+            {{ descriptionWordCount() }} / 100 {{ t('COMMON.WORDS') }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Permissions Section -->
+      <div class="col-span-2 border-t pt-6">
+        <label class="block text-sm font-semibold text-gray-900 mb-4 flex items-center gap-2">
+          <span class="text-red-500">*</span>
+          {{ t('role.permissions') }}
+        </label>
+
+        <!-- Loading State -->
+        @if (permissionsResource.isLoading()) {
+          <div class="flex items-center gap-3 p-4">
+            <div class="animate-spin h-5 w-5 border-2 border-primary border-t-transparent rounded-full"></div>
+            <span class="text-gray-600">{{ t('COMMON.MESSAGES.LOADING_DATA') }}</span>
+          </div>
+        }
+
+        <!-- Error State -->
+        @if (permissionsResource.error()) {
+          <div class="p-4 bg-red-50 text-red-600 rounded-lg border border-red-200 text-sm flex items-center justify-between">
+            <span>{{ t('errors.failed_to_load_permissions') }}</span>
+            <button
+              type="button"
+              (click)="permissionsResource.reload()"
+              class="underline font-medium hover:text-red-700 transition-colors"
+            >
+              {{ t('BUTTON.RETRY') }}
+            </button>
+          </div>
+        }
+
+        <!-- Permissions List -->
+        @if (permissionsResource.value(); as categories) {
+          <div class="space-y-6">
+            @for (category of categories; track category.id) {
+              <div class="p-4 border rounded-lg bg-gray-50/50 hover:bg-gray-50 transition-colors">
+                <h3 class="text-sm font-bold text-gray-900 mb-4 flex items-center gap-2">
+                  <span class="w-2 h-2 bg-primary rounded-full"></span>
+                  {{ category.categoryName }}
+                </h3>
+
+                <div class="flex flex-wrap gap-3">
+                  @for (perm of category.permissions; track perm.key) {
+                    <app-permission-chip-component
+                      [label]="perm.label"
+                      [isActive]="selectedPermissionKeys().includes(perm.key)"
+                      (toggle)="togglePermission(perm.key)"
+                    />
+                  }
+                </div>
+              </div>
+            }
+          </div>
+        }
+
+        <!-- Validation Error -->
+        @if (isFormSubmitted() && mainForm.controls.permissions.errors; as errors) {
+          @if (errors['required']) {
+            <div class="mt-3 text-red-600 text-sm">{{ t('VALIDATION.PERMISSIONS_REQUIRED') }}</div>
+          }
+          @if (errors['minlength']) {
+            <div class="mt-3 text-red-600 text-sm">{{ t('VALIDATION.SELECT_AT_LEAST_ONE_PERMISSION') }}</div>
+          }
+        }
+      </div>
+    </ng-container>
+
+    <!-- Form Actions -->
+    <ng-container formActions>
+      <app-form-cancel-button-component (clicked)="onCancel()" />
+      <app-form-save-button-component
+        [isLoading]="saveResource.isLoading()"
+        [isDisabled]="mainForm.invalid || isSubmitting()"
+        type="submit"
+      />
+    </ng-container>
+  </app-form-container-component>
+</div>

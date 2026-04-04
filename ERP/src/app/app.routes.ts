@@ -59,6 +59,11 @@ export const routes: Routes = [
         // canMatch: [() => inject(AuthService).hasPermission('MyProject.employment-types')],
         loadChildren: () => import('./features/shifts/attendance.route').then(m => m.ATTENDANCE_ROUTES),
       },
+       {
+        path: 'roles',
+        // canMatch: [() => inject(AuthService).hasPermission('MyProject.employment-types')],
+        loadChildren: () => import('./features/role/roles.routes').then(m => m.ROLES_ROUTES),
+      },
       {
         path: '403',
         loadComponent: () => import('@shared/pages/access-denied-component/access-denied-component').then(m => m.AccessDeniedComponent),

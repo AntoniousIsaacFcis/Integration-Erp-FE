@@ -644,6 +644,9 @@
     "INVALID_FILE": "ملف غير صالح",
     "INVALID_FILE_OR_SIZE": "خطا في الصيغة او حجم الملف"
   },
+  "errors": {
+    "failed_to_load_permissions": "فشل تحميل الصلاحيات. حاول مرة أخرى."
+  },
   "JOB_LEVEL": {
     "TITLE": "المستويات الوظيفية",
     "JOB_LEVEL_NAME": "اسم المستوى الوظيفي",
@@ -668,6 +671,16 @@
     "TYPE_NAME": "نوع الدوام",
     "EMPLOYEES": "موظف",
     "DESCRIPTION_PLACEHOLDER": "الوصف لا يتعدى الـ 250 كلمة"
+  },
+  "role": {
+    "add_new_role": "إضافة دور جديد",
+    "name": "اسم الدور",
+    "type": "نوع الدور",
+    "status": "الحالة",
+    "description": "الوصف",
+    "permissions": "الأذونات",
+    "select_type": "اختر النوع",
+    "select_status": "اختر الحالة"
   },
   "FILTERS": {
     "FILTER_BY": "تصفية حسب",
@@ -782,5 +795,22 @@
     "TABLE_HOLIDAY_TYPE": "النوع",
     "TYPE_LATE": "تاخير",
     "TYPE_EARLY_LEAVE": "غادر قبل انتهاء العمل"
+  },
+  "ROLES": {
+    "ADD_ROLE": "إضافة دور وظيفي",
+    "ROLE_NAME": "اسم الدور",
+    "ROLE_NAME_PLACEHOLDER": "اكتب اسم الدور",
+    "ROLE_TYPE": "نوع الدور",
+    "SELECT_ROLE_TYPE": "اختر نوع الدور",
+    "TYPE_MANAGER": "مدير",
+    "TYPE_EMPLOYEE": "موظف",
+    "TYPE_SUPERVISOR": "مشرف",
+    "DESCRIPTION": "وصف الدور",
+    "DESCRIPTION_PLACEHOLDER": "الوصف لا يتعدى الـ 100 كلمة",
+    "DESC_LIMIT_HINT": "الوصف لا يتعدى",
+    "STATUS": "الحالة",
+    "CHOOSE_PERMISSIONS": "اختيار الصلاحيات",
+    "SELECTED_PERMISSIONS": "صلاحية محددة",
+    "PERMISSIONS_REQUIRED": "يرجى اختيار صلاحية واحدة على الأقل"
   }
 }
