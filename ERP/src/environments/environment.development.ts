@@ -1,8 +1,8 @@
 export const environment = {
   production: false,
-  // baseUrl: 'https://localhost:44387',//for real api
-  baseUrl: 'http://localhost:4200',
-  useMocks: true// Set to TRUE when you want MSW, FALSE for Live API
+  baseUrl: 'https://localhost:44387',//for real api
+  // baseUrl: 'http://localhost:4200',
+  useMocks: false// Set to TRUE when you want MSW, FALSE for Live API
 };
 
 /* to change for real api to msw
@@ -24,5 +24,7 @@ first : in envinment.development
 second : in angular.json
 3-  "ssl": false
 
-4-ng serve -o
+4-ng serve --ssl
+
+
 */
