@@ -140,7 +140,7 @@ export class CreateRoleComponent {
     }
 
     this.isSubmitting.set(true);
-    
+
     // Simulate API call completion
     setTimeout(() => {
       this.isSubmitting.set(false);
