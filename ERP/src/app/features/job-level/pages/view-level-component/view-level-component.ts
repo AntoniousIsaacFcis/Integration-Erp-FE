@@ -4,7 +4,7 @@ import { AppBaseTableComponent } from "@shared/components/organisms/app-base-tab
 import { HttpClient } from '@angular/common/http';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { NgIcon, provideIcons } from '@ng-icons/core';
-import { lucidePencil, lucideTrash2 } from '@ng-icons/lucide';
+import { lucideEye, lucidePencil, lucideTrash2 } from '@ng-icons/lucide';
 import { isPlatformBrowser } from '@angular/common';
 import { of } from 'rxjs';
 import { JobLevelService } from '@features/job-level/service/job-level-service';
@@ -19,7 +19,7 @@ import { TableStatusBadgeComponent } from "@shared/components/atoms/table-status
   imports: [TranslocoModule, AppBaseTableComponent, NgIcon, ActionBtnComponent, StatusBadgeComponent, HasPermissionDirective, TableStatusBadgeComponent],
   templateUrl: './view-level-component.html',
   styleUrl: './view-level-component.css',
-  providers: [provideIcons({ lucideTrash2, lucidePencil })],
+  providers: [provideIcons({ lucideTrash2, lucidePencil ,lucideEye})],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ViewLevelComponent {
@@ -60,6 +60,9 @@ export class ViewLevelComponent {
     console.log('Navigate to Create Level Page');
   }
 
+  handleView(id: string) {
+    this.router.navigate(['/attendance/permissions/details', id]);
+  }
 
   totalItems = computed(() => this.levelsResource.value()?.total ?? 0);
 

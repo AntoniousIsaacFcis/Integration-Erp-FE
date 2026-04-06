@@ -52,6 +52,10 @@
               <button *appHasPermission="'Organization.Levels.Create'"
                 class="flex size-[30px] items-center justify-center rounded-full bg-[#0000001A] transition-colors hover:bg-[#00000033]"><ng-icon
                   name="lucideTrash2" size="16px" color="#F40552" /></button>
+                  <button (click)="handleView(level.id!)"
+                class="flex size-[32px] items-center justify-center rounded-full bg-[#61BDDC33] hover:bg-gray-100 transition-colors">
+                <ng-icon name="lucideEye" size="16" color="#61BDDC" />
+              </button>
             </div>
           </td>
         </tr>
