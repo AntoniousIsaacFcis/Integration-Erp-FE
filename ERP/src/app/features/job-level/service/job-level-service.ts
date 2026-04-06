@@ -17,12 +17,19 @@ export class JobLevelService {
   private readonly API_URL = `${environment.baseUrl}/api/organization/organization-level`; //for real api
 
   getLevels(params: GetLevelsParams) {
+    const normalizedSearch = params.search?.trim();
+
     // Map frontend format to backend format
     const queryParams: ApiQueryParams = {
       page: params.page,
       limit: params.limit,
-      ...(params.search && { q: params.search }),
-      ...(params.status && { isDeleted: params.status === 'inactive' }),
+      ...(normalizedSearch && {
+        searchTerm: normalizedSearch,
+        search: normalizedSearch,
+        q: normalizedSearch,
+        filter: normalizedSearch,
+      }),
+      ...(params.status && { isActive: params.status === 'active' }),
     };
 
     return this.http.get<IJobLevelApiListResponse>(this.API_URL, { params: queryParams }).pipe(
@@ -46,7 +53,12 @@ export class JobLevelService {
         nameAr: item.name,
         employeeCount: 0,
         departmentId: '',
-        status: item.isDeleted ? 'inactive' : ('active' as const),
+        status:
+          (typeof item.isActive === 'boolean'
+            ? item.isActive
+            : !item.isDeleted)
+            ? 'active'
+            : ('inactive' as const),
         description: item.description ?? '',
         createdAt: item.creationTime,
       })),
@@ -92,6 +104,9 @@ type GetLevelsParams = {
 type ApiQueryParams = {
   page: number;
   limit: number;
+  searchTerm?: string;
+  search?: string;
   q?: string;
-  isDeleted?: boolean;
+  filter?: string;
+  isActive?: boolean;
 };

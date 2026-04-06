@@ -30,14 +30,15 @@ interface GetLevelsParams {
 interface ApiQueryParams {
   page: number;
   limit: number;
-  q?: string; // or whatever your backend expects
-  isDeleted?: boolean; // convert status to isDeleted
+  searchTerm?: string;
+  isActive?: boolean; // convert status to isActive
 }
 export interface IJobLevelApiResponse {
   levelOrder: number;
   name: string;
   description?: string;
-  isDeleted: boolean;
+  isActive?: boolean;
+  isDeleted?: boolean;
   deleterId: string | null;
   deletionTime: string | null;
   lastModificationTime: string | null;

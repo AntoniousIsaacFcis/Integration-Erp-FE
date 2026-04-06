@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, PLATFORM_ID, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, PLATFORM_ID, signal } from '@angular/core';
 import { TranslocoModule } from '@jsverse/transloco';
 import { AppBaseTableComponent } from "@shared/components/organisms/app-base-table-component/app-base-table-component";
 import { HttpClient } from '@angular/common/http';
@@ -54,6 +54,16 @@ export class ViewLevelComponent {
       return this.jobService.getLevels(params);
     }
   });
+
+  // Best practice: when filters change, restart from first page.
+  private readonly resetPageOnFiltersChange = effect(
+    () => {
+      this.searchTerm();
+      this.selectedStatus();
+      this.currentPage.set(1);
+    },
+    { allowSignalWrites: true },
+  );
 
   handleCreateNavigation() {
     this.router.navigate(['/job-levels/create']);

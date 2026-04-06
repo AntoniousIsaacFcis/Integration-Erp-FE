@@ -23,7 +23,7 @@ private readonly searchUpdater$ = new Subject<string>();
 
   constructor() {
     this.searchUpdater$.pipe(
-      debounceTime(400), //wait after last letter inserted
+      debounceTime(300), //wait after last letter inserted
       distinctUntilChanged(), // not make request until change
       takeUntilDestroyed() // auto clean memory
     ).subscribe(value => {
