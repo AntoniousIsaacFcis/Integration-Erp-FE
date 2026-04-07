@@ -678,8 +678,7 @@
   "ENTER_CODE_SENT": "Enter verification code sent to your email",
   "RECOVER_ACCESS": "Recover Your Account",
   "RECOVER_SUBTITLE": "Enter your registered email and we'll send you password reset instructions.",
-  "REMEMBER_PASSWORD": "Remember your password?"
-  ,
+  "REMEMBER_PASSWORD": "Remember your password?",
   "ROLES": {
     "ADD_ROLE": "Add Role",
     "ROLE_NAME": "Role Name",
@@ -696,5 +695,29 @@
     "CHOOSE_PERMISSIONS": "Choose Permissions",
     "SELECTED_PERMISSIONS": "selected",
     "PERMISSIONS_REQUIRED": "Please select at least one permission"
+  },
+  "ABSENCE_TYPE": {
+    "ABSENCE": "Absence",
+    "HOLIDAY": "Holiday",
+    "EXCUSE": "Excuse"
+  },
+  "LEAVE_TYPE": {
+    "ANNUAL": "Annual",
+    "SICK": "Sick"
+  },
+  "PERMISSIONS": {
+    "ADD_NEW": "Add New Permission",
+    "TYPE_LABEL": "Leave Type",
+    "STATUS_LABEL": "Classification",
+    "ALL_TYPES": "All",
+    "TYPE_HOLIDAY": "Holiday",
+    "TYPE_PERMISSION": "Leave with Permission",
+    "TYPE_EXCUSE": "Leave with Excuse",
+    "TABLE_EMPLOYEE_NAME": "Employee Name",
+    "TABLE_DATE": "Date",
+    "TABLE_PERMISSION_ID": "Permission ID",
+    "TABLE_HOLIDAY_TYPE": "Type",
+    "TYPE_LATE": "Late",
+    "TYPE_EARLY_LEAVE": "Left Before Work End"
   }
 }
