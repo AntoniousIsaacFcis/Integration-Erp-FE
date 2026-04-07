@@ -74,6 +74,10 @@ export class ViewLevelComponent {
     this.router.navigate(['/attendance/permissions/details', id]);
   }
 
+  handleEdit(id: string) {
+    this.router.navigate(['/job-levels/edit', id]);
+  }
+
   totalItems = computed(() => this.levelsResource.value()?.total ?? 0);
 
   levelsList = computed(() => this.levelsResource.value()?.data ?? []);

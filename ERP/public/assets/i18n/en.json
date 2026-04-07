@@ -279,6 +279,7 @@
   },
   "PLACEHOLDER": {
     "ENTER_NAME": "General Manager",
+    "ENTER_NUMBER": "Enter the level sort order",
     "ENTER_EMAIL": "Enter Email",
     "ENTER_PHONE": "Enter Phone Number",
     "ENTER_ADDRESS": "Enter Address",

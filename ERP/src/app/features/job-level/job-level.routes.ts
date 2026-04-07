@@ -23,6 +23,13 @@ export const JOB_LEVEL_ROUTES: Routes = [{
       data: { breadcrumb: 'MENU.CREATE_LEVEL' }
     },
     {
+      path: 'edit/:id',
+      // canActivate: [permissionGuard('Organization.Levels.Update')],
+      loadComponent: () => import('./pages/edit-level-component/edit-level-component')
+        .then(x => x.EditLevelComponent),
+      data: { breadcrumb: 'JOB_LEVEL.EDIT_JOB_LEVEL' }
+    },
+    {
       path: 'mapping',
       // canActivate: [permissionGuard('Organization.Levels.Mapping')],
       loadComponent: () => import('./pages/level-mapping-component/level-mapping-component')

@@ -4,6 +4,7 @@ import { IJobLevel, IJobLevelApiListResponse, IJobLevelResponse } from '../model
 import {
   ICreateOrganizationLevel,
   IOrganizationLevel,
+  IUpdateOrganizationLevel,
 } from '@features/organization/models/iorganization-level';
 import { environment } from '@env/environment.development';
 import { map, catchError } from 'rxjs';
@@ -94,12 +95,24 @@ export class JobLevelService {
     return this.http.post<IOrganizationLevel>(this.API_URL, data);
   }
 
-  isLevelOrderTaken(levelOrder: number) {
+  getById(id: string) {
+    return this.http.get<IOrganizationLevel>(`${this.API_URL}/${id}`);
+  }
+
+  update(id: string, data: IUpdateOrganizationLevel) {
+    return this.http.put<IOrganizationLevel>(`${this.API_URL}/${id}`, data);
+  }
+
+  isLevelOrderTaken(levelOrder: number, excludedId?: string) {
     return this.http
       .get<IJobLevelApiListResponse>(this.API_URL, {
         params: { page: 1, limit: 10000 },
       })
-      .pipe(map((response) => response.items.some((item) => item.levelOrder === levelOrder)));
+      .pipe(
+        map((response) =>
+          response.items.some((item) => item.levelOrder === levelOrder && item.id !== excludedId),
+        ),
+      );
   }
 }
 
