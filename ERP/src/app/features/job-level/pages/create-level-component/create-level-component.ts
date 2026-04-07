@@ -18,6 +18,7 @@ import { AppValidators } from '@shared/validators/word-limit.validator';
 import { AppInputComponent } from '@shared/components/atoms/app-input-component/app-input-component';
 import { AppTextareaComponent } from '@shared/components/atoms/app-textarea-component/app-textarea-component';
 import { ICreateOrganizationLevel } from '@features/organization/models/iorganization-level';
+import { EMPTY, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-create-level-component',
@@ -45,7 +46,11 @@ export class CreateLevelComponent {
 
   jobLevelForm = this.fb.group({
     levelOrder: this.fb.control<number | null>(null, [Validators.required, Validators.min(0)]),
-    name: this.fb.nonNullable.control('', [Validators.required]),
+    name: this.fb.nonNullable.control('', [
+      Validators.required,
+      Validators.minLength(3),
+      Validators.maxLength(100),
+    ]),
     description: this.fb.nonNullable.control('', [AppValidators.wordLimit(250)]),
   });
   // 1. Capture the description value as a signal
@@ -64,10 +69,18 @@ export class CreateLevelComponent {
   isOverLimit = computed(() => this.wordCount() > 250);
 
   isFormSubmitted = signal(false);
+
+  constructor() {
+    this.jobLevelForm.controls.levelOrder.valueChanges
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => this.clearControlError('levelOrder', 'duplicate'));
+  }
+
   onSubmit() {
     if (this.isSubmitting()) return;
 
     this.isFormSubmitted.set(true);
+    this.clearControlError('levelOrder', 'duplicate');
     this.jobLevelForm.updateValueAndValidity();
 
     if (this.jobLevelForm.invalid) {
@@ -81,13 +94,24 @@ export class CreateLevelComponent {
     const formData = this.jobLevelForm.getRawValue();
     const description = formData.description?.trim();
     const payload: ICreateOrganizationLevel = {
-      levelOrder: formData.levelOrder!,
+      levelOrder: Number(formData.levelOrder),
       name: formData.name.trim(),
       ...(description ? { description } : {}),
     };
 
     this._jobLevelService
-      .create(payload)
+      .isLevelOrderTaken(payload.levelOrder)
+      .pipe(
+        switchMap((isTaken) => {
+          if (isTaken) {
+            this.setControlError('levelOrder', 'duplicate');
+            this.isSubmitting.set(false);
+            return EMPTY;
+          }
+
+          return this._jobLevelService.create(payload);
+        }),
+      )
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: async (response) => {
@@ -110,6 +134,22 @@ export class CreateLevelComponent {
         },
       });
   }
+
+  private setControlError(controlName: 'levelOrder' | 'name' | 'description', errorKey: string) {
+    const control = this.jobLevelForm.controls[controlName];
+    control.setErrors({ ...(control.errors ?? {}), [errorKey]: true });
+    control.markAsTouched();
+  }
+
+  private clearControlError(controlName: 'levelOrder' | 'name' | 'description', errorKey: string) {
+    const control = this.jobLevelForm.controls[controlName];
+    const errors = control.errors;
+    if (!errors?.[errorKey]) return;
+
+    const { [errorKey]: _removed, ...remainingErrors } = errors;
+    control.setErrors(Object.keys(remainingErrors).length ? remainingErrors : null);
+  }
+
   onCancel() {
     this.isFormSubmitted.set(false);
     this.jobLevelForm.reset({

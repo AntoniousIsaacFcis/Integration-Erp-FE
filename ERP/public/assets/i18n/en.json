@@ -181,6 +181,7 @@
     "REQUIRED_FIELD": "This field is required",
     "INVALID_EMAIL": "Invalid email",
     "MIN_LENGTH": "Minimum 6 characters",
+    "MAX_LENGTH": "Maximum length exceeded",
     "LOGGING_IN": "Logging in...",
     "SEND_RESET_LINK": "Send Reset Link",
     "SENDING": "Sending...",
@@ -560,7 +561,11 @@
     "INVALID_NATIONAL_ID_FORMAT": "National ID must contain 12-14 digits",
     "MIN_VALUE": "Value must be 0 or greater",
     "REQUIRED_FILES": "At least one file must be uploaded",
-    "INVALID_TIME_RANGE": "End time must be after start time"
+    "INVALID_TIME_RANGE": "End time must be after start time",
+    "DUPLICATE_VALUE": "This value is already used",
+    "DUPLICATE_SORT_ORDER": "Sort order is already used",
+    "LEVEL_NAME_MIN_LENGTH": "Level name must be at least 3 characters",
+    "LEVEL_NAME_MAX_LENGTH": "Level name must not exceed 100 characters"
   },
   "errors": {
     "failed_to_load_permissions": "Failed to load permissions. Please try again."

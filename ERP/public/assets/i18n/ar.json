@@ -195,6 +195,7 @@
     "REQUIRED_FIELD": "هذا الحقل مطلوب",
     "INVALID_EMAIL": "بريد إلكتروني غير صحيح",
     "MIN_LENGTH": "الحد الأدنى 6 احرف",
+    "MAX_LENGTH": "تم تجاوز الحد الأقصى للأحرف",
     "LOGGING_IN": "جاري تسجيل الدخول",
     "SEND_RESET_LINK": "إرسال رابط التعيين",
     "SENDING": "جاري الإرسال...",
@@ -299,6 +300,8 @@
   "PLACEHOLDER": {
     "GENERAL_MANAGER": "مدير عام",
     "NIGHT": "ليلي",
+    "ENTER_NAME":"مدير عام",
+    "ENTER_NUMBER":"ادخل رقم لترتيب الوظيفة في الهرم الوظيفي",
     "ENTER_EMAIL": "أدخل البريد الإلكتروني",
     "ENTER_PHONE": "أدخل رقم الهاتف",
     "ENTER_ADDRESS": "أدخل العنوان",
@@ -642,7 +645,11 @@
     "START_DATE_MUST_BE_BEFORE_END_DATE": "تاريخ البداية يجب أن يكون قبل تاريخ النهاية",
     "MAX_WORDS": "الحد الاقصي للكلمات",
     "INVALID_FILE": "ملف غير صالح",
-    "INVALID_FILE_OR_SIZE": "خطا في الصيغة او حجم الملف"
+    "INVALID_FILE_OR_SIZE": "خطا في الصيغة او حجم الملف",
+    "DUPLICATE_VALUE": "هذه القيمة مستخدمة من قبل",
+    "DUPLICATE_SORT_ORDER": "ترتيب الفرز مستخدم من قبل",
+    "LEVEL_NAME_MIN_LENGTH": "اسم المستوى يجب ألا يقل عن 3 أحرف",
+    "LEVEL_NAME_MAX_LENGTH": "اسم المستوى يجب ألا يتجاوز 100 حرف"
   },
   "errors": {
     "failed_to_load_permissions": "فشل تحميل الصلاحيات. حاول مرة أخرى."

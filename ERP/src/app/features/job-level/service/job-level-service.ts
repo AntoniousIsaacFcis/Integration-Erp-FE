@@ -50,6 +50,7 @@ export class JobLevelService {
     return {
       data: response.items.map((item) => ({
         id: item.id,
+        levelOrder: item.levelOrder,
         nameAr: item.name,
         employeeCount: 0,
         departmentId: '',
@@ -91,6 +92,14 @@ export class JobLevelService {
 
   create(data: ICreateOrganizationLevel) {
     return this.http.post<IOrganizationLevel>(this.API_URL, data);
+  }
+
+  isLevelOrderTaken(levelOrder: number) {
+    return this.http
+      .get<IJobLevelApiListResponse>(this.API_URL, {
+        params: { page: 1, limit: 10000 },
+      })
+      .pipe(map((response) => response.items.some((item) => item.levelOrder === levelOrder)));
   }
 }
 

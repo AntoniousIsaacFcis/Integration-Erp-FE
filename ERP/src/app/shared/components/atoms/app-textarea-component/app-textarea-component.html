@@ -6,6 +6,17 @@
   }
   <textarea [formControl]="control()"
     [placeholder]="t(placeholder())"
-    class="w-full min-h-[120px] p-md bg-white border border-[#0000001A] rounded-md outline-none transition-all text-sm text-start text-black placeholder:text-black/20 placeholder:font-normal focus:border-primary  focus:ring-1 focus:ring-primary/20">
+    class="w-full min-h-[120px] p-md bg-white border border-[#0000001A] rounded-md outline-none transition-all text-sm text-start text-black placeholder:text-black/20 placeholder:font-normal focus:border-primary  focus:ring-1 focus:ring-primary/20"
+    [class.!border-error]="showErrors() && control().invalid"
+    [class.!border-2]="showErrors() && control().invalid">
   </textarea>
+
+  @if (errorKey; as key) {
+    <div class="flex items-center gap-xs text-error animate-fade-in">
+      <ng-icon name="lucideOctagonX" size="16" strokeWidth="3"></ng-icon>
+      <span class="text-xs font-medium text-start">
+        {{ t(key) }}
+      </span>
+    </div>
+  }
 </div>

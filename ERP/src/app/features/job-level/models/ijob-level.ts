@@ -1,5 +1,6 @@
 export interface IJobLevel {
   id?: string;
+  levelOrder?: number;
   nameAr: string;
   employeeCount: number;
   departmentId: string;
