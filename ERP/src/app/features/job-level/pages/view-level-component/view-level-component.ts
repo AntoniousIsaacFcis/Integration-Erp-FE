@@ -9,6 +9,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { of } from 'rxjs';
 import { JobLevelService } from '@features/job-level/service/job-level-service';
 import { Router } from '@angular/router';
+import { NotificationService } from '@core/services/notification-service';
 import { ActionBtnComponent } from "@shared/components/molecules/action-btn-component/action-btn-component";
 import { StatusBadgeComponent } from "@shared/components/molecules/status-badge-component/status-badge-component";
 import { HasPermissionDirective } from '@shared/directives/has-permission-directive';
@@ -27,6 +28,7 @@ export class ViewLevelComponent {
   private readonly platformId = inject(PLATFORM_ID);
   private readonly jobService = inject(JobLevelService);
   private readonly router = inject(Router);
+  private readonly notificationService = inject(NotificationService);
 
   statusOptions = [
     { value: '', label: 'FILTERS.ALL' },
@@ -76,6 +78,42 @@ export class ViewLevelComponent {
 
   handleEdit(id: string) {
     this.router.navigate(['/job-levels/edit', id]);
+  }
+
+  handleDelete(id: string) {
+    this.notificationService.show({
+      type: 'warning',
+      title: 'JOB_LEVEL.DELETE_JOB_LEVEL',
+      message: 'COMMON.MESSAGES.CONFIRM_DELETE',
+      isModal: true,
+      actionLabel: 'COMMON.YES',
+      cancelLabel: 'COMMON.NO',
+      onAction: () => this.deleteLevel(id),
+    });
+  }
+
+  private deleteLevel(id: string) {
+    this.jobService.delete(id).subscribe({
+      next: () => {
+        this.notificationService.show({
+          type: 'success',
+          title: 'COMMON.MESSAGES.DELETED_SUCCESSFULLY',
+          message: 'COMMON.MESSAGES.SUCCESS_MESSAGE',
+          isModal: false,
+          actionLabel: 'COMMON.CONFIRM',
+        });
+        this.levelsResource.reload();
+      },
+      error: () => {
+        this.notificationService.show({
+          type: 'error',
+          title: 'COMMON.MESSAGES.OPERATION_FAILED',
+          message: 'COMMON.MESSAGES.PLEASE_TRY_AGAIN',
+          isModal: false,
+          actionLabel: 'COMMON.CONFIRM',
+        });
+      },
+    });
   }
 
   totalItems = computed(() => this.levelsResource.value()?.total ?? 0);

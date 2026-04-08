@@ -30,8 +30,17 @@
           }
         </div>
 
-        <div class="mt-auto mb-8 w-full px-[33px]">
-          <button (click)="notificationService.dismiss(notif.id)"
+        <div class="mt-auto mb-8 w-full px-[33px] flex gap-3">
+          @if (notif.cancelLabel) {
+          <button (click)="handleCancel(notif)"
+            class="w-full h-[30px] bg-white text-[#537C0F] border border-[#537C0F] rounded-[8px] flex items-center justify-center">
+            <span class="text-[12px] font-medium font-arabic">
+              {{ t(notif.cancelLabel) }}
+            </span>
+          </button>
+          }
+
+          <button (click)="handleAction(notif)"
             class="w-full h-[30px] bg-[#537C0F] text-white rounded-[8px] flex items-center justify-center">
             <span class="text-[12px] font-medium font-arabic text-white">
               {{ t(notif.actionLabel) || 'موافق' }}

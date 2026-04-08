@@ -7,4 +7,7 @@ export interface INotification {
   message?: string;
   isModal?: boolean;
   actionLabel: string;
+  cancelLabel?: string;
+  onAction?: () => void;
+  onCancel?: () => void;
 }

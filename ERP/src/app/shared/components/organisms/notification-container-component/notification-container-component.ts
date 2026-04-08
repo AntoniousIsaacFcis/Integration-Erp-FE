@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { INotification } from '@core/models/inotification';
 import { NotificationService } from '@core/services/notification-service';
 import { TranslocoModule } from '@jsverse/transloco';
 import { NgIcon, provideIcons } from '@ng-icons/core';
@@ -14,6 +15,16 @@ import { lucideAlertCircle, lucideCheck,lucideInfo, lucideX } from '@ng-icons/lu
 })
 export class NotificationContainerComponent {
 protected notificationService = inject(NotificationService);
+
+handleAction(notification: INotification) {
+  this.notificationService.dismiss(notification.id);
+  notification.onAction?.();
+}
+
+handleCancel(notification: INotification) {
+  this.notificationService.dismiss(notification.id);
+  notification.onCancel?.();
+}
 
 iconName(type: string) {
     const icons: Record<string, string> = {

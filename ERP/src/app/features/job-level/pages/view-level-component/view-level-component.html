@@ -51,6 +51,7 @@
                 class="flex size-[30px] items-center justify-center rounded-full bg-[#0000001A] transition-colors hover:bg-[#00000033]"><ng-icon
                   name="lucidePencil" size="16px" color="black" /></button>
               <button *appHasPermission="'Organization.Levels.Create'"
+                (click)="handleDelete(level.id!)"
                 class="flex size-[30px] items-center justify-center rounded-full bg-[#0000001A] transition-colors hover:bg-[#00000033]"><ng-icon
                   name="lucideTrash2" size="16px" color="#F40552" /></button>
                   <button (click)="handleView(level.id!)"

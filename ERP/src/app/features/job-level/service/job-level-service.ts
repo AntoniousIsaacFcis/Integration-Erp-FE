@@ -103,6 +103,10 @@ export class JobLevelService {
     return this.http.put<IOrganizationLevel>(`${this.API_URL}/${id}`, data);
   }
 
+  delete(id: string) {
+    return this.http.delete<void>(`${this.API_URL}/${id}`);
+  }
+
   isLevelOrderTaken(levelOrder: number, excludedId?: string) {
     return this.http
       .get<IJobLevelApiListResponse>(this.API_URL, {
