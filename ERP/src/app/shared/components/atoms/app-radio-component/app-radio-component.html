@@ -10,10 +10,10 @@
           <label class="flex items-center gap-[8px] cursor-pointer group">
             <div class="relative flex items-center justify-center">
               <input type="radio" [value]="option.value" [formControl]="control()"
-                class="peer appearance-none w-[20px] h-[20px] border border-[#0000001A] rounded-full checked:border-primary transition-all cursor-pointer">
-              <div class="absolute w-[10px] h-[10px] rounded-full scale-0 peer-checked:scale-100 peer-checked:bg-primary transition-transform"></div>
+                class="peer appearance-none w-[20px] h-[20px] border border-[#0000001A] rounded-full checked:border-primary transition-all cursor-pointer disabled:border-gray-300 disabled:bg-gray-50 disabled:cursor-not-allowed">
+              <div class="absolute w-[10px] h-[10px] rounded-full scale-0 peer-checked:scale-100 peer-checked:bg-primary transition-transform peer-disabled:peer-checked:bg-gray-400 transition-transform"></div>
             </div>
-            <span class="text-[16px] font-medium text-black transition-colors group-hover:text-primary">
+            <span class="text-[16px] font-medium text-black transition-colors group-hover:text-primary peer-disabled:cursor-not-allowed peer-disabled:group-hover:text-gray-400">
               {{ t(option.label) }}
             </span>
           </label>
