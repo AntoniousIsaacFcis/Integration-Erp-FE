@@ -17,6 +17,7 @@ import { Router } from '@angular/router';
 import { AppValidators } from '@shared/validators/word-limit.validator';
 import { AppInputComponent } from '@shared/components/atoms/app-input-component/app-input-component';
 import { AppTextareaComponent } from '@shared/components/atoms/app-textarea-component/app-textarea-component';
+import { AppRadioComponent } from '@shared/components/atoms/app-radio-component/app-radio-component';
 import { ICreateOrganizationLevel } from '@features/organization/models/iorganization-level';
 import { EMPTY, switchMap } from 'rxjs';
 
@@ -30,6 +31,7 @@ import { EMPTY, switchMap } from 'rxjs';
     FormCancelButtonComponent,
     AppInputComponent,
     AppTextareaComponent,
+    AppRadioComponent,
   ],
   templateUrl: './create-level-component.html',
   styleUrl: './create-level-component.css',
@@ -51,6 +53,7 @@ export class CreateLevelComponent {
       Validators.minLength(3),
       Validators.maxLength(100),
     ]),
+    isActive: this.fb.nonNullable.control(true, [Validators.required]),
     description: this.fb.nonNullable.control('', [AppValidators.wordLimit(250)]),
   });
   // 1. Capture the description value as a signal
@@ -97,6 +100,7 @@ export class CreateLevelComponent {
     const payload: ICreateOrganizationLevel = {
       levelOrder: Number(formData.levelOrder),
       name: formData.name.trim(),
+      isActive: formData.isActive,
       ...(description ? { description } : {}),
     };
 
@@ -165,6 +169,7 @@ export class CreateLevelComponent {
     this.jobLevelForm.reset({
       levelOrder: null,
       name: '',
+      isActive: true,
       description: '',
     });
   }

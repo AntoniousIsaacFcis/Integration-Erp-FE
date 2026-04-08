@@ -13,6 +13,7 @@ import { JobLevelService } from '@features/job-level/service/job-level-service';
 import { IUpdateOrganizationLevel } from '@features/organization/models/iorganization-level';
 import { TranslocoModule } from '@jsverse/transloco';
 import { AppInputComponent } from '@shared/components/atoms/app-input-component/app-input-component';
+import { AppRadioComponent } from '@shared/components/atoms/app-radio-component/app-radio-component';
 import { AppTextareaComponent } from '@shared/components/atoms/app-textarea-component/app-textarea-component';
 import { FormCancelButtonComponent } from '@shared/components/molecules/form-cancel-button-component/form-cancel-button-component';
 import { FormSaveButtonComponent } from '@shared/components/molecules/form-save-button-component/form-save-button-component';
@@ -30,6 +31,7 @@ import { EMPTY, switchMap } from 'rxjs';
     FormSaveButtonComponent,
     FormCancelButtonComponent,
     AppInputComponent,
+    AppRadioComponent,
     AppTextareaComponent,
   ],
   templateUrl: './edit-level-component.html',
@@ -56,6 +58,7 @@ export class EditLevelComponent implements OnInit {
       Validators.minLength(3),
       Validators.maxLength(100),
     ]),
+    isActive: this.fb.nonNullable.control(true, [Validators.required]),
     description: this.fb.nonNullable.control('', [AppValidators.wordLimit(250)]),
   });
 
@@ -95,6 +98,7 @@ export class EditLevelComponent implements OnInit {
           this.jobLevelForm.patchValue({
             levelOrder: level.levelOrder,
             name: level.name,
+            isActive: level.isActive !== false,
             description: level.description ?? '',
           });
           this.isLoading.set(false);
@@ -127,6 +131,7 @@ export class EditLevelComponent implements OnInit {
     const payload: IUpdateOrganizationLevel = {
       levelOrder: Number(formData.levelOrder),
       name: formData.name.trim(),
+      isActive: formData.isActive,
       ...(description ? { description } : {}),
     };
 

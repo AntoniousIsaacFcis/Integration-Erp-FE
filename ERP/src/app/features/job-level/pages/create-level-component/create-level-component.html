@@ -27,6 +27,16 @@
         type="number"
       />
 
+      <app-app-radio-component
+        [label]="t('JOB_LEVEL.STATUS')"
+        [required]="true"
+        [control]="jobLevelForm.controls.isActive"
+        [options]="[
+          { label: 'COMMON.ACTIVE', value: true },
+          { label: 'COMMON.INACTIVE', value: false }
+        ]"
+      />
+
       <div class="col-span-2">
         <app-app-textarea-component
           [label]="t('JOB_LEVEL.DESCRIPTION')"

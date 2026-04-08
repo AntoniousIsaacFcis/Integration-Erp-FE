@@ -3,6 +3,7 @@ export interface IOrganizationLevel {
   levelOrder: number;
   name: string;
   description?: string;
+  isActive?: boolean;
   // Audit properties (Read-only on Frontend)
   creationTime?: string;
   creatorId?: string;

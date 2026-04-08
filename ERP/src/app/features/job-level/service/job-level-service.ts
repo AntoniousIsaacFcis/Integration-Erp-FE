@@ -92,7 +92,7 @@ export class JobLevelService {
   // }
 
   create(data: ICreateOrganizationLevel) {
-    return this.http.post<IOrganizationLevel>(this.API_URL, data);
+    return this.http.post<IOrganizationLevel>(this.API_URL, this.withNormalizedActiveState(data));
   }
 
   getById(id: string) {
@@ -100,7 +100,10 @@ export class JobLevelService {
   }
 
   update(id: string, data: IUpdateOrganizationLevel) {
-    return this.http.put<IOrganizationLevel>(`${this.API_URL}/${id}`, data);
+    return this.http.put<IOrganizationLevel>(
+      `${this.API_URL}/${id}`,
+      this.withNormalizedActiveState(data),
+    );
   }
 
   delete(id: string) {
@@ -117,6 +120,15 @@ export class JobLevelService {
           response.items.some((item) => item.levelOrder === levelOrder && item.id !== excludedId),
         ),
       );
+  }
+
+  private withNormalizedActiveState<T extends ICreateOrganizationLevel | IUpdateOrganizationLevel>(
+    data: T,
+  ): T {
+    return {
+      ...data,
+      ...(typeof data.isActive === 'boolean' ? { isActive: data.isActive } : {}),
+    };
   }
 }
 
