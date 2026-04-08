@@ -71,7 +71,7 @@ export class ViewLevelComponent {
   }
 
   handleView(id: string) {
-    this.router.navigate(['/attendance/permissions/details', id]);
+    this.router.navigate(['/job-levels/preview', id]);
   }
 
   handleEdit(id: string) {

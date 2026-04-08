@@ -662,6 +662,7 @@
     "EMPLOYEE_COUNT": "عدد الموظفين",
     "ADD_JOB_LEVEL": "إضافة مستوى وظيفي",
     "EDIT_JOB_LEVEL": " تعديل المستوى الوظيفي",
+    "PREVIEW_JOB_LEVEL": "عرض المستوى الوظيفي",
     "DELETE_JOB_LEVEL": "حذف المستوى الوظيفي",
     "LEVEL_MAPPING": "ربط المستويات",
     "MAP_TO_DESIGNATION": "ربط بمسمى وظيفي",

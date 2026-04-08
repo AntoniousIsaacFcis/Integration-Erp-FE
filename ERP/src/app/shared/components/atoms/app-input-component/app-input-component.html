@@ -14,7 +14,7 @@
     <input [formControl]="control()" [type]="isPassword() && !showPassword() ? 'password' : type()"
       [placeholder]="t(placeholder())" [name]="name()"
   [autocomplete]="autocomplete()"
-      class="w-full h-[44px] px-md  bg-white border border-[#0000001A] rounded-md outline-none transition-all text-sm text-start text-black placeholder:text-black/20 placeholder:font-normal focus:border-primary  focus:ring-1 focus:ring-primary/20"
+      class="w-full h-[44px] px-md  bg-white border border-[#0000001A] rounded-md outline-none transition-all text-sm text-start text-black placeholder:text-black/20 placeholder:font-normal focus:border-primary  focus:ring-1 focus:ring-primary/20  disabled:opacity-70 disabled:cursor-not-allowed"
       [class.!border-error]="showErrors() && control().invalid"
       [class.!border-2]="showErrors() && control().invalid" [class.pe-xl]="isPassword()" />
 
