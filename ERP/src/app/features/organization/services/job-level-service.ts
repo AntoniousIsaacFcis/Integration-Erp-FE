@@ -16,22 +16,25 @@ import { map, catchError } from 'rxjs';
 export class JobLevelService {
   private http = inject(HttpClient);
   // private readonly API_URL = `${environment.baseUrl}/api/job-levels`; //for msw
-  private readonly API_URL = `${environment.baseUrl}/api/organization/organization-level`; //for real api
+  private readonly API_URL = `${environment.baseUrl}/api/organization/employee-level`;
 
   getLevels(params: GetLevelsParams) {
     const normalizedSearch = params.search?.trim();
 
     // Map frontend format to backend format
     const queryParams: ApiQueryParams = {
-      page: params.page,
-      limit: params.limit,
+      skipCount: (params.page - 1) * params.limit,
+      maxResultCount: params.limit,
       ...(normalizedSearch && {
-        searchTerm: normalizedSearch,
-        search: normalizedSearch,
-        q: normalizedSearch,
         filter: normalizedSearch,
+        search: normalizedSearch,
+        searchTerm: normalizedSearch,
+        q: normalizedSearch,
       }),
-      ...(params.status && { isActive: params.status === 'active' }),
+      ...(params.status && {
+        status: params.status,
+        isActive: params.status === 'active',
+      }),
     };
 
     return this.http.get<IEmployeeLevelApiListResponse>(this.API_URL, { params: queryParams }).pipe(
@@ -93,7 +96,7 @@ export class JobLevelService {
   isLevelOrderTaken(levelOrder: number, excludedId?: string) {
     return this.http
       .get<IEmployeeLevelApiListResponse>(this.API_URL, {
-        params: { page: 1, limit: 10000 },
+        params: { skipCount: 0, maxResultCount: 1000 },
       })
       .pipe(
         map((response) =>
@@ -120,11 +123,12 @@ type GetLevelsParams = {
 };
 
 type ApiQueryParams = {
-  page: number;
-  limit: number;
-  searchTerm?: string;
-  search?: string;
-  q?: string;
+  skipCount: number;
+  maxResultCount: number;
   filter?: string;
+  search?: string;
+  searchTerm?: string;
+  q?: string;
+  status?: string;
   isActive?: boolean;
 };
