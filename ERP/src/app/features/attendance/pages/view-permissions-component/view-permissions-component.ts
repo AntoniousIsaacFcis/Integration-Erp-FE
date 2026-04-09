@@ -2,7 +2,7 @@ import { DatePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
-import { PermissionService } from '@features/shifts/services/permission-service';
+import { PermissionService } from '@features/attendance/services/permission-service';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { lucideEye, lucidePencil, lucidePlusCircle, lucideTrash2 } from '@ng-icons/lucide';
 import { AppBaseTableComponent } from "@shared/components/organisms/app-base-table-component/app-base-table-component";
@@ -64,7 +64,7 @@ private permissionService = inject(PermissionService);
   ];
 
   handleAddPermission() {
-    this.router.navigate(['/shifts/add-permission']);
+    this.router.navigate(['/attendance/add-permission']);
   }
 
   handleEdit(id: string) {

@@ -3,13 +3,13 @@ import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@a
 import { rxResource } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslationService } from '@core/services/translation-service';
-import { AttendanceService } from '@features/shifts/services/attendance-service';
+import { AttendanceService } from '@features/attendance/services/attendance-service';
 import { TranslocoModule } from '@jsverse/transloco';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { AppBaseTableComponent } from "@shared/components/organisms/app-base-table-component/app-base-table-component";
 import { AppDateInputComponent } from "@shared/components/atoms/app-date-input-component/app-date-input-component";
 import { ActionBtnComponent } from "@shared/components/molecules/action-btn-component/action-btn-component";
-import { ISpecialShiftListItem } from '@features/shifts/models/iattendance';
+import { ISpecialShiftListItem } from '@features/attendance/models/iattendance';
 import { DateFilterComponent } from "@shared/components/molecules/date-filter-component/date-filter-component";
 import { lucideCirclePlus, lucidePencil, lucidePlus, lucideTrash2 } from '@ng-icons/lucide';
 
@@ -60,11 +60,11 @@ pageSize = signal(10);
   });
 
   handleCreateNavigation() {
-    this.router.navigate(['/shifts/special-create']);
+    this.router.navigate(['/attendance/special-create']);
   }
 
   handleEdit(id: string) {
-    this.router.navigate(['/shifts/special/special-create', id]);
+    this.router.navigate(['/attendance/special/special-create', id]);
   }
 
   handleDelete(id: string) {

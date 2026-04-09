@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '@env/environment.development';
-import { IVacation, IVacationResponse, IVacationStats } from '@features/vacations/models/ivacation';
+import { IVacation, IVacationResponse, IVacationStats } from '@features/attendance/models/ivacation';
 import { ISelectOption } from '@shared/components/atoms/select-btn-component/select-btn-component';
 import { Observable } from 'rxjs';
 import { IAttendanceDay, IAttendanceResponse, IEditAttendanceDay, IShift, IShiftListResponse, ISpecialShiftListResponse, IUpdateAttendancePayload } from '../models/iattendance';

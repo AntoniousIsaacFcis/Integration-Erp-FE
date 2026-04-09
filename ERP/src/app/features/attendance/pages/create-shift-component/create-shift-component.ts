@@ -5,14 +5,14 @@ import { SelectBtnComponent } from "@shared/components/atoms/select-btn-componen
 import { FormSaveButtonComponent } from "@shared/components/molecules/form-save-button-component/form-save-button-component";
 import { FormCancelButtonComponent } from "@shared/components/molecules/form-cancel-button-component/form-cancel-button-component";
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { AttendanceService } from '@features/shifts/services/attendance-service';
+import { AttendanceService } from '@features/attendance/services/attendance-service';
 import { NotificationService } from '@core/services/notification-service';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { of } from 'rxjs';
 import { TranslocoModule } from '@jsverse/transloco';
 import { Router } from '@angular/router';
 import { AppSelectComponent } from "@shared/components/atoms/app-select-component/app-select-component";
-import { WorkDaysGridComponent } from "@features/shifts/components/work-days-grid-component/work-days-grid-component";
+import { WorkDaysGridComponent } from "@features/attendance/components/work-days-grid-component/work-days-grid-component";
 import { TimeInputComponent } from "@shared/components/atoms/time-input-component/time-input-component";
 import { timeRangeValidator } from '@shared/validators/time-range.validator';
 
@@ -87,7 +87,7 @@ export class CreateShiftComponent {
           title: 'SHIFTS.SUCCESS_TITLE',
           actionLabel: 'COMMON.OK'
         });
-        this.router.navigate(['/shifts']);
+        this.router.navigate(['/attendance']);
       }
     });
   }
@@ -104,6 +104,6 @@ export class CreateShiftComponent {
   }
 
   onCancel() {
-    this.router.navigate(['/shifts']);
+    this.router.navigate(['/attendance']);
   }
 }

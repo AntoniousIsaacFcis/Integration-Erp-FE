@@ -119,9 +119,54 @@ export const routes: Routes = [
         redirectTo: 'organization/employment-types',
       },
       {
-        path: 'shifts',
+        path: 'attendance',
         // canMatch: [() => inject(AuthService).hasPermission('MyProject.employment-types')],
-        loadChildren: () => import('./features/shifts/attendance.route').then(m => m.ATTENDANCE_ROUTES),
+        loadChildren: () => import('./features/attendance/attendance.route').then(m => m.ATTENDANCE_ROUTES),
+      },
+      {
+        path: 'shifts',
+        pathMatch: 'full',
+        redirectTo: 'attendance',
+      },
+      {
+        path: 'shifts/view',
+        redirectTo: 'attendance/view',
+      },
+      {
+        path: 'shifts/create',
+        redirectTo: 'attendance/create',
+      },
+      {
+        path: 'shifts/special',
+        redirectTo: 'attendance/special',
+      },
+      {
+        path: 'shifts/special-create',
+        redirectTo: 'attendance/special-create',
+      },
+      {
+        path: 'shifts/edit-attendance-day',
+        redirectTo: 'attendance/edit-attendance-day',
+      },
+      {
+        path: 'shifts/view-attendance-days',
+        redirectTo: 'attendance/view-attendance-days',
+      },
+      {
+        path: 'shifts/attendance-log-details/:id',
+        redirectTo: 'attendance/attendance-log-details/:id',
+      },
+      {
+        path: 'shifts/add-permission',
+        redirectTo: 'attendance/add-permission',
+      },
+      {
+        path: 'shifts/view-permissions',
+        redirectTo: 'attendance/view-permissions',
+      },
+      {
+        path: 'shifts',
+        redirectTo: 'attendance',
       },
        {
         path: 'roles',

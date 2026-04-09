@@ -5,8 +5,8 @@ import { AppDateInputComponent } from "@shared/components/atoms/app-date-input-c
 import { AppSelectComponent } from "@shared/components/atoms/app-select-component/app-select-component";
 import { FormSaveButtonComponent } from "@shared/components/molecules/form-save-button-component/form-save-button-component";
 import { FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ICustomShiftForm } from '@features/shifts/models/iattendance';
-import { AttendanceService } from '@features/shifts/services/attendance-service';
+import { ICustomShiftForm } from '@features/attendance/models/iattendance';
+import { AttendanceService } from '@features/attendance/services/attendance-service';
 import { rxResource, toSignal } from '@angular/core/rxjs-interop';
 import { of } from 'rxjs';
 import { TranslocoModule } from '@jsverse/transloco';
@@ -64,7 +64,7 @@ private fb = inject(FormBuilder);
 
       this.saveTrigger.set(payload);
 
-      this.router.navigate(['shifts/special']);
+      this.router.navigate(['attendance/special']);
     }
   }
 
@@ -87,6 +87,6 @@ private fb = inject(FormBuilder);
   }
 
   onCancel() {
-    this.router.navigate(['shifts/special']);
+    this.router.navigate(['attendance/special']);
   }
 }

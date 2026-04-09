@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, effect, inject, 
 import { rxResource } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AttendanceService } from '@features/shifts/services/attendance-service';
+import { AttendanceService } from '@features/attendance/services/attendance-service';
 import { TranslocoModule } from '@jsverse/transloco';
 import { FormContainerComponent } from "@shared/components/organisms/form-container-component/form-container-component";
 import { AppInputComponent } from "@shared/components/atoms/app-input-component/app-input-component";
@@ -89,6 +89,6 @@ export class AttendanceLogDetailsComponent {
   }
 
   onBack() {
-    this.router.navigate(['/shifts/view-attendance-days']);
+    this.router.navigate(['/attendance/view-attendance-days']);
   }
 }

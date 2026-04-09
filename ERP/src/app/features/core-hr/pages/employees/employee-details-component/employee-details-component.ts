@@ -11,11 +11,11 @@ import { ISelectOption, SelectBtnComponent } from '@shared/components/atoms/sele
 import { ActivatedRoute, Router } from '@angular/router';
 import { MOCK_ATTENDANCE_DATA } from '@mocks/data/attendance.data';
 import { AppBaseTableComponent } from "@shared/components/organisms/app-base-table-component/app-base-table-component";
-import { IVacationResponse, VacationStatus } from '@features/vacations/models/ivacation';
+import { IVacationResponse, VacationStatus } from '@features/attendance/models/ivacation';
 import { DatePipe } from '@angular/common';
 import { SalaryService } from '@features/salary/services/salary-service';
 import { MOCK_SALARY_STORE } from '@mocks/data/salary.data';
-import { AttendanceService } from '@features/shifts/services/attendance-service';
+import { AttendanceService } from '@features/attendance/services/attendance-service';
 
 interface YearFilterSource {
   url: string;

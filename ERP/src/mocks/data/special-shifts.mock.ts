@@ -1,4 +1,4 @@
-import { ISpecialShiftListItem } from "@features/shifts/models/iattendance";
+import { ISpecialShiftListItem } from "@features/attendance/models/iattendance";
 
 export const SPECIAL_SHIFTS_MOCK: ISpecialShiftListItem[] = [
   {

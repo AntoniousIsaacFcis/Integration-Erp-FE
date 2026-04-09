@@ -2,7 +2,7 @@ import { DatePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
-import { AttendanceService } from '@features/shifts/services/attendance-service';
+import { AttendanceService } from '@features/attendance/services/attendance-service';
 import { TranslocoModule } from '@jsverse/transloco';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { lucideCheckCircle, lucideCloudUpload, lucideEye, lucidePencil } from '@ng-icons/lucide';
@@ -90,14 +90,14 @@ export class ViewAttendanceDaysComponent {
   }
 
   handleDailyRegistration() {
-    this.router.navigate(['/shifts/edit-attendance-day']);
+    this.router.navigate(['/attendance/edit-attendance-day']);
   }
 
   handleViewDetails(id: string) {
-    this.router.navigate(['/shifts/attendance-log-details', id]);
+    this.router.navigate(['/attendance/attendance-log-details', id]);
   }
 
   handleEdit(id: string) {
-    this.router.navigate(['/shifts/attendance/edit', id]);
+    this.router.navigate(['/attendance/attendance/edit', id]);
   }
 }

@@ -37,16 +37,16 @@ export const MENU_ITEMS: INavItem[] = [
   {
     id: '6',
     label: 'MENU.SHIFT_MANAGEMENT',
-    path: '/shifts',
+    path: '/attendance',
     icon: 'lucideCalendar',
     children: [
-      { id: '6-1', label: 'MENU.VIEW_SHIFTS', path: '/shifts/view', icon: 'lucideCalendarDays' },
-      { id: '6-2', label: 'MENU.CREATE_SHIFT', path: '/shifts/create', icon: 'lucidePlus' },
-      { id: '6-3', label: 'MENU.VIEW_SPECIAL_SHIFTS', path: '/shifts/special', icon: 'lucideUsers' },
-      { id: '6-4', label: 'MENU.CREATE_SPECIAL_SHIFT', path: '/shifts/special-create', icon: 'lucideBarChart3' }, { id: '6-5', label: 'MENU.EDIT_ATTENDANCE_DAY', path: '/shifts/edit-attendance-day', icon: 'lucidePencil' },
-      { id: '6-6', label: 'MENU.VIEW_ATTENDANCE_DAYS', path: '/shifts/view-attendance-days', icon: 'lucideCheckCircle' },
-      { id: '6-7', label: 'MENU.ADD_ATTENDANCE_PERMISSION', path: '/shifts/add-permission', icon: 'lucideCheckSquare' },
-      { id: '6-8', label: 'MENU.VIEW_PERMISSIONS', path: '/shifts/view-permissions', icon: 'lucideShieldCheck' }
+      { id: '6-1', label: 'MENU.VIEW_SHIFTS', path: '/attendance/view', icon: 'lucideCalendarDays' },
+      { id: '6-2', label: 'MENU.CREATE_SHIFT', path: '/attendance/create', icon: 'lucidePlus' },
+      { id: '6-3', label: 'MENU.VIEW_SPECIAL_SHIFTS', path: '/attendance/special', icon: 'lucideUsers' },
+      { id: '6-4', label: 'MENU.CREATE_SPECIAL_SHIFT', path: '/attendance/special-create', icon: 'lucideBarChart3' }, { id: '6-5', label: 'MENU.EDIT_ATTENDANCE_DAY', path: '/attendance/edit-attendance-day', icon: 'lucidePencil' },
+      { id: '6-6', label: 'MENU.VIEW_ATTENDANCE_DAYS', path: '/attendance/view-attendance-days', icon: 'lucideCheckCircle' },
+      { id: '6-7', label: 'MENU.ADD_ATTENDANCE_PERMISSION', path: '/attendance/add-permission', icon: 'lucideCheckSquare' },
+      { id: '6-8', label: 'MENU.VIEW_PERMISSIONS', path: '/attendance/view-permissions', icon: 'lucideShieldCheck' }
     ]
   },
   {

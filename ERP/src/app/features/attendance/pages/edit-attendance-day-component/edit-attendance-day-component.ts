@@ -2,8 +2,8 @@ import { ChangeDetectionStrategy, Component, computed, effect, inject, signal } 
 import { rxResource } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { IUpdateAttendancePayload } from '@features/shifts/models/iattendance';
-import { AttendanceService } from '@features/shifts/services/attendance-service';
+import { IUpdateAttendancePayload } from '@features/attendance/models/iattendance';
+import { AttendanceService } from '@features/attendance/services/attendance-service';
 import { TranslocoModule } from '@jsverse/transloco';
 import { AppInputComponent } from '@shared/components/atoms/app-input-component/app-input-component';
 import { AppSelectComponent } from '@shared/components/atoms/app-select-component/app-select-component';
@@ -95,13 +95,13 @@ export class EditAttendanceDayComponent {
 
       this.updateTrigger.set(payload);
 
-      this.router.navigate(['/shifts/view-attendance-days']);
+      this.router.navigate(['/attendance/view-attendance-days']);
     } else {
       this.attendanceForm.markAllAsTouched();
     }
   }
 
   onCancel() {
-    this.router.navigate(['/shifts/view-attendance-days']);
+    this.router.navigate(['/attendance/view-attendance-days']);
   }
 }

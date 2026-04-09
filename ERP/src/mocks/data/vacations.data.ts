@@ -1,5 +1,5 @@
 // @core/mocks/data/vacations.data.ts
-import { IVacation, IVacationStats } from '@features/vacations/models/ivacation';
+import { IVacation, IVacationStats } from '@features/attendance/models/ivacation';
 
 const vacationTypes = ['إجازة سنوية', 'إجازة مرضية', 'إجازة باذن', 'إجازة عاطفية'];
 const reasons = ['سفر عائلي', 'وعكة صحية', 'سفر شخصي', 'قضاء وقت مع العائلة', 'زيارة طبية', 'مناسبة عائلية', 'استراحة شخصية', 'مرض مفاجئ'];

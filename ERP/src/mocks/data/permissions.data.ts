@@ -1,4 +1,4 @@
-import { IPermission } from "@features/shifts/models/iattendance";
+import { IPermission } from "@features/attendance/models/iattendance";
 
 export const MOCK_PERMISSIONS: IPermission[] = [
   // Approved (11 items)

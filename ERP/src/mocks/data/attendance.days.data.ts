@@ -1,4 +1,4 @@
-import { IAttendanceLog } from "@features/shifts/models/iattendance";
+import { IAttendanceLog } from "@features/attendance/models/iattendance";
 
 export const MOCK_ATTENDANCE_LOGS: IAttendanceLog[] = [
   {

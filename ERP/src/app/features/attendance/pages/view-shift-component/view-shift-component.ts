@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
-import { AttendanceService } from '@features/shifts/services/attendance-service';
+import { AttendanceService } from '@features/attendance/services/attendance-service';
 import { TranslationService } from '@core/services/translation-service';
 import { TranslocoModule } from '@jsverse/transloco';
 import { NgIcon, provideIcons } from '@ng-icons/core';
@@ -9,7 +9,7 @@ import { lucidePencil, lucideTrash2, lucidePlus, lucideCirclePlus } from '@ng-ic
 import { AppBaseTableComponent } from "@shared/components/organisms/app-base-table-component/app-base-table-component";
 import { ActionBtnComponent } from "@shared/components/molecules/action-btn-component/action-btn-component";
 import { DatePipe } from '@angular/common';
-import { IShift, IShiftListItem } from '@features/shifts/models/iattendance';
+import { IShift, IShiftListItem } from '@features/attendance/models/iattendance';
 import { DateFilterComponent } from "@shared/components/molecules/date-filter-component/date-filter-component";
 import { TableStatusBadgeComponent } from "@shared/components/atoms/table-status-badge-component/table-status-badge-component";
 
@@ -59,11 +59,11 @@ export class ViewShiftComponent {
 
 
   handleCreateNavigation() {
-    this.router.navigate(['/shifts/create']);
+    this.router.navigate(['/attendance/create']);
   }
 
   handleEdit(id: string) {
-    this.router.navigate(['/shifts/details', id]);
+    this.router.navigate(['/attendance/details', id]);
   }
 
   handleDelete(id: string) {

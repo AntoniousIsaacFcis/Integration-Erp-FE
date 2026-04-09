@@ -1,6 +1,6 @@
 import { Component, input, OnInit, signal } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { DayConfig } from '@features/shifts/models/iattendance';
+import { DayConfig } from '@features/attendance/models/iattendance';
 import { TranslocoModule } from '@jsverse/transloco';
 
 @Component({
