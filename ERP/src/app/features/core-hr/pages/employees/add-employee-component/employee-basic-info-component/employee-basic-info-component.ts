@@ -13,7 +13,7 @@ import { startWith } from 'rxjs';
 import { IDocument } from '@shared/models/idocument';
 import { DocumentsComponent } from "@shared/components/organisms/documents-component/documents-component";
 import { fileValidation } from '@shared/validators/file-validation.validator';
-import { JobTitlesService } from '@core/services/job-titles-service';
+import { DesignationsService } from '@features/organization/services/designations-service';
 import { EmploymentTypesService } from '@features/organization/services/employment-types-service';
 
 @Component({
@@ -30,7 +30,7 @@ export class EmployeeBasicInfoComponent {
   private departmentService = inject(DepartmentsService);
   protected nationalitiesService = inject(NationalitiesService);
   protected _employmentTypesService = inject(EmploymentTypesService);
-  protected _jobTitlesService = inject(JobTitlesService);
+  protected _designationsService = inject(DesignationsService);
   phoneRegex = /^\+?([0-9\s\-]{11,15})$/;
 
   constructor() {
@@ -118,8 +118,8 @@ export class EmployeeBasicInfoComponent {
   employmentTypes = this._employmentTypesService.lookupList;
   isLoadingTypes = this._employmentTypesService.lookupResource.isLoading;
 
-  jobTitles = this._jobTitlesService.list;
-  isLoadingJobs = this._jobTitlesService.resource.isLoading;
+  jobTitles = this._designationsService.list;
+  isLoadingJobs = this._designationsService.resource.isLoading;
 
   getControl(name: string): FormControl {
     return this.mainForm.get(name) as FormControl;

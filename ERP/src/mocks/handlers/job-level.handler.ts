@@ -2,7 +2,7 @@
 import { delay, http, HttpResponse } from 'msw';
 import { environment } from '@env/environment.development';
 import { JOB_LEVELS_MOCK_DATA } from '@mocks/data/job-level.data';
-import { IOrganizationLevelTableItem } from '@features/organization/models/iorganization-level';
+import { IEmployeeLevelTableItem } from '@features/organization/models/iemployee-level';
 
 let currentDb = [...JOB_LEVELS_MOCK_DATA];
 
@@ -43,10 +43,10 @@ export const jobLevelHandlers = [
   }),
 
   http.post(`${environment.baseUrl}/api/job-levels`, async ({ request }) => {
-    const payload = (await request.json()) as IOrganizationLevelTableItem;
+    const payload = (await request.json()) as IEmployeeLevelTableItem;
 
     //simulation adding to server
-    const newJobLevel: IOrganizationLevelTableItem = {
+    const newJobLevel: IEmployeeLevelTableItem = {
       ...payload,
       id: (currentDb.length + 1).toString(),
       employeeCount: 1, // default job level

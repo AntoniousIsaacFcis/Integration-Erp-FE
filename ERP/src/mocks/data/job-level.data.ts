@@ -1,6 +1,6 @@
-import { IOrganizationLevelTableItem } from '@features/organization/models/iorganization-level';
+import { IEmployeeLevelTableItem } from '@features/organization/models/iemployee-level';
 
-export const JOB_LEVELS_MOCK_DATA: IOrganizationLevelTableItem[] = [
+export const JOB_LEVELS_MOCK_DATA: IEmployeeLevelTableItem[] = [
   {
     id: '1',
     levelOrder: 1,

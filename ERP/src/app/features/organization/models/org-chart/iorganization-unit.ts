@@ -2,8 +2,8 @@ export interface IOrganizationUnit {
   id: string;         // Guid in C#
   code: string;
   name: string;
-  typeId: string;     // Guid linking to OrganizationType(Company , Branch , Division , Department , Section , Team)
-  levelId: string;    // Guid linking to OrganizationLevel(hierarchy depth/rank)
+  typeId: string;     // Guid linking to OrganizationUnitType: Company, Branch, Division, Department, Section, Team
+  levelId: string;    // Guid linking to OrganizationUnitLevel: org-chart depth/rank
   isActive: boolean;
 
   //Audit Properties

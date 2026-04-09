@@ -1,16 +1,16 @@
-export interface IOrganizationLevel {
-  id: string; // Required for trackBy, editing, and deleting
+export interface IEmployeeLevel {
+  id: string;
   levelOrder: number;
   name: string;
   description?: string;
   isActive?: boolean;
-  // Audit properties (Read-only on Frontend)
+
   creationTime?: string;
   creatorId?: string;
   lastModificationTime?: string;
 }
 
-export interface IOrganizationLevelTableItem {
+export interface IEmployeeLevelTableItem {
   id?: string;
   levelOrder?: number;
   nameAr: string;
@@ -21,14 +21,14 @@ export interface IOrganizationLevelTableItem {
   createdAt?: string;
 }
 
-export interface IOrganizationLevelListResponse {
-  data: IOrganizationLevelTableItem[];
+export interface IEmployeeLevelListResponse {
+  data: IEmployeeLevelTableItem[];
   total: number;
   page: number;
   limit: number;
 }
 
-export interface IOrganizationLevelApiResponse {
+export interface IEmployeeLevelApiResponse {
   levelOrder: number;
   name: string;
   description?: string;
@@ -43,14 +43,14 @@ export interface IOrganizationLevelApiResponse {
   id: string;
 }
 
-export interface IOrganizationLevelApiListResponse {
+export interface IEmployeeLevelApiListResponse {
   totalCount: number;
-  items: IOrganizationLevelApiResponse[];
+  items: IEmployeeLevelApiResponse[];
 }
 
-export type ICreateOrganizationLevel = Omit<
-  IOrganizationLevel,
+export type ICreateEmployeeLevel = Omit<
+  IEmployeeLevel,
   'id' | 'creationTime' | 'creatorId' | 'lastModificationTime'
 >;
 
-export interface IUpdateOrganizationLevel extends ICreateOrganizationLevel {} // id passed via URL param
+export interface IUpdateEmployeeLevel extends ICreateEmployeeLevel {}

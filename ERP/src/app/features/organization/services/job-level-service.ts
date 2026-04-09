@@ -1,12 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import {
-  ICreateOrganizationLevel,
-  IOrganizationLevel,
-  IOrganizationLevelApiListResponse,
-  IOrganizationLevelListResponse,
-  IUpdateOrganizationLevel,
-} from '@features/organization/models/iorganization-level';
+  ICreateEmployeeLevel,
+  IEmployeeLevel,
+  IEmployeeLevelApiListResponse,
+  IEmployeeLevelListResponse,
+  IUpdateEmployeeLevel,
+} from '@features/organization/models/iemployee-level';
 import { environment } from '@env/environment.development';
 import { map, catchError } from 'rxjs';
 
@@ -34,7 +34,7 @@ export class JobLevelService {
       ...(params.status && { isActive: params.status === 'active' }),
     };
 
-    return this.http.get<IOrganizationLevelApiListResponse>(this.API_URL, { params: queryParams }).pipe(
+    return this.http.get<IEmployeeLevelApiListResponse>(this.API_URL, { params: queryParams }).pipe(
       map((response) => this.mapApiResponse(response, params)),
       // Add error handling
       catchError((error) => {
@@ -46,9 +46,9 @@ export class JobLevelService {
 
   // for real api
   private mapApiResponse(
-    response: IOrganizationLevelApiListResponse,
+    response: IEmployeeLevelApiListResponse,
     params: GetLevelsParams,
-  ): IOrganizationLevelListResponse {
+  ): IEmployeeLevelListResponse {
     return {
       data: response.items.map((item) => ({
         id: item.id,
@@ -71,16 +71,16 @@ export class JobLevelService {
     };
   }
 
-  create(data: ICreateOrganizationLevel) {
-    return this.http.post<IOrganizationLevel>(this.API_URL, this.withNormalizedActiveState(data));
+  create(data: ICreateEmployeeLevel) {
+    return this.http.post<IEmployeeLevel>(this.API_URL, this.withNormalizedActiveState(data));
   }
 
   getById(id: string) {
-    return this.http.get<IOrganizationLevel>(`${this.API_URL}/${id}`);
+    return this.http.get<IEmployeeLevel>(`${this.API_URL}/${id}`);
   }
 
-  update(id: string, data: IUpdateOrganizationLevel) {
-    return this.http.put<IOrganizationLevel>(
+  update(id: string, data: IUpdateEmployeeLevel) {
+    return this.http.put<IEmployeeLevel>(
       `${this.API_URL}/${id}`,
       this.withNormalizedActiveState(data),
     );
@@ -92,7 +92,7 @@ export class JobLevelService {
 
   isLevelOrderTaken(levelOrder: number, excludedId?: string) {
     return this.http
-      .get<IOrganizationLevelApiListResponse>(this.API_URL, {
+      .get<IEmployeeLevelApiListResponse>(this.API_URL, {
         params: { page: 1, limit: 10000 },
       })
       .pipe(
@@ -102,7 +102,7 @@ export class JobLevelService {
       );
   }
 
-  private withNormalizedActiveState<T extends ICreateOrganizationLevel | IUpdateOrganizationLevel>(
+  private withNormalizedActiveState<T extends ICreateEmployeeLevel | IUpdateEmployeeLevel>(
     data: T,
   ): T {
     return {

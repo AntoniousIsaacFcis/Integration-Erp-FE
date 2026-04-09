@@ -10,7 +10,7 @@ import {
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { JobLevelService } from '@features/organization/services/job-level-service';
-import { IUpdateOrganizationLevel } from '@features/organization/models/iorganization-level';
+import { IUpdateEmployeeLevel } from '@features/organization/models/iemployee-level';
 import { TranslocoModule } from '@jsverse/transloco';
 import { AppInputComponent } from '@shared/components/atoms/app-input-component/app-input-component';
 import { AppRadioComponent } from '@shared/components/atoms/app-radio-component/app-radio-component';
@@ -128,7 +128,7 @@ export class EditLevelComponent implements OnInit {
 
     const formData = this.jobLevelForm.getRawValue();
     const description = formData.description?.trim();
-    const payload: IUpdateOrganizationLevel = {
+    const payload: IUpdateEmployeeLevel = {
       levelOrder: Number(formData.levelOrder),
       name: formData.name.trim(),
       isActive: formData.isActive,

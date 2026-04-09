@@ -18,7 +18,7 @@ import { AppValidators } from '@shared/validators/word-limit.validator';
 import { AppInputComponent } from '@shared/components/atoms/app-input-component/app-input-component';
 import { AppTextareaComponent } from '@shared/components/atoms/app-textarea-component/app-textarea-component';
 import { AppRadioComponent } from '@shared/components/atoms/app-radio-component/app-radio-component';
-import { ICreateOrganizationLevel } from '@features/organization/models/iorganization-level';
+import { ICreateEmployeeLevel } from '@features/organization/models/iemployee-level';
 import { EMPTY, switchMap } from 'rxjs';
 
 @Component({
@@ -97,7 +97,7 @@ export class CreateLevelComponent {
 
     const formData = this.jobLevelForm.getRawValue();
     const description = formData.description?.trim();
-    const payload: ICreateOrganizationLevel = {
+    const payload: ICreateEmployeeLevel = {
       levelOrder: Number(formData.levelOrder),
       name: formData.name.trim(),
       isActive: formData.isActive,

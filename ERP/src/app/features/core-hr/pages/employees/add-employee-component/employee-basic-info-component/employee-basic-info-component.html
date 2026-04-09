@@ -67,7 +67,7 @@
   <app-app-select-component [label]="t('EMPLOYEES.JOB_TITLE') + '*'" [control]="getControl('jobTitleId')"
     [showErrors]="submitted()"
     [placeholder]="isLoadingJobs() ? t('COMMON.LOADING') : t('PLACEHOLDER.SELECT_JOB_TITLE')">
-    @if (_jobTitlesService.resource.error()) {
+    @if (_designationsService.resource.error()) {
     <option disabled class="text-error">⚠️ {{ t('ERRORS.LOAD_FAILED') }}</option>
     } @else {
     @for (job of jobTitles(); track job.id) {
