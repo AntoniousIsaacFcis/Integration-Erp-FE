@@ -9,10 +9,10 @@ import { of } from 'rxjs';
 import { TranslocoModule } from '@jsverse/transloco';
 
 // Services
-import { RoleService } from '@features/role/services/role-service';
+import { RoleService } from '@features/core-hr/services/role-service';
 
 // Models
-import { ICreateRoleRequest, IPermissionCategory } from '@features/role/models/irole';
+import { ICreateRoleRequest, IPermissionCategory } from '@features/core-hr/models/irole';
 
 // Components
 import { FormContainerComponent } from '@shared/components/organisms/form-container-component/form-container-component';
@@ -21,7 +21,7 @@ import { AppSelectComponent } from '@shared/components/atoms/app-select-componen
 import { AppTextareaComponent } from '@shared/components/atoms/app-textarea-component/app-textarea-component';
 import { FormCancelButtonComponent } from '@shared/components/molecules/form-cancel-button-component/form-cancel-button-component';
 import { FormSaveButtonComponent } from '@shared/components/molecules/form-save-button-component/form-save-button-component';
-import { PermissionChipComponent } from '@features/role/components/permission-chip-component/permission-chip-component';
+import { PermissionChipComponent } from '@features/core-hr/components/roles/permission-chip-component/permission-chip-component';
 
 // Validators
 import { AppValidators } from '@shared/validators/word-limit.validator';
@@ -144,11 +144,11 @@ export class CreateRoleComponent {
     // Simulate API call completion
     setTimeout(() => {
       this.isSubmitting.set(false);
-      this.router.navigate(['/roles']);
+      this.router.navigate(['/core-hr/roles']);
     }, 1000);
   }
 
   onCancel() {
-    this.router.navigate(['/roles']);
+    this.router.navigate(['/core-hr/roles']);
   }
 }

@@ -10,13 +10,13 @@ export const MENU_ITEMS: INavItem[] = [
   {
     id: '2',
     label: 'MENU.EMPLOYEES',
-    path: '/employees',
+    path: '/core-hr/employees',
     icon: 'lucideUsers',
     children: [
-      { id: '2-1', label: 'MENU.ALL_EMPLOYEES', path: '/employees/view', icon: 'lucideList' },
-      { id: '2-2', label: 'MENU.ADD_EMPLOYEE', path: '/employees/add', icon: 'lucidePlus' },
-      { id: '2-3', label: 'MENU.EMPLOYEE_RECORDS', path: '/employees/records', icon: 'lucideFileText' },
-      { id: '2-4', label: 'MENU.ATTENDANCE', path: '/employees/attendance', icon: 'lucideClipboardList' }
+      { id: '2-1', label: 'MENU.ALL_EMPLOYEES', path: '/core-hr/employees/view', icon: 'lucideList' },
+      { id: '2-2', label: 'MENU.ADD_EMPLOYEE', path: '/core-hr/employees/add', icon: 'lucidePlus' },
+      { id: '2-3', label: 'MENU.EMPLOYEE_RECORDS', path: '/core-hr/employees/records', icon: 'lucideFileText' },
+      { id: '2-4', label: 'MENU.ATTENDANCE', path: '/core-hr/employees/attendance', icon: 'lucideClipboardList' }
     ]
   },
   {

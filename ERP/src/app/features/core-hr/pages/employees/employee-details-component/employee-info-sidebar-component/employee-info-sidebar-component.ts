@@ -1,6 +1,6 @@
 import { NgOptimizedImage } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
-import { IEmployeeForm } from '@features/employees/models/iemployee';
+import { IEmployeeForm } from '@features/core-hr/models/iemployee';
 import { TranslocoModule } from '@jsverse/transloco';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { lucideBriefcaseBusiness, lucideCalendar, lucideCreditCard, lucideFingerprint, lucideGlobe, lucideHeart, lucideMail, lucidePersonStanding, lucidePhone, lucideUser, lucideVenusAndMars } from '@ng-icons/lucide';

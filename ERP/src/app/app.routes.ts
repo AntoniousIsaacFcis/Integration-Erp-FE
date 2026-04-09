@@ -27,8 +27,29 @@ export const routes: Routes = [
         data: { breadcrumb: null }
       },
       {
+        path: 'core-hr',
+        loadChildren: () => import('./features/core-hr/core-hr.route').then(m => m.CORE_HR_ROUTES),
+      },
+      {
         path: 'employees',
-        loadChildren: () => import('./features/employees/employees.route').then(m => m.EMPLOYEE_ROUTES),
+        pathMatch: 'full',
+        redirectTo: 'core-hr/employees',
+      },
+      {
+        path: 'employees/view',
+        redirectTo: 'core-hr/employees/view',
+      },
+      {
+        path: 'employees/add',
+        redirectTo: 'core-hr/employees/add',
+      },
+      {
+        path: 'employees/details/:empId',
+        redirectTo: 'core-hr/employees/details/:empId',
+      },
+      {
+        path: 'employees',
+        redirectTo: 'core-hr/employees',
       },
       {
         path: 'organization',
@@ -104,8 +125,17 @@ export const routes: Routes = [
       },
        {
         path: 'roles',
+        pathMatch: 'full',
+        redirectTo: 'core-hr/roles',
+      },
+      {
+        path: 'roles/create',
+        redirectTo: 'core-hr/roles/create',
+      },
+       {
+        path: 'roles',
         // canMatch: [() => inject(AuthService).hasPermission('MyProject.employment-types')],
-        loadChildren: () => import('./features/role/roles.routes').then(m => m.ROLES_ROUTES),
+        redirectTo: 'core-hr/roles',
       },
       {
         path: '403',

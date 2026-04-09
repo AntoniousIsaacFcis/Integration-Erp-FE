@@ -1,5 +1,5 @@
 // @core/mocks/data/salary.data.ts
-import { ISalaryResponse } from "@features/employees/models/isalary";
+import { ISalaryResponse } from "@features/core-hr/models/isalary";
 
 export const MOCK_SALARY_STORE: Record<string, Record<string, Record<string, ISalaryResponse>>> = {
   "1": { // Employee 1 - Project Manager

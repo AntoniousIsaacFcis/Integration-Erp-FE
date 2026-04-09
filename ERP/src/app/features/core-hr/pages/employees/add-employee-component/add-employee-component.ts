@@ -5,10 +5,10 @@ import { EmployeeBasicInfoComponent } from "./employee-basic-info-component/empl
 import { StepperVisualComponent } from "./stepper-visual-component/stepper-visual-component";
 import { FormContainerComponent } from "@shared/components/organisms/form-container-component/form-container-component";
 import { FormSaveButtonComponent } from "@shared/components/molecules/form-save-button-component/form-save-button-component";
-import { IEmployeeForm } from '@features/employees/models/iemployee';
+import { IEmployeeForm } from '@features/core-hr/models/iemployee';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { of } from 'rxjs';
-import { EmployeeService } from '@features/employees/services/employee-service';
+import { EmployeeService } from '@features/core-hr/services/employee-service';
 import { Router } from '@angular/router';
 import { NotificationService } from '@core/services/notification-service';
 
@@ -56,7 +56,7 @@ export class AddEmployeeComponent {
 
         setTimeout(() => {
           // this.notificationService.dismissAll();
-          this.router.navigate(['/employees/view']);
+          this.router.navigate(['/core-hr/employees/view']);
           this.saveTrigger.set(null);
         }, 1500);
       }

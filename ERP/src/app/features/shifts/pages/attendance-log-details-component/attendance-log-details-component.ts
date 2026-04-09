@@ -15,7 +15,7 @@ import { FormSaveButtonComponent } from "@shared/components/molecules/form-save-
 
 @Component({
   selector: 'app-attendance-log-details-component',
-  imports: [ReactiveFormsModule, TranslocoModule, FormContainerComponent, AppInputComponent, AppDateInputComponent, TimeInputComponent, FormCancelButtonComponent, FormSaveButtonComponent],
+  imports: [ReactiveFormsModule, TranslocoModule, FormContainerComponent, AppInputComponent, AppDateInputComponent, TimeInputComponent, FormSaveButtonComponent],
   templateUrl: './attendance-log-details-component.html',
   styleUrl: './attendance-log-details-component.css',
   providers: [DatePipe],

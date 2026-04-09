@@ -6,7 +6,7 @@ export const ROLES_ROUTES: Routes = [
     children: [
       {
         path: 'create',
-        loadComponent: () => import('./pages/create-role-component/create-role-component').then(m => m.CreateRoleComponent)
+        loadComponent: () => import('./pages/roles/create-role-component/create-role-component').then(m => m.CreateRoleComponent)
       },
       {
         path: '',

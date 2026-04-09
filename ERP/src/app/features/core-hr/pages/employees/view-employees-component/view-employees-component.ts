@@ -2,13 +2,13 @@ import { DecimalPipe, isPlatformBrowser } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, PLATFORM_ID, signal } from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
-import { EmployeeService } from '@features/employees/services/employee-service';
+import { EmployeeService } from '@features/core-hr/services/employee-service';
 import { of } from 'rxjs';
 import { AppBaseTableComponent } from "@shared/components/organisms/app-base-table-component/app-base-table-component";
 import { TranslocoModule } from '@jsverse/transloco';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { lucidePencil, lucideSaudiRiyal, lucideTrash2 } from '@ng-icons/lucide';
-import { IEmployeeResponse } from '@features/employees/models/iemployee';
+import { IEmployeeResponse } from '@features/core-hr/models/iemployee';
 import { TranslationService } from '@core/services/translation-service';
 import { DateFilterComponent } from "@shared/components/molecules/date-filter-component/date-filter-component";
 import { ActionBtnComponent } from "@shared/components/molecules/action-btn-component/action-btn-component";
@@ -74,7 +74,7 @@ export class ViewEmployeesComponent {
   });
 
   handleCreateNavigation() {
-    this.router.navigate(['/employees/add']);
+    this.router.navigate(['/core-hr/employees/add']);
   }
 
   handleUpload() {
@@ -83,7 +83,7 @@ export class ViewEmployeesComponent {
   }
 
   navigateToDetails(id: string | undefined) {
-  if (id) this.router.navigate(['/employees/details', id]);
+  if (id) this.router.navigate(['/core-hr/employees/details', id]);
 }
 
 }
