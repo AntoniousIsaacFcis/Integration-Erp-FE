@@ -1,6 +1,6 @@
 export interface IEmploymentType {
   id: string;
-  employmentTypeAr: string;
+  employmentTypeAr: string; //Full Time or Part Time or Contractor or Internship or Temporary
   employmentTypeEn: string;
   employeeCount: number;
   status: 'active' | 'inactive';

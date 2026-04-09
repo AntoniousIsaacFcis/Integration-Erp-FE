@@ -1,6 +1,6 @@
 export interface IOrganizationType {
   id: string;
-  name: string;
+  name: string; //Company or Section or Team
 
   //auditing
   creationTime?: string;

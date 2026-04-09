@@ -1,9 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { IJobLevel, IJobLevelApiListResponse, IJobLevelResponse } from '../models/ijob-level';
 import {
   ICreateOrganizationLevel,
   IOrganizationLevel,
+  IOrganizationLevelApiListResponse,
+  IOrganizationLevelListResponse,
   IUpdateOrganizationLevel,
 } from '@features/organization/models/iorganization-level';
 import { environment } from '@env/environment.development';
@@ -33,7 +34,7 @@ export class JobLevelService {
       ...(params.status && { isActive: params.status === 'active' }),
     };
 
-    return this.http.get<IJobLevelApiListResponse>(this.API_URL, { params: queryParams }).pipe(
+    return this.http.get<IOrganizationLevelApiListResponse>(this.API_URL, { params: queryParams }).pipe(
       map((response) => this.mapApiResponse(response, params)),
       // Add error handling
       catchError((error) => {
@@ -45,9 +46,9 @@ export class JobLevelService {
 
   // for real api
   private mapApiResponse(
-    response: IJobLevelApiListResponse,
+    response: IOrganizationLevelApiListResponse,
     params: GetLevelsParams,
-  ): IJobLevelResponse {
+  ): IOrganizationLevelListResponse {
     return {
       data: response.items.map((item) => ({
         id: item.id,
@@ -70,27 +71,6 @@ export class JobLevelService {
     };
   }
 
-  //for msw
-  // private mapApiResponse(response: any, params: GetLevelsParams): IJobLevelResponse {
-  //   const items = response.items || response.data || [];
-  //   const total = response.totalCount || response.total || 0;
-
-  //   return {
-  //     data: items.map((item: any) => ({
-  //       id: item.id,
-  //       nameAr: item.name || item.nameAr,
-  //       employeeCount: item.employeeCount || 0,
-  //       departmentId: item.departmentId || '',
-  //       status: (item.status === 'inactive' || item.isDeleted) ? 'inactive' : 'active',
-  //       description: item.description || '',
-  //       createdAt: item.creationTime || item.createdAt
-  //     })),
-  //     total: total,
-  //     page: params.page,
-  //     limit: params.limit
-  //   };
-  // }
-
   create(data: ICreateOrganizationLevel) {
     return this.http.post<IOrganizationLevel>(this.API_URL, this.withNormalizedActiveState(data));
   }
@@ -112,7 +92,7 @@ export class JobLevelService {
 
   isLevelOrderTaken(levelOrder: number, excludedId?: string) {
     return this.http
-      .get<IJobLevelApiListResponse>(this.API_URL, {
+      .get<IOrganizationLevelApiListResponse>(this.API_URL, {
         params: { page: 1, limit: 10000 },
       })
       .pipe(
