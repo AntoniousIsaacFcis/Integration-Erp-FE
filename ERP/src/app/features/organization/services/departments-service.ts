@@ -3,7 +3,7 @@ import { computed, inject, Injectable } from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { TranslationService } from '@core/services/translation-service';
 import { environment } from '@env/environment.development';
-import { IDepartment } from '@features/job-level/models/idepartment';
+import { IDepartment } from '../models/idepartment';
 import { TranslocoService } from '@jsverse/transloco';
 
 interface IDepartmentView extends IDepartment {

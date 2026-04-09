@@ -2,7 +2,7 @@
 import { delay, http, HttpResponse } from 'msw';
 import { environment } from '@env/environment.development';
 import { JOB_LEVELS_MOCK_DATA } from '@mocks/data/job-level.data';
-import { IJobLevel } from '@features/job-level/models/ijob-level';
+import { IJobLevel } from '@features/organization/models/ijob-level';
 
 let currentDb = [...JOB_LEVELS_MOCK_DATA];
 

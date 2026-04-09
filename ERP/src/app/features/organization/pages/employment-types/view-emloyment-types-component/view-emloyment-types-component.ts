@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
-import { EmploymentTypesService } from '@features/employment-types/services/employment-types-service';
+import { EmploymentTypesService } from '@features/organization/services/employment-types-service';
 import { TranslocoModule } from '@jsverse/transloco';
 import { AppBaseTableComponent } from "@shared/components/organisms/app-base-table-component/app-base-table-component";
 import { ActionBtnComponent } from "@shared/components/molecules/action-btn-component/action-btn-component";
@@ -45,5 +45,5 @@ export class ViewEmloymentTypesComponent {
     { value: 'inactive', label: 'COMMON.INACTIVE' }
   ];
 
-  goToCreate() { this.router.navigate(['/employment-types/create']); }
+  goToCreate() { this.router.navigate(['/organization/employment-types/create']); }
 }

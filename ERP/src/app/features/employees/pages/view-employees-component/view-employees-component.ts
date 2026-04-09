@@ -12,7 +12,7 @@ import { IEmployeeResponse } from '@features/employees/models/iemployee';
 import { TranslationService } from '@core/services/translation-service';
 import { DateFilterComponent } from "@shared/components/molecules/date-filter-component/date-filter-component";
 import { ActionBtnComponent } from "@shared/components/molecules/action-btn-component/action-btn-component";
-import { EmploymentTypesService } from '@features/employment-types/services/employment-types-service';
+import { EmploymentTypesService } from '@features/organization/services/employment-types-service';
 import { TableStatusBadgeComponent } from "@shared/components/atoms/table-status-badge-component/table-status-badge-component";
 
 @Component({

@@ -1,4 +1,4 @@
-import { IJobLevel } from "@features/job-level/models/ijob-level";
+import { IJobLevel } from "@features/organization/models/ijob-level";
 
 export const JOB_LEVELS_MOCK_DATA: IJobLevel[] = [
   { id: '1', nameAr: 'مدير عام', employeeCount: 30, departmentId: '1', status: 'active', description: 'مسؤول عن الإدارة العامة', createdAt: '2026-01-01' },

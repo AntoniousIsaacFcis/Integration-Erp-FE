@@ -29,7 +29,37 @@ export const routes: Routes = [
       {
         path: 'employees',
         loadChildren: () => import('./features/employees/employees.route').then(m => m.EMPLOYEE_ROUTES),
-      },{
+      },
+      {
+        path: 'organization',
+        loadChildren: () => import('./features/organization/organization.route').then(m => m.ORGANIZATION_ROUTES),
+      },
+      {
+        path: 'job-levels',
+        pathMatch: 'full',
+        redirectTo: 'organization/levels',
+      },
+      {
+        path: 'job-levels/view',
+        redirectTo: 'organization/levels/view',
+      },
+      {
+        path: 'job-levels/create',
+        redirectTo: 'organization/levels/create',
+      },
+      {
+        path: 'job-levels/mapping',
+        redirectTo: 'organization/levels/mapping',
+      },
+      {
+        path: 'job-levels/edit/:id',
+        redirectTo: 'organization/levels/edit/:id',
+      },
+      {
+        path: 'job-levels/preview/:id',
+        redirectTo: 'organization/levels/preview/:id',
+      },
+      {
         path: 'job-levels',
         // canMatch: [() => {
         //   const authService = inject(AuthService);
@@ -47,12 +77,25 @@ export const routes: Routes = [
         //     })
         //   );
         // }],
-        loadChildren: () => import('./features/job-level/job-level.routes').then(m => m.JOB_LEVEL_ROUTES)
+        redirectTo: 'organization/levels',
+      },
+      {
+        path: 'employment-types',
+        pathMatch: 'full',
+        redirectTo: 'organization/employment-types',
+      },
+      {
+        path: 'employment-types/view',
+        redirectTo: 'organization/employment-types/view',
+      },
+      {
+        path: 'employment-types/create',
+        redirectTo: 'organization/employment-types/create',
       },
       {
         path: 'employment-types',
         // canMatch: [() => inject(AuthService).hasPermission('MyProject.employment-types')],
-        loadChildren: () => import('./features/employment-types/employmentTypes.routes').then(m => m.EMPLOYMENT_TYPES_ROUTES),
+        redirectTo: 'organization/employment-types',
       },
       {
         path: 'shifts',

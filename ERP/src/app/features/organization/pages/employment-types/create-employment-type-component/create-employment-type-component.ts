@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component, inject, signal, DestroyRef, compute
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
-import { EmploymentTypesService } from '@features/employment-types/services/employment-types-service';
+import { EmploymentTypesService } from '@features/organization/services/employment-types-service';
 import { TranslocoModule } from '@jsverse/transloco';
 
 // Shared Components
@@ -88,7 +88,7 @@ export class CreateEmploymentTypeComponent {
       .subscribe({
         next: () => {
           this.isSubmitting.set(false);
-          this.router.navigate(['/employment-types/view']);
+          this.router.navigate(['/organization/employment-types/view']);
         },
         error: (err) => {
           console.error('Create Error:', err);
@@ -98,6 +98,6 @@ export class CreateEmploymentTypeComponent {
   }
 
   onCancel() {
-    this.router.navigate(['/employment-types/view']);
+    this.router.navigate(['/organization/employment-types/view']);
   }
 }

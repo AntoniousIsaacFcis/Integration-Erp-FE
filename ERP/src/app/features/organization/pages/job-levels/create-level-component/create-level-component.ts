@@ -4,26 +4,25 @@ import {
   computed,
   DestroyRef,
   inject,
-  OnInit,
   signal,
 } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
-import { JobLevelService } from '@features/job-level/service/job-level-service';
-import { IUpdateOrganizationLevel } from '@features/organization/models/iorganization-level';
-import { TranslocoModule } from '@jsverse/transloco';
-import { AppInputComponent } from '@shared/components/atoms/app-input-component/app-input-component';
-import { AppRadioComponent } from '@shared/components/atoms/app-radio-component/app-radio-component';
-import { AppTextareaComponent } from '@shared/components/atoms/app-textarea-component/app-textarea-component';
-import { FormCancelButtonComponent } from '@shared/components/molecules/form-cancel-button-component/form-cancel-button-component';
-import { FormSaveButtonComponent } from '@shared/components/molecules/form-save-button-component/form-save-button-component';
+import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { FormContainerComponent } from '@shared/components/organisms/form-container-component/form-container-component';
-import { AppValidators } from '@shared/validators/word-limit.validator';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
+import { FormSaveButtonComponent } from '@shared/components/molecules/form-save-button-component/form-save-button-component';
+import { FormCancelButtonComponent } from '@shared/components/molecules/form-cancel-button-component/form-cancel-button-component';
+import { JobLevelService } from '@features/organization/services/job-level-service';
+import { Router } from '@angular/router';
+import { AppValidators } from '@shared/validators/word-limit.validator';
+import { AppInputComponent } from '@shared/components/atoms/app-input-component/app-input-component';
+import { AppTextareaComponent } from '@shared/components/atoms/app-textarea-component/app-textarea-component';
+import { AppRadioComponent } from '@shared/components/atoms/app-radio-component/app-radio-component';
+import { ICreateOrganizationLevel } from '@features/organization/models/iorganization-level';
 import { EMPTY, switchMap } from 'rxjs';
 
 @Component({
-  selector: 'app-edit-level-component',
+  selector: 'app-create-level-component',
   imports: [
     TranslocoModule,
     FormContainerComponent,
@@ -31,25 +30,21 @@ import { EMPTY, switchMap } from 'rxjs';
     FormSaveButtonComponent,
     FormCancelButtonComponent,
     AppInputComponent,
-    AppRadioComponent,
     AppTextareaComponent,
+    AppRadioComponent,
   ],
-  templateUrl: './edit-level-component.html',
-  styleUrl: './edit-level-component.css',
+  templateUrl: './create-level-component.html',
+  styleUrl: './create-level-component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class EditLevelComponent implements OnInit {
+export class CreateLevelComponent {
   private readonly fb = inject(FormBuilder);
-  private readonly jobLevelService = inject(JobLevelService);
-  private readonly route = inject(ActivatedRoute);
+  private _jobLevelService = inject(JobLevelService);
+  private readonly _translocoService = inject(TranslocoService);
   private readonly router = inject(Router);
-  private readonly destroyRef = inject(DestroyRef);
+  private readonly destroyRef = inject(DestroyRef); // to kill create request if browser closed
 
-  private levelId = '';
-
-  isLoading = signal(true);
   isSubmitting = signal(false);
-  isFormSubmitted = signal(false);
 
   jobLevelForm = this.fb.group({
     levelOrder: this.fb.control<number | null>(null, [Validators.required, Validators.min(0)]),
@@ -61,11 +56,11 @@ export class EditLevelComponent implements OnInit {
     isActive: this.fb.nonNullable.control(true, [Validators.required]),
     description: this.fb.nonNullable.control('', [AppValidators.wordLimit(250)]),
   });
-
+  // 1. Capture the description value as a signal
   private descriptionValue = toSignal(this.jobLevelForm.controls.description.valueChanges, {
     initialValue: '',
   });
-
+  // 2.
   wordCount = computed(() => {
     const text = this.descriptionValue() ?? '';
     return text
@@ -73,8 +68,10 @@ export class EditLevelComponent implements OnInit {
       .split(/\s+/)
       .filter((w) => w.length > 0).length;
   });
-
+  // 3.
   isOverLimit = computed(() => this.wordCount() > 250);
+
+  isFormSubmitted = signal(false);
 
   constructor() {
     this.jobLevelForm.controls.levelOrder.valueChanges
@@ -82,37 +79,8 @@ export class EditLevelComponent implements OnInit {
       .subscribe(() => this.clearControlError('levelOrder', 'duplicate'));
   }
 
-  ngOnInit() {
-    this.levelId = this.route.snapshot.paramMap.get('id') ?? '';
-
-    if (!this.levelId) {
-      this.router.navigate(['/job-levels/view']);
-      return;
-    }
-
-    this.jobLevelService
-      .getById(this.levelId)
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: (level) => {
-          this.jobLevelForm.patchValue({
-            levelOrder: level.levelOrder,
-            name: level.name,
-            isActive: level.isActive !== false,
-            description: level.description ?? '',
-          });
-          this.isLoading.set(false);
-        },
-        error: (error) => {
-          console.error('Failed to load level:', error);
-          this.isLoading.set(false);
-          this.router.navigate(['/job-levels/view']);
-        },
-      });
-  }
-
   onSubmit() {
-    if (this.isLoading() || this.isSubmitting()) return;
+    if (this.isSubmitting()) return;
 
     this.isFormSubmitted.set(true);
     this.trimName();
@@ -121,6 +89,7 @@ export class EditLevelComponent implements OnInit {
 
     if (this.jobLevelForm.invalid) {
       this.jobLevelForm.markAllAsTouched();
+      console.warn('Form is invalid, submission blocked.');
       return;
     }
 
@@ -128,15 +97,15 @@ export class EditLevelComponent implements OnInit {
 
     const formData = this.jobLevelForm.getRawValue();
     const description = formData.description?.trim();
-    const payload: IUpdateOrganizationLevel = {
+    const payload: ICreateOrganizationLevel = {
       levelOrder: Number(formData.levelOrder),
       name: formData.name.trim(),
       isActive: formData.isActive,
       ...(description ? { description } : {}),
     };
 
-    this.jobLevelService
-      .isLevelOrderTaken(payload.levelOrder, this.levelId)
+    this._jobLevelService
+      .isLevelOrderTaken(payload.levelOrder)
       .pipe(
         switchMap((isTaken) => {
           if (isTaken) {
@@ -145,25 +114,30 @@ export class EditLevelComponent implements OnInit {
             return EMPTY;
           }
 
-          return this.jobLevelService.update(this.levelId, payload);
+          return this._jobLevelService.create(payload);
         }),
-        takeUntilDestroyed(this.destroyRef),
       )
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: () => {
+        next: async (response) => {
+          const successMsg = this._translocoService.translate('COMMON.SUCCESS_MESSAGE');
+          console.log('✅ Success:', successMsg);
+
           this.isFormSubmitted.set(false);
           this.isSubmitting.set(false);
-          this.router.navigate(['/job-levels/view']);
+
+          const success = await this.router.navigate(['/', 'organization', 'levels', 'view']);
+
+          if (!success) {
+            console.error('❌ Navigation failed!');
+          }
         },
         error: (error) => {
           this.isSubmitting.set(false);
-          console.error('Update level failed:', error);
+          console.error('Submission Error:', error);
+          // هنا يفضل استدعاء ToastService لإظهار الخطأ
         },
       });
-  }
-
-  onCancel() {
-    this.router.navigate(['/job-levels/view']);
   }
 
   private setControlError(controlName: 'levelOrder' | 'name' | 'description', errorKey: string) {
@@ -188,5 +162,15 @@ export class EditLevelComponent implements OnInit {
     if (nameControl.value !== trimmedName) {
       nameControl.setValue(trimmedName);
     }
+  }
+
+  onCancel() {
+    this.isFormSubmitted.set(false);
+    this.jobLevelForm.reset({
+      levelOrder: null,
+      name: '',
+      isActive: true,
+      description: '',
+    });
   }
 }

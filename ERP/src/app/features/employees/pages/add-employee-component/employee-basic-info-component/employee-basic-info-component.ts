@@ -4,7 +4,7 @@ import { AppInputComponent } from "@shared/components/atoms/app-input-component/
 import { AppSelectComponent } from "@shared/components/atoms/app-select-component/app-select-component";
 import { AppDateInputComponent } from "@shared/components/atoms/app-date-input-component/app-date-input-component";
 import { TranslocoModule } from '@jsverse/transloco';
-import { DepartmentsService } from '@features/departments/services/departments-service';
+import { DepartmentsService } from '@features/organization/services/departments-service';
 import { NationalitiesService } from '@core/services/nationalities-service';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { lucideOctagonX, lucideSaudiRiyal } from '@ng-icons/lucide';
@@ -14,7 +14,7 @@ import { IDocument } from '@shared/models/idocument';
 import { DocumentsComponent } from "@shared/components/organisms/documents-component/documents-component";
 import { fileValidation } from '@shared/validators/file-validation.validator';
 import { JobTitlesService } from '@core/services/job-titles-service';
-import { EmploymentTypesService } from '@features/employment-types/services/employment-types-service';
+import { EmploymentTypesService } from '@features/organization/services/employment-types-service';
 
 @Component({
   selector: 'app-employee-basic-info-component',

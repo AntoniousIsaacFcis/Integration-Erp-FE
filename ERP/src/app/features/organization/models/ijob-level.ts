@@ -1,3 +1,6 @@
+//for  msw mocking
+//real api => use feature/organizarion/iorganizationLevel 
+
 export interface IJobLevel {
   id?: string;
   levelOrder?: number;

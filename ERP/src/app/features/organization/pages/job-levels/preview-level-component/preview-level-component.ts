@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { JobLevelService } from '@features/job-level/service/job-level-service';
+import { JobLevelService } from '@features/organization/services/job-level-service';
 import { TranslocoModule } from '@jsverse/transloco';
 import { AppInputComponent } from '@shared/components/atoms/app-input-component/app-input-component';
 import { AppRadioComponent } from "@shared/components/atoms/app-radio-component/app-radio-component";
@@ -90,6 +90,6 @@ export class PreviewLevelComponent implements OnInit {
   }
 
   goBack() {
-    this.router.navigate(['/job-levels/view']);
+    this.router.navigate(['/organization/levels/view']);
   }
 }

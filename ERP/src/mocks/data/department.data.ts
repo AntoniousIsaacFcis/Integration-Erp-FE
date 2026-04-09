@@ -1,4 +1,4 @@
-import { IDepartment } from "@features/job-level/models/idepartment";
+import { IDepartment } from "@features/organization/models/idepartment";
 
 export const MOCK_DEPARTMENTS: IDepartment[] = [
   { id: '1', nameAr: 'قسم البرمجة', nameEn: 'Development' },

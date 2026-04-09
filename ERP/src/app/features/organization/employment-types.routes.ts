@@ -1,5 +1,5 @@
 import { Routes } from "@angular/router";
-import { ViewEmloymentTypesComponent } from "./pages/view-emloyment-types-component/view-emloyment-types-component";
+import { ViewEmloymentTypesComponent } from "./pages/employment-types/view-emloyment-types-component/view-emloyment-types-component";
 
 export const EMPLOYMENT_TYPES_ROUTES: Routes = [
   {
@@ -13,7 +13,7 @@ export const EMPLOYMENT_TYPES_ROUTES: Routes = [
       },
       {
         path: 'create',
-        loadComponent: () => import('./pages/create-employment-type-component/create-employment-type-component').then(x => x.CreateEmploymentTypeComponent),
+        loadComponent: () => import('./pages/employment-types/create-employment-type-component/create-employment-type-component').then(x => x.CreateEmploymentTypeComponent),
         data: { breadcrumb: 'BREADCRUMB.ADD_TYPE' }
       }
       , {

@@ -7,7 +7,7 @@ import { NgIcon, provideIcons } from '@ng-icons/core';
 import { lucideEye, lucidePencil, lucideTrash2 } from '@ng-icons/lucide';
 import { isPlatformBrowser } from '@angular/common';
 import { of } from 'rxjs';
-import { JobLevelService } from '@features/job-level/service/job-level-service';
+import { JobLevelService } from '@features/organization/services/job-level-service';
 import { Router } from '@angular/router';
 import { NotificationService } from '@core/services/notification-service';
 import { ActionBtnComponent } from "@shared/components/molecules/action-btn-component/action-btn-component";
@@ -68,16 +68,16 @@ export class ViewLevelComponent {
   );
 
   handleCreateNavigation() {
-    this.router.navigate(['/job-levels/create']);
+    this.router.navigate(['/organization/levels/create']);
     console.log('Navigate to Create Level Page');
   }
 
   handleView(id: string) {
-    this.router.navigate(['/job-levels/preview', id]);
+    this.router.navigate(['/organization/levels/preview', id]);
   }
 
   handleEdit(id: string) {
-    this.router.navigate(['/job-levels/edit', id]);
+    this.router.navigate(['/organization/levels/edit', id]);
   }
 
   handleDelete(id: string) {

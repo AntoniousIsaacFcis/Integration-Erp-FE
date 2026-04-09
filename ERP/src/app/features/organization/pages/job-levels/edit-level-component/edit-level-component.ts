@@ -4,25 +4,26 @@ import {
   computed,
   DestroyRef,
   inject,
+  OnInit,
   signal,
 } from '@angular/core';
-import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
-import { FormContainerComponent } from '@shared/components/organisms/form-container-component/form-container-component';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
-import { FormSaveButtonComponent } from '@shared/components/molecules/form-save-button-component/form-save-button-component';
-import { FormCancelButtonComponent } from '@shared/components/molecules/form-cancel-button-component/form-cancel-button-component';
-import { JobLevelService } from '@features/job-level/service/job-level-service';
-import { Router } from '@angular/router';
-import { AppValidators } from '@shared/validators/word-limit.validator';
+import { ActivatedRoute, Router } from '@angular/router';
+import { JobLevelService } from '@features/organization/services/job-level-service';
+import { IUpdateOrganizationLevel } from '@features/organization/models/iorganization-level';
+import { TranslocoModule } from '@jsverse/transloco';
 import { AppInputComponent } from '@shared/components/atoms/app-input-component/app-input-component';
-import { AppTextareaComponent } from '@shared/components/atoms/app-textarea-component/app-textarea-component';
 import { AppRadioComponent } from '@shared/components/atoms/app-radio-component/app-radio-component';
-import { ICreateOrganizationLevel } from '@features/organization/models/iorganization-level';
+import { AppTextareaComponent } from '@shared/components/atoms/app-textarea-component/app-textarea-component';
+import { FormCancelButtonComponent } from '@shared/components/molecules/form-cancel-button-component/form-cancel-button-component';
+import { FormSaveButtonComponent } from '@shared/components/molecules/form-save-button-component/form-save-button-component';
+import { FormContainerComponent } from '@shared/components/organisms/form-container-component/form-container-component';
+import { AppValidators } from '@shared/validators/word-limit.validator';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { EMPTY, switchMap } from 'rxjs';
 
 @Component({
-  selector: 'app-create-level-component',
+  selector: 'app-edit-level-component',
   imports: [
     TranslocoModule,
     FormContainerComponent,
@@ -30,21 +31,25 @@ import { EMPTY, switchMap } from 'rxjs';
     FormSaveButtonComponent,
     FormCancelButtonComponent,
     AppInputComponent,
-    AppTextareaComponent,
     AppRadioComponent,
+    AppTextareaComponent,
   ],
-  templateUrl: './create-level-component.html',
-  styleUrl: './create-level-component.css',
+  templateUrl: './edit-level-component.html',
+  styleUrl: './edit-level-component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CreateLevelComponent {
+export class EditLevelComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
-  private _jobLevelService = inject(JobLevelService);
-  private readonly _translocoService = inject(TranslocoService);
+  private readonly jobLevelService = inject(JobLevelService);
+  private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
-  private readonly destroyRef = inject(DestroyRef); // to kill create request if browser closed
+  private readonly destroyRef = inject(DestroyRef);
 
+  private levelId = '';
+
+  isLoading = signal(true);
   isSubmitting = signal(false);
+  isFormSubmitted = signal(false);
 
   jobLevelForm = this.fb.group({
     levelOrder: this.fb.control<number | null>(null, [Validators.required, Validators.min(0)]),
@@ -56,11 +61,11 @@ export class CreateLevelComponent {
     isActive: this.fb.nonNullable.control(true, [Validators.required]),
     description: this.fb.nonNullable.control('', [AppValidators.wordLimit(250)]),
   });
-  // 1. Capture the description value as a signal
+
   private descriptionValue = toSignal(this.jobLevelForm.controls.description.valueChanges, {
     initialValue: '',
   });
-  // 2.
+
   wordCount = computed(() => {
     const text = this.descriptionValue() ?? '';
     return text
@@ -68,10 +73,8 @@ export class CreateLevelComponent {
       .split(/\s+/)
       .filter((w) => w.length > 0).length;
   });
-  // 3.
-  isOverLimit = computed(() => this.wordCount() > 250);
 
-  isFormSubmitted = signal(false);
+  isOverLimit = computed(() => this.wordCount() > 250);
 
   constructor() {
     this.jobLevelForm.controls.levelOrder.valueChanges
@@ -79,8 +82,37 @@ export class CreateLevelComponent {
       .subscribe(() => this.clearControlError('levelOrder', 'duplicate'));
   }
 
+  ngOnInit() {
+    this.levelId = this.route.snapshot.paramMap.get('id') ?? '';
+
+    if (!this.levelId) {
+      this.router.navigate(['/organization/levels/view']);
+      return;
+    }
+
+    this.jobLevelService
+      .getById(this.levelId)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (level) => {
+          this.jobLevelForm.patchValue({
+            levelOrder: level.levelOrder,
+            name: level.name,
+            isActive: level.isActive !== false,
+            description: level.description ?? '',
+          });
+          this.isLoading.set(false);
+        },
+        error: (error) => {
+          console.error('Failed to load level:', error);
+          this.isLoading.set(false);
+          this.router.navigate(['/organization/levels/view']);
+        },
+      });
+  }
+
   onSubmit() {
-    if (this.isSubmitting()) return;
+    if (this.isLoading() || this.isSubmitting()) return;
 
     this.isFormSubmitted.set(true);
     this.trimName();
@@ -89,7 +121,6 @@ export class CreateLevelComponent {
 
     if (this.jobLevelForm.invalid) {
       this.jobLevelForm.markAllAsTouched();
-      console.warn('Form is invalid, submission blocked.');
       return;
     }
 
@@ -97,15 +128,15 @@ export class CreateLevelComponent {
 
     const formData = this.jobLevelForm.getRawValue();
     const description = formData.description?.trim();
-    const payload: ICreateOrganizationLevel = {
+    const payload: IUpdateOrganizationLevel = {
       levelOrder: Number(formData.levelOrder),
       name: formData.name.trim(),
       isActive: formData.isActive,
       ...(description ? { description } : {}),
     };
 
-    this._jobLevelService
-      .isLevelOrderTaken(payload.levelOrder)
+    this.jobLevelService
+      .isLevelOrderTaken(payload.levelOrder, this.levelId)
       .pipe(
         switchMap((isTaken) => {
           if (isTaken) {
@@ -114,30 +145,25 @@ export class CreateLevelComponent {
             return EMPTY;
           }
 
-          return this._jobLevelService.create(payload);
+          return this.jobLevelService.update(this.levelId, payload);
         }),
+        takeUntilDestroyed(this.destroyRef),
       )
-      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: async (response) => {
-          const successMsg = this._translocoService.translate('COMMON.SUCCESS_MESSAGE');
-          console.log('✅ Success:', successMsg);
-
+        next: () => {
           this.isFormSubmitted.set(false);
           this.isSubmitting.set(false);
-
-          const success = await this.router.navigate(['/', 'job-levels', 'view']);
-
-          if (!success) {
-            console.error('❌ Navigation failed!');
-          }
+          this.router.navigate(['/organization/levels/view']);
         },
         error: (error) => {
           this.isSubmitting.set(false);
-          console.error('Submission Error:', error);
-          // هنا يفضل استدعاء ToastService لإظهار الخطأ
+          console.error('Update level failed:', error);
         },
       });
+  }
+
+  onCancel() {
+    this.router.navigate(['/organization/levels/view']);
   }
 
   private setControlError(controlName: 'levelOrder' | 'name' | 'description', errorKey: string) {
@@ -162,15 +188,5 @@ export class CreateLevelComponent {
     if (nameControl.value !== trimmedName) {
       nameControl.setValue(trimmedName);
     }
-  }
-
-  onCancel() {
-    this.isFormSubmitted.set(false);
-    this.jobLevelForm.reset({
-      levelOrder: null,
-      name: '',
-      isActive: true,
-      description: '',
-    });
   }
 }
