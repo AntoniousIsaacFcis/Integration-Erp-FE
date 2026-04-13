@@ -64,6 +64,8 @@ export class CreateEmploymentTypeComponent {
     if (this.isSubmitting()) return;
 
     this.isFormSubmitted.set(true);
+    this.normalizeStringFields();
+    this.EmployeeTypesForm.updateValueAndValidity();
 
     if (this.EmployeeTypesForm.invalid) {
       this.EmployeeTypesForm.markAllAsTouched();
@@ -91,6 +93,22 @@ export class CreateEmploymentTypeComponent {
           this.isSubmitting.set(false);
         }
       });
+  }
+
+  private normalizeStringFields() {
+    const nameControl = this.EmployeeTypesForm.controls.name;
+    const descriptionControl = this.EmployeeTypesForm.controls.description;
+
+    const trimmedName = nameControl.value.trim();
+    const trimmedDescription = descriptionControl.value.trim();
+
+    if (nameControl.value !== trimmedName) {
+      nameControl.setValue(trimmedName);
+    }
+
+    if (descriptionControl.value !== trimmedDescription) {
+      descriptionControl.setValue(trimmedDescription);
+    }
   }
 
   onCancel() {

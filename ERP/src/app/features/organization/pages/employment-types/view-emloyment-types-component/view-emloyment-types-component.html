@@ -2,7 +2,7 @@
   [extraFilters]="empTypesFilters" [extraActions]="empTypesActions" *transloco="let t">
 
   <ng-template #empTypesFilters>
-    <app-status-badge-component label="t('FILTERS.STATUS')" [options]="statusOptions"
+    <app-status-badge-component label="FILTERS.STATUS" [options]="statusOptions"
       [(selectedStatus)]="selectedStatus"></app-status-badge-component>
   </ng-template>
 
@@ -41,23 +41,23 @@
         <tr class="bg-white hover:bg-gray-50/50 transition-all border-b border-gray-100">
           <td class="py-4 ps-24 text-start font-normal text-sm">{{ type.name }}</td>
           <td class="py-4 pe-26 text-sm text-center">{{ type.employeeCount }} {{t('JOB_LEVEL.EMPLOYEES')}}</td>
-           <td class="py-4 pe-60 flex justify-center">
-            @let isActive = type.status === 'active';
-            <div class="flex items-center justify-center rounded-[8px] w-[65px] h-[32px]"
-              [class]="isActive ? 'bg-[#00A3891A]' : 'bg-[#EF44441A]'">
-              <span class="font-semibold text-sm" [class]="isActive ? 'text-[#00A389]' : 'text-[#EF4444]'">
-                {{ isActive ? t('COMMON.ACTIVE') : t('COMMON.INACTIVE') }}
-              </span>
-            </div>
+           <td class="py-3 pe-60 flex justify-center">
+            <app-table-status-badge-component [status]="type.status" />
           </td>
           <td class="py-4 px-20">
             <div class="flex gap-5 justify-end">
               <button
+                (click)="handleEdit(type.id)"
                 class="flex size-[30px] items-center justify-center rounded-full bg-[#0000001A] transition-colors hover:bg-[#00000033]"><ng-icon
                   name="lucidePencil" size="16px" color="black" /></button>
               <button
+                (click)="handleDelete(type.id)"
                 class="flex size-[30px] items-center justify-center rounded-full bg-[#0000001A] transition-colors hover:bg-[#00000033]"><ng-icon
                   name="lucideTrash2" size="16px" color="#F40552" /></button>
+              <button
+                (click)="handleView(type.id)"
+                class="flex size-[32px] items-center justify-center rounded-full bg-[#61BDDC33] hover:bg-gray-100 transition-colors"><ng-icon
+                  name="lucideEye" size="16px" color="#61BDDC" /></button>
             </div>
           </td>
         </tr>

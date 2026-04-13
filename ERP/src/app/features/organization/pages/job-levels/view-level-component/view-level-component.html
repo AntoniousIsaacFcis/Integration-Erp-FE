@@ -1,8 +1,9 @@
-<app-app-base-table-component [(searchTerm)]="searchTerm" actionLabel="BUTTON.ADD_LEVEL"
-  [totalItems]="totalItems()" [(currentPage)]="currentPage"  [extraFilters]="empFilters" [extraActions]="empActions" *transloco="let t">
+<app-app-base-table-component [(searchTerm)]="searchTerm" actionLabel="BUTTON.ADD_LEVEL" [totalItems]="totalItems()"
+  [(currentPage)]="currentPage" [extraFilters]="empFilters" [extraActions]="empActions" *transloco="let t">
 
   <ng-template #empFilters>
-     <app-status-badge-component label="FILTERS.STATUS" [(selectedStatus)]="selectedStatus" [options]="statusOptions"></app-status-badge-component>
+    <app-status-badge-component label="FILTERS.STATUS" [(selectedStatus)]="selectedStatus"
+      [options]="statusOptions"></app-status-badge-component>
   </ng-template>
 
   <ng-template #empActions>
@@ -11,9 +12,9 @@
 
   <div class="w-full ">
     @if (levelsResource.isLoading()) {
-      <div class="flex justify-center py-20 text-gray-400">
-        {{ t('COMMON.MESSAGES.LOADING_DATA') }}
-      </div>
+    <div class="flex justify-center py-20 text-gray-400">
+      {{ t('COMMON.MESSAGES.LOADING_DATA') }}
+    </div>
     }
 
     @if (levelsResource.error()) {
@@ -40,21 +41,21 @@
         <tr class="bg-white hover:bg-gray-50/50 transition-all border-b border-gray-100">
           <td class="py-4 ps-24 font-normal text-sm">{{ level.nameAr }}</td>
           <td class="py-4 pe-26 text-sm">{{ level.employeeCount }} موظف</td>
-          <td class="py-3 pe-60 flex justify-center">
-           <app-table-status-badge-component [status]="level.status" />
+          <td class="py-3 pe-60 align-middle">
+            <div class="flex justify-center items-center h-full">
+              <app-table-status-badge-component [status]="level.status" />
+            </div>
           </td>
 
           <td class="py-4 px-20">
             <div class="flex gap-5 justify-end">
-              <button
-                (click)="handleEdit(level.id!)"
+              <button (click)="handleEdit(level.id!)"
                 class="flex size-[30px] items-center justify-center rounded-full bg-[#0000001A] transition-colors hover:bg-[#00000033]"><ng-icon
                   name="lucidePencil" size="16px" color="black" /></button>
-              <button *appHasPermission="'Organization.Levels.Create'"
-                (click)="handleDelete(level.id!)"
+              <button *appHasPermission="'Organization.Levels.Create'" (click)="handleDelete(level.id!)"
                 class="flex size-[30px] items-center justify-center rounded-full bg-[#0000001A] transition-colors hover:bg-[#00000033]"><ng-icon
                   name="lucideTrash2" size="16px" color="#F40552" /></button>
-                  <button (click)="handleView(level.id!)"
+              <button (click)="handleView(level.id!)"
                 class="flex size-[32px] items-center justify-center rounded-full bg-[#61BDDC33] hover:bg-gray-100 transition-colors">
                 <ng-icon name="lucideEye" size="16" color="#61BDDC" />
               </button>

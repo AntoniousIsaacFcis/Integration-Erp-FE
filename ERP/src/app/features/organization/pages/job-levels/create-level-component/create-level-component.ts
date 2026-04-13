@@ -76,7 +76,7 @@ export class CreateLevelComponent {
     if (this.isSubmitting()) return;
 
     this.isFormSubmitted.set(true);
-    this.trimName();
+    this.normalizeStringFields();
     this.clearControlError('levelOrder', 'duplicate');
     this.jobLevelForm.updateValueAndValidity();
 
@@ -148,12 +148,19 @@ export class CreateLevelComponent {
     control.setErrors(Object.keys(remainingErrors).length ? remainingErrors : null);
   }
 
-  private trimName() {
+  private normalizeStringFields() {
     const nameControl = this.jobLevelForm.controls.name;
+    const descriptionControl = this.jobLevelForm.controls.description;
+
     const trimmedName = nameControl.value.trim();
+    const trimmedDescription = descriptionControl.value.trim();
 
     if (nameControl.value !== trimmedName) {
       nameControl.setValue(trimmedName);
+    }
+
+    if (descriptionControl.value !== trimmedDescription) {
+      descriptionControl.setValue(trimmedDescription);
     }
   }
 

@@ -13,4 +13,23 @@ export interface IEmploymentTypeResponse {
   limit: number;
 }
 
+export interface IEmploymentTypeApiItem {
+  name: string;
+  description?: string;
+  isActive?: boolean;
+  isDeleted?: boolean;
+  deleterId: string | null;
+  deletionTime: string | null;
+  lastModificationTime: string | null;
+  lastModifierId: string | null;
+  creationTime: string;
+  creatorId: string | null;
+  id: string;
+}
+
+export interface IEmploymentTypeApiResponse {
+  totalCount: number;
+  items: IEmploymentTypeApiItem[];
+}
+
 export type CreateEmploymentTypeDTO = Omit<IEmploymentType, 'id' | 'employeeCount'>;

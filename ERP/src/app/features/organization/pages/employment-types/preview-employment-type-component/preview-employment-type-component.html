@@ -1,0 +1,38 @@
+<div
+  class="w-full max-w-standard bg-white rounded-[20px] shadow-soft border border-black/5 p-spacing-xl flex flex-col gap-spacing-lg mx-auto">
+  <app-form-container-component *transloco="let t" [title]="t('JOB_LEVEL.PREVIEW_TYPE')">
+    <ng-container formFields [formGroup]="employmentTypeForm">
+      @if (isLoading()) {
+        <div class="col-span-2 flex justify-center py-10 text-gray-400">
+          {{ t('COMMON.MESSAGES.LOADING_DATA') }}
+        </div>
+      } @else {
+        <div class="col-span-2">
+          <app-app-input-component [label]="t('JOB_LEVEL.TYPE_NAME')" [placeholder]="t('JOB_LEVEL.TYPE_NAME')"
+            [control]="employmentTypeForm.controls.name" />
+        </div>
+
+        <app-app-radio-component [label]="t('JOB_LEVEL.STATUS')" [control]="employmentTypeForm.controls.status"
+          [options]="[
+            { label: 'COMMON.ACTIVE', value: 'active' },
+            { label: 'COMMON.INACTIVE', value: 'inactive' }
+          ]" />
+
+        <div class="col-span-2">
+          <app-app-textarea-component [label]="t('JOB_LEVEL.DESCRIPTION')"
+            [placeholder]="t('JOB_LEVEL.DESCRIPTION_PLACEHOLDER')" [control]="employmentTypeForm.controls.description" />
+
+          <div class="p-2">
+            <span class="text-xs font-medium text-gray-400">
+              {{ characterCount() }} / {{ descriptionCharacterLimit }} {{ t('COMMON.CHARACTERS') }}
+            </span>
+          </div>
+        </div>
+      }
+    </ng-container>
+
+    <ng-container formActions>
+      <app-form-save-button-component [label]="'COMMON.BACK'" (clicked)="goBack()" />
+    </ng-container>
+  </app-form-container-component>
+</div>

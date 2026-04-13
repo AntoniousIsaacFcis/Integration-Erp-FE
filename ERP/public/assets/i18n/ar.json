@@ -680,6 +680,9 @@
     "EMPLOYMENT_TYPES": "أنواع الدوام",
     "TYPES_TABLE": "جدول أنواع الدوام",
     "ADD_TYPE": "إضافة دوام جديد",
+    "EDIT_TYPE": "تعديل نوع الدوام",
+    "PREVIEW_TYPE": "عرض نوع الدوام",
+    "DELETE_TYPE": "حذف نوع الدوام",
     "TYPE_NAME": "نوع الدوام",
     "EMPLOYEES": "موظف",
     "DESCRIPTION_PLACEHOLDER": "الوصف لا يتعدى 1000 حرف"

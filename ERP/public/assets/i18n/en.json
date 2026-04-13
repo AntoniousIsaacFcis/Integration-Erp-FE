@@ -596,6 +596,9 @@
     "EMPLOYMENT_TYPES": "Employment Types",
     "TYPES_TABLE": "Employment Types Table",
     "ADD_TYPE": "Add New Employment Type",
+    "EDIT_TYPE": "Edit Employment Type",
+    "PREVIEW_TYPE": "Preview Employment Type",
+    "DELETE_TYPE": "Delete Employment Type",
     "TYPE_NAME": "Employment Type",
     "EMPLOYEES": "Employees",
     "DESCRIPTION_PLACEHOLDER": "Description should not exceed 1000 characters"
