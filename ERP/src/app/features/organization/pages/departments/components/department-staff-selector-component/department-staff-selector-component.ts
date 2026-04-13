@@ -13,6 +13,9 @@ import { IDepartmentStaffOption } from '@features/organization/models/idepartmen
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DepartmentStaffSelectorComponent {
+  private readonly maxVisibleSelectedStaff = 4;
+  private readonly maxVisibleAvailableStaff = 4;
+
   label = input.required<string>();
   placeholder = input<string>('ORGANIZATION.SEARCH_STAFF');
   selectedIds = input<string[]>([]);
@@ -38,9 +41,18 @@ export class DepartmentStaffSelectorComponent {
           id,
           fullNameAr: id,
           fullNameEn: id,
+          fullName: id,
           displayName: id,
+          staffCode: '',
+          phone: '',
+          mobileNumber: '',
         },
     ),
+  );
+
+  visibleSelectedStaff = computed(() => this.selectedStaff().slice(-this.maxVisibleSelectedStaff));
+  hiddenSelectedCount = computed(() =>
+    Math.max(this.selectedStaff().length - this.maxVisibleSelectedStaff, 0),
   );
 
   availableStaff = computed(() => {
@@ -52,14 +64,9 @@ export class DepartmentStaffSelectorComponent {
           return false;
         }
 
-        return (
-          !search ||
-          option.displayName.toLowerCase().includes(search) ||
-          option.fullNameAr.toLowerCase().includes(search) ||
-          option.fullNameEn.toLowerCase().includes(search)
-        );
+        return !search || this.matchesSearch(option, search);
       })
-      .slice(0, 8);
+      .slice(0, this.maxVisibleAvailableStaff);
   });
 
   updateSearchTerm(event: Event) {
@@ -82,5 +89,23 @@ export class DepartmentStaffSelectorComponent {
     }
 
     this.selectedIdsChange.emit(this.selectedIds().filter((id) => id !== optionId));
+  }
+
+  getStaffMeta(option: IDepartmentStaffOption) {
+    return [option.staffCode && `#${option.staffCode}`, option.mobileNumber, option.phone]
+      .filter(Boolean)
+      .join(' | ');
+  }
+
+  private matchesSearch(option: IDepartmentStaffOption, search: string) {
+    return [
+      option.displayName,
+      option.fullName,
+      option.fullNameAr,
+      option.fullNameEn,
+      option.staffCode,
+      option.mobileNumber,
+      option.phone,
+    ].some((value) => value.toLowerCase().includes(search));
   }
 }

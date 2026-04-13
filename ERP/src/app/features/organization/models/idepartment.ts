@@ -46,7 +46,11 @@ export interface IDepartmentStaffOption {
   id: string;
   fullNameAr: string;
   fullNameEn: string;
+  fullName: string;
   displayName: string;
+  staffCode: string;
+  phone: string;
+  mobileNumber: string;
 }
 
 export interface CreateDepartmentDTO {

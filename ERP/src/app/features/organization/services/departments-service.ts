@@ -3,7 +3,8 @@ import { computed, inject, Injectable } from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { TranslationService } from '@core/services/translation-service';
 import { environment } from '@env/environment.development';
-import { EmployeeService } from '@features/core-hr/services/employee-service';
+import { IStaffApiItem } from '@features/core-hr/models/istaff';
+import { StaffService } from '@features/core-hr/services/staff-service';
 import {
   CreateDepartmentDTO,
   IDepartment,
@@ -19,7 +20,7 @@ import { catchError, map, of } from 'rxjs';
 })
 export class DepartmentsService {
   private readonly http = inject(HttpClient);
-  private readonly employeeService = inject(EmployeeService);
+  private readonly staffService = inject(StaffService);
   private readonly translationService = inject(TranslationService);
   private readonly API_URL = `${environment.baseUrl}/api/organization/department`;
 
@@ -75,16 +76,11 @@ export class DepartmentsService {
 
   staffLookupResource = rxResource({
     stream: () =>
-      this.employeeService.getEmployees({ page: 1, limit: 1000, search: '' }).pipe(
+      this.staffService.getStaff({ skipCount: 0, maxResultCount: 1000, filter: '' }).pipe(
         map((response) =>
-          response.data
-            .filter((employee): employee is typeof employee & { id: string } => Boolean(employee.id))
-            .map((employee) => ({
-              id: employee.id,
-              fullNameAr: employee.fullNameAr,
-              fullNameEn: employee.fullNameEn,
-              displayName: employee.fullNameAr,
-            })),
+          response.items
+            .filter((staff): staff is IStaffApiItem & { id: string } => Boolean(staff.id))
+            .map((staff) => this.mapStaffOption(staff)),
         ),
         catchError(() => of([])),
       ),
@@ -95,7 +91,8 @@ export class DepartmentsService {
 
     return (this.staffLookupResource.value() ?? []).map((staff) => ({
       ...staff,
-      displayName: lang === 'ar' ? staff.fullNameAr : staff.fullNameEn || staff.fullNameAr,
+      displayName:
+        lang === 'ar' ? staff.fullNameAr : staff.fullNameEn || staff.fullName || staff.fullNameAr,
     }));
   });
 
@@ -144,6 +141,25 @@ export class DepartmentsService {
       isActive: data.status === 'active',
       managerStaffIds: this.uniqueIds(data.managerStaffIds),
       employeeStaffIds: this.uniqueIds(data.employeeStaffIds),
+    };
+  }
+
+  private mapStaffOption(staff: IStaffApiItem): IDepartmentStaffOption {
+    const composedName = [staff.firstName, staff.middleName, staff.lastName]
+      .filter((part): part is string => Boolean(part?.trim()))
+      .join(' ')
+      .trim();
+    const fullName = staff.fullName?.trim() || composedName || staff.staffCode?.trim() || staff.id;
+
+    return {
+      id: staff.id,
+      fullNameAr: fullName,
+      fullNameEn: fullName,
+      fullName,
+      displayName: fullName,
+      staffCode: staff.staffCode?.trim() || '',
+      phone: staff.phone?.trim() || '',
+      mobileNumber: staff.mobileNumber?.trim() || '',
     };
   }
 
