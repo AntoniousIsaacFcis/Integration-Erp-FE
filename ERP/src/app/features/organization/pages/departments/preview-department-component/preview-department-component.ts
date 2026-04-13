@@ -17,6 +17,7 @@ import { AppRadioComponent } from '@shared/components/atoms/app-radio-component/
 import { AppTextareaComponent } from '@shared/components/atoms/app-textarea-component/app-textarea-component';
 import { FormSaveButtonComponent } from '@shared/components/molecules/form-save-button-component/form-save-button-component';
 import { FormContainerComponent } from '@shared/components/organisms/form-container-component/form-container-component';
+import { DepartmentStaffSelectorComponent } from '../components/department-staff-selector-component/department-staff-selector-component';
 
 @Component({
   selector: 'app-preview-department-component',
@@ -28,6 +29,7 @@ import { FormContainerComponent } from '@shared/components/organisms/form-contai
     AppRadioComponent,
     AppTextareaComponent,
     FormSaveButtonComponent,
+    DepartmentStaffSelectorComponent,
   ],
   templateUrl: './preview-department-component.html',
   styleUrl: './preview-department-component.css',
@@ -45,15 +47,28 @@ export class PreviewDepartmentComponent implements OnInit {
 
   departmentForm = this.fb.group({
     name: this.fb.nonNullable.control({ value: '', disabled: true }),
+    abbreviation: this.fb.nonNullable.control({ value: '', disabled: true }),
     status: this.fb.nonNullable.control<'active' | 'inactive'>({ value: 'active', disabled: true }),
+    managerStaffIds: this.fb.nonNullable.control([] as string[]),
+    employeeStaffIds: this.fb.nonNullable.control([] as string[]),
     description: this.fb.nonNullable.control({ value: '', disabled: true }),
   });
 
   private descriptionValue = toSignal(this.departmentForm.controls.description.valueChanges, {
     initialValue: '',
   });
+  private managerStaffIdsValue = toSignal(this.departmentForm.controls.managerStaffIds.valueChanges, {
+    initialValue: [] as string[],
+  });
+  private employeeStaffIdsValue = toSignal(this.departmentForm.controls.employeeStaffIds.valueChanges, {
+    initialValue: [] as string[],
+  });
 
   characterCount = computed(() => (this.descriptionValue() ?? '').length);
+  managerStaffIds = computed(() => this.managerStaffIdsValue() ?? []);
+  employeeStaffIds = computed(() => this.employeeStaffIdsValue() ?? []);
+  staffOptions = this.departmentsService.staffLookupList;
+  isLoadingStaff = this.departmentsService.staffLookupResource.isLoading;
 
   ngOnInit() {
     const departmentId = this.route.snapshot.paramMap.get('id') ?? '';
@@ -70,7 +85,10 @@ export class PreviewDepartmentComponent implements OnInit {
         next: (department) => {
           this.departmentForm.patchValue({
             name: department.name,
+            abbreviation: department.abbreviation ?? '',
             status: department.status,
+            managerStaffIds: department.managerStaffIds,
+            employeeStaffIds: department.employeeStaffIds,
             description: department.description ?? '',
           });
           this.isLoading.set(false);

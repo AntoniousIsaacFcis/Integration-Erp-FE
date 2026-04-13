@@ -7,16 +7,29 @@
           {{ t('COMMON.MESSAGES.LOADING_DATA') }}
         </div>
       } @else {
-        <div class="col-span-2">
+        <div>
           <app-app-input-component [label]="t('ORGANIZATION.DEPARTMENT_NAME')"
             [placeholder]="t('PLACEHOLDER.ENTER_NAME')" [control]="departmentForm.controls.name" />
         </div>
+
+        <app-app-input-component [label]="t('ORGANIZATION.DEPARTMENT_ABBREVIATION')"
+          [placeholder]="t('PLACEHOLDER.ENTER_CODE')" [control]="departmentForm.controls.abbreviation" />
+
+        <app-department-staff-selector-component [label]="'ORGANIZATION.RESPONSIBLE_MANAGERS'"
+          [selectedIds]="managerStaffIds()" [staffOptions]="staffOptions()" [isLoading]="isLoadingStaff()"
+          [disabled]="true" />
 
         <app-app-radio-component [label]="t('COMMON.STATUS')" [control]="departmentForm.controls.status"
           [options]="[
             { label: 'COMMON.ACTIVE', value: 'active' },
             { label: 'COMMON.INACTIVE', value: 'inactive' }
           ]" />
+
+        <div class="col-span-2">
+          <app-department-staff-selector-component [label]="'ORGANIZATION.EMPLOYEES_IN_DEPARTMENT'"
+            [selectedIds]="employeeStaffIds()" [staffOptions]="staffOptions()" [isLoading]="isLoadingStaff()"
+            [disabled]="true" />
+        </div>
 
         <div class="col-span-2">
           <app-app-textarea-component [label]="t('COMMON.DESCRIPTION')"

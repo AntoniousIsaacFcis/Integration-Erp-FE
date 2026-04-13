@@ -1,8 +1,11 @@
 export interface IDepartment {
   id: string;
   name: string;
+  abbreviation?: string;
   description?: string;
   status: 'active' | 'inactive';
+  managerStaffIds: string[];
+  employeeStaffIds: string[];
 }
 
 export interface IDepartmentResponse {
@@ -14,8 +17,11 @@ export interface IDepartmentResponse {
 
 export interface IDepartmentApiItem {
   name: string;
+  abbreviation?: string;
   description?: string;
   isActive?: boolean;
+  managerStaffIds?: string[];
+  employeeStaffIds?: string[];
   isDeleted?: boolean;
   deleterId: string | null;
   deletionTime: string | null;
@@ -36,4 +42,18 @@ export interface IDepartmentLookupItem {
   displayName: string;
 }
 
-export type CreateDepartmentDTO = Omit<IDepartment, 'id'>;
+export interface IDepartmentStaffOption {
+  id: string;
+  fullNameAr: string;
+  fullNameEn: string;
+  displayName: string;
+}
+
+export interface CreateDepartmentDTO {
+  name: string;
+  abbreviation?: string;
+  description?: string;
+  status: 'active' | 'inactive';
+  managerStaffIds: string[];
+  employeeStaffIds: string[];
+}

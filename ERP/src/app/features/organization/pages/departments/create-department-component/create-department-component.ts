@@ -11,6 +11,7 @@ import { AppTextareaComponent } from '@shared/components/atoms/app-textarea-comp
 import { FormCancelButtonComponent } from '@shared/components/molecules/form-cancel-button-component/form-cancel-button-component';
 import { FormSaveButtonComponent } from '@shared/components/molecules/form-save-button-component/form-save-button-component';
 import { FormContainerComponent } from '@shared/components/organisms/form-container-component/form-container-component';
+import { DepartmentStaffSelectorComponent } from '../components/department-staff-selector-component/department-staff-selector-component';
 
 @Component({
   selector: 'app-create-department-component',
@@ -23,6 +24,7 @@ import { FormContainerComponent } from '@shared/components/organisms/form-contai
     AppTextareaComponent,
     FormSaveButtonComponent,
     FormCancelButtonComponent,
+    DepartmentStaffSelectorComponent,
   ],
   templateUrl: './create-department-component.html',
   styleUrl: './create-department-component.css',
@@ -40,16 +42,29 @@ export class CreateDepartmentComponent {
 
   departmentForm = this.fb.nonNullable.group({
     name: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]],
+    abbreviation: [''],
     status: ['active' as 'active' | 'inactive', [Validators.required]],
+    managerStaffIds: this.fb.nonNullable.control<string[]>([]),
+    employeeStaffIds: this.fb.nonNullable.control<string[]>([]),
     description: ['', [AppValidators.charLimit(this.descriptionCharacterLimit)]],
   });
 
   private descriptionValue = toSignal(this.departmentForm.controls.description.valueChanges, {
     initialValue: '',
   });
+  private managerStaffIdsValue = toSignal(this.departmentForm.controls.managerStaffIds.valueChanges, {
+    initialValue: [] as string[],
+  });
+  private employeeStaffIdsValue = toSignal(this.departmentForm.controls.employeeStaffIds.valueChanges, {
+    initialValue: [] as string[],
+  });
 
   characterCount = computed(() => this.descriptionValue().length);
   isOverLimit = computed(() => this.characterCount() > this.descriptionCharacterLimit);
+  managerStaffIds = computed(() => this.managerStaffIdsValue() ?? []);
+  employeeStaffIds = computed(() => this.employeeStaffIdsValue() ?? []);
+  staffOptions = this.departmentsService.staffLookupList;
+  isLoadingStaff = this.departmentsService.staffLookupResource.isLoading;
 
   onSubmit() {
     if (this.isSubmitting()) return;
@@ -70,7 +85,10 @@ export class CreateDepartmentComponent {
     this.departmentsService
       .create({
         name: formValue.name.trim(),
+        abbreviation: formValue.abbreviation,
         status: formValue.status,
+        managerStaffIds: formValue.managerStaffIds,
+        employeeStaffIds: formValue.employeeStaffIds,
         description: formValue.description,
       })
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -89,9 +107,11 @@ export class CreateDepartmentComponent {
 
   private normalizeStringFields() {
     const nameControl = this.departmentForm.controls.name;
+    const abbreviationControl = this.departmentForm.controls.abbreviation;
     const descriptionControl = this.departmentForm.controls.description;
 
     const trimmedName = nameControl.value.trim();
+    const trimmedAbbreviation = abbreviationControl.value.trim();
     const trimmedDescription = descriptionControl.value.trim();
 
     if (nameControl.value !== trimmedName) {
@@ -101,9 +121,21 @@ export class CreateDepartmentComponent {
     if (descriptionControl.value !== trimmedDescription) {
       descriptionControl.setValue(trimmedDescription);
     }
+
+    if (abbreviationControl.value !== trimmedAbbreviation) {
+      abbreviationControl.setValue(trimmedAbbreviation);
+    }
   }
 
   onCancel() {
     this.router.navigate(['/organization/departments/view']);
+  }
+
+  onManagersChange(selectedIds: string[]) {
+    this.departmentForm.controls.managerStaffIds.setValue(selectedIds);
+  }
+
+  onEmployeesChange(selectedIds: string[]) {
+    this.departmentForm.controls.employeeStaffIds.setValue(selectedIds);
   }
 }

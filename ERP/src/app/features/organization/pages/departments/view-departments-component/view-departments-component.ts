@@ -80,7 +80,20 @@ export class ViewDepartmentsComponent {
   );
 
   totalItems = computed(() => this.departmentsResource.value()?.total ?? 0);
-  departmentsList = computed(() => this.departmentsResource.value()?.data ?? []);
+  staffOptions = this.departmentsService.staffLookupList;
+  departmentsList = computed(() => {
+    const staffMap = new Map(
+      this.staffOptions().map((staff) => [staff.id, staff.displayName]),
+    );
+
+    return (this.departmentsResource.value()?.data ?? []).map((department) => ({
+      ...department,
+      managerNames: department.managerStaffIds
+        .map((staffId) => staffMap.get(staffId))
+        .filter((name): name is string => Boolean(name)),
+      employeeCount: department.employeeStaffIds.length,
+    }));
+  });
 
   handleCreateNavigation() {
     this.router.navigate(['/organization/departments/create']);

@@ -31,7 +31,8 @@
         <thead class="text-sm sticky top-0 bg-[#F4F4F4] z-10">
           <tr>
             <th class="py-4 ps-20 text-start">{{ t('ORGANIZATION.DEPARTMENT_NAME') }}</th>
-            <th class="py-4 pe-16 text-start">{{ t('COMMON.DESCRIPTION') }}</th>
+            <th class="py-4 pe-16 text-start">{{ t('ORGANIZATION.RESPONSIBLE_MANAGERS') }}</th>
+            <th class="py-4 pe-10 text-center">{{ t('JOB_LEVEL.EMPLOYEE_COUNT') }}</th>
             <th class="py-4 pe-24 text-center">{{ t('COMMON.STATUS') }}</th>
             <th class="py-4 px-20 text-center"></th>
           </tr>
@@ -39,9 +40,17 @@
         <tbody>
           @for (department of departmentsList(); track department.id) {
             <tr class="bg-white hover:bg-gray-50/50 transition-all border-b border-gray-100">
-              <td class="py-4 ps-20 text-start font-normal text-sm">{{ department.name }}</td>
-              <td class="py-4 pe-16 text-start font-normal text-sm max-w-[340px] truncate">
-                {{ department.description || '-' }}
+              <td class="py-4 ps-20 text-start font-normal text-sm">
+                <div class="flex flex-col gap-1">
+                  <span>{{ department.name }}</span>
+                  <span class="text-xs text-black/40">{{ department.abbreviation || '-' }}</span>
+                </div>
+              </td>
+              <td class="py-4 pe-16 text-start font-normal text-sm max-w-[260px] truncate">
+                {{ department.managerNames.length ? department.managerNames.join(', ') : '-' }}
+              </td>
+              <td class="py-4 pe-10 text-sm text-center">
+                {{ department.employeeCount }} {{ t('JOB_LEVEL.EMPLOYEES') }}
               </td>
               <td class="py-3 pe-24 flex justify-center">
                 <app-table-status-badge-component [status]="department.status" />

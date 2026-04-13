@@ -320,6 +320,7 @@
     "LEVELS": "Levels",
     "UNITS": "Organizational Units",
     "DEPARTMENT_NAME": "Department Name",
+    "DEPARTMENT_ABBREVIATION": "Abbreviation",
     "DESIGNATION_NAME": "Designation Name",
     "LEVEL_NAME": "Level Name",
     "UNIT_CODE": "Unit Code",
@@ -340,6 +341,9 @@
     "TOTAL_EMPLOYEES": "Total Employees",
     "HIERARCHY": "Hierarchy",
     "MANAGE_DEPARTMENT": "Manage Departments",
+    "RESPONSIBLE_MANAGERS": "Responsible Managers",
+    "EMPLOYEES_IN_DEPARTMENT": "Employees In Department",
+    "SEARCH_STAFF": "Search employee",
     "MANAGE_DESIGNATIONS": "Manage Designations",
     "MANAGE_LEVEL": "Manage Levels"
   },

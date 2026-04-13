@@ -1,0 +1,55 @@
+<div class="flex flex-col w-full gap-sm" *transloco="let t">
+  <label class="text-base font-medium leading-none text-start text-black">
+    {{ t(label()) }} @if (required()) { <span class="text-error">*</span> }
+  </label>
+
+  <div
+    class="mt-2 w-full rounded-md border border-[#0000001A] bg-white p-3 transition-all focus-within:border-primary focus-within:ring-1 focus-within:ring-primary/20"
+    [class.bg-gray-50]="disabled()" [class.opacity-70]="disabled()">
+    <div class="flex flex-wrap items-center gap-2">
+      @for (member of selectedStaff(); track member.id) {
+      <span class="inline-flex items-center gap-2 rounded-full bg-[#F4F4F4] px-3 py-1 text-xs font-medium text-black">
+        {{ member.displayName }}
+
+        @if (!disabled()) {
+        <button type="button" (click)="removeStaff(member.id)"
+          class="flex size-4 items-center justify-center rounded-full text-black/50 transition-colors hover:text-black">
+          <ng-icon name="lucideX" size="12" />
+        </button>
+        }
+      </span>
+      }
+
+      @if (!disabled()) {
+      <div class="relative min-w-[160px] flex-1">
+        <input type="text"
+          class="h-8 w-full border-0 bg-transparent pe-8 text-sm text-black outline-none placeholder:text-black/30"
+          [value]="searchTerm()" (input)="updateSearchTerm($event)" [placeholder]="t(placeholder())" />
+
+        <span class="pointer-events-none absolute inset-y-0 end-0 flex items-center text-black/30">
+          <ng-icon name="lucideSearch" size="16" />
+        </span>
+      </div>
+      } @else if (!selectedStaff().length) {
+      <span class="text-sm text-black/40">{{ t('COMMON.NO_DATA') }}</span>
+      }
+    </div>
+  </div>
+
+  @if (!disabled()) {
+  @if (isLoading()) {
+  <div class="text-xs text-gray-400">{{ t('COMMON.MESSAGES.LOADING_DATA') }}</div>
+  } @else if (availableStaff().length) {
+  <div class="flex flex-wrap gap-2">
+    @for (option of availableStaff(); track option.id) {
+    <button type="button" (click)="addStaff(option.id)"
+      class="rounded-full border border-[#00000014] bg-[#F9F9F9] px-3 py-1 text-xs font-medium text-black transition-colors hover:border-primary/30 hover:bg-primary/5">
+      {{ option.displayName }}
+    </button>
+    }
+  </div>
+  } @else if (staffOptions().length || searchTerm()) {
+  <div class="text-xs text-gray-400">{{ t('COMMON.NO_DATA') }}</div>
+  }
+  }
+</div>

@@ -28,8 +28,11 @@ function buildDepartmentId(name: string) {
 function toApiItem(department: IDepartment) {
   return {
     name: department.name,
+    abbreviation: department.abbreviation ?? '',
     description: department.description ?? '',
     isActive: department.status === 'active',
+    managerStaffIds: department.managerStaffIds,
+    employeeStaffIds: department.employeeStaffIds,
     isDeleted: false,
     deleterId: null,
     deletionTime: null,
@@ -61,6 +64,7 @@ export const departmentHandlers = [
       const normalizedSearch = search.toLowerCase().trim();
       filtered = filtered.filter((department) =>
         department.name.toLowerCase().includes(normalizedSearch) ||
+        department.abbreviation?.toLowerCase().includes(normalizedSearch) ||
         department.description?.toLowerCase().includes(normalizedSearch),
       );
     }
@@ -103,8 +107,11 @@ export const departmentHandlers = [
     const newDepartment: IDepartment = {
       id: buildDepartmentId(payload.name ?? ''),
       name: payload.name?.trim() || '',
+      abbreviation: payload.abbreviation?.trim() || '',
       description: payload.description?.trim() || '',
       status: payload.isActive === false ? 'inactive' : 'active',
+      managerStaffIds: Array.from(new Set(payload.managerStaffIds ?? [])),
+      employeeStaffIds: Array.from(new Set(payload.employeeStaffIds ?? [])),
     };
 
     currentDepartments = [newDepartment, ...currentDepartments];
@@ -127,8 +134,11 @@ export const departmentHandlers = [
     const updatedDepartment: IDepartment = {
       ...currentDepartment,
       name: payload.name?.trim() || currentDepartment.name,
+      abbreviation: payload.abbreviation?.trim() || '',
       description: payload.description?.trim() || '',
       status: payload.isActive === false ? 'inactive' : 'active',
+      managerStaffIds: Array.from(new Set(payload.managerStaffIds ?? [])),
+      employeeStaffIds: Array.from(new Set(payload.employeeStaffIds ?? [])),
     };
 
     currentDepartments = currentDepartments.map((item, index) =>

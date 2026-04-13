@@ -352,6 +352,7 @@
     "LEVELS": "المستويات",
     "UNITS": "الوحدات التنظيمية",
     "DEPARTMENT_NAME": "اسم القسم",
+    "DEPARTMENT_ABBREVIATION": "الاختصار",
     "DESIGNATION_NAME": "اسم المسمى",
     "LEVEL_NAME": "اسم المستوى",
     "UNIT_CODE": "كود الوحدة",
@@ -372,6 +373,9 @@
     "TOTAL_EMPLOYEES": "إجمالي الموظفين",
     "HIERARCHY": "الهيكل الهرمي",
     "MANAGE_DEPARTMENT": "إدارة الأقسام",
+    "RESPONSIBLE_MANAGERS": "المديرون المسؤولون",
+    "EMPLOYEES_IN_DEPARTMENT": "الموظفون بالقسم",
+    "SEARCH_STAFF": "ابحث عن موظف",
     "MANAGE_DESIGNATIONS": "إدارة المسميات",
     "MANAGE_LEVEL": "إدارة المستويات"
   },
