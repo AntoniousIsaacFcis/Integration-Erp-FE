@@ -62,6 +62,18 @@ export class DepartmentsService {
       ),
   });
 
+  selectResource = rxResource({
+    stream: () =>
+      this.http
+        .get<IDepartmentApiResponse>(this.API_URL, {
+          params: { skipCount: 0, maxResultCount: 1000 },
+        })
+        .pipe(
+          map((response) => response.items.map((item) => this.mapApiItem(item))),
+          catchError(() => of([])),
+        ),
+  });
+
   departmentsResource = this.lookupResource;
 
   lookupList = computed<IDepartmentLookupItem[]>(() => {
@@ -73,6 +85,14 @@ export class DepartmentsService {
   });
 
   localizedDepartments = this.lookupList;
+
+  selectList = computed<IDepartmentLookupItem[]>(() => {
+    const data = this.selectResource.value() ?? [];
+    return data.map((department) => ({
+      id: department.id,
+      displayName: department.name,
+    }));
+  });
 
   staffLookupResource = rxResource({
     stream: () =>

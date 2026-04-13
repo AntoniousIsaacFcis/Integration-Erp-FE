@@ -1,0 +1,51 @@
+<div
+  class="w-full max-w-standard bg-white rounded-[20px] shadow-soft border border-black/5 p-spacing-xl flex flex-col gap-spacing-lg mx-auto">
+  <app-form-container-component *transloco="let t" [title]="t('ORGANIZATION.EDIT_DESIGNATION')" (submit)="onSubmit()">
+    <ng-container formFields [formGroup]="designationForm">
+      @if (isLoading()) {
+      <div class="col-span-2 flex justify-center py-10 text-gray-400">
+        {{ t('COMMON.MESSAGES.LOADING_DATA') }}
+      </div>
+      } @else {
+      <div class="col-span-2">
+        <app-app-input-component [label]="t('ORGANIZATION.DESIGNATION_NAME') + ' *'"
+          [placeholder]="t('PLACEHOLDER.ENTER_NAME')" [control]="designationForm.controls.name"
+          [showErrors]="isFormSubmitted()" [minLengthErrorKey]="'ERRORS.DESIGNATION_NAME_MIN_LENGTH'"
+          [maxLengthErrorKey]="'ERRORS.DESIGNATION_NAME_MAX_LENGTH'" />
+      </div>
+
+      <app-app-select-component [label]="t('EMPLOYEES.DEPARTMENT')" [control]="designationForm.controls.departmentId"
+        [showErrors]="isFormSubmitted()"
+        [placeholder]="isLoadingDepartments() ? t('COMMON.LOADING') : t('PLACEHOLDER.SELECT_DEPARTMENT')">
+        @for (department of departmentOptions(); track department.id) {
+        <option [value]="department.id">{{ department.displayName }}</option>
+        }
+      </app-app-select-component>
+
+      <app-app-radio-component [label]="t('COMMON.STATUS')" [required]="true"
+        [control]="designationForm.controls.status" [options]="[
+          { label: 'COMMON.ACTIVE', value: 'active' },
+          { label: 'COMMON.INACTIVE', value: 'inactive' }
+        ]" />
+
+      <div class="col-span-2">
+        <app-app-textarea-component [label]="t('COMMON.DESCRIPTION')"
+          [placeholder]="t('PLACEHOLDER.DESCRIPTION_LIMIT')" [control]="designationForm.controls.description"
+          [showErrors]="isFormSubmitted()" />
+
+        <div class="p-2">
+          <span class="text-xs font-medium transition-colors duration-200"
+            [class]="isFormSubmitted() && isOverLimit() ? 'text-red-500' : 'text-gray-400'">
+            {{ characterCount() }} / {{ descriptionCharacterLimit }} {{ t('COMMON.CHARACTERS') }}
+          </span>
+        </div>
+      </div>
+      }
+    </ng-container>
+
+    <ng-container formActions>
+      <app-form-cancel-button-component (clicked)="onCancel()" />
+      <app-form-save-button-component [isLoading]="isSubmitting()" [isDisabled]="isLoading()" type="submit" />
+    </ng-container>
+  </app-form-container-component>
+</div>
