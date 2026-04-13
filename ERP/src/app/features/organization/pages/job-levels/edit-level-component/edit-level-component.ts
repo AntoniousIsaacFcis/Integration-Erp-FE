@@ -20,7 +20,7 @@ import { FormSaveButtonComponent } from '@shared/components/molecules/form-save-
 import { FormContainerComponent } from '@shared/components/organisms/form-container-component/form-container-component';
 import { AppValidators } from '@shared/validators/word-limit.validator';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
-import { EMPTY, switchMap } from 'rxjs';
+import { catchError, EMPTY, forkJoin, switchMap, throwError } from 'rxjs';
 
 @Component({
   selector: 'app-edit-level-component',
@@ -72,6 +72,10 @@ export class EditLevelComponent implements OnInit {
   isOverLimit = computed(() => this.characterCount() > this.descriptionCharacterLimit);
 
   constructor() {
+    this.jobLevelForm.controls.name.valueChanges
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => this.clearControlError('name', 'duplicate'));
+
     this.jobLevelForm.controls.levelOrder.valueChanges
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => this.clearControlError('levelOrder', 'duplicate'));
@@ -111,6 +115,7 @@ export class EditLevelComponent implements OnInit {
 
     this.isFormSubmitted.set(true);
     this.normalizeStringFields();
+    this.clearControlError('name', 'duplicate');
     this.clearControlError('levelOrder', 'duplicate');
     this.jobLevelForm.updateValueAndValidity();
 
@@ -130,17 +135,19 @@ export class EditLevelComponent implements OnInit {
       ...(description ? { description } : {}),
     };
 
-    this.jobLevelService
-      .isLevelOrderTaken(payload.levelOrder, this.levelId)
+    forkJoin({
+      isNameTaken: this.jobLevelService.isNameTaken(payload.name, this.levelId),
+      isLevelOrderTaken: this.jobLevelService.isLevelOrderTaken(payload.levelOrder, this.levelId),
+    })
       .pipe(
-        switchMap((isTaken) => {
-          if (isTaken) {
-            this.setControlError('levelOrder', 'duplicate');
-            this.isSubmitting.set(false);
+        switchMap((validationState) => {
+          if (this.applyDuplicateErrors(validationState)) {
             return EMPTY;
           }
 
-          return this.jobLevelService.update(this.levelId, payload);
+          return this.jobLevelService.update(this.levelId, payload).pipe(
+            catchError((error) => this.handleUpdateRequestError(payload, this.levelId, error)),
+          );
         }),
         takeUntilDestroyed(this.destroyRef),
       )
@@ -150,7 +157,7 @@ export class EditLevelComponent implements OnInit {
           this.isSubmitting.set(false);
           this.router.navigate(['/organization/levels/view']);
         },
-        error: (error) => {
+        error: (error: unknown) => {
           this.isSubmitting.set(false);
           console.error('Update level failed:', error);
         },
@@ -190,5 +197,47 @@ export class EditLevelComponent implements OnInit {
     if (descriptionControl.value !== trimmedDescription) {
       descriptionControl.setValue(trimmedDescription);
     }
+  }
+
+  private handleUpdateRequestError(
+    payload: IUpdateEmployeeLevel,
+    excludedId: string,
+    error: unknown,
+  ) {
+    return forkJoin({
+      isNameTaken: this.jobLevelService.isNameTaken(payload.name, excludedId),
+      isLevelOrderTaken: this.jobLevelService.isLevelOrderTaken(payload.levelOrder, excludedId),
+    }).pipe(
+      switchMap((validationState) => {
+        if (this.applyDuplicateErrors(validationState)) {
+          return EMPTY;
+        }
+
+        return throwError(() => error);
+      }),
+    );
+  }
+
+  private applyDuplicateErrors(validationState: {
+    isNameTaken: boolean;
+    isLevelOrderTaken: boolean;
+  }) {
+    let hasDuplicateError = false;
+
+    if (validationState.isNameTaken) {
+      this.setControlError('name', 'duplicate');
+      hasDuplicateError = true;
+    }
+
+    if (validationState.isLevelOrderTaken) {
+      this.setControlError('levelOrder', 'duplicate');
+      hasDuplicateError = true;
+    }
+
+    if (hasDuplicateError) {
+      this.isSubmitting.set(false);
+    }
+
+    return hasDuplicateError;
   }
 }

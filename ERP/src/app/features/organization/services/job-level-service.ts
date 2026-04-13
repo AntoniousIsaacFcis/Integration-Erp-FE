@@ -3,12 +3,13 @@ import { inject, Injectable } from '@angular/core';
 import {
   ICreateEmployeeLevel,
   IEmployeeLevel,
+  IEmployeeLevelApiResponse,
   IEmployeeLevelApiListResponse,
   IEmployeeLevelListResponse,
   IUpdateEmployeeLevel,
 } from '@features/organization/models/iemployee-level';
 import { environment } from '@env/environment.development';
-import { map, catchError } from 'rxjs';
+import { catchError, map, Observable, of, switchMap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -94,14 +95,61 @@ export class JobLevelService {
   }
 
   isLevelOrderTaken(levelOrder: number, excludedId?: string) {
+    return this.checkLevelsInPages(
+      (item) => this.hasSameLevelOrder(item.levelOrder, levelOrder) && item.id !== excludedId,
+    );
+  }
+
+  isNameTaken(name: string, excludedId?: string) {
+    return this.checkLevelsInPages(
+      (item) => this.hasSameName(item.name, name) && item.id !== excludedId,
+    );
+  }
+
+  private hasSameLevelOrder(existingLevelOrder: unknown, requestedLevelOrder: number) {
+    const parsedExistingLevelOrder = Number(existingLevelOrder);
+
+    if (Number.isFinite(parsedExistingLevelOrder)) {
+      return parsedExistingLevelOrder === requestedLevelOrder;
+    }
+
+    return String(existingLevelOrder).trim() === String(requestedLevelOrder).trim();
+  }
+
+  private hasSameName(existingName: unknown, requestedName: string) {
+    return (
+      String(existingName ?? '').trim().toLocaleLowerCase() ===
+      requestedName.trim().toLocaleLowerCase()
+    );
+  }
+
+  private checkLevelsInPages(
+    matcher: (item: IEmployeeLevelApiResponse) => boolean,
+    skipCount = 0,
+  ): Observable<boolean> {
+    const pageSize = 100;
+
     return this.http
       .get<IEmployeeLevelApiListResponse>(this.API_URL, {
-        params: { skipCount: 0, maxResultCount: 1000 },
+        params: { skipCount, maxResultCount: pageSize },
       })
       .pipe(
-        map((response) =>
-          response.items.some((item) => item.levelOrder === levelOrder && item.id !== excludedId),
-        ),
+        switchMap((response) => {
+          const isFound = response.items.some(matcher);
+
+          if (isFound) {
+            return of(true);
+          }
+
+          const nextSkipCount = skipCount + response.items.length;
+          const hasMoreItems = response.items.length > 0 && nextSkipCount < response.totalCount;
+
+          if (!hasMoreItems) {
+            return of(false);
+          }
+
+          return this.checkLevelsInPages(matcher, nextSkipCount);
+        }),
       );
   }
 

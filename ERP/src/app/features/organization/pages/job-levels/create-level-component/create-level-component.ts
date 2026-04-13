@@ -19,7 +19,7 @@ import { AppInputComponent } from '@shared/components/atoms/app-input-component/
 import { AppTextareaComponent } from '@shared/components/atoms/app-textarea-component/app-textarea-component';
 import { AppRadioComponent } from '@shared/components/atoms/app-radio-component/app-radio-component';
 import { ICreateEmployeeLevel } from '@features/organization/models/iemployee-level';
-import { EMPTY, switchMap } from 'rxjs';
+import { catchError, EMPTY, forkJoin, switchMap, throwError } from 'rxjs';
 
 @Component({
   selector: 'app-create-level-component',
@@ -67,6 +67,10 @@ export class CreateLevelComponent {
   isFormSubmitted = signal(false);
 
   constructor() {
+    this.jobLevelForm.controls.name.valueChanges
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => this.clearControlError('name', 'duplicate'));
+
     this.jobLevelForm.controls.levelOrder.valueChanges
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => this.clearControlError('levelOrder', 'duplicate'));
@@ -77,6 +81,7 @@ export class CreateLevelComponent {
 
     this.isFormSubmitted.set(true);
     this.normalizeStringFields();
+    this.clearControlError('name', 'duplicate');
     this.clearControlError('levelOrder', 'duplicate');
     this.jobLevelForm.updateValueAndValidity();
 
@@ -97,22 +102,24 @@ export class CreateLevelComponent {
       ...(description ? { description } : {}),
     };
 
-    this._jobLevelService
-      .isLevelOrderTaken(payload.levelOrder)
+    forkJoin({
+      isNameTaken: this._jobLevelService.isNameTaken(payload.name),
+      isLevelOrderTaken: this._jobLevelService.isLevelOrderTaken(payload.levelOrder),
+    })
       .pipe(
-        switchMap((isTaken) => {
-          if (isTaken) {
-            this.setControlError('levelOrder', 'duplicate');
-            this.isSubmitting.set(false);
+        switchMap((validationState) => {
+          if (this.applyDuplicateErrors(validationState)) {
             return EMPTY;
           }
 
-          return this._jobLevelService.create(payload);
+          return this._jobLevelService
+            .create(payload)
+            .pipe(catchError((error) => this.handleCreateRequestError(payload, error)));
         }),
+        takeUntilDestroyed(this.destroyRef),
       )
-      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: async (response) => {
+        next: async () => {
           const successMsg = this._translocoService.translate('COMMON.SUCCESS_MESSAGE');
           console.log('✅ Success:', successMsg);
 
@@ -125,7 +132,7 @@ export class CreateLevelComponent {
             console.error('❌ Navigation failed!');
           }
         },
-        error: (error) => {
+        error: (error: unknown) => {
           this.isSubmitting.set(false);
           console.error('Submission Error:', error);
           // هنا يفضل استدعاء ToastService لإظهار الخطأ
@@ -166,5 +173,43 @@ export class CreateLevelComponent {
 
   onCancel() {
     this.router.navigate(['/organization/levels/view']);
+  }
+
+  private handleCreateRequestError(payload: ICreateEmployeeLevel, error: unknown) {
+    return forkJoin({
+      isNameTaken: this._jobLevelService.isNameTaken(payload.name),
+      isLevelOrderTaken: this._jobLevelService.isLevelOrderTaken(payload.levelOrder),
+    }).pipe(
+      switchMap((validationState) => {
+        if (this.applyDuplicateErrors(validationState)) {
+          return EMPTY;
+        }
+
+        return throwError(() => error);
+      }),
+    );
+  }
+
+  private applyDuplicateErrors(validationState: {
+    isNameTaken: boolean;
+    isLevelOrderTaken: boolean;
+  }) {
+    let hasDuplicateError = false;
+
+    if (validationState.isNameTaken) {
+      this.setControlError('name', 'duplicate');
+      hasDuplicateError = true;
+    }
+
+    if (validationState.isLevelOrderTaken) {
+      this.setControlError('levelOrder', 'duplicate');
+      hasDuplicateError = true;
+    }
+
+    if (hasDuplicateError) {
+      this.isSubmitting.set(false);
+    }
+
+    return hasDuplicateError;
   }
 }
