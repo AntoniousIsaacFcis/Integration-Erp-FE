@@ -363,6 +363,7 @@
     "EDIT_DEPARTMENT": " تعديل القسم",
     "EDIT_DESIGNATION": " تعديل المسمى",
     "EDIT_LEVEL": " تعديل المستوى",
+    "PREVIEW_DEPARTMENT": "عرض القسم",
     "DELETE_DEPARTMENT": "حذف القسم",
     "DELETE_DESIGNATION": "حذف المسمى",
     "DELETE_LEVEL": "حذف المستوى",
@@ -651,6 +652,8 @@
     "DUPLICATE_SORT_ORDER": "ترتيب الفرز مستخدم من قبل",
     "LEVEL_NAME_MIN_LENGTH": "اسم المستوى يجب ألا يقل عن 3 أحرف",
     "LEVEL_NAME_MAX_LENGTH": "اسم المستوى يجب ألا يتجاوز 100 حرف",
+    "DEPARTMENT_NAME_MIN_LENGTH": "اسم القسم يجب ألا يقل عن 3 أحرف",
+    "DEPARTMENT_NAME_MAX_LENGTH": "اسم القسم يجب ألا يتجاوز 100 حرف",
     "EMPLOYMENT_TYPE_NAME_MIN_LENGTH": "اسم نوع التوظيف يجب ألا يقل عن 3 أحرف",
     "EMPLOYMENT_TYPE_NAME_MAX_LENGTH": "اسم نوع التوظيف يجب ألا يتجاوز 100 حرف",
     "MAX_CHARACTERS": "تم تجاوز الحد الأقصى لعدد الأحرف"

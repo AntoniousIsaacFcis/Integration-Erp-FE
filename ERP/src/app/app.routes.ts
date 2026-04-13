@@ -56,6 +56,31 @@ export const routes: Routes = [
         loadChildren: () => import('./features/organization/organization.route').then(m => m.ORGANIZATION_ROUTES),
       },
       {
+        path: 'departments',
+        pathMatch: 'full',
+        redirectTo: 'organization/departments',
+      },
+      {
+        path: 'departments/view',
+        redirectTo: 'organization/departments/view',
+      },
+      {
+        path: 'departments/create',
+        redirectTo: 'organization/departments/create',
+      },
+      {
+        path: 'departments/edit/:id',
+        redirectTo: 'organization/departments/edit/:id',
+      },
+      {
+        path: 'departments/preview/:id',
+        redirectTo: 'organization/departments/preview/:id',
+      },
+      {
+        path: 'departments',
+        redirectTo: 'organization/departments',
+      },
+      {
         path: 'job-levels',
         pathMatch: 'full',
         redirectTo: 'organization/levels',

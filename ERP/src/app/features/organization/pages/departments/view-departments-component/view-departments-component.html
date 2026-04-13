@@ -1,0 +1,71 @@
+<app-app-base-table-component [(searchTerm)]="searchTerm" [totalItems]="totalItems()" [(currentPage)]="currentPage"
+  [extraFilters]="departmentFilters" [extraActions]="departmentActions" *transloco="let t">
+
+  <ng-template #departmentFilters>
+    <app-status-badge-component label="FILTERS.STATUS" [(selectedStatus)]="selectedStatus"
+      [options]="statusOptions"></app-status-badge-component>
+  </ng-template>
+
+  <ng-template #departmentActions>
+    <app-action-btn-component [label]="'BUTTON.ADD_DEPARTMENT'" (clicked)="handleCreateNavigation()" />
+  </ng-template>
+
+  <div class="w-full">
+    @if (departmentsResource.isLoading()) {
+      <div class="flex justify-center py-20 text-gray-400">
+        {{ t('COMMON.MESSAGES.LOADING_DATA') }}
+      </div>
+    }
+
+    @if (departmentsResource.error()) {
+      <div class="bg-red-50 text-red-600 p-6 rounded-xl text-center border border-red-100">
+        <p>فشل الاتصال بالنظام</p>
+        <button (click)="departmentsResource.reload()" class="mt-3 px-4 py-2 bg-red-600 text-white rounded-lg">
+          إعادة المحاولة
+        </button>
+      </div>
+    }
+
+    @if (departmentsResource.value()) {
+      <table class="w-full text-right font-arabic text-black border border-[#F4F4F4]/50 rounded-xl overflow-hidden">
+        <thead class="text-sm sticky top-0 bg-[#F4F4F4] z-10">
+          <tr>
+            <th class="py-4 ps-20 text-start">{{ t('ORGANIZATION.DEPARTMENT_NAME') }}</th>
+            <th class="py-4 pe-16 text-start">{{ t('COMMON.DESCRIPTION') }}</th>
+            <th class="py-4 pe-24 text-center">{{ t('COMMON.STATUS') }}</th>
+            <th class="py-4 px-20 text-center"></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (department of departmentsList(); track department.id) {
+            <tr class="bg-white hover:bg-gray-50/50 transition-all border-b border-gray-100">
+              <td class="py-4 ps-20 text-start font-normal text-sm">{{ department.name }}</td>
+              <td class="py-4 pe-16 text-start font-normal text-sm max-w-[340px] truncate">
+                {{ department.description || '-' }}
+              </td>
+              <td class="py-3 pe-24 flex justify-center">
+                <app-table-status-badge-component [status]="department.status" />
+              </td>
+              <td class="py-4 px-20">
+                <div class="flex gap-5 justify-end">
+                  <button (click)="handleEdit(department.id)"
+                    class="flex size-[30px] items-center justify-center rounded-full bg-[#0000001A] transition-colors hover:bg-[#00000033]">
+                    <ng-icon name="lucidePencil" size="16px" color="black" />
+                  </button>
+                  <button (click)="handleDelete(department.id)"
+                    class="flex size-[30px] items-center justify-center rounded-full bg-[#0000001A] transition-colors hover:bg-[#00000033]">
+                    <ng-icon name="lucideTrash2" size="16px" color="#F40552" />
+                  </button>
+                  <button (click)="handleView(department.id)"
+                    class="flex size-[32px] items-center justify-center rounded-full bg-[#61BDDC33] hover:bg-gray-100 transition-colors">
+                    <ng-icon name="lucideEye" size="16px" color="#61BDDC" />
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+  </div>
+</app-app-base-table-component>

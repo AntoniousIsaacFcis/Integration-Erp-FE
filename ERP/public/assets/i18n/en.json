@@ -331,6 +331,7 @@
     "EDIT_DEPARTMENT": "Edit Department",
     "EDIT_DESIGNATION": "Edit Designation",
     "EDIT_LEVEL": "Edit Level",
+    "PREVIEW_DEPARTMENT": "Preview Department",
     "DELETE_DEPARTMENT": "Delete Department",
     "DELETE_DESIGNATION": "Delete Designation",
     "DELETE_LEVEL": "Delete Level",
@@ -568,6 +569,8 @@
     "DUPLICATE_SORT_ORDER": "Sort order is already used",
     "LEVEL_NAME_MIN_LENGTH": "Level name must be at least 3 characters",
     "LEVEL_NAME_MAX_LENGTH": "Level name must not exceed 100 characters",
+    "DEPARTMENT_NAME_MIN_LENGTH": "Department name must be at least 3 characters",
+    "DEPARTMENT_NAME_MAX_LENGTH": "Department name must not exceed 100 characters",
     "EMPLOYMENT_TYPE_NAME_MIN_LENGTH": "Employment type name must be at least 3 characters",
     "EMPLOYMENT_TYPE_NAME_MAX_LENGTH": "Employment type name must not exceed 100 characters",
     "MAX_CHARACTERS": "Maximum character limit exceeded"

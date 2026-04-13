@@ -12,10 +12,7 @@ export const ORGANIZATION_ROUTES: Routes = [
       },
       {
         path: 'departments',
-        loadComponent: () =>
-          import('./pages/manage-department/departments-component/departments-component')
-            .then(x => x.DepartmentsComponent),
-        data: { breadcrumb: 'MENU.DEPARTMENTS' },
+        loadChildren: () => import('./department.routes').then(m => m.DEPARTMENT_ROUTES),
       },
       {
         path: 'levels',

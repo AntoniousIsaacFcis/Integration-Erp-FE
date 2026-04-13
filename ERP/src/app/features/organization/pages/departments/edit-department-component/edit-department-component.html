@@ -1,0 +1,43 @@
+<div
+  class="w-full max-w-standard bg-white rounded-[20px] shadow-soft border border-black/5 p-spacing-xl flex flex-col gap-spacing-lg mx-auto">
+  <app-form-container-component *transloco="let t" [title]="t('ORGANIZATION.EDIT_DEPARTMENT')" (submit)="onSubmit()">
+    <ng-container formFields [formGroup]="departmentForm">
+      @if (isLoading()) {
+        <div class="col-span-2 flex justify-center py-10 text-gray-400">
+          {{ t('COMMON.MESSAGES.LOADING_DATA') }}
+        </div>
+      } @else {
+        <div class="col-span-2">
+          <app-app-input-component [label]="t('ORGANIZATION.DEPARTMENT_NAME') + ' *'"
+            [placeholder]="t('PLACEHOLDER.ENTER_NAME')" [control]="departmentForm.controls.name"
+            [showErrors]="isFormSubmitted()" [minLengthErrorKey]="'ERRORS.DEPARTMENT_NAME_MIN_LENGTH'"
+            [maxLengthErrorKey]="'ERRORS.DEPARTMENT_NAME_MAX_LENGTH'" />
+        </div>
+
+        <app-app-radio-component [label]="t('COMMON.STATUS')" [required]="true"
+          [control]="departmentForm.controls.status" [options]="[
+            { label: 'COMMON.ACTIVE', value: 'active' },
+            { label: 'COMMON.INACTIVE', value: 'inactive' }
+          ]" />
+
+        <div class="col-span-2">
+          <app-app-textarea-component [label]="t('COMMON.DESCRIPTION')"
+            [placeholder]="t('PLACEHOLDER.DESCRIPTION_LIMIT')" [control]="departmentForm.controls.description"
+            [showErrors]="isFormSubmitted()" />
+
+          <div class="p-2">
+            <span class="text-xs font-medium transition-colors duration-200"
+              [class]="isFormSubmitted() && isOverLimit() ? 'text-red-500' : 'text-gray-400'">
+              {{ characterCount() }} / {{ descriptionCharacterLimit }} {{ t('COMMON.CHARACTERS') }}
+            </span>
+          </div>
+        </div>
+      }
+    </ng-container>
+
+    <ng-container formActions>
+      <app-form-cancel-button-component (clicked)="onCancel()" />
+      <app-form-save-button-component [isLoading]="isSubmitting()" [isDisabled]="isLoading()" type="submit" />
+    </ng-container>
+  </app-form-container-component>
+</div>

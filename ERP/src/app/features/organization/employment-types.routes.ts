@@ -1,5 +1,4 @@
 import { Routes } from "@angular/router";
-import { ViewEmloymentTypesComponent } from "./pages/employment-types/view-emloyment-types-component/view-emloyment-types-component";
 
 export const EMPLOYMENT_TYPES_ROUTES: Routes = [
   {
@@ -8,7 +7,7 @@ export const EMPLOYMENT_TYPES_ROUTES: Routes = [
     children: [
       {
         path: 'view',
-        component: ViewEmloymentTypesComponent,
+        loadComponent: () => import('./pages/employment-types/view-emloyment-types-component/view-emloyment-types-component').then(x => x.ViewEmloymentTypesComponent),
         data: { breadcrumb: 'BREADCRUMB.TYPES_TABLE' }
       },
       {
