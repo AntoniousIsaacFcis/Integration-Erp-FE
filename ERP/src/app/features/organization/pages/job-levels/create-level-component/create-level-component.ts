@@ -165,12 +165,6 @@ export class CreateLevelComponent {
   }
 
   onCancel() {
-    this.isFormSubmitted.set(false);
-    this.jobLevelForm.reset({
-      levelOrder: null,
-      name: '',
-      isActive: true,
-      description: '',
-    });
+    this.router.navigate(['/organization/levels/view']);
   }
 }

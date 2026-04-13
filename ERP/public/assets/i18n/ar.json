@@ -377,8 +377,11 @@
     "RESPONSIBLE_MANAGERS": "المديرون المسؤولون",
     "EMPLOYEES_IN_DEPARTMENT": "الموظفون بالقسم",
     "SEARCH_STAFF": "ابحث عن موظف",
-    "MANAGE_DESIGNATIONS": "إدارة المسميات",
-    "MANAGE_LEVEL": "إدارة المستويات"
+    "MANAGE_DESIGNATIONS": "إدارة المسميات الوظيفية",
+    "MANAGE_LEVEL": "إدارة المستويات",
+    "MANAGE_DEPARTMENTS": "إدارة الأقسام",
+    "MANAGE_JOB_LEVELS": "إدارة المستويات الوظيفية",
+    "MANAGE_EMPLOYMENT_TYPES": "إدارة أنواع الوظائف"
   },
   "EMPLOYEES": {
     "TITLE": "إدارة الموظفين",

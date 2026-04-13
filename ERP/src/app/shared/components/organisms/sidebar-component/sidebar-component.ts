@@ -41,9 +41,10 @@ export class SidebarComponent {
   });
 
   protected readonly activeSubId = computed(() => {
-    const url = this.navService.currentUrl();
     for (const item of this.navService.filteredMenuItems()) {
-      const activeChild = item.children?.find((child: INavItem) => child.path === url);
+      const activeChild = item.children?.find((child: INavItem) =>
+        this.navService.isActive(child.path),
+      );
       if (activeChild) return activeChild.id;
     }
     return null;

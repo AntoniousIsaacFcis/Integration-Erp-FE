@@ -346,7 +346,10 @@
     "EMPLOYEES_IN_DEPARTMENT": "Employees In Department",
     "SEARCH_STAFF": "Search employee",
     "MANAGE_DESIGNATIONS": "Manage Designations",
-    "MANAGE_LEVEL": "Manage Levels"
+    "MANAGE_LEVEL": "Manage Levels",
+    "MANAGE_DEPARTMENTS": "Manage Departments",
+    "MANAGE_JOB_LEVELS": "Manage Job Levels",
+    "MANAGE_EMPLOYMENT_TYPES": "Manage Employment Types"
   },
   "EMPLOYEES": {
     "TITLE": "Employee Management",

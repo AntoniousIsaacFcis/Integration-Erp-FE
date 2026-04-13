@@ -25,13 +25,10 @@ export const MENU_ITEMS: INavItem[] = [
     path: '/organization',
     icon: 'lucideBuilding2',
     children: [
-      { id: '3-1', label: 'MENU.DEPARTMENTS', path: '/organization/departments', icon: 'lucideFolder' },
-      { id: '3-2', label: 'MENU.DESIGNATIONS', path: '/organization/designations', icon: 'lucideBriefcase' },
-      { id: '3-3', label: 'MENU.VIEW_LEVELS', path: '/organization/levels/view', icon: 'lucideGraduationCap' },
-      { id: '3-4', label: 'MENU.CREATE_LEVEL', path: '/organization/levels/create', icon: 'lucidePlus' },
-      { id: '3-5', label: 'MENU.LEVEL_MAPPING', path: '/organization/levels/mapping', icon: 'lucideLink' },
-      { id: '3-6', label: 'MENU.VIEW_TYPES', path: '/organization/employment-types/view', icon: 'lucideList' },
-      { id: '3-7', label: 'MENU.CREATE_TYPE', path: '/organization/employment-types/create', icon: 'lucidePlus' }
+      { id: '3-1', label: 'ORGANIZATION.MANAGE_DESIGNATIONS', path: '/organization/designations', icon: 'lucideBriefcase' },
+      { id: '3-2', label: 'ORGANIZATION.MANAGE_DEPARTMENTS', path: '/organization/departments', icon: 'lucideFolder' },
+      { id: '3-3', label: 'ORGANIZATION.MANAGE_JOB_LEVELS', path: '/organization/levels', icon: 'lucideGraduationCap' },
+      { id: '3-4', label: 'ORGANIZATION.MANAGE_EMPLOYMENT_TYPES', path: '/organization/employment-types', icon: 'lucideList' }
     ]
   },
   {
