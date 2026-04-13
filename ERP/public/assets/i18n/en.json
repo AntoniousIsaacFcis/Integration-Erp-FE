@@ -566,7 +566,9 @@
     "DUPLICATE_VALUE": "This value is already used",
     "DUPLICATE_SORT_ORDER": "Sort order is already used",
     "LEVEL_NAME_MIN_LENGTH": "Level name must be at least 3 characters",
-    "LEVEL_NAME_MAX_LENGTH": "Level name must not exceed 100 characters"
+    "LEVEL_NAME_MAX_LENGTH": "Level name must not exceed 100 characters",
+    "EMPLOYMENT_TYPE_NAME_MIN_LENGTH": "Employment type name must be at least 3 characters",
+    "EMPLOYMENT_TYPE_NAME_MAX_LENGTH": "Employment type name must not exceed 100 characters"
   },
   "errors": {
     "failed_to_load_permissions": "Failed to load permissions. Please try again."

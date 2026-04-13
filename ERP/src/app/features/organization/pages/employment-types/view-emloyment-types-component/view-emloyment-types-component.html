@@ -39,7 +39,7 @@
       <tbody>
         @for (type of typesList(); track type.id) {
         <tr class="bg-white hover:bg-gray-50/50 transition-all border-b border-gray-100">
-          <td class="py-4 ps-24 text-start font-normal text-sm">{{ type.employmentTypeAr }}</td>
+          <td class="py-4 ps-24 text-start font-normal text-sm">{{ type.name }}</td>
           <td class="py-4 pe-26 text-sm text-center">{{ type.employeeCount }} {{t('JOB_LEVEL.EMPLOYEES')}}</td>
            <td class="py-4 pe-60 flex justify-center">
             @let isActive = type.status === 'active';

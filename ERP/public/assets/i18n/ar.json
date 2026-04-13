@@ -649,7 +649,9 @@
     "DUPLICATE_VALUE": "هذه القيمة مستخدمة من قبل",
     "DUPLICATE_SORT_ORDER": "ترتيب الفرز مستخدم من قبل",
     "LEVEL_NAME_MIN_LENGTH": "اسم المستوى يجب ألا يقل عن 3 أحرف",
-    "LEVEL_NAME_MAX_LENGTH": "اسم المستوى يجب ألا يتجاوز 100 حرف"
+    "LEVEL_NAME_MAX_LENGTH": "اسم المستوى يجب ألا يتجاوز 100 حرف",
+    "EMPLOYMENT_TYPE_NAME_MIN_LENGTH": "اسم نوع التوظيف يجب ألا يقل عن 3 أحرف",
+    "EMPLOYMENT_TYPE_NAME_MAX_LENGTH": "اسم نوع التوظيف يجب ألا يتجاوز 100 حرف"
   },
   "errors": {
     "failed_to_load_permissions": "فشل تحميل الصلاحيات. حاول مرة أخرى."

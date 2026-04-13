@@ -9,12 +9,12 @@ import { jobTitlesHandlers } from './handlers/job-titles.handler';
 import { attendanceHandlers } from './handlers/attendance.handlers';
 import { vacationHandlers } from './handlers/vacation.handlers';
 import { salaryHandlers } from './handlers/salary.handlers';
-import { employmentTypesHandlers } from './handlers/employment-types.handler';
 import { shiftsHandlers } from './handlers/shifts.handlers';
 import { specialShiftHandlers } from './handlers/special-shifts.handlers';
 import { attendanceDaysHandlers } from './handlers/attendance.days.handler';
 import { permissionsHandlers } from './handlers/permissions.handler';
 import { roleHandlers } from './handlers/role.handler';
+import { employmentTypesHandlers } from './handlers/employment-types.handler';
 
 export const worker = setupWorker(
   ...attendanceDaysHandlers,

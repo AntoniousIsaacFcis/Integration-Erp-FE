@@ -47,7 +47,7 @@ export class CreateEmploymentTypeComponent {
    * This automatically ensures that value is 'string' and not 'string | null'
    */
   EmployeeTypesForm = this.fb.nonNullable.group({
-    employmentTypeAr: ['', [Validators.required]],
+    name: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]],
     // Casting 'active' as a literal type ensures it matches 'active' | 'inactive' in your DTO
     status: ['active' as 'active' | 'inactive', [Validators.required]],
     description: ['', [AppValidators.wordLimit(250)]]
@@ -75,12 +75,11 @@ export class CreateEmploymentTypeComponent {
 
     this.isSubmitting.set(true);
 
-    // getRawValue() now strictly returns { employmentTypeAr: string, status: 'active' | 'inactive', description: string }
+    // getRawValue() now strictly returns { name: string, status: 'active' | 'inactive', description: string }
     const rawValue = this.EmployeeTypesForm.getRawValue();
 
     this._employeeTypesService.create({
-      employmentTypeAr: rawValue.employmentTypeAr,
-      employmentTypeEn: rawValue.employmentTypeAr, // Mapping to English
+      name: rawValue.name.trim(),
       status: rawValue.status,
       description: rawValue.description
     })

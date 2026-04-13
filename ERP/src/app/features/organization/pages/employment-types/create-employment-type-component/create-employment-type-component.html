@@ -6,7 +6,9 @@
 
       <div class="col-span-2">
         <app-app-input-component [label]="t('JOB_LEVEL.TYPE_NAME') + ' *'" [placeholder]="t('JOB_LEVEL.TYPE_NAME')"
-          [control]="EmployeeTypesForm.controls.employmentTypeAr" [showErrors]="isFormSubmitted()" />
+          [control]="EmployeeTypesForm.controls.name" [showErrors]="isFormSubmitted()"
+          [minLengthErrorKey]="'ERRORS.EMPLOYMENT_TYPE_NAME_MIN_LENGTH'"
+          [maxLengthErrorKey]="'ERRORS.EMPLOYMENT_TYPE_NAME_MAX_LENGTH'" />
       </div>
 
       <app-app-radio-component [label]="t('JOB_LEVEL.STATUS')" [required]="true"
@@ -17,11 +19,12 @@
 
       <div class="col-span-2">
         <app-app-textarea-component [label]="t('JOB_LEVEL.DESCRIPTION')"
-          [placeholder]="t('JOB_LEVEL.DESCRIPTION_PLACEHOLDER')" [control]="EmployeeTypesForm.controls.description" />
+          [placeholder]="t('JOB_LEVEL.DESCRIPTION_PLACEHOLDER')" [control]="EmployeeTypesForm.controls.description"
+          [showErrors]="isFormSubmitted()" />
 
         <div class="p-2">
           <span class="text-xs font-medium transition-colors duration-200 "
-            [class]="isOverLimit() ? 'text-red-500' : 'text-gray-400'">
+            [class]="isFormSubmitted() && isOverLimit() ? 'text-red-500' : 'text-gray-400'">
             {{ wordCount() }} / 250 {{ t('COMMON.WORDS') }}
           </span>
         </div>
@@ -31,8 +34,7 @@
 
     <ng-container formActions>
       <app-form-cancel-button-component (clicked)="onCancel()" />
-      <app-form-save-button-component [isLoading]="isSubmitting()" [isDisabled]="EmployeeTypesForm.invalid"
-        type="submit" />
+      <app-form-save-button-component [isLoading]="isSubmitting()" type="submit" />
     </ng-container>
 
   </app-form-container-component>

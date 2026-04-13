@@ -1,7 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { computed, inject, Injectable } from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
-import { TranslationService } from '@core/services/translation-service';
 import { environment } from '@env/environment.development';
 import { CreateEmploymentTypeDTO, IEmploymentType, IEmploymentTypeResponse } from '../models/iemployment-type';
 import { catchError, of } from 'rxjs';
@@ -11,8 +10,8 @@ import { catchError, of } from 'rxjs';
 })
 export class EmploymentTypesService {
   private readonly http = inject(HttpClient);
-  private readonly translationService = inject(TranslationService);
-  private readonly API_URL = `${environment.baseUrl}/api/employment-types`;
+  private readonly API_URL = `${environment.baseUrl}/api/organization/employment-type
+`;
 
   // 1. Resource for Management Table (Paginated/Filtered)
 getManagementData(params: { page: number; limit: number; search?: string;status?: string }) {
@@ -37,10 +36,9 @@ getManagementData(params: { page: number; limit: number; search?: string;status?
   // Live translation computed list for dropdowns
   readonly lookupList = computed(() => {
     const data = this.lookupResource.value() ?? [];
-    const lang = this.translationService.lang();
     return data.map(type => ({
       id: type.id,
-      displayName: lang === 'ar' ? type.employmentTypeAr : type.employmentTypeEn
+      displayName: type.name
     }));
   });
 
