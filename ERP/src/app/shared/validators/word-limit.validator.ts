@@ -15,4 +15,15 @@ export class AppValidators {
         : null;
     };
   }
+
+  static charLimit(maxCharacters: number): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const value = control.value;
+      if (!value || typeof value !== 'string') return null;
+
+      return value.length > maxCharacters
+        ? { maxCharacters: { actual: value.length, limit: maxCharacters } }
+        : null;
+    };
+  }
 }

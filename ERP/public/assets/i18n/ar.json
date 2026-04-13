@@ -41,6 +41,7 @@
     "TOTAL": "الإجمالي",
     "EMPTY_STATE": "لا توجد عناصر",
     "WORDS": "كلمة",
+    "CHARACTERS": "حرف",
     "OPTIONAL": "اختياري",
     "SINGLE": "أعزب",
     "MARRIED": "متزوج",
@@ -305,7 +306,7 @@
     "ENTER_EMAIL": "أدخل البريد الإلكتروني",
     "ENTER_PHONE": "أدخل رقم الهاتف",
     "ENTER_ADDRESS": "أدخل العنوان",
-    "DESCRIPTION_LIMIT": "الوصف لا يتعدي ال 250 كلمة",
+    "DESCRIPTION_LIMIT": "الوصف لا يتعدى 1000 حرف",
     "ENTER_USERNAME": "أدخل اسم المستخدم",
     "ENTER_PASSWORD": "أدخل كلمة المرور",
     "SELECT_OPTION": "اختر خياراً",
@@ -651,7 +652,8 @@
     "LEVEL_NAME_MIN_LENGTH": "اسم المستوى يجب ألا يقل عن 3 أحرف",
     "LEVEL_NAME_MAX_LENGTH": "اسم المستوى يجب ألا يتجاوز 100 حرف",
     "EMPLOYMENT_TYPE_NAME_MIN_LENGTH": "اسم نوع التوظيف يجب ألا يقل عن 3 أحرف",
-    "EMPLOYMENT_TYPE_NAME_MAX_LENGTH": "اسم نوع التوظيف يجب ألا يتجاوز 100 حرف"
+    "EMPLOYMENT_TYPE_NAME_MAX_LENGTH": "اسم نوع التوظيف يجب ألا يتجاوز 100 حرف",
+    "MAX_CHARACTERS": "تم تجاوز الحد الأقصى لعدد الأحرف"
   },
   "errors": {
     "failed_to_load_permissions": "فشل تحميل الصلاحيات. حاول مرة أخرى."
@@ -680,7 +682,7 @@
     "ADD_TYPE": "إضافة دوام جديد",
     "TYPE_NAME": "نوع الدوام",
     "EMPLOYEES": "موظف",
-    "DESCRIPTION_PLACEHOLDER": "الوصف لا يتعدى الـ 250 كلمة"
+    "DESCRIPTION_PLACEHOLDER": "الوصف لا يتعدى 1000 حرف"
   },
   "role": {
     "add_new_role": "إضافة دور جديد",

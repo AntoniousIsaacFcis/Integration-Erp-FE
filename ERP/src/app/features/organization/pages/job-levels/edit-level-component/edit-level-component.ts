@@ -39,6 +39,7 @@ import { EMPTY, switchMap } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EditLevelComponent implements OnInit {
+  readonly descriptionCharacterLimit = 1000;
   private readonly fb = inject(FormBuilder);
   private readonly jobLevelService = inject(JobLevelService);
   private readonly route = inject(ActivatedRoute);
@@ -59,22 +60,16 @@ export class EditLevelComponent implements OnInit {
       Validators.maxLength(100),
     ]),
     isActive: this.fb.nonNullable.control(true, [Validators.required]),
-    description: this.fb.nonNullable.control('', [AppValidators.wordLimit(250)]),
+    description: this.fb.nonNullable.control('', [AppValidators.charLimit(this.descriptionCharacterLimit)]),
   });
 
   private descriptionValue = toSignal(this.jobLevelForm.controls.description.valueChanges, {
     initialValue: '',
   });
 
-  wordCount = computed(() => {
-    const text = this.descriptionValue() ?? '';
-    return text
-      .trim()
-      .split(/\s+/)
-      .filter((w) => w.length > 0).length;
-  });
+  characterCount = computed(() => (this.descriptionValue() ?? '').length);
 
-  isOverLimit = computed(() => this.wordCount() > 250);
+  isOverLimit = computed(() => this.characterCount() > this.descriptionCharacterLimit);
 
   constructor() {
     this.jobLevelForm.controls.levelOrder.valueChanges

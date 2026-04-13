@@ -38,6 +38,7 @@ import { EMPTY, switchMap } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CreateLevelComponent {
+  readonly descriptionCharacterLimit = 1000;
   private readonly fb = inject(FormBuilder);
   private _jobLevelService = inject(JobLevelService);
   private readonly _translocoService = inject(TranslocoService);
@@ -54,22 +55,14 @@ export class CreateLevelComponent {
       Validators.maxLength(100),
     ]),
     isActive: this.fb.nonNullable.control(true, [Validators.required]),
-    description: this.fb.nonNullable.control('', [AppValidators.wordLimit(250)]),
+    description: this.fb.nonNullable.control('', [AppValidators.charLimit(this.descriptionCharacterLimit)]),
   });
   // 1. Capture the description value as a signal
   private descriptionValue = toSignal(this.jobLevelForm.controls.description.valueChanges, {
     initialValue: '',
   });
-  // 2.
-  wordCount = computed(() => {
-    const text = this.descriptionValue() ?? '';
-    return text
-      .trim()
-      .split(/\s+/)
-      .filter((w) => w.length > 0).length;
-  });
-  // 3.
-  isOverLimit = computed(() => this.wordCount() > 250);
+  characterCount = computed(() => (this.descriptionValue() ?? '').length);
+  isOverLimit = computed(() => this.characterCount() > this.descriptionCharacterLimit);
 
   isFormSubmitted = signal(false);
 

@@ -41,6 +41,7 @@
     "TOTAL": "Total",
     "EMPTY_STATE": "No Items",
     "WORDS": "Word",
+    "CHARACTERS": "Characters",
     "OPTIONAL": "Optional",
     "SINGLE": "Single",
     "MARRIED": "Married",
@@ -283,7 +284,7 @@
     "ENTER_EMAIL": "Enter Email",
     "ENTER_PHONE": "Enter Phone Number",
     "ENTER_ADDRESS": "Enter Address",
-    "DESCRIPTION_LIMIT": "Description should not exceed 250 words",
+    "DESCRIPTION_LIMIT": "Description should not exceed 1000 characters",
     "ENTER_USERNAME": "Enter Username",
     "ENTER_PASSWORD": "Enter Password",
     "SELECT_OPTION": "Select an Option",
@@ -568,7 +569,8 @@
     "LEVEL_NAME_MIN_LENGTH": "Level name must be at least 3 characters",
     "LEVEL_NAME_MAX_LENGTH": "Level name must not exceed 100 characters",
     "EMPLOYMENT_TYPE_NAME_MIN_LENGTH": "Employment type name must be at least 3 characters",
-    "EMPLOYMENT_TYPE_NAME_MAX_LENGTH": "Employment type name must not exceed 100 characters"
+    "EMPLOYMENT_TYPE_NAME_MAX_LENGTH": "Employment type name must not exceed 100 characters",
+    "MAX_CHARACTERS": "Maximum character limit exceeded"
   },
   "errors": {
     "failed_to_load_permissions": "Failed to load permissions. Please try again."
@@ -596,7 +598,7 @@
     "ADD_TYPE": "Add New Employment Type",
     "TYPE_NAME": "Employment Type",
     "EMPLOYEES": "Employees",
-    "DESCRIPTION_PLACEHOLDER": "Description should not exceed 250 words"
+    "DESCRIPTION_PLACEHOLDER": "Description should not exceed 1000 characters"
   },
   "FILTERS": {
     "FILTER_BY": "Filter By",

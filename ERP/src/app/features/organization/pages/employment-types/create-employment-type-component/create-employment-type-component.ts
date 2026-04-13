@@ -34,6 +34,7 @@ import { AppValidators } from '@shared/validators/word-limit.validator';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CreateEmploymentTypeComponent {
+  readonly descriptionCharacterLimit = 1000;
   private readonly fb = inject(FormBuilder);
   private readonly _employeeTypesService = inject(EmploymentTypesService);
   private readonly router = inject(Router);
@@ -50,19 +51,15 @@ export class CreateEmploymentTypeComponent {
     name: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]],
     // Casting 'active' as a literal type ensures it matches 'active' | 'inactive' in your DTO
     status: ['active' as 'active' | 'inactive', [Validators.required]],
-    description: ['', [AppValidators.wordLimit(250)]]
+    description: ['', [AppValidators.charLimit(this.descriptionCharacterLimit)]]
   });
   private descriptionValue = toSignal(
     this.EmployeeTypesForm.controls.description.valueChanges,
     { initialValue: '' }
   );
-  // Compute the word count dynamically
-  wordCount = computed(() => {
-    const text = this.descriptionValue();
-    return text.trim().split(/\s+/).filter(w => w.length > 0).length;
-  });
+  characterCount = computed(() => this.descriptionValue().length);
   // Check if we are over the limit to change text color
-  isOverLimit = computed(() => this.wordCount() > 250);
+  isOverLimit = computed(() => this.characterCount() > this.descriptionCharacterLimit);
   onSubmit() {
     if (this.isSubmitting()) return;
 

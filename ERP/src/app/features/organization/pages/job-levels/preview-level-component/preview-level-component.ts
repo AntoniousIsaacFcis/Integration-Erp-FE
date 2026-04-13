@@ -34,6 +34,7 @@ import { FormSaveButtonComponent } from "@shared/components/molecules/form-save-
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PreviewLevelComponent implements OnInit {
+  readonly descriptionCharacterLimit = 1000;
   private readonly fb = inject(FormBuilder);
   private readonly jobLevelService = inject(JobLevelService);
   private readonly route = inject(ActivatedRoute);
@@ -53,13 +54,7 @@ export class PreviewLevelComponent implements OnInit {
     initialValue: '',
   });
 
-  wordCount = computed(() => {
-    const text = this.descriptionValue() ?? '';
-    return text
-      .trim()
-      .split(/\s+/)
-      .filter((w) => w.length > 0).length;
-  });
+  characterCount = computed(() => (this.descriptionValue() ?? '').length);
 
   ngOnInit() {
     const levelId = this.route.snapshot.paramMap.get('id') ?? '';

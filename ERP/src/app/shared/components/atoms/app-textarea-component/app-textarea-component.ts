@@ -20,12 +20,14 @@ export class AppTextareaComponent {
 
   requiredErrorKey = input<string>('AUTH.REQUIRED_FIELD');
   maxWordsErrorKey = input<string>('ERRORS.MAX_WORDS');
+  maxCharactersErrorKey = input<string>('ERRORS.MAX_CHARACTERS');
 
   get errorKey(): string | null {
     const ctrl = this.control();
     if (this.showErrors() && ctrl.invalid) {
       if (ctrl.errors?.['required']) return this.requiredErrorKey();
       if (ctrl.errors?.['maxWords']) return this.maxWordsErrorKey();
+      if (ctrl.errors?.['maxCharacters']) return this.maxCharactersErrorKey();
     }
     return null;
   }
