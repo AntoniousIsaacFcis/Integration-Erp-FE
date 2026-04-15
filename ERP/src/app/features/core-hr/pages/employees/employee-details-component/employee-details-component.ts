@@ -16,6 +16,8 @@ import { DatePipe } from '@angular/common';
 import { SalaryService } from '@features/salary/services/salary-service';
 import { MOCK_SALARY_STORE } from '@mocks/data/salary.data';
 import { AttendanceService } from '@features/attendance/services/attendance-service';
+import { EmployeeDocumentService } from '@features/core-hr/services/employee-document-service';
+import { IDocument } from '@shared/models/idocument';
 
 interface YearFilterSource {
   url: string;
@@ -35,6 +37,7 @@ export class EmployeeDetailsComponent {
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
   private readonly attendanceService = inject(AttendanceService);
+  private readonly employeeDocumentService = inject(EmployeeDocumentService);
 
   empId = input.required<string>(); //from Route Path
   year = input<string>('2025');
@@ -169,6 +172,19 @@ export class EmployeeDetailsComponent {
     }
   });
 
+  documentsResource = rxResource<IDocument[], any>({
+    params: () => {
+      const id = this.empId();
+
+      if (!id || this.activeTab() !== 'docs') {
+        return undefined;
+      }
+
+      return { id };
+    },
+    stream: ({ params }) => this.employeeDocumentService.getDocuments(params.id),
+  });
+
 
   attendanceResource = rxResource({
     params: () => {
@@ -264,13 +280,22 @@ export class EmployeeDetailsComponent {
   salaryData = computed(() => this.salaryResource.value());
 
   //-------documents section
-  onDownloadDoc(doc: any) {
-    // If the doc is a File object (from the upload) or a URL
+  onDownloadDoc(doc: IDocument) {
     if (doc.file instanceof File) {
-      const url = URL.createObjectURL(doc.file);
-      window.open(url, '_blank');
-    } else if (typeof doc.url === 'string') {
-      window.open(doc.url, '_blank');
+      const localUrl = URL.createObjectURL(doc.file);
+      window.open(localUrl, '_blank');
+      setTimeout(() => URL.revokeObjectURL(localUrl), 1000);
+      return;
     }
+
+    if (!doc.id) {
+      return;
+    }
+
+    this.employeeDocumentService.downloadDocument(doc.id).subscribe((blob) => {
+      const downloadUrl = URL.createObjectURL(blob);
+      window.open(downloadUrl, '_blank');
+      setTimeout(() => URL.revokeObjectURL(downloadUrl), 1000);
+    });
   }
 }

@@ -25,11 +25,15 @@
     }
   </div>
 
-  @if (errorKey; as key) {
+  @if (errorMessage; as message) {
     <div class="flex items-center gap-xs text-error animate-fade-in ">
       <ng-icon name="lucideOctagonX" size="16" strokeWidth="3"></ng-icon>
       <span class="text-xs font-medium text-start">
-        {{ t(key) }}
+        @if (shouldTranslateErrorMessage) {
+          {{ t(message) }}
+        } @else {
+          {{ message }}
+        }
       </span>
     </div>
   }

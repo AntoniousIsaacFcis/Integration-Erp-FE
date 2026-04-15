@@ -1,5 +1,5 @@
 <div class="flex items-center justify-center rounded-[8px] h-[32px] w-fit px-3 transition-colors" [class]="badgeClasses().bg" *transloco="let t">
   <span class="font-semibold text-sm" [class]="badgeClasses().text">
-    {{ t(translationKey()) }}
+    {{ label() ? displayText() : t(translationKey()) }}
   </span>
 </div>

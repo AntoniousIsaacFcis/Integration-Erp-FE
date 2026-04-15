@@ -1,8 +1,9 @@
-import { ChangeDetectionStrategy, Component, input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, effect, inject, input, signal } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { TranslocoModule } from '@jsverse/transloco';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { lucideOctagonX } from '@ng-icons/lucide';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-app-input-component',
@@ -13,6 +14,8 @@ import { lucideOctagonX } from '@ng-icons/lucide';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppInputComponent {
+  private readonly cdr = inject(ChangeDetectorRef);
+  private readonly destroyRef = inject(DestroyRef);
   label = input<string>('');
   placeholder = input<string>('');
   control = input.required<FormControl>();
@@ -34,9 +37,25 @@ export class AppInputComponent {
   minErrorKey = input<string>('ERRORS.MIN_VALUE');
   duplicateErrorKey = input<string>('ERRORS.DUPLICATE_VALUE');
 
-  get errorKey(): string | null {
+  constructor() {
+    effect(() => {
+      const control = this.control();
+
+      control.statusChanges
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe(() => this.cdr.markForCheck());
+
+      control.valueChanges
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe(() => this.cdr.markForCheck());
+    });
+  }
+
+  get errorMessage(): string | null {
     const ctrl = this.control();
+
     if (this.showErrors() && ctrl.invalid) {
+      if (typeof ctrl.errors?.['backendMessage'] === 'string') return ctrl.errors['backendMessage'];
       if (ctrl.errors?.['required']) return this.requiredErrorKey();
       if (ctrl.errors?.['email']) return this.emailErrorKey();
       if (ctrl.errors?.['minlength']) return this.minLengthErrorKey();
@@ -45,7 +64,12 @@ export class AppInputComponent {
       if (ctrl.errors?.['min']) return this.minErrorKey();
       if (ctrl.errors?.['duplicate']) return this.duplicateErrorKey();
     }
+
     return null;
+  }
+
+  get shouldTranslateErrorMessage() {
+    return this.control().errors?.['backendMessage'] == null;
   }
 
   togglePassword() {

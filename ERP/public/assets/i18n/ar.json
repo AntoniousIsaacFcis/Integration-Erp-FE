@@ -131,7 +131,8 @@
     "VIEW_ATTENDANCE_DAYS": "أيام الحضور",
     "VIEW_ATTENDANCE_LOG_DETAILS": "معلومات سجل الحضور",
     "ADD_ATTENDANCE_PERMISSION": "إضافة إذن حضور",
-    "VIEW_PERMISSIONS": "أذونات الحضور"
+    "VIEW_PERMISSIONS": "أذونات الحضور",
+    "CORE_HR":"الموظفين"
   },
   "BUTTON": {
     "ADD_LEVEL": "إضافة مستوى",
@@ -658,6 +659,8 @@
     "INVALID_FILE_OR_SIZE": "خطا في الصيغة او حجم الملف",
     "DUPLICATE_VALUE": "هذه القيمة مستخدمة من قبل",
     "DUPLICATE_SORT_ORDER": "ترتيب الفرز مستخدم من قبل",
+    "DUPLICATE_STAFF_EMAIL": "هذا البريد الإلكتروني مستخدم بالفعل لموظف آخر",
+    "DUPLICATE_STAFF_PHONE": "رقم الهاتف هذا مستخدم بالفعل لموظف آخر",
     "LEVEL_NAME_MIN_LENGTH": "اسم المستوى يجب ألا يقل عن 3 أحرف",
     "LEVEL_NAME_MAX_LENGTH": "اسم المستوى يجب ألا يتجاوز 100 حرف",
       "DEPARTMENT_NAME_MIN_LENGTH": "اسم القسم يجب ألا يقل عن 3 أحرف",

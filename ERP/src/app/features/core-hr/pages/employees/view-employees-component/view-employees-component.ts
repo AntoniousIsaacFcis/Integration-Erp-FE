@@ -14,6 +14,8 @@ import { DateFilterComponent } from "@shared/components/molecules/date-filter-co
 import { ActionBtnComponent } from "@shared/components/molecules/action-btn-component/action-btn-component";
 import { EmploymentTypesService } from '@features/organization/services/employment-types-service';
 import { TableStatusBadgeComponent } from "@shared/components/atoms/table-status-badge-component/table-status-badge-component";
+import { DesignationsService } from '@features/organization/services/designations-service';
+import { EmploymentStatusesService } from '@features/organization/services/employment-statuses-service';
 
 @Component({
   selector: 'app-view-employees-component',
@@ -26,6 +28,8 @@ import { TableStatusBadgeComponent } from "@shared/components/atoms/table-status
 export class ViewEmployeesComponent {
   private readonly employeeService = inject(EmployeeService);
   private readonly employmentTypeService = inject(EmploymentTypesService);
+  private readonly employmentStatusesService = inject(EmploymentStatusesService);
+  private readonly designationsService = inject(DesignationsService);
   private readonly router = inject(Router);
   private readonly platformId = inject(PLATFORM_ID);
   private readonly translationService = inject(TranslationService);
@@ -56,19 +60,26 @@ export class ViewEmployeesComponent {
     const response = this.employeesResource.value()?.data ?? [];
     const lang = this.translationService.lang();
     const employmentTypes = this.employmentTypeService.lookupList();
+    const employmentStatuses = this.employmentStatusesService.lookupList();
+    const designations = this.designationsService.list();
 
     return response.map(emp => {
       const typeMatch = employmentTypes.find(t => t.id === emp.employmentType);
+      const statusMatch = employmentStatuses.find((status) => status.id === emp.employmentStatus);
+      const jobTitleMatch = designations.find((designation) => designation.id === emp.jobTitleId);
 
       return {
         ...emp,
         displayName: lang === 'ar' ? emp.fullNameAr : (emp.fullNameEn || emp.fullNameAr),
 
         displayJobTitle: lang === 'ar'
-          ? (emp.jobTitleAr || emp.jobTitleEn)
-          : (emp.jobTitleEn || emp.jobTitleAr),
+          ? (jobTitleMatch?.displayName || emp.jobTitleAr || emp.jobTitleEn || emp.jobTitleId)
+          : (jobTitleMatch?.displayName || emp.jobTitleEn || emp.jobTitleAr || emp.jobTitleId),
 
         displayEmploymentType: typeMatch?.displayName || emp.employmentType
+        ,
+        displayEmploymentStatus: statusMatch?.displayName || emp.employmentStatusName || emp.employmentStatus,
+        employmentStatusKey: statusMatch?.displayName || emp.employmentStatusName || emp.employmentStatus,
       };
     });
   });

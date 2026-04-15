@@ -1,7 +1,13 @@
 export interface IDocument {
-  file: File;
+  id?: string;
+  file?: File | null;
   name: string;
   size: number;
-  uploadDate: Date;
+  uploadDate: Date | string;
   type: string;
+  staffId?: string;
+  documentTypeId?: string;
+  documentTypeName?: string;
+  expiryDate?: string | null;
+  fileReference?: string | null;
 }

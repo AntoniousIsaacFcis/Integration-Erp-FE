@@ -16,8 +16,9 @@
 
   <app-app-select-component [label]="t('EMPLOYEES.GENDER')+ '*'" [control]="getControl('gender')"
     [showErrors]="submitted()" [placeholder]="'PLACEHOLDER.GENDER'">
-    <option value="male">{{ t('EMPLOYEES.MALE') }}</option>
-    <option value="female">{{ t('EMPLOYEES.FEMALE') }}</option>
+    @for (option of genderOptions; track option.value) {
+    <option [value]="option.value">{{ t(option.label) }}</option>
+    }
   </app-app-select-component>
 
   <app-app-select-component [label]="t('EMPLOYEES.NATIONALITY')+ '*'" [control]="getControl('nationality')"
@@ -27,29 +28,37 @@
     @if (nationalitiesService.nationalitiesResource.error()) {
     <div class="text-error text-xs">⚠️ فشل تحميل البيانات، يرجى تحديث الصفحة</div>
     } @else {
-    @for (n of nationalities(); track n.code) {
-    <option [value]="n.code">{{ t(n.displayName) }}</option>
+    @for (n of nationalities(); track n.id) {
+    <option [value]="n.id">{{ n.displayName }}</option>
     }
     }
   </app-app-select-component>
 
   <app-app-select-component [label]="t('EMPLOYEES.MARITAL_STATUS')+ '*'" [control]="getControl('maritalStatus')"
     [showErrors]="submitted()" [placeholder]="'PLACEHOLDER.MARITAL_STATUS'">
-    <option value="single">{{ t('EMPLOYEES.SINGLE') }}</option>
-    <option value="married">{{ t('EMPLOYEES.MARRIED') }}</option>
-    <option value="divorced">{{ t('EMPLOYEES.DIVORCED') }}</option>
-    <option value="widowed">{{ t('EMPLOYEES.WIDOWED') }}</option>
+    @for (option of maritalStatusOptions; track option.value) {
+    <option [value]="option.value">{{ t(option.label) }}</option>
+    }
   </app-app-select-component>
 
   <app-app-date-input-component [label]="t('EMPLOYEES.BIRTH_DATE')" [control]="getControl('birthDate')"
     [showErrors]="submitted()" />
+  @if (birthDateError()) {
+  <div class="flex items-center gap-xs text-error animate-fade-in md:col-span-1">
+    <ng-icon name="lucideOctagonX" size="16" strokeWidth="3"></ng-icon>
+    <span class="text-xs font-medium text-start">
+      Birth date cannot be in the future.
+    </span>
+  </div>
+  }
 
   <app-app-input-component [label]="t('EMPLOYEES.PHONE') + '*'" [control]="getControl('phone')"
     [placeholder]="'012xxxxxxxx'" [showErrors]="submitted()" [patternErrorKey]="'ERRORS.INVALID_PHONE_FORMAT'"
-    autocomplete="tel" name="phone" />
+    autocomplete="tel" name="phone" [duplicateErrorKey]="'ERRORS.DUPLICATE_STAFF_PHONE'" />
 
   <app-app-input-component [label]="t('EMPLOYEES.EMAIL') + '*'" [control]="getControl('email')"
-    [placeholder]="'example@domain.com'" [showErrors]="submitted()" autocomplete="email" name="email" />
+    [placeholder]="'example@domain.com'" [showErrors]="submitted()" autocomplete="email" name="email"
+    [duplicateErrorKey]="'ERRORS.DUPLICATE_STAFF_EMAIL'" />
 
   <app-app-input-component [label]="t('EMPLOYEES.ADDRESS') + '*'" [control]="getControl('address')"
     [placeholder]="t('PLACEHOLDER.ADDRESS')" [showErrors]="submitted()" name="address" autocomplete="street-address" />
@@ -64,18 +73,6 @@
     <div class="text-lg font-semibold text-black">{{ t('MENU.JOB_DATA') }}</div>
   </div>
 
-  <app-app-select-component [label]="t('EMPLOYEES.JOB_TITLE') + '*'" [control]="getControl('jobTitleId')"
-    [showErrors]="submitted()"
-    [placeholder]="isLoadingJobs() ? t('COMMON.LOADING') : t('PLACEHOLDER.SELECT_JOB_TITLE')">
-    @if (_designationsService.resource.error()) {
-    <option disabled class="text-error">⚠️ {{ t('ERRORS.LOAD_FAILED') }}</option>
-    } @else {
-    @for (job of jobTitles(); track job.id) {
-    <option [value]="job.id">{{ job.displayName }}</option>
-    }
-    }
-  </app-app-select-component>
-
   <app-app-select-component [label]="t('EMPLOYEES.DEPARTMENT') + '*'" [control]="getControl('departmentId')"
     [showErrors]="submitted()" [placeholder]="isLoadingDepartments() ? t('COMMON.LOADING') : t('COMMON.PROGRAMMING')">
 
@@ -86,6 +83,23 @@
     }
   </app-app-select-component>
 
+  <app-app-select-component [label]="t('EMPLOYEES.JOB_TITLE') + '*'" [control]="getControl('jobTitleId')"
+    [showErrors]="submitted()"
+    [placeholder]="
+      !getControl('departmentId').value
+        ? t('PLACEHOLDER.SELECT_DEPARTMENT')
+        : (isLoadingJobs() ? t('COMMON.LOADING') : t('PLACEHOLDER.SELECT_JOB_TITLE'))
+    ">
+    @if (_designationsService.resource.error()) {
+    <option disabled class="text-error">⚠️ {{ t('ERRORS.LOAD_FAILED') }}</option>
+    } @else if (!getControl('departmentId').value) {
+    <option disabled value="">{{ t('PLACEHOLDER.SELECT_DEPARTMENT') }}</option>
+    } @else {
+    @for (job of jobTitles(); track job.id) {
+    <option [value]="job.id">{{ job.displayName }}</option>
+    }
+    }
+  </app-app-select-component>
 
   <app-app-select-component [label]="t('EMPLOYEES.EMPLOYMENT_TYPE') + '*'" [control]="getControl('employmentType')"
     [showErrors]="submitted()" [placeholder]="isLoadingTypes() ? t('COMMON.LOADING') : t('PLACEHOLDER.SELECT_TYPE')">
@@ -104,13 +118,25 @@
 
   <app-app-date-input-component [label]="t('EMPLOYEES.PROBATION_PERIOD_END') + '*'"
     [control]="getControl('probationEndDate')" [showErrors]="submitted()" />
+  @if (probationDateError()) {
+  <div class="flex items-center gap-xs text-error animate-fade-in md:col-span-1">
+    <ng-icon name="lucideOctagonX" size="16" strokeWidth="3"></ng-icon>
+    <span class="text-xs font-medium text-start">
+      Probation end date must be on or after joining date.
+    </span>
+  </div>
+  }
 
   <app-app-select-component [label]="t('EMPLOYEES.EMPLOYMENT_STATUS') + '*'" [control]="getControl('employmentStatus')"
-    [showErrors]="submitted()" [placeholder]="'PLACEHOLDER.REJECTED'">
-    <option value="on-boarding">{{ t('EMPLOYEES.STATUS_ONBOARDING') }}</option>
-    <option value="active">{{ t('EMPLOYEES.STATUS_ACTIVE') }}</option>
-    <option value="probation">{{ t('EMPLOYEES.STATUS_PROBATION') }}</option>
-    <option value="probation">{{ t('EMPLOYEES.STATUS_HOLIDAY') }}</option>
+    [showErrors]="submitted()"
+    [placeholder]="isLoadingEmploymentStatuses() ? t('COMMON.LOADING') : t('PLACEHOLDER.REJECTED')">
+    @if (employmentStatusesService.resource.error()) {
+    <option disabled class="text-error">⚠️ {{ t('ERRORS.LOAD_FAILED') }}</option>
+    } @else {
+    @for (status of employmentStatuses(); track status.id) {
+    <option [value]="status.id">{{ status.displayName }}</option>
+    }
+    }
   </app-app-select-component>
 
   <!-- salary -->
@@ -147,19 +173,24 @@
   </div>
 
   <div class="col-span-full grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
-    <app-app-select-component [label]="t('DOCUMENTS.TYPE') + '*'" [control]="getControl('documentType')"
-      [showErrors]="submitted()" [placeholder]="'PLACEHOLDER.DOCUMENTS_TYPE'">
-      <option value="pdf">PDF</option>
-      <option value="id_card">{{ t('DOCUMENTS.NATIONAL_ID') }}</option>
-      <option value="passport">{{ t('DOCUMENTS.PASSPORT') }}</option>
+    <app-app-select-component [label]="t('DOCUMENTS.TYPE')" [control]="getControl('documentTypeId')"
+      [showErrors]="submitted()"
+      [placeholder]="isLoadingDocumentTypes() ? t('COMMON.LOADING') : t('PLACEHOLDER.DOCUMENTS_TYPE')">
+      @if (documentTypesService.resource.error()) {
+      <option disabled class="text-error">⚠️ {{ t('ERRORS.LOAD_FAILED') }}</option>
+      } @else {
+      @for (type of documentTypes(); track type.id) {
+      <option [value]="type.id">{{ type.displayName }}</option>
+      }
+      }
     </app-app-select-component>
 
-    <app-app-date-input-component [label]="t('DOCUMENTS.EXPIRY_DATE') + '*'" [control]="getControl('expiryDate')"
+    <app-app-date-input-component [label]="t('DOCUMENTS.EXPIRY_DATE')" [control]="getControl('expiryDate')"
       [showErrors]="submitted()" />
 
     <div class="col-span-full ">
       <label class="text-sm font-medium text-black">
-        {{ t('DOCUMENTS.JOB_FILES') }} <span class="text-red-500">*</span>
+        {{ t('DOCUMENTS.JOB_FILES') }}
       </label>
 
       <app-documents-component (onFilesChanged)="handleFilesChange($event)" />

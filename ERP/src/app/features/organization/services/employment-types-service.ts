@@ -52,13 +52,11 @@ getManagementData(params: { page: number; limit: number; search?: string;status?
   public readonly lookupResource = rxResource({
     stream: () =>
       this.http
-        .get<Array<IEmploymentType | IEmploymentTypeApiItem>>(`${this.API_URL}/lookup`)
+        .get<IEmploymentTypeApiResponse>(this.API_URL, {
+          params: { skipCount: 0, maxResultCount: 1000 },
+        })
         .pipe(
-          map((items) =>
-            items.map((item) =>
-              'status' in item ? item : this.mapApiItem(item),
-            ),
-          ),
+          map((response) => response.items.map((item) => this.mapApiItem(item))),
           catchError(() => of([])),
         ),
   });
@@ -66,7 +64,9 @@ getManagementData(params: { page: number; limit: number; search?: string;status?
   // Live translation computed list for dropdowns
   readonly lookupList = computed(() => {
     const data = this.lookupResource.value() ?? [];
-    return data.map(type => ({
+    return data
+      .filter((type) => type.status === 'active')
+      .map(type => ({
       id: type.id,
       displayName: type.name
     }));

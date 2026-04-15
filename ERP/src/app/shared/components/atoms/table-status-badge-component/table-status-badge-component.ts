@@ -10,6 +10,7 @@ import { TranslocoModule } from '@jsverse/transloco';
 })
 export class TableStatusBadgeComponent {
 status = input.required<string>();
+label = input<string>('');
 
 translationPrefix = input<string>('COMMON');
 
@@ -38,4 +39,6 @@ badgeClasses = computed(() => {
     const key = this.status().toUpperCase();
     return `${this.translationPrefix()}.${key}`;
   });
+
+  displayText = computed(() => this.label().trim() || this.translationKey());
 }

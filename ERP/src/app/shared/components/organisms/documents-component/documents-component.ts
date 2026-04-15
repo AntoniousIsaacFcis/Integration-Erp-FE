@@ -71,13 +71,16 @@ export class DocumentsComponent {
   }
 
    getPreviewUrl(doc: IDocument): string | null {
-    if (doc.type.startsWith('image/')) {
+    if (doc.file instanceof File && doc.type.startsWith('image/')) {
       return URL.createObjectURL(doc.file);
     }
     return null;
   }
 
   downloadFile(doc: IDocument) {
+    if (!(doc.file instanceof File)) {
+      return;
+    }
     const url = URL.createObjectURL(doc.file);
     const a = document.createElement('a');
     a.href = url;

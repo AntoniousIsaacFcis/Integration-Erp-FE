@@ -1,16 +1,17 @@
-import { ResourceStatus, ChangeDetectionStrategy, Component, computed, effect, inject, signal, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal, viewChild } from '@angular/core';
 import { TranslocoModule } from '@jsverse/transloco';
-import { FormBuilder } from '@angular/forms';
 import { EmployeeBasicInfoComponent } from "./employee-basic-info-component/employee-basic-info-component";
 import { StepperVisualComponent } from "./stepper-visual-component/stepper-visual-component";
 import { FormContainerComponent } from "@shared/components/organisms/form-container-component/form-container-component";
 import { FormSaveButtonComponent } from "@shared/components/molecules/form-save-button-component/form-save-button-component";
 import { IEmployeeForm } from '@features/core-hr/models/iemployee';
-import { rxResource } from '@angular/core/rxjs-interop';
-import { of } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { EmployeeService } from '@features/core-hr/services/employee-service';
 import { Router } from '@angular/router';
 import { NotificationService } from '@core/services/notification-service';
+import { DocumentTypesService } from '@features/organization/services/document-types-service';
+import { EmploymentStatusesService } from '@features/organization/services/employment-statuses-service';
+import { IRemoteServiceError } from '@core/models/iremote-service-error';
 
 @Component({
   selector: 'app-add-employee-component',
@@ -21,59 +22,16 @@ import { NotificationService } from '@core/services/notification-service';
 })
 export class AddEmployeeComponent {
   private router = inject(Router);
-  private fb = inject(FormBuilder);
+  private readonly destroyRef = inject(DestroyRef);
   private employeeService = inject(EmployeeService);
   private notificationService = inject(NotificationService);
+  private readonly documentTypesService = inject(DocumentTypesService);
+  private readonly employmentStatusesService = inject(EmploymentStatusesService);
 
   activeSegment = signal(1);
-  private saveTrigger = signal<IEmployeeForm | null>(null);
+  private pendingPayload = signal<IEmployeeForm | null>(null);
   basicInfoComp = viewChild(EmployeeBasicInfoComponent);
-
-  saveResource = rxResource({
-    params: () => this.saveTrigger(),
-    stream: ({ params }) => {
-      if (!params) return of(null);
-      return this.employeeService.createEmployee(params);
-    }
-  });
-
-  isLoading = computed(() => this.saveResource.isLoading());
-
-  constructor() {
-    effect(() => {
-      const loading = this.isLoading();
-      const response = this.saveResource.value();
-      const error = this.saveResource.error();
-
-      if (!loading && response && !error) {
-        this.notificationService.show({
-          type: 'success',
-          isModal: true,
-          title: 'EMPLOYEES.SUCCESS_ADD_TITLE',
-          // message: 'EMPLOYEES.SUCCESS_ADD_MSG',
-          actionLabel: 'COMMON.GO_TO_LIST'
-        });
-
-        setTimeout(() => {
-          // this.notificationService.dismissAll();
-          this.router.navigate(['/core-hr/employees/view']);
-          this.saveTrigger.set(null);
-        }, 1500);
-      }
-
-      if (!loading && error) {
-        this.notificationService.show({
-          type: 'error',
-          isModal: false,
-          title: 'ERRORS.SAVE_FAILED',
-          message: 'ERRORS.SERVER_ERROR_TRY_AGAIN',
-          actionLabel: 'COMMON.OK'
-        });
-
-        this.saveTrigger.set(null);
-      }
-    });
-  }
+  isLoading = signal(false);
 
   onStepperClick(stepId: number) {
     this.activeSegment.set(stepId);
@@ -106,21 +64,77 @@ export class AddEmployeeComponent {
     if (!basic) return;
 
     basic.submitted.set(true);
+    basic.clearSubmitErrors();
+    basic.mainForm.updateValueAndValidity();
 
     if (basic.mainForm.valid) {
       const rawData = basic.mainForm.getRawValue();
+      const selectedDocumentType = this.documentTypesService
+        .lookupList()
+        .find((type) => type.id === rawData.documentTypeId);
+      const selectedEmploymentStatus = this.employmentStatusesService
+        .lookupList()
+        .find((status) => status.id === rawData.employmentStatus);
 
       const finalPayload: IEmployeeForm = {
         ...rawData,
+        gender: rawData.gender,
         emergencyContact: rawData.emergencyPhone,
+        emergencyPhone: rawData.emergencyPhone,
         documents: rawData.attachedFiles,
-        status: rawData.employmentStatus || 'active',
+        documentTypeId: rawData.documentTypeId,
+        documentTypeName: selectedDocumentType?.displayName,
+        documentExpiryDate: rawData.expiryDate || '',
+        employmentStatusName: selectedEmploymentStatus?.displayName,
         probationPeriod: rawData.probationEndDate || '',
         basicSalary: Number(rawData.basicSalary) || 0,
-      } as IEmployeeForm;
+        allowances: Number(rawData.allowances) || 0,
+        deductions: Number(rawData.deductions) || 0,
+        totalSalary: Number(rawData.totalSalary) || 0,
+      };
 
       console.log('Sending Payload:', finalPayload);
-      this.saveTrigger.set(finalPayload);
+      this.pendingPayload.set(finalPayload);
+      this.isLoading.set(true);
+
+      this.employeeService.createEmployee(finalPayload)
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe({
+          next: () => {
+            this.isLoading.set(false);
+            this.pendingPayload.set(null);
+            this.notificationService.show({
+              type: 'success',
+              isModal: false,
+              title: 'EMPLOYEES.SUCCESS_ADD_TITLE',
+              actionLabel: 'COMMON.GO_TO_LIST'
+            });
+
+            setTimeout(() => {
+              this.router.navigate(['/core-hr/employees/view']);
+            }, 1500);
+          },
+          error: (error) => {
+            this.isLoading.set(false);
+
+            if (this.handleSubmitError(error)) {
+              this.pendingPayload.set(null);
+              return;
+            }
+
+            const backendError = this.extractBackendError(error);
+
+            this.notificationService.show({
+              type: 'error',
+              isModal: false,
+              title: 'ERRORS.SAVE_FAILED',
+              message: backendError.message,
+              actionLabel: 'COMMON.OK'
+            });
+
+            this.pendingPayload.set(null);
+          },
+        });
     } else {
       this.onStepperClick(1);
       basic.mainForm.markAllAsTouched();
@@ -137,6 +151,152 @@ export class AddEmployeeComponent {
   scrollTo(id: string, stepNumber: number) {
     this.activeSegment.set(stepNumber);
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  private handleSubmitError(error: unknown) {
+    const basic = this.basicInfoComp();
+    const backendError = this.extractBackendError(error);
+
+    console.error('Create employee failed:', {
+      payload: this.pendingPayload(),
+      error,
+      backendError,
+    });
+
+    const handledFieldError = basic?.applySubmitFieldErrors(
+      this.resolveFieldErrors(backendError),
+    ) ?? false;
+
+    if (!handledFieldError || !basic) {
+      return false;
+    }
+
+    basic.submitted.set(true);
+    basic.mainForm.markAllAsTouched();
+    this.onStepperClick(1);
+
+    return true;
+  }
+
+  private extractBackendError(error: unknown) {
+    const layers = this.collectErrorLayers(error);
+    const remoteError = this.findRemoteError(layers);
+    const code = remoteError?.code || this.pickFirstString(layers.map((layer) => layer?.code)) || '';
+    const message =
+      remoteError?.message ||
+      this.pickFirstString(layers.map((layer) => layer?.message)) ||
+      'ERRORS.SERVER_ERROR_TRY_AGAIN';
+
+    return {
+      code,
+      message,
+      remoteError,
+      raw: JSON.stringify(error ?? {}),
+    };
+  }
+
+  private collectErrorLayers(error: unknown) {
+    const layers: Array<any> = [];
+    let current: any = error;
+
+    for (let index = 0; index < 4 && current; index += 1) {
+      layers.push(current);
+      current = current?.error;
+    }
+
+    return layers;
+  }
+
+  private pickFirstString(values: unknown[]) {
+    return values.find((value): value is string => typeof value === 'string' && value.trim().length > 0) ?? '';
+  }
+
+  private findRemoteError(layers: Array<any>) {
+    return layers.find((layer): layer is IRemoteServiceError =>
+      typeof layer?.message === 'string' &&
+      (
+        typeof layer?.code === 'string' ||
+        Array.isArray(layer?.validationErrors) ||
+        layer?.data != null ||
+        layer?.details != null
+      ),
+    );
+  }
+
+  private resolveFieldErrors(backendError: {
+    code: string;
+    message: string;
+    remoteError?: IRemoteServiceError;
+    raw: string;
+  }): Partial<Record<'email' | 'phone' | 'nationalId', string>> {
+    const fieldErrors: Partial<Record<'email' | 'phone' | 'nationalId', string>> = {};
+    const validationErrors = backendError.remoteError?.validationErrors ?? [];
+
+    validationErrors.forEach((validationError) => {
+      const normalizedMembers = validationError.members.map((member) => member.toLowerCase());
+
+      if (normalizedMembers.some((member) => member.includes('email'))) {
+        fieldErrors.email = validationError.message;
+      }
+
+      if (
+        normalizedMembers.some((member) =>
+          member.includes('phone') || member.includes('mobile'),
+        )
+      ) {
+        fieldErrors.phone = validationError.message;
+      }
+
+      if (
+        normalizedMembers.some((member) =>
+          member.includes('nationalid') || member.includes('national-id') || member.includes('national_id'),
+        )
+      ) {
+        fieldErrors.nationalId = validationError.message;
+      }
+    });
+
+    if (!fieldErrors.email && this.matchesEmailFieldError(backendError)) {
+      fieldErrors.email = backendError.message;
+    }
+
+    if (!fieldErrors.phone && this.matchesPhoneFieldError(backendError)) {
+      fieldErrors.phone = backendError.message;
+    }
+
+    if (!fieldErrors.nationalId && this.matchesNationalIdFieldError(backendError)) {
+      fieldErrors.nationalId = backendError.message;
+    }
+
+    return fieldErrors;
+  }
+
+  private matchesEmailFieldError(backendError: { code: string; message: string; raw: string }) {
+    return (
+      backendError.code.includes('CoreHR:StaffEmailAlreadyExists') ||
+      backendError.raw.includes('CoreHR:StaffEmailAlreadyExists') ||
+      /email.*already used by another staff record/i.test(backendError.message)
+    );
+  }
+
+  private matchesPhoneFieldError(backendError: { code: string; message: string; raw: string }) {
+    return (
+      backendError.code.includes('CoreHR:StaffPhoneAlreadyExists') ||
+      backendError.code.includes('CoreHR:StaffMobileNumberAlreadyExists') ||
+      backendError.raw.includes('CoreHR:StaffPhoneAlreadyExists') ||
+      backendError.raw.includes('CoreHR:StaffMobileNumberAlreadyExists') ||
+      /phone.*already used by another staff record/i.test(backendError.message) ||
+      /mobile.*already used by another staff record/i.test(backendError.message)
+    );
+  }
+
+  private matchesNationalIdFieldError(backendError: { code: string; message: string; raw: string }) {
+    return (
+      backendError.code.includes('NationalId') ||
+      backendError.raw.includes('NationalId') ||
+      /national\s*id.*already used/i.test(backendError.message) ||
+      /national\s*id.*exists/i.test(backendError.message)
+    );
   }
 
 }

@@ -1,10 +1,21 @@
 import { IJobDetails } from "./ijob-details";
 import { IPersonalInfo } from "./ipersonal-info";
 import { ISalary } from "./isalary";
+import { IDocument } from "@shared/models/idocument";
 
 export interface IEmployeeForm extends IPersonalInfo, IJobDetails, ISalary {
   id?: string;
-  documents?: any[];
+  staffCode?: string;
+  allowances?: number;
+  deductions?: number;
+  totalSalary?: number;
+  emergencyPhone?: string;
+  documentTypeId?: string;
+  documentTypeName?: string;
+  documentExpiryDate?: string;
+  documents?: IDocument[];
+  isActive?: boolean;
+  customData?: string | null;
 }
 
 export interface IEmployeeResponse {

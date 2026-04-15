@@ -2,7 +2,7 @@ export interface IPersonalInfo {
   fullNameAr: string;
   fullNameEn: string;
   nationalId: string;
-  gender: 'male' | 'female';
+  gender: string;
   nationality: string;
   birthDate: string;
   maritalStatus: string;

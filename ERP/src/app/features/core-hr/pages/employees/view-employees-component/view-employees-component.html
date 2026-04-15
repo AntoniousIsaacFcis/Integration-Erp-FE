@@ -40,12 +40,12 @@
       <tbody>
         @for (emp of employeesList(); track emp.id) {
         <tr class="bg-white border-b border-gray-200 hover:bg-gray-50/50 transition-all ">
-          <td class="py-4 ps-12  text-start font-normal text-sm  ">{{ emp.jobTitleId }}</td>
+          <td class="py-4 ps-12  text-start font-normal text-sm  ">{{ emp.staffCode || emp.id }}</td>
           <td class="py-4 pe-4 font-normal text-center text-sm  ">{{ emp.displayName }}</td>
           <td class="py-4  font-normal text-center text-sm ">{{ emp.displayJobTitle }}</td>
           <td class="py-4 px-4">
             <div class="flex justify-center">
-              <app-table-status-badge-component [status]="emp.employmentStatus" translationPrefix="EMPLOYEES" />
+              <app-table-status-badge-component [status]="emp.employmentStatusKey" [label]="emp.displayEmploymentStatus" />
             </div>
           </td>
           <td class="py-4 px-4 font-normal text-center text-sm">{{ emp.displayEmploymentType }}</td>

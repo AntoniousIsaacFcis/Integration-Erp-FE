@@ -56,10 +56,14 @@ export class DepartmentsService {
 
   lookupResource = rxResource({
     stream: () =>
-      this.http.get<Array<IDepartment | IDepartmentApiItem>>(`${this.API_URL}/lookup`).pipe(
-        map((items) => items.map((item) => ('status' in item ? item : this.mapApiItem(item)))),
-        catchError(() => of([])),
-      ),
+      this.http
+        .get<IDepartmentApiResponse>(this.API_URL, {
+          params: { skipCount: 0, maxResultCount: 1000 },
+        })
+        .pipe(
+          map((response) => response.items.map((item) => this.mapApiItem(item))),
+          catchError(() => of([])),
+        ),
   });
 
   selectResource = rxResource({
@@ -78,7 +82,9 @@ export class DepartmentsService {
 
   lookupList = computed<IDepartmentLookupItem[]>(() => {
     const data = this.lookupResource.value() ?? [];
-    return data.map((department) => ({
+    return data
+      .filter((department) => department.status === 'active')
+      .map((department) => ({
       id: department.id,
       displayName: department.name,
     }));

@@ -575,6 +575,8 @@
     "INVALID_TIME_RANGE": "End time must be after start time",
     "DUPLICATE_VALUE": "This value is already used",
     "DUPLICATE_SORT_ORDER": "Sort order is already used",
+    "DUPLICATE_STAFF_EMAIL": "This email is already used by another staff record.",
+    "DUPLICATE_STAFF_PHONE": "This phone number is already used by another staff record.",
     "LEVEL_NAME_MIN_LENGTH": "Level name must be at least 3 characters",
     "LEVEL_NAME_MAX_LENGTH": "Level name must not exceed 100 characters",
       "DEPARTMENT_NAME_MIN_LENGTH": "Department name must be at least 3 characters",

@@ -6,5 +6,6 @@ export interface IJobDetails {
   employmentType: string;
   joiningDate: string;
   employmentStatus: string;
+  employmentStatusName?: string;
   probationPeriod: string;
 }
