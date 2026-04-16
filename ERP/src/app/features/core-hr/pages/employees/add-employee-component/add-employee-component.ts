@@ -256,12 +256,12 @@ export class AddEmployeeComponent {
       }
     });
 
-    if (!fieldErrors.email && this.matchesEmailFieldError(backendError)) {
-      fieldErrors.email = backendError.message;
+    if (this.matchesEmailFieldError(backendError)) {
+      fieldErrors.email = 'ERRORS.DUPLICATE_STAFF_EMAIL';
     }
 
-    if (!fieldErrors.phone && this.matchesPhoneFieldError(backendError)) {
-      fieldErrors.phone = backendError.message;
+    if (this.matchesPhoneFieldError(backendError)) {
+      fieldErrors.phone = 'ERRORS.DUPLICATE_STAFF_PHONE';
     }
 
     if (!fieldErrors.nationalId && this.matchesNationalIdFieldError(backendError)) {

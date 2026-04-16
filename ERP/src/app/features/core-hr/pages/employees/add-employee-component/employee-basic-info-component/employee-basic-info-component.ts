@@ -266,6 +266,18 @@ export class EmployeeBasicInfoComponent {
           return;
         }
 
+        if (controlName === 'email' && message === 'ERRORS.DUPLICATE_STAFF_EMAIL') {
+          this.setDuplicateError(controlName);
+          hasFieldError = true;
+          return;
+        }
+
+        if (controlName === 'phone' && message === 'ERRORS.DUPLICATE_STAFF_PHONE') {
+          this.setDuplicateError(controlName);
+          hasFieldError = true;
+          return;
+        }
+
         this.setBackendMessage(controlName, message);
         hasFieldError = true;
       });
@@ -278,6 +290,15 @@ export class EmployeeBasicInfoComponent {
     control.setErrors({
       ...(control.errors ?? {}),
       backendMessage: message,
+    });
+    control.markAsTouched();
+  }
+
+  private setDuplicateError(controlName: 'email' | 'phone') {
+    const control = this.getControl(controlName);
+    control.setErrors({
+      ...(control.errors ?? {}),
+      duplicate: true,
     });
     control.markAsTouched();
   }
