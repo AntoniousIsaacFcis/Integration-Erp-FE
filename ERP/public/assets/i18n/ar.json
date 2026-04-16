@@ -443,6 +443,7 @@
     "DEDUCTIONS": "الخصومات",
     "TOTAL_SALARY": "الراتب الإجمالي",
     "SUCCESS_ADD_TITLE": "تم إضافة الموظف بنجاح",
+    "NOT_TO_SAY":"لا أفضل الاجابة",
     "DOCUMENTS": {
       "TITLE": "الملفات والعقود",
       "NO_DOCUMENTS": "لا يوجد أي مستندات"
@@ -661,6 +662,8 @@
     "DUPLICATE_SORT_ORDER": "ترتيب الفرز مستخدم من قبل",
     "DUPLICATE_STAFF_EMAIL": "هذا البريد الإلكتروني مستخدم بالفعل لموظف آخر",
     "DUPLICATE_STAFF_PHONE": "رقم الهاتف هذا مستخدم بالفعل لموظف آخر",
+    "BIRTH_DATE_CANNOT_BE_IN_FUTURE": "تاريخ الميلاد لا يمكن أن يكون في المستقبل",
+    "PROBATION_END_MUST_BE_ON_OR_AFTER_JOINING_DATE": "يجب أن تكون فترة الاختبار في نفس تاريخ التعيين أو بعده",
     "LEVEL_NAME_MIN_LENGTH": "اسم المستوى يجب ألا يقل عن 3 أحرف",
     "LEVEL_NAME_MAX_LENGTH": "اسم المستوى يجب ألا يتجاوز 100 حرف",
       "DEPARTMENT_NAME_MIN_LENGTH": "اسم القسم يجب ألا يقل عن 3 أحرف",

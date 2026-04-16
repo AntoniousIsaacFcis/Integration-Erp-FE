@@ -577,6 +577,8 @@
     "DUPLICATE_SORT_ORDER": "Sort order is already used",
     "DUPLICATE_STAFF_EMAIL": "This email is already used by another staff record.",
     "DUPLICATE_STAFF_PHONE": "This phone number is already used by another staff record.",
+    "BIRTH_DATE_CANNOT_BE_IN_FUTURE": "Birth date cannot be in the future.",
+    "PROBATION_END_MUST_BE_ON_OR_AFTER_JOINING_DATE": "Probation end date must be on or after joining date.",
     "LEVEL_NAME_MIN_LENGTH": "Level name must be at least 3 characters",
     "LEVEL_NAME_MAX_LENGTH": "Level name must not exceed 100 characters",
       "DEPARTMENT_NAME_MIN_LENGTH": "Department name must be at least 3 characters",

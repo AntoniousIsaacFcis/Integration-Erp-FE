@@ -42,15 +42,7 @@
   </app-app-select-component>
 
   <app-app-date-input-component [label]="t('EMPLOYEES.BIRTH_DATE')" [control]="getControl('birthDate')"
-    [showErrors]="submitted()" />
-  @if (birthDateError()) {
-  <div class="flex items-center gap-xs text-error animate-fade-in md:col-span-1">
-    <ng-icon name="lucideOctagonX" size="16" strokeWidth="3"></ng-icon>
-    <span class="text-xs font-medium text-start">
-      Birth date cannot be in the future.
-    </span>
-  </div>
-  }
+    [showErrors]="submitted()" [futureDateErrorKey]="'ERRORS.BIRTH_DATE_CANNOT_BE_IN_FUTURE'" />
 
   <app-app-input-component [label]="t('EMPLOYEES.PHONE') + '*'" [control]="getControl('phone')"
     [placeholder]="'012xxxxxxxx'" [showErrors]="submitted()" [patternErrorKey]="'ERRORS.INVALID_PHONE_FORMAT'"
@@ -117,15 +109,8 @@
     [showErrors]="submitted()" />
 
   <app-app-date-input-component [label]="t('EMPLOYEES.PROBATION_PERIOD_END') + '*'"
-    [control]="getControl('probationEndDate')" [showErrors]="submitted()" />
-  @if (probationDateError()) {
-  <div class="flex items-center gap-xs text-error animate-fade-in md:col-span-1">
-    <ng-icon name="lucideOctagonX" size="16" strokeWidth="3"></ng-icon>
-    <span class="text-xs font-medium text-start">
-      Probation end date must be on or after joining date.
-    </span>
-  </div>
-  }
+    [control]="getControl('probationEndDate')" [showErrors]="submitted()"
+    [dateRangeErrorKey]="'ERRORS.PROBATION_END_MUST_BE_ON_OR_AFTER_JOINING_DATE'" />
 
   <app-app-select-component [label]="t('EMPLOYEES.EMPLOYMENT_STATUS') + '*'" [control]="getControl('employmentStatus')"
     [showErrors]="submitted()"

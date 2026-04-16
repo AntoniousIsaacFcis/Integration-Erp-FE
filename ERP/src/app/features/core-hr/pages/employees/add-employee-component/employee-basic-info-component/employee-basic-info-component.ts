@@ -117,6 +117,18 @@ export class EmployeeBasicInfoComponent {
     this.getControl('attachedFiles').valueChanges
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((files) => this.syncDocumentValidators(files as IDocument[]));
+
+    this.getControl('joiningDate').valueChanges
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => this.syncProbationDateControlError());
+
+    this.getControl('probationEndDate').valueChanges
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => this.syncProbationDateControlError());
+
+    this.mainForm.statusChanges
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => this.syncProbationDateControlError());
   }
 
 
@@ -250,6 +262,30 @@ export class EmployeeBasicInfoComponent {
   probationDateError = computed(() => {
     return this.submitted() && this.mainForm.errors?.['probationBeforeHireDate'];
   });
+
+  private syncProbationDateControlError() {
+    const probationEndDateControl = this.getControl('probationEndDate');
+    const hasProbationDateError = !!this.mainForm.errors?.['probationBeforeHireDate'];
+    const currentErrors = probationEndDateControl.errors ?? {};
+
+    if (hasProbationDateError) {
+      probationEndDateControl.setErrors({
+        ...currentErrors,
+        dateRangeInvalid: true,
+      });
+      probationEndDateControl.markAsTouched();
+      return;
+    }
+
+    if (!currentErrors['dateRangeInvalid']) {
+      return;
+    }
+
+    const { dateRangeInvalid: _removed, ...remainingErrors } = currentErrors;
+    probationEndDateControl.setErrors(
+      Object.keys(remainingErrors).length ? remainingErrors : null,
+    );
+  }
 
   clearSubmitErrors() {
     this.clearSubmitError('email');

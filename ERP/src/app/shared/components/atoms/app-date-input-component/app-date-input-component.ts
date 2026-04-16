@@ -1,8 +1,9 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, effect, inject, input } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { TranslocoModule } from '@jsverse/transloco';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { lucideCalendar, lucideOctagonX } from '@ng-icons/lucide';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-app-date-input-component',
@@ -13,6 +14,8 @@ import { lucideCalendar, lucideOctagonX } from '@ng-icons/lucide';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AppDateInputComponent {
+  private readonly cdr = inject(ChangeDetectorRef);
+  private readonly destroyRef = inject(DestroyRef);
   label = input<string>('');
   control = input.required<FormControl>();
   showErrors = input<boolean>(false);
@@ -21,6 +24,21 @@ export class AppDateInputComponent {
   emailErrorKey = input<string>('AUTH.INVALID_EMAIL');
   minLengthErrorKey = input<string>('AUTH.MIN_LENGTH');
   dateRangeErrorKey = input<string>('ERRORS.START_DATE_MUST_BE_BEFORE_END_DATE');
+  futureDateErrorKey = input<string>('ERRORS.FUTURE_DATE_NOT_ALLOWED');
+
+  constructor() {
+    effect(() => {
+      const control = this.control();
+
+      control.statusChanges
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe(() => this.cdr.markForCheck());
+
+      control.valueChanges
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe(() => this.cdr.markForCheck());
+    });
+  }
 
   get errorKey(): string | null {
     const ctrl = this.control();
@@ -30,6 +48,7 @@ export class AppDateInputComponent {
       if (ctrl.errors?.['minlength']) return this.minLengthErrorKey();
       if (ctrl.errors?.['pattern']) return 'AUTH.INVALID_PATTERN';
       if (ctrl.errors?.['dateRangeInvalid']) return this.dateRangeErrorKey();
+      if (ctrl.errors?.['futureBirthDate']) return this.futureDateErrorKey();
 
     }
     return null;
