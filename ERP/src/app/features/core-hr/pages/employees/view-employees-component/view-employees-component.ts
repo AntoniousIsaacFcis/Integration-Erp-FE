@@ -1,5 +1,5 @@
-import { DecimalPipe, isPlatformBrowser } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, PLATFORM_ID, signal } from '@angular/core';
+import { DatePipe, DecimalPipe, isPlatformBrowser } from '@angular/common';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, PLATFORM_ID, signal } from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import { EmployeeService } from '@features/core-hr/services/employee-service';
@@ -19,7 +19,7 @@ import { EmploymentStatusesService } from '@features/organization/services/emplo
 
 @Component({
   selector: 'app-view-employees-component',
-  imports: [TranslocoModule, NgIcon, AppBaseTableComponent, DecimalPipe, DateFilterComponent, ActionBtnComponent, TableStatusBadgeComponent],
+  imports: [TranslocoModule, NgIcon, AppBaseTableComponent, DecimalPipe, DatePipe, DateFilterComponent, ActionBtnComponent, TableStatusBadgeComponent],
   templateUrl: './view-employees-component.html',
   styleUrl: './view-employees-component.css',
   providers: [provideIcons({ lucidePencil, lucideTrash2, lucideSaudiRiyal, lucideEye })],
@@ -37,15 +37,14 @@ export class ViewEmployeesComponent {
   currentPage = signal(1);
   pageSize = signal(10);
   searchTerm = signal('');
-
-  joiningDate = signal<string>('');
+  hireDate = signal<string>('');
 
   employeesResource = rxResource<IEmployeeResponse, any>({
     params: () => ({
       page: this.currentPage(),
       limit: this.pageSize(),
       search: this.searchTerm(),
-      joiningDate: this.joiningDate()
+      hireDate: this.hireDate(),
     }),
     stream: ({ params }) => {
       if (!isPlatformBrowser(this.platformId))
@@ -53,6 +52,15 @@ export class ViewEmployeesComponent {
       return this.employeeService.getEmployees(params);
     }
   });
+
+  private readonly resetPageOnFiltersChange = effect(
+    () => {
+      this.searchTerm();
+      this.hireDate();
+      this.currentPage.set(1);
+    },
+    { allowSignalWrites: true },
+  );
 
   totalItems = computed(() => this.employeesResource.value()?.total ?? 0);
   //translate dynamic Name =>

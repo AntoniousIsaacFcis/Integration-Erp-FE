@@ -53,10 +53,10 @@ export class EmployeeService {
     page: number;
     limit: number;
     search?: string;
-    joiningDate?: string;
+    hireDate?: string;
   }): Observable<IEmployeeResponse> {
     const normalizedSearch = params.search?.trim();
-    const normalizedJoiningDate = params.joiningDate?.trim();
+    const normalizedHireDate = params.hireDate?.trim();
 
     return this.http
       .get<IStaffApiResponse>(this.API_URL, {
@@ -69,9 +69,8 @@ export class EmployeeService {
             searchTerm: normalizedSearch,
             q: normalizedSearch,
           }),
-          ...(normalizedJoiningDate && {
-            hireDate: normalizedJoiningDate,
-            joiningDate: normalizedJoiningDate,
+          ...(normalizedHireDate && {
+            hireDate: normalizedHireDate,
           }),
         },
       })

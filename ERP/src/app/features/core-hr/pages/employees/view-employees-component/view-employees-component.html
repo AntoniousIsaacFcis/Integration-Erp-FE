@@ -4,7 +4,7 @@
 
   <ng-template #empFilters>
     <div class="flex items-center gap-3">
-      <app-date-filter-component [(selectedDate)]="joiningDate" />
+      <app-date-filter-component [(selectedDate)]="hireDate" />
     </div>
   </ng-template>
 
@@ -34,6 +34,7 @@
           <th class="py-4 px-4 text-center">{{ t('EMPLOYEES.TABLE.EMPLOYEE_JOB_NAME') }}</th>
           <th class="py-4 px-4 text-center">{{ t('EMPLOYEES.TABLE.EMPLOYEE_STATUS') }}</th>
           <th class="py-4 px-4 text-center">{{ t('EMPLOYEES.TABLE.JOB_TYPE') }}</th>
+          <th class="py-4 px-4 text-center">{{ t('EMPLOYEES.HIRE_DATE') }}</th>
           <th class="py-4 pe-6 text-center">{{ t('EMPLOYEES.TABLE.BASIC_SALARY') }}</th>
         </tr>
       </thead>
@@ -49,6 +50,7 @@
             </div>
           </td>
           <td class="py-4 px-4 font-normal text-center text-sm">{{ emp.displayEmploymentType }}</td>
+          <td class="py-4 px-4 font-normal text-center text-sm">{{ emp.joiningDate | date:'dd/MM/yyyy' }}</td>
           <td class="py-4 px-4 text-sm font-normal ">
             <div class="flex items-center  gap-x-1">
               <ng-icon name="lucideSaudiRiyal" size="14px" [title]="t('COMMON.CURRENCY.SAR')" />
