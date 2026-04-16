@@ -75,10 +75,6 @@ export class EditLevelComponent implements OnInit {
     this.jobLevelForm.controls.name.valueChanges
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => this.clearControlError('name', 'duplicate'));
-
-    this.jobLevelForm.controls.levelOrder.valueChanges
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => this.clearControlError('levelOrder', 'duplicate'));
   }
 
   ngOnInit() {
@@ -116,7 +112,6 @@ export class EditLevelComponent implements OnInit {
     this.isFormSubmitted.set(true);
     this.normalizeStringFields();
     this.clearControlError('name', 'duplicate');
-    this.clearControlError('levelOrder', 'duplicate');
     this.jobLevelForm.updateValueAndValidity();
 
     if (this.jobLevelForm.invalid) {
@@ -137,7 +132,6 @@ export class EditLevelComponent implements OnInit {
 
     forkJoin({
       isNameTaken: this.jobLevelService.isNameTaken(payload.name, this.levelId),
-      isLevelOrderTaken: this.jobLevelService.isLevelOrderTaken(payload.levelOrder, this.levelId),
     })
       .pipe(
         switchMap((validationState) => {
@@ -206,7 +200,6 @@ export class EditLevelComponent implements OnInit {
   ) {
     return forkJoin({
       isNameTaken: this.jobLevelService.isNameTaken(payload.name, excludedId),
-      isLevelOrderTaken: this.jobLevelService.isLevelOrderTaken(payload.levelOrder, excludedId),
     }).pipe(
       switchMap((validationState) => {
         if (this.applyDuplicateErrors(validationState)) {
@@ -220,17 +213,11 @@ export class EditLevelComponent implements OnInit {
 
   private applyDuplicateErrors(validationState: {
     isNameTaken: boolean;
-    isLevelOrderTaken: boolean;
   }) {
     let hasDuplicateError = false;
 
     if (validationState.isNameTaken) {
       this.setControlError('name', 'duplicate');
-      hasDuplicateError = true;
-    }
-
-    if (validationState.isLevelOrderTaken) {
-      this.setControlError('levelOrder', 'duplicate');
       hasDuplicateError = true;
     }
 

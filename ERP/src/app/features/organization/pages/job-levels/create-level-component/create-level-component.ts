@@ -70,10 +70,6 @@ export class CreateLevelComponent {
     this.jobLevelForm.controls.name.valueChanges
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => this.clearControlError('name', 'duplicate'));
-
-    this.jobLevelForm.controls.levelOrder.valueChanges
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => this.clearControlError('levelOrder', 'duplicate'));
   }
 
   onSubmit() {
@@ -82,7 +78,6 @@ export class CreateLevelComponent {
     this.isFormSubmitted.set(true);
     this.normalizeStringFields();
     this.clearControlError('name', 'duplicate');
-    this.clearControlError('levelOrder', 'duplicate');
     this.jobLevelForm.updateValueAndValidity();
 
     if (this.jobLevelForm.invalid) {
@@ -104,7 +99,6 @@ export class CreateLevelComponent {
 
     forkJoin({
       isNameTaken: this._jobLevelService.isNameTaken(payload.name),
-      isLevelOrderTaken: this._jobLevelService.isLevelOrderTaken(payload.levelOrder),
     })
       .pipe(
         switchMap((validationState) => {
@@ -178,7 +172,6 @@ export class CreateLevelComponent {
   private handleCreateRequestError(payload: ICreateEmployeeLevel, error: unknown) {
     return forkJoin({
       isNameTaken: this._jobLevelService.isNameTaken(payload.name),
-      isLevelOrderTaken: this._jobLevelService.isLevelOrderTaken(payload.levelOrder),
     }).pipe(
       switchMap((validationState) => {
         if (this.applyDuplicateErrors(validationState)) {
@@ -192,17 +185,11 @@ export class CreateLevelComponent {
 
   private applyDuplicateErrors(validationState: {
     isNameTaken: boolean;
-    isLevelOrderTaken: boolean;
   }) {
     let hasDuplicateError = false;
 
     if (validationState.isNameTaken) {
       this.setControlError('name', 'duplicate');
-      hasDuplicateError = true;
-    }
-
-    if (validationState.isLevelOrderTaken) {
-      this.setControlError('levelOrder', 'duplicate');
       hasDuplicateError = true;
     }
 
