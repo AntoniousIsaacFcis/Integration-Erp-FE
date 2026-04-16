@@ -26,6 +26,10 @@ export interface IStaffApiItem {
   designationId?: string | null;
   employmentTypeId?: string | null;
   employmentStatusId?: string | null;
+  basicSalary?: number | null;
+  allowanceAmount?: number | null;
+  deductionAmount?: number | null;
+  totalSalary?: number | null;
   hireDate?: string | null;
   isActive?: boolean;
   customData?: string | null;

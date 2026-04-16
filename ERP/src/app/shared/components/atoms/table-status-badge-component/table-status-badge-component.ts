@@ -15,7 +15,7 @@ label = input<string>('');
 translationPrefix = input<string>('COMMON');
 
 badgeClasses = computed(() => {
-    const key = this.status().toLowerCase();
+    const key = this.normalizeStatusKey(this.status());
 
     const colorMap: Record<string, { bg: string, text: string }> = {
       // Active / Inactive
@@ -27,8 +27,11 @@ badgeClasses = computed(() => {
       'late': { bg: 'bg-orange-100', text: 'text-orange-700' },
       'absent': { bg: 'bg-red-100', text: 'text-red-700' },
 
-      //employees
-      'status_probation': { bg: 'bg-[#FF4A551A]', text: 'text-[#FF4A55]' }
+      // Employees
+      'probation': { bg: 'bg-[#FFF3E6]', text: 'text-[#FF8400]' },
+      'status-probation': { bg: 'bg-[#FFF3E6]', text: 'text-[#FF8400]' },
+      'refused': { bg: 'bg-[#FFEDEE]', text: 'text-[#FF4A55]' },
+      'rejected': { bg: 'bg-[#FFEDEE]', text: 'text-[#FF4A55]' },
     };
 
     //default
@@ -41,4 +44,12 @@ badgeClasses = computed(() => {
   });
 
   displayText = computed(() => this.label().trim() || this.translationKey());
+
+  private normalizeStatusKey(value: string): string {
+    return value
+      .trim()
+      .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
+      .replace(/[\s_]+/g, '-')
+      .toLowerCase();
+  }
 }

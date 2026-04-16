@@ -7,7 +7,7 @@ import { of } from 'rxjs';
 import { AppBaseTableComponent } from "@shared/components/organisms/app-base-table-component/app-base-table-component";
 import { TranslocoModule } from '@jsverse/transloco';
 import { NgIcon, provideIcons } from '@ng-icons/core';
-import { lucidePencil, lucideSaudiRiyal, lucideTrash2 } from '@ng-icons/lucide';
+import { lucideEye, lucidePencil, lucideSaudiRiyal, lucideTrash2 } from '@ng-icons/lucide';
 import { IEmployeeResponse } from '@features/core-hr/models/iemployee';
 import { TranslationService } from '@core/services/translation-service';
 import { DateFilterComponent } from "@shared/components/molecules/date-filter-component/date-filter-component";
@@ -22,7 +22,7 @@ import { EmploymentStatusesService } from '@features/organization/services/emplo
   imports: [TranslocoModule, NgIcon, AppBaseTableComponent, DecimalPipe, DateFilterComponent, ActionBtnComponent, TableStatusBadgeComponent],
   templateUrl: './view-employees-component.html',
   styleUrl: './view-employees-component.css',
-  providers: [provideIcons({ lucidePencil, lucideTrash2 ,lucideSaudiRiyal})],
+  providers: [provideIcons({ lucidePencil, lucideTrash2, lucideSaudiRiyal, lucideEye })],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ViewEmployeesComponent {
@@ -79,7 +79,7 @@ export class ViewEmployeesComponent {
         displayEmploymentType: typeMatch?.displayName || emp.employmentType
         ,
         displayEmploymentStatus: statusMatch?.displayName || emp.employmentStatusName || emp.employmentStatus,
-        employmentStatusKey: statusMatch?.displayName || emp.employmentStatusName || emp.employmentStatus,
+        employmentStatusKey: this.toStatusKey(statusMatch?.displayName || emp.employmentStatusName || ''),
       };
     });
   });
@@ -94,7 +94,19 @@ export class ViewEmployeesComponent {
   }
 
   navigateToDetails(id: string | undefined) {
-  if (id) this.router.navigate(['/core-hr/employees/details', id]);
-}
+    if (id) this.router.navigate(['/core-hr/employees/details', id]);
+  }
+
+  navigateToPreview(id: string | undefined) {
+    if (id) this.router.navigate(['/core-hr/employees/details', id]);
+  }
+
+  private toStatusKey(value: string): string {
+    return value
+      .trim()
+      .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
+      .replace(/[\s_]+/g, '-')
+      .toLowerCase();
+  }
 
 }

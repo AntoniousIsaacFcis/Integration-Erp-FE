@@ -88,6 +88,14 @@ export class EmployeeService {
   private mapStaffToEmployee(staff: IStaffApiItem): IEmployeeForm {
     const customData = this.parseCustomData(staff.customData);
     const salary = (customData['salary'] as Record<string, unknown> | undefined) ?? {};
+    const basicSalary = this.toNumberOrNull(staff.basicSalary);
+    const allowanceAmount = this.toNumberOrNull(staff.allowanceAmount);
+    const deductionAmount = this.toNumberOrNull(staff.deductionAmount);
+    const totalSalary =
+      this.toNumberOrNull(staff.totalSalary) ??
+      (basicSalary != null || allowanceAmount != null || deductionAmount != null
+        ? (basicSalary ?? 0) + (allowanceAmount ?? 0) - (deductionAmount ?? 0)
+        : null);
     const fullNameAr = this.composeName(
       staff.fullNameAr,
       staff.fullName,
@@ -140,10 +148,10 @@ export class EmployeeService {
       employmentStatusName: (customData['employmentStatusName'] as string | undefined) || '',
       joiningDate: this.normalizeDate(staff.hireDate),
       probationPeriod: (customData['probationEndDate'] as string | undefined) || '',
-      basicSalary: Number(salary['basicSalary'] ?? 0),
-      allowances: Number(salary['allowances'] ?? 0),
-      deductions: Number(salary['deductions'] ?? 0),
-      totalSalary: Number(salary['totalSalary'] ?? salary['basicSalary'] ?? 0),
+      basicSalary: basicSalary ?? Number(salary['basicSalary'] ?? 0),
+      allowances: allowanceAmount ?? Number(salary['allowances'] ?? 0),
+      deductions: deductionAmount ?? Number(salary['deductions'] ?? 0),
+      totalSalary: totalSalary ?? Number(salary['totalSalary'] ?? salary['basicSalary'] ?? 0),
       documentTypeId: (customData['documentTypeId'] as string | undefined) || undefined,
       documentTypeName: (customData['documentTypeName'] as string | undefined) || undefined,
       documentExpiryDate: (customData['documentExpiryDate'] as string | undefined) || undefined,
@@ -259,6 +267,19 @@ export class EmployeeService {
 
   private normalizeDate(value?: string | null): string {
     return value?.trim() || '';
+  }
+
+  private toNumberOrNull(value: unknown): number | null {
+    if (typeof value === 'number' && Number.isFinite(value)) {
+      return value;
+    }
+
+    if (typeof value === 'string' && value.trim() !== '') {
+      const parsedValue = Number(value);
+      return Number.isFinite(parsedValue) ? parsedValue : null;
+    }
+
+    return null;
   }
 
   private mapGenderForApi(value: IEmployeeForm['gender']): string | null {

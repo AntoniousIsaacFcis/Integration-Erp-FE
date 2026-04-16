@@ -52,7 +52,7 @@
           <td class="py-4 px-4 text-sm font-normal ">
             <div class="flex items-center  gap-x-1">
               <ng-icon name="lucideSaudiRiyal" size="14px" [title]="t('COMMON.CURRENCY.SAR')" />
-              <span> {{ emp.basicSalary | number:'1.0-0' }}</span>
+              <span> {{ (emp.basicSalary ?? 0) | number:'1.0-0' }}</span>
             </div>
           </td>
           <td class="py-4 pe-6">
@@ -64,6 +64,10 @@
               <button
                 class="flex size-[30px] items-center justify-center rounded-full bg-[#0000001A] hover:bg-[#00000033]">
                 <ng-icon name="lucideTrash2" size="16px" color="#F40552" />
+              </button>
+              <button (click)="navigateToPreview(emp.id)"
+                class="flex size-[32px] items-center justify-center rounded-full bg-[#61BDDC33] hover:bg-gray-100 transition-colors">
+                <ng-icon name="lucideEye" size="16px" color="#61BDDC" />
               </button>
             </div>
           </td>
