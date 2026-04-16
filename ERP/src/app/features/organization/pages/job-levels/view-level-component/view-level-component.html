@@ -26,7 +26,11 @@
     </div>
     }
 
-    @if (levelsResource.value()) {
+    @if (levelsResource.value() && !levelsList().length) {
+    <app-empty-table-placeholder-component />
+    }
+
+    @if (levelsResource.value() && levelsList().length) {
     <table class="w-full text-right font-arabic text-black border border-[#F4F4F4]/50 rounded-xl overflow-hidden">
       <thead class="text-sm sticky top-0 bg-[#F4F4F4] z-10">
         <tr>

@@ -16,10 +16,11 @@ import { EmploymentTypesService } from '@features/organization/services/employme
 import { TableStatusBadgeComponent } from "@shared/components/atoms/table-status-badge-component/table-status-badge-component";
 import { DesignationsService } from '@features/organization/services/designations-service';
 import { EmploymentStatusesService } from '@features/organization/services/employment-statuses-service';
+import { EmptyTablePlaceholderComponent } from '@shared/components/molecules/empty-table-placeholder-component/empty-table-placeholder-component';
 
 @Component({
   selector: 'app-view-employees-component',
-  imports: [TranslocoModule, NgIcon, AppBaseTableComponent, DecimalPipe, DatePipe, DateFilterComponent, ActionBtnComponent, TableStatusBadgeComponent],
+  imports: [TranslocoModule, NgIcon, AppBaseTableComponent, DecimalPipe, DatePipe, DateFilterComponent, ActionBtnComponent, TableStatusBadgeComponent, EmptyTablePlaceholderComponent],
   templateUrl: './view-employees-component.html',
   styleUrl: './view-employees-component.css',
   providers: [provideIcons({ lucidePencil, lucideTrash2, lucideSaudiRiyal, lucideEye })],

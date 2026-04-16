@@ -14,6 +14,7 @@ import { EmploymentTypesService } from '@features/organization/services/employme
 import { TranslocoModule } from '@jsverse/transloco';
 import { AppBaseTableComponent } from "@shared/components/organisms/app-base-table-component/app-base-table-component";
 import { ActionBtnComponent } from "@shared/components/molecules/action-btn-component/action-btn-component";
+import { EmptyTablePlaceholderComponent } from "@shared/components/molecules/empty-table-placeholder-component/empty-table-placeholder-component";
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { StatusBadgeComponent } from "@shared/components/molecules/status-badge-component/status-badge-component";
 import { lucideEye, lucidePencil, lucideTrash2 } from '@ng-icons/lucide';
@@ -23,7 +24,7 @@ import { TableStatusBadgeComponent } from "@shared/components/atoms/table-status
 
 @Component({
   selector: 'app-view-emloyment-types-component',
-  imports: [AppBaseTableComponent, TranslocoModule, ActionBtnComponent, NgIcon, StatusBadgeComponent, TableStatusBadgeComponent],
+  imports: [AppBaseTableComponent, TranslocoModule, ActionBtnComponent, EmptyTablePlaceholderComponent, NgIcon, StatusBadgeComponent, TableStatusBadgeComponent],
   templateUrl: './view-emloyment-types-component.html',
   styleUrl: './view-emloyment-types-component.css',
   providers:[provideIcons({lucidePencil,lucideTrash2,lucideEye})],

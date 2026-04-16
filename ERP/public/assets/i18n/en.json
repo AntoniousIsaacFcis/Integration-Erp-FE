@@ -40,6 +40,9 @@
     "CODE": "Code",
     "TOTAL": "Total",
     "EMPTY_STATE": "No Items",
+    "EMPTY_TABLE": {
+      "TITLE": "There is no content in the table yet, add now!"
+    },
     "WORDS": "Word",
     "CHARACTERS": "Characters",
     "OPTIONAL": "Optional",

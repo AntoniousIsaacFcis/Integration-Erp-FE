@@ -18,6 +18,7 @@ import { TranslocoModule } from '@jsverse/transloco';
 import { of } from 'rxjs';
 import { TableStatusBadgeComponent } from '@shared/components/atoms/table-status-badge-component/table-status-badge-component';
 import { ActionBtnComponent } from '@shared/components/molecules/action-btn-component/action-btn-component';
+import { EmptyTablePlaceholderComponent } from '@shared/components/molecules/empty-table-placeholder-component/empty-table-placeholder-component';
 import { StatusBadgeComponent } from '@shared/components/molecules/status-badge-component/status-badge-component';
 import { AppBaseTableComponent } from '@shared/components/organisms/app-base-table-component/app-base-table-component';
 
@@ -28,6 +29,7 @@ import { AppBaseTableComponent } from '@shared/components/organisms/app-base-tab
     AppBaseTableComponent,
     NgIcon,
     ActionBtnComponent,
+    EmptyTablePlaceholderComponent,
     StatusBadgeComponent,
     TableStatusBadgeComponent,
   ],

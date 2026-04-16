@@ -10,9 +10,11 @@
   <div class="w-full  min-h-[500px]   shadow-soft  relative mt-5 border rounded-lg ">
     <ng-content />
 
+    @if (totalItems() > 0) {
     <div class="absolute -bottom-12 left-0 w-full h-[30px] ">
       <app-paginagtion-component [totalItems]="totalItems()" [(currentPage)]="currentPage" />
     </div>
+    }
 
   </div>
 

@@ -11,13 +11,14 @@ import { JobLevelService } from '@features/organization/services/job-level-servi
 import { Router } from '@angular/router';
 import { NotificationService } from '@core/services/notification-service';
 import { ActionBtnComponent } from "@shared/components/molecules/action-btn-component/action-btn-component";
+import { EmptyTablePlaceholderComponent } from "@shared/components/molecules/empty-table-placeholder-component/empty-table-placeholder-component";
 import { StatusBadgeComponent } from "@shared/components/molecules/status-badge-component/status-badge-component";
 import { HasPermissionDirective } from '@shared/directives/has-permission-directive';
 import { TableStatusBadgeComponent } from "@shared/components/atoms/table-status-badge-component/table-status-badge-component";
 
 @Component({
   selector: 'app-view-level-component',
-  imports: [TranslocoModule, AppBaseTableComponent, NgIcon, ActionBtnComponent, StatusBadgeComponent, HasPermissionDirective, TableStatusBadgeComponent],
+  imports: [TranslocoModule, AppBaseTableComponent, NgIcon, ActionBtnComponent, EmptyTablePlaceholderComponent, StatusBadgeComponent, HasPermissionDirective, TableStatusBadgeComponent],
   templateUrl: './view-level-component.html',
   styleUrl: './view-level-component.css',
   providers: [provideIcons({ lucideTrash2, lucidePencil ,lucideEye})],

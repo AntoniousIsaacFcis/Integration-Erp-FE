@@ -26,7 +26,11 @@
       </div>
     }
 
-    @if (departmentsResource.value()) {
+    @if (departmentsResource.value() && !departmentsList().length) {
+      <app-empty-table-placeholder-component />
+    }
+
+    @if (departmentsResource.value() && departmentsList().length) {
       <table class="w-full text-right font-arabic text-black border border-[#F4F4F4]/50 rounded-xl overflow-hidden">
         <thead class="text-sm sticky top-0 bg-[#F4F4F4] z-10">
           <tr>

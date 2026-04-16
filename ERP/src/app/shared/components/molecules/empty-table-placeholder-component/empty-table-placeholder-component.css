@@ -1,0 +1,49 @@
+.empty-folder-icon {
+  position: relative;
+  width: 88px;
+  height: 73.3333px;
+}
+
+.empty-folder-icon__tab {
+  position: absolute;
+  top: 0;
+  left: 18px;
+  width: 30px;
+  height: 16px;
+  border-radius: 10px 10px 0 0;
+  background: #537c0f;
+}
+
+.empty-folder-icon__body {
+  position: absolute;
+  top: 7.33px;
+  left: 8px;
+  width: 72px;
+  height: 52px;
+  border-radius: 10px;
+  background: #537c0f;
+}
+
+.empty-folder-icon__badge {
+  position: absolute;
+  top: 19px;
+  left: 31px;
+  display: flex;
+  width: 26px;
+  height: 26px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  background: #ffffff;
+  color: #537c0f;
+  font-family: 'IBM Plex Sans Arabic', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+@media (max-width: 640px) {
+  .empty-folder-icon {
+    transform: scale(0.9);
+  }
+}
