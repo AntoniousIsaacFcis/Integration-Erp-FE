@@ -122,6 +122,7 @@ export class ViewDepartmentsComponent {
   private deleteDepartment(id: string) {
     this.departmentsService.delete(id).subscribe({
       next: () => {
+        this.departmentsService.reloadLookups();
         this.notificationService.show({
           type: 'success',
           title: 'COMMON.MESSAGES.DELETED_SUCCESSFULLY',

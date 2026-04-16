@@ -137,6 +137,7 @@ export class EditDepartmentComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {
+          this.departmentsService.reloadLookups();
           this.isSubmitting.set(false);
           this.isFormSubmitted.set(false);
           this.router.navigate(['/organization/departments/view']);

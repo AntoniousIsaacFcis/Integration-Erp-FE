@@ -144,6 +144,11 @@ export class DepartmentsService {
     return this.http.delete<void>(`${this.API_URL}/${id}`);
   }
 
+  reloadLookups() {
+    this.lookupResource.reload();
+    this.selectResource.reload();
+  }
+
   private mapApiItem(item: IDepartmentApiItem): IDepartment {
     return {
       id: item.id,

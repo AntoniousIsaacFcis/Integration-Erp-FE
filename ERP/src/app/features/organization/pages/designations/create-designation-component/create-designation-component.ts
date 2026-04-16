@@ -65,6 +65,10 @@ export class CreateDesignationComponent {
   departmentOptions = this.departmentsService.selectList;
   isLoadingDepartments = this.departmentsService.selectResource.isLoading;
 
+  constructor() {
+    this.departmentsService.reloadLookups();
+  }
+
   onSubmit() {
     if (this.isSubmitting()) return;
 

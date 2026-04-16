@@ -71,6 +71,7 @@ export class EditDesignationComponent implements OnInit {
   isLoadingDepartments = this.departmentsService.selectResource.isLoading;
 
   ngOnInit() {
+    this.departmentsService.reloadLookups();
     this.designationId = this.route.snapshot.paramMap.get('id') ?? '';
 
     if (!this.designationId) {
