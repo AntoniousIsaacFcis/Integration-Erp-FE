@@ -43,6 +43,10 @@ export class CreateEmploymentTypeComponent {
   isSubmitting = signal(false);
   isFormSubmitted = signal(false);
 
+  constructor() {
+    this._employeeTypesService.reloadLookups();
+  }
+
   /**
    * Use the .nonNullable builder.
    * This automatically ensures that value is 'string' and not 'string | null'
@@ -85,6 +89,7 @@ export class CreateEmploymentTypeComponent {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {
+          this._employeeTypesService.reloadLookups();
           this.isSubmitting.set(false);
           this.router.navigate(['/organization/employment-types/view']);
         },

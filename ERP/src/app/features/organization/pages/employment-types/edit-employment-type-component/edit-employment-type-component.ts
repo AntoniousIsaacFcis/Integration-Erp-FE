@@ -64,6 +64,7 @@ export class EditEmploymentTypeComponent implements OnInit {
   isOverLimit = computed(() => this.characterCount() > this.descriptionCharacterLimit);
 
   ngOnInit() {
+    this.employmentTypesService.reloadLookups();
     this.employmentTypeId = this.route.snapshot.paramMap.get('id') ?? '';
 
     if (!this.employmentTypeId) {
@@ -116,6 +117,7 @@ export class EditEmploymentTypeComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {
+          this.employmentTypesService.reloadLookups();
           this.isSubmitting.set(false);
           this.isFormSubmitted.set(false);
           this.router.navigate(['/organization/employment-types/view']);

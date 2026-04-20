@@ -126,6 +126,7 @@ export class EditDesignationComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {
+          this.designationsService.reloadLookups();
           this.isSubmitting.set(false);
           this.isFormSubmitted.set(false);
           this.router.navigate(['/organization/designations/view']);

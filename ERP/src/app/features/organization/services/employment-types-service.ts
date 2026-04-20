@@ -95,6 +95,10 @@ getManagementData(params: { page: number; limit: number; search?: string;status?
     return this.http.delete(`${this.API_URL}/${id}`);
   }
 
+  reloadLookups() {
+    this.lookupResource.reload();
+  }
+
   private mapApiItem(item: IEmploymentTypeApiItem): IEmploymentType {
     return {
       id: item.id,

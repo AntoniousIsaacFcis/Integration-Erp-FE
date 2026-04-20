@@ -74,11 +74,13 @@ export class DesignationsService {
 
   readonly lookupList = computed<IDesignationLookupItem[]>(() => {
     const data = this.lookupResource.value() ?? [];
-    return data.map((designation) => ({
-      id: designation.id,
-      departmentId: designation.departmentId,
-      displayName: designation.name,
-    }));
+    return data
+      .filter((designation) => designation.status === 'active')
+      .map((designation) => ({
+        id: designation.id,
+        departmentId: designation.departmentId,
+        displayName: designation.name,
+      }));
   });
 
   // Backward-compatible aliases used by employee job-title dropdowns.
@@ -105,6 +107,10 @@ export class DesignationsService {
 
   delete(id: string) {
     return this.http.delete<void>(`${this.API_URL}/${id}`);
+  }
+
+  reloadLookups() {
+    this.lookupResource.reload();
   }
 
   private mapApiItem(item: IDesignationApiItem): IDesignation {
