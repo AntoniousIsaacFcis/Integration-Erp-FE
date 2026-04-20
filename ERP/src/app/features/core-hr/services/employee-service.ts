@@ -43,6 +43,35 @@ export class EmployeeService {
     );
   }
 
+  updateEmployee(id: string, employeeData: IEmployeeForm): Observable<IEmployeeForm> {
+    const payload = this.toCreateStaffPayload(employeeData);
+
+    return this.http.put<IStaffApiItem>(`${this.API_URL}/${id}`, payload).pipe(
+      concatMap((staff) =>
+        this.employeeDocumentService
+          .createDocumentsForStaff(
+            staff.id,
+            employeeData.documents ?? [],
+            employeeData.documentTypeId,
+            employeeData.documentTypeName,
+          )
+          .pipe(
+            catchError((error) => {
+              console.warn('Employee updated, but document upload failed:', error);
+              return of([]);
+            }),
+            map((documents) => ({
+              ...this.mapStaffToEmployee(staff),
+              documents,
+              documentTypeId: employeeData.documentTypeId,
+              documentTypeName: employeeData.documentTypeName,
+              documentExpiryDate: employeeData.documentExpiryDate,
+            })),
+          ),
+      ),
+    );
+  }
+
   getEmployeeById(id: string): Observable<IEmployeeForm> {
     return this.http
       .get<IStaffApiItem>(`${this.API_URL}/${id}`)
@@ -84,6 +113,10 @@ export class EmployeeService {
       );
   }
 
+  deleteEmployee(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.API_URL}/${id}`);
+  }
+
   private mapStaffToEmployee(staff: IStaffApiItem): IEmployeeForm {
     const customData = this.parseCustomData(staff.customData);
     const salary = (customData['salary'] as Record<string, unknown> | undefined) ?? {};
@@ -96,14 +129,14 @@ export class EmployeeService {
         ? (basicSalary ?? 0) + (allowanceAmount ?? 0) - (deductionAmount ?? 0)
         : null);
     const fullNameAr = this.composeName(
-      staff.fullNameAr,
+      (customData['fullNameAr'] as string | undefined) ?? staff.fullNameAr,
       staff.fullName,
       staff.firstName,
       staff.middleName,
       staff.lastName,
     );
     const fullNameEn = this.composeName(
-      staff.fullNameEn,
+      (customData['fullNameEn'] as string | undefined) ?? staff.fullNameEn,
       undefined,
       staff.firstNameEn,
       staff.middleNameEn,
@@ -146,14 +179,21 @@ export class EmployeeService {
       employmentStatus: staff.employmentStatusId?.trim() || (customData['employmentStatusId'] as string | undefined) || '',
       employmentStatusName: (customData['employmentStatusName'] as string | undefined) || '',
       joiningDate: this.normalizeDate(staff.hireDate),
-      probationPeriod: (customData['probationEndDate'] as string | undefined) || '',
+      probationPeriod: this.normalizeProbationDate(
+        staff.probationEndDate ||
+        (customData['probationEndDate'] as string | undefined) ||
+        (customData['probationPeriod'] as string | undefined),
+        staff.hireDate,
+      ),
       basicSalary: basicSalary ?? Number(salary['basicSalary'] ?? 0),
       allowances: allowanceAmount ?? Number(salary['allowances'] ?? 0),
       deductions: deductionAmount ?? Number(salary['deductions'] ?? 0),
       totalSalary: totalSalary ?? Number(salary['totalSalary'] ?? salary['basicSalary'] ?? 0),
       documentTypeId: (customData['documentTypeId'] as string | undefined) || undefined,
       documentTypeName: (customData['documentTypeName'] as string | undefined) || undefined,
-      documentExpiryDate: (customData['documentExpiryDate'] as string | undefined) || undefined,
+      documentExpiryDate: this.normalizeDate(
+        (customData['documentExpiryDate'] as string | undefined) || undefined,
+      ) || undefined,
       isActive: staff.isActive ?? true,
       customData: staff.customData ?? null,
       documents: [],
@@ -184,11 +224,14 @@ export class EmployeeService {
       designationId: employeeData.jobTitleId?.trim() || null,
       employmentTypeId: employeeData.employmentType?.trim() || null,
       employmentStatusId: employeeData.employmentStatus?.trim() || null,
+      probationEndDate: employeeData.probationPeriod || null,
       nationalityId: employeeData.nationality?.trim() || null,
       hireDate: employeeData.joiningDate || null,
       presentAddressLine1: employeeData.address?.trim() || null,
       isActive: !/inactive/i.test(employeeData.employmentStatusName || ''),
       customData: JSON.stringify({
+        fullNameAr: employeeData.fullNameAr?.trim() || null,
+        fullNameEn: employeeData.fullNameEn?.trim() || null,
         nationalityId: employeeData.nationality || null,
         address: employeeData.address || null,
         emergencyPhone: employeeData.emergencyPhone || employeeData.emergencyContact || null,
@@ -265,7 +308,60 @@ export class EmployeeService {
   }
 
   private normalizeDate(value?: string | null): string {
-    return value?.trim() || '';
+    const normalizedValue = value?.trim() || '';
+
+    if (!normalizedValue) {
+      return '';
+    }
+
+    const isoDateMatch = normalizedValue.match(/^\d{4}-\d{2}-\d{2}/);
+    if (isoDateMatch) {
+      return isoDateMatch[0];
+    }
+
+    return normalizedValue;
+  }
+
+  private normalizeProbationDate(value?: string | null, hireDate?: string | null): string {
+    const normalizedValue = this.normalizeDate(value);
+
+    if (!normalizedValue) {
+      return '';
+    }
+
+    if (/^\d{4}-\d{2}-\d{2}$/.test(normalizedValue)) {
+      return normalizedValue;
+    }
+
+    const normalizedHireDate = this.normalizeDate(hireDate);
+    if (!normalizedHireDate) {
+      return '';
+    }
+
+    const durationMatch = normalizedValue.match(/(\d+)\s*(day|days|week|weeks|month|months|year|years)/i);
+    if (!durationMatch) {
+      return '';
+    }
+
+    const amount = Number(durationMatch[1]);
+    const unit = durationMatch[2].toLowerCase();
+    const probationDate = new Date(`${normalizedHireDate}T00:00:00`);
+
+    if (Number.isNaN(probationDate.getTime())) {
+      return '';
+    }
+
+    if (unit.startsWith('day')) {
+      probationDate.setDate(probationDate.getDate() + amount);
+    } else if (unit.startsWith('week')) {
+      probationDate.setDate(probationDate.getDate() + (amount * 7));
+    } else if (unit.startsWith('month')) {
+      probationDate.setMonth(probationDate.getMonth() + amount);
+    } else if (unit.startsWith('year')) {
+      probationDate.setFullYear(probationDate.getFullYear() + amount);
+    }
+
+    return probationDate.toISOString().slice(0, 10);
   }
 
   private toNumberOrNull(value: unknown): number | null {

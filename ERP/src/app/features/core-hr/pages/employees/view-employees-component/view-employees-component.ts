@@ -17,6 +17,7 @@ import { TableStatusBadgeComponent } from "@shared/components/atoms/table-status
 import { DesignationsService } from '@features/organization/services/designations-service';
 import { EmploymentStatusesService } from '@features/organization/services/employment-statuses-service';
 import { EmptyTablePlaceholderComponent } from '@shared/components/molecules/empty-table-placeholder-component/empty-table-placeholder-component';
+import { NotificationService } from '@core/services/notification-service';
 
 @Component({
   selector: 'app-view-employees-component',
@@ -34,6 +35,7 @@ export class ViewEmployeesComponent {
   private readonly router = inject(Router);
   private readonly platformId = inject(PLATFORM_ID);
   private readonly translationService = inject(TranslationService);
+  private readonly notificationService = inject(NotificationService);
 
   currentPage = signal(1);
   pageSize = signal(10);
@@ -102,12 +104,52 @@ export class ViewEmployeesComponent {
     // هنا يمكنك استدعاء الـ Modal الخاص بالرفع مستقبلاً
   }
 
-  navigateToDetails(id: string | undefined) {
-    if (id) this.router.navigate(['/core-hr/employees/details', id]);
+  navigateToEdit(id: string | undefined) {
+    if (id) this.router.navigate(['/core-hr/employees/edit', id]);
   }
 
   navigateToPreview(id: string | undefined) {
     if (id) this.router.navigate(['/core-hr/employees/details', id]);
+  }
+
+  handleDelete(id: string | undefined) {
+    if (!id) {
+      return;
+    }
+
+    this.notificationService.show({
+      type: 'warning',
+      title: 'EMPLOYEES.DELETE_EMPLOYEE',
+      message: 'COMMON.MESSAGES.CONFIRM_DELETE',
+      isModal: true,
+      actionLabel: 'COMMON.YES',
+      cancelLabel: 'COMMON.NO',
+      onAction: () => this.deleteEmployee(id),
+    });
+  }
+
+  private deleteEmployee(id: string) {
+    this.employeeService.deleteEmployee(id).subscribe({
+      next: () => {
+        this.notificationService.show({
+          type: 'success',
+          title: 'COMMON.MESSAGES.DELETED_SUCCESSFULLY',
+          message: 'COMMON.MESSAGES.SUCCESS_MESSAGE',
+          isModal: false,
+          actionLabel: 'COMMON.CONFIRM',
+        });
+        this.employeesResource.reload();
+      },
+      error: () => {
+        this.notificationService.show({
+          type: 'error',
+          title: 'COMMON.MESSAGES.OPERATION_FAILED',
+          message: 'COMMON.MESSAGES.PLEASE_TRY_AGAIN',
+          isModal: false,
+          actionLabel: 'COMMON.CONFIRM',
+        });
+      },
+    });
   }
 
   private toStatusKey(value: string): string {

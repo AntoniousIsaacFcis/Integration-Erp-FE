@@ -6,7 +6,7 @@
     </div>
 
     <div class="flex-1 scroll-smooth" id="main-content">
-      <app-form-container-component [title]="t('EMPLOYEES.ADD_EMPLOYEE')" (submit)="onSaveAll()">
+      <app-form-container-component [title]="t(pageTitleKey())" (submit)="onSaveAll()">
 
         <ng-container formFields>
           <section  class="col-span-full">
@@ -15,7 +15,7 @@
         </ng-container>
 
         <ng-container formActions>
-          <app-form-save-button-component [isLoading]="isLoading()" [label]="'COMMON.SAVE_EMPLOYEE'"  type="submit"/>
+          <app-form-save-button-component [isLoading]="isLoading()" [label]="submitLabelKey()"  type="submit"/>
         </ng-container>
 
       </app-form-container-component>

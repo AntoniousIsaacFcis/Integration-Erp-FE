@@ -22,6 +22,15 @@ export const EMPLOYEE_ROUTES: Routes = [
         }
       },
       {
+        path: 'edit/:empId',
+        loadComponent: () =>
+          import('./pages/employees/add-employee-component/add-employee-component')
+            .then(m => m.AddEmployeeComponent),
+        data: {
+          breadcrumb: 'EMPLOYEES.EDIT_EMPLOYEE',
+        }
+      },
+      {
         path: 'details/:empId',
         loadComponent: () => import('./pages/employees/employee-details-component/employee-details-component')
           .then(m => m.EmployeeDetailsComponent),

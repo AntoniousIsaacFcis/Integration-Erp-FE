@@ -173,6 +173,12 @@ export class EmployeeBasicInfoComponent {
     this.mainForm.get('attachedFiles')?.updateValueAndValidity();
   }
 
+  setProbationRequired(isRequired: boolean) {
+    const probationEndDateControl = this.getControl('probationEndDate');
+    probationEndDateControl.setValidators(isRequired ? [Validators.required] : []);
+    probationEndDateControl.updateValueAndValidity({ emitEvent: false });
+  }
+
   private syncDocumentValidators(files: IDocument[]) {
     const hasFiles = Array.isArray(files) && files.length > 0;
     const documentTypeControl = this.getControl('documentTypeId');

@@ -26,6 +26,7 @@ export interface IStaffApiItem {
   designationId?: string | null;
   employmentTypeId?: string | null;
   employmentStatusId?: string | null;
+  probationEndDate?: string | null;
   basicSalary?: number | null;
   allowanceAmount?: number | null;
   deductionAmount?: number | null;
@@ -59,6 +60,7 @@ export interface ICreateStaffPayload {
   designationId?: string | null;
   employmentTypeId?: string | null;
   employmentStatusId?: string | null;
+  probationEndDate?: string | null;
   nationalityId?: string | null;
   hireDate?: string | null;
   presentAddressLine1?: string | null;

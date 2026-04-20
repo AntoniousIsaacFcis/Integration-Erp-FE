@@ -63,11 +63,11 @@
           </td>
           <td class="py-4 pe-6">
             <div class="flex gap-4 justify-end">
-              <button (click)="navigateToDetails(emp.id)"
+              <button (click)="navigateToEdit(emp.id)"
                 class="flex size-[30px] items-center justify-center rounded-full bg-[#0000001A] hover:bg-[#00000033]">
                 <ng-icon name="lucidePencil" size="16px" color="black" />
               </button>
-              <button
+              <button (click)="handleDelete(emp.id)"
                 class="flex size-[30px] items-center justify-center rounded-full bg-[#0000001A] hover:bg-[#00000033]">
                 <ng-icon name="lucideTrash2" size="16px" color="#F40552" />
               </button>

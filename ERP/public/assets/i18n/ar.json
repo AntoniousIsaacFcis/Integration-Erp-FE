@@ -64,6 +64,7 @@
     "CURRENCY": {
       "SAR": "ر.س"
     },
+      "FORM_UPDATED":"تم تحديث النموذج بنجاح",
     "MESSAGES": {
       "SUCCESS": "تم بنجاح",
       "SUCCESS_MESSAGE": "تمت العملية بنجاح",

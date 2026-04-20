@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, OnInit, signal, viewChild } from '@angular/core';
 import { TranslocoModule } from '@jsverse/transloco';
 import { EmployeeBasicInfoComponent } from "./employee-basic-info-component/employee-basic-info-component";
 import { StepperVisualComponent } from "./stepper-visual-component/stepper-visual-component";
@@ -7,7 +7,7 @@ import { FormSaveButtonComponent } from "@shared/components/molecules/form-save-
 import { IEmployeeForm } from '@features/core-hr/models/iemployee';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { EmployeeService } from '@features/core-hr/services/employee-service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NotificationService } from '@core/services/notification-service';
 import { DocumentTypesService } from '@features/organization/services/document-types-service';
 import { EmploymentStatusesService } from '@features/organization/services/employment-statuses-service';
@@ -20,8 +20,9 @@ import { IRemoteServiceError } from '@core/models/iremote-service-error';
   styleUrl: './add-employee-component.css',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AddEmployeeComponent {
+export class AddEmployeeComponent implements OnInit {
   private router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
   private readonly destroyRef = inject(DestroyRef);
   private employeeService = inject(EmployeeService);
   private notificationService = inject(NotificationService);
@@ -30,8 +31,70 @@ export class AddEmployeeComponent {
 
   activeSegment = signal(1);
   private pendingPayload = signal<IEmployeeForm | null>(null);
+  private readonly employeeId = signal<string>('');
+  private readonly initialEmployee = signal<IEmployeeForm | null>(null);
   basicInfoComp = viewChild(EmployeeBasicInfoComponent);
-  isLoading = signal(false);
+  isFetching = signal(false);
+  isSubmitting = signal(false);
+  isLoading = computed(() => this.isFetching() || this.isSubmitting());
+  isEditMode = computed(() => !!this.employeeId());
+  pageTitleKey = computed(() => this.isEditMode() ? 'EMPLOYEES.EDIT_EMPLOYEE' : 'EMPLOYEES.ADD_EMPLOYEE');
+  submitLabelKey = computed(() => this.isEditMode() ? 'COMMON.UPDATE' : 'COMMON.SAVE_EMPLOYEE');
+
+  constructor() {
+    effect(() => {
+      const employee = this.initialEmployee();
+      const basic = this.basicInfoComp();
+
+      if (!employee || !basic) {
+        return;
+      }
+
+      basic.mainForm.patchValue({
+        fullNameAr: employee.fullNameAr ?? '',
+        fullNameEn: employee.fullNameEn ?? '',
+        nationalId: employee.nationalId ?? '',
+        gender: employee.gender ?? '',
+        nationality: employee.nationality ?? '',
+        maritalStatus: employee.maritalStatus ?? '',
+        birthDate: employee.birthDate ?? '',
+        phone: employee.phone ?? '',
+        email: employee.email ?? '',
+        address: employee.address ?? '',
+        emergencyPhone: employee.emergencyPhone ?? employee.emergencyContact ?? '',
+        jobTitleId: employee.jobTitleId ?? '',
+        departmentId: employee.departmentId ?? '',
+        joiningDate: employee.joiningDate ?? '',
+        employmentType: employee.employmentType ?? '',
+        probationEndDate: employee.probationPeriod ?? '',
+        employmentStatus: employee.employmentStatus ?? '',
+        basicSalary: String(employee.basicSalary ?? 0),
+        allowances: String(employee.allowances ?? 0),
+        deductions: String(employee.deductions ?? 0),
+        totalSalary: employee.totalSalary ?? 0,
+        documentTypeId: employee.documentTypeId ?? '',
+        expiryDate: employee.documentExpiryDate ?? '',
+        attachedFiles: [],
+      }, { emitEvent: false });
+
+      basic.setProbationRequired(!this.isEditMode() || !!employee.probationPeriod);
+      basic.mainForm.markAsPristine();
+      basic.mainForm.markAsUntouched();
+      basic.clearSubmitErrors();
+      basic.submitted.set(false);
+    });
+  }
+
+  ngOnInit() {
+    const employeeId = this.route.snapshot.paramMap.get('empId') ?? '';
+
+    if (!employeeId) {
+      return;
+    }
+
+    this.employeeId.set(employeeId);
+    this.loadEmployee(employeeId);
+  }
 
   onStepperClick(stepId: number) {
     this.activeSegment.set(stepId);
@@ -95,18 +158,25 @@ export class AddEmployeeComponent {
 
       console.log('Sending Payload:', finalPayload);
       this.pendingPayload.set(finalPayload);
-      this.isLoading.set(true);
+      this.isSubmitting.set(true);
 
-      this.employeeService.createEmployee(finalPayload)
+      const request$ = this.isEditMode()
+        ? this.employeeService.updateEmployee(this.employeeId(), finalPayload)
+        : this.employeeService.createEmployee(finalPayload);
+
+      request$
         .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe({
           next: () => {
-            this.isLoading.set(false);
+            this.isSubmitting.set(false);
             this.pendingPayload.set(null);
+
             this.notificationService.show({
               type: 'success',
               isModal: false,
-              title: 'EMPLOYEES.SUCCESS_ADD_TITLE',
+              title: this.isEditMode()
+                ? 'COMMON.FORM_UPDATED'
+                : 'EMPLOYEES.SUCCESS_ADD_TITLE',
               actionLabel: 'COMMON.GO_TO_LIST'
             });
 
@@ -115,7 +185,7 @@ export class AddEmployeeComponent {
             }, 1500);
           },
           error: (error) => {
-            this.isLoading.set(false);
+            this.isSubmitting.set(false);
 
             if (this.handleSubmitError(error)) {
               this.pendingPayload.set(null);
@@ -157,7 +227,7 @@ export class AddEmployeeComponent {
     const basic = this.basicInfoComp();
     const backendError = this.extractBackendError(error);
 
-    console.error('Create employee failed:', {
+    console.error('Employee submit failed:', {
       payload: this.pendingPayload(),
       error,
       backendError,
@@ -297,6 +367,24 @@ export class AddEmployeeComponent {
       /national\s*id.*already used/i.test(backendError.message) ||
       /national\s*id.*exists/i.test(backendError.message)
     );
+  }
+
+  private loadEmployee(employeeId: string) {
+    this.isFetching.set(true);
+
+    this.employeeService.getEmployeeById(employeeId)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (employee) => {
+          this.initialEmployee.set(employee);
+          this.isFetching.set(false);
+        },
+        error: (error) => {
+          console.error('Failed to load employee:', error);
+          this.isFetching.set(false);
+          this.router.navigate(['/core-hr/employees/view']);
+        },
+      });
   }
 
 }
