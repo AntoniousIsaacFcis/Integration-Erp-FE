@@ -402,6 +402,7 @@
     "JOB_TITLE": "Job Title",
     "JOINING_DATE": "Joining Date",
     "EMPLOYMENT_TYPE": "Employment Type",
+    "SEARCH_PLACEHOLDER": "Search by name, email, phone...",
     "PROBATION_PERIOD_END": "Probation Period",
     "EMPLOYMENT_STATUS": "Employment Status",
     "STATUS_ONBOARDING": "Onboarding",

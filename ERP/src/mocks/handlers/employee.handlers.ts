@@ -21,9 +21,27 @@ export const employeeHandlers = [
     // Filter Logic
     let filtered = localEmployees.filter(emp => {
       const matchesSearch = !search ||
-        emp.fullNameAr.includes(search) ||
+        emp.fullNameAr.toLowerCase().includes(search) ||
         emp.fullNameEn.toLowerCase().includes(search) ||
-        emp.email.toLowerCase().includes(search);
+        emp.email.toLowerCase().includes(search) ||
+        (emp.jobTitleAr || '').toLowerCase().includes(search) ||
+        (emp.jobTitleEn || '').toLowerCase().includes(search) ||
+        (emp.jobLevelName || '').toLowerCase().includes(search) ||
+        (emp.jobLevelNameAr || '').toLowerCase().includes(search) ||
+        (emp.jobLevelNameEn || '').toLowerCase().includes(search) ||
+        (emp.departmentName || '').toLowerCase().includes(search) ||
+        (emp.departmentNameAr || '').toLowerCase().includes(search) ||
+        (emp.departmentNameEn || '').toLowerCase().includes(search) ||
+        (emp.staffCode || '').toLowerCase().includes(search) ||
+        emp.phone.toLowerCase().includes(search) ||
+        emp.nationalId.toLowerCase().includes(search) ||
+        emp.employmentType.toLowerCase().includes(search) ||
+        emp.employmentStatus.toLowerCase().includes(search) ||
+        (emp.employmentStatusName || '').toLowerCase().includes(search) ||
+        emp.nationality.toLowerCase().includes(search) ||
+        (emp.nationalityName || '').toLowerCase().includes(search) ||
+        (emp.nationalityNameAr || '').toLowerCase().includes(search) ||
+        (emp.nationalityNameEn || '').toLowerCase().includes(search);
 
       const matchesStatus = !status || emp.employmentStatus === status;
 

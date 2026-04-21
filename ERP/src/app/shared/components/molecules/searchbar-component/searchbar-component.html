@@ -12,7 +12,7 @@
       </div>
 
       <input type="text" [value]="searchQuery()" (input)="onInput($event)"
-        [placeholder]="t('HEADER.SEARCH_PLACEHOLDER')" [class.text-black]="variant() === 'table'" class="flex-1 h-[23px] bg-transparent outline-none
+        [placeholder]="t(placeholder())" [class.text-black]="variant() === 'table'" class="flex-1 h-[23px] bg-transparent outline-none
               border-none text-[15px] font-[400] leading-none
                placeholder:text-[#999999] font-arabic" [class.text-black]="variant() === 'table'"
         [class.text-white]="variant() === 'default'" />

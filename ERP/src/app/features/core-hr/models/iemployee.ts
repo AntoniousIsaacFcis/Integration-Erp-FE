@@ -10,6 +10,12 @@ export interface IEmployeeForm extends IPersonalInfo, IJobDetails, ISalary {
   deductions?: number;
   totalSalary?: number;
   emergencyPhone?: string;
+  designationName?: string;
+  designationNameAr?: string;
+  designationNameEn?: string;
+  nationalityName?: string;
+  nationalityNameAr?: string;
+  nationalityNameEn?: string;
   documentTypeId?: string;
   documentTypeName?: string;
   documentExpiryDate?: string;

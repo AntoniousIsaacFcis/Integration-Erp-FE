@@ -25,6 +25,7 @@ export class PageHeaderComponent {
  actionClicked = output<void>();
 
 searchQuery = model<string>('');//modal for twoWay binding
+searchPlaceholder = input<string>('HEADER.SEARCH_PLACEHOLDER');
 
   handleActionClick() {
     this.actionClicked.emit();

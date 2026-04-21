@@ -149,6 +149,12 @@ export class EmployeeService {
         (customData['nationalityId'] as string | undefined) ??
         staff.nationalityCode ??
         '',
+      nationalityName:
+        (customData['nationalityName'] as string | undefined) ||
+        (customData['nationality'] as string | undefined) ||
+        '',
+      nationalityNameAr: (customData['nationalityNameAr'] as string | undefined) || '',
+      nationalityNameEn: (customData['nationalityNameEn'] as string | undefined) || '',
       birthDate: this.normalizeDate(staff.birthDate),
       maritalStatus: this.mapMaritalStatusForUi(staff.maritalStatus),
       phone: staff.phone?.trim() || staff.mobileNumber?.trim() || '',
@@ -168,7 +174,48 @@ export class EmployeeService {
         '',
       fingerPrintNumber: (customData['fingerPrintNumber'] as string | undefined) || '',
       jobTitleId: staff.designationId?.trim() || '',
+      designationName:
+        (customData['designationName'] as string | undefined) ||
+        (customData['jobTitleName'] as string | undefined) ||
+        '',
+      designationNameAr:
+        (customData['designationNameAr'] as string | undefined) ||
+        (customData['jobTitleNameAr'] as string | undefined) ||
+        '',
+      designationNameEn:
+        (customData['designationNameEn'] as string | undefined) ||
+        (customData['jobTitleNameEn'] as string | undefined) ||
+        '',
+      jobTitleAr:
+        (customData['designationNameAr'] as string | undefined) ||
+        (customData['jobTitleNameAr'] as string | undefined) ||
+        (customData['designationName'] as string | undefined) ||
+        '',
+      jobTitleEn:
+        (customData['designationNameEn'] as string | undefined) ||
+        (customData['jobTitleNameEn'] as string | undefined) ||
+        (customData['designationName'] as string | undefined) ||
+        '',
+      jobLevelId:
+        (customData['jobLevelId'] as string | undefined) ||
+        (customData['employeeLevelId'] as string | undefined) ||
+        '',
+      jobLevelName:
+        (customData['jobLevelName'] as string | undefined) ||
+        (customData['employeeLevelName'] as string | undefined) ||
+        '',
+      jobLevelNameAr:
+        (customData['jobLevelNameAr'] as string | undefined) ||
+        (customData['employeeLevelNameAr'] as string | undefined) ||
+        '',
+      jobLevelNameEn:
+        (customData['jobLevelNameEn'] as string | undefined) ||
+        (customData['employeeLevelNameEn'] as string | undefined) ||
+        '',
       departmentId: staff.departmentId?.trim() || '',
+      departmentName: (customData['departmentName'] as string | undefined) || '',
+      departmentNameAr: (customData['departmentNameAr'] as string | undefined) || '',
+      departmentNameEn: (customData['departmentNameEn'] as string | undefined) || '',
       employmentType: staff.employmentTypeId?.trim() || '',
       employmentStatus: staff.employmentStatusId?.trim() || (customData['employmentStatusId'] as string | undefined) || '',
       employmentStatusName: (customData['employmentStatusName'] as string | undefined) || '',

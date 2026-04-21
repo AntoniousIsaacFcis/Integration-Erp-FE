@@ -437,6 +437,7 @@
     "JOB_TITLE": "المسمى الوظيفي ",
     "JOINING_DATE": "تاريخ التعيين",
     "EMPLOYMENT_TYPE": "نوع التوظيف",
+    "SEARCH_PLACEHOLDER": "ابحث بالاسم أو البريد الإلكتروني أو الهاتف...",
     "PROBATION_PERIOD_END": "فترة الاختبار",
     "EMPLOYMENT_STATUS": "حالة التوظيف",
     "STATUS_ONBOARDING": "تحت التجربة",

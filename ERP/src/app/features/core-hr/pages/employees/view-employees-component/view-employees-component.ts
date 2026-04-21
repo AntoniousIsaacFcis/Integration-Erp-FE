@@ -18,6 +18,8 @@ import { DesignationsService } from '@features/organization/services/designation
 import { EmploymentStatusesService } from '@features/organization/services/employment-statuses-service';
 import { EmptyTablePlaceholderComponent } from '@shared/components/molecules/empty-table-placeholder-component/empty-table-placeholder-component';
 import { NotificationService } from '@core/services/notification-service';
+import { DepartmentsService } from '@features/organization/services/departments-service';
+import { NationalitiesService } from '@core/services/nationalities-service';
 
 @Component({
   selector: 'app-view-employees-component',
@@ -32,6 +34,8 @@ export class ViewEmployeesComponent {
   private readonly employmentTypeService = inject(EmploymentTypesService);
   private readonly employmentStatusesService = inject(EmploymentStatusesService);
   private readonly designationsService = inject(DesignationsService);
+  private readonly departmentsService = inject(DepartmentsService);
+  private readonly nationalitiesService = inject(NationalitiesService);
   private readonly router = inject(Router);
   private readonly platformId = inject(PLATFORM_ID);
   private readonly translationService = inject(TranslationService);
@@ -52,7 +56,12 @@ export class ViewEmployeesComponent {
     stream: ({ params }) => {
       if (!isPlatformBrowser(this.platformId))
         return of({ data: [], total: 0, page: 1, limit: 10 });
-      return this.employeeService.getEmployees(params);
+      return this.employeeService.getEmployees({
+        page: params.search?.trim() ? 1 : params.page,
+        limit: params.search?.trim() ? 1000 : params.limit,
+        search: params.search?.trim() ? '' : params.search,
+        hireDate: params.search?.trim() ? '' : params.hireDate,
+      });
     }
   });
 
@@ -65,35 +74,133 @@ export class ViewEmployeesComponent {
     { allowSignalWrites: true },
   );
 
-  totalItems = computed(() => this.employeesResource.value()?.total ?? 0);
-  //translate dynamic Name =>
+  totalItems = computed(() => this.filteredEmployees().total);
+
+  private readonly filteredEmployees = computed(() => {
+    const response = this.employeesResource.value();
+    const search = this.normalizeSearch(this.searchTerm());
+    const hireDate = this.hireDate();
+    const page = this.currentPage();
+    const limit = this.pageSize();
+
+    const enrichedEmployees = this.enrichEmployees(response?.data ?? []);
+    const filteredByHireDate = enrichedEmployees.filter((employee) =>
+      this.matchesHireDate(employee.joiningDate, hireDate),
+    );
+
+    if (!search) {
+      return {
+        items: filteredByHireDate,
+        total: response?.total ?? filteredByHireDate.length,
+      };
+    }
+
+    const matchingEmployees = filteredByHireDate.filter((employee) =>
+      this.matchesEmployeeSearch(employee, search),
+    );
+    const startIndex = (page - 1) * limit;
+
+    return {
+      items: matchingEmployees.slice(startIndex, startIndex + limit),
+      total: matchingEmployees.length,
+    };
+  });
+
   employeesList = computed(() => {
-    const response = this.employeesResource.value()?.data ?? [];
+    return this.filteredEmployees().items;
+  });
+
+  private enrichEmployees(response: IEmployeeResponse['data']) {
     const lang = this.translationService.lang();
     const employmentTypes = this.employmentTypeService.lookupList();
     const employmentStatuses = this.employmentStatusesService.lookupList();
     const designations = this.designationsService.list();
+    const departments = this.departmentsService.localizedDepartments();
+    const nationalities = this.nationalitiesService.localizedNationalities();
 
     return response.map(emp => {
       const typeMatch = employmentTypes.find(t => t.id === emp.employmentType);
       const statusMatch = employmentStatuses.find((status) => status.id === emp.employmentStatus);
       const jobTitleMatch = designations.find((designation) => designation.id === emp.jobTitleId);
+      const departmentMatch = departments.find((department) => department.id === emp.departmentId);
+      const nationalityMatch = nationalities.find((nationality) => nationality.id === emp.nationality);
+      const designationName =
+        jobTitleMatch?.displayName || emp.designationName || emp.jobTitleEn || emp.jobTitleAr || emp.jobTitleId;
+      const departmentName =
+        departmentMatch?.displayName || emp.departmentName || emp.departmentNameEn || emp.departmentNameAr || emp.departmentId;
+      const nationalityName =
+        nationalityMatch?.displayName ||
+        emp.nationalityName ||
+        emp.nationalityNameEn ||
+        emp.nationalityNameAr ||
+        emp.nationality;
+      const employmentStatusName = statusMatch?.displayName || emp.employmentStatusName || emp.employmentStatus;
 
       return {
         ...emp,
         displayName: lang === 'ar' ? emp.fullNameAr : (emp.fullNameEn || emp.fullNameAr),
-
         displayJobTitle: lang === 'ar'
-          ? (jobTitleMatch?.displayName || emp.jobTitleAr || emp.jobTitleEn || emp.jobTitleId)
-          : (jobTitleMatch?.displayName || emp.jobTitleEn || emp.jobTitleAr || emp.jobTitleId),
-
-        displayEmploymentType: typeMatch?.displayName || emp.employmentType
-        ,
-        displayEmploymentStatus: statusMatch?.displayName || emp.employmentStatusName || emp.employmentStatus,
-        employmentStatusKey: this.toStatusKey(statusMatch?.displayName || emp.employmentStatusName || ''),
+          ? (emp.jobTitleAr || designationName || emp.jobTitleEn || emp.jobTitleId)
+          : (emp.jobTitleEn || designationName || emp.jobTitleAr || emp.jobTitleId),
+        displayEmploymentType: typeMatch?.displayName || emp.employmentType,
+        displayEmploymentStatus: employmentStatusName,
+        employmentStatusKey: this.toStatusKey(employmentStatusName),
+        searchableDesignationName: designationName,
+        searchableDepartmentName: departmentName,
+        searchableEmploymentTypeName: typeMatch?.displayName || emp.employmentType || '',
+        searchableNationalityName: nationalityName,
+        searchableNationalityNameAr: nationalityMatch?.nameAr || emp.nationalityNameAr || '',
+        searchableNationalityNameEn: nationalityMatch?.nameEn || emp.nationalityNameEn || '',
       };
     });
-  });
+  }
+
+  private matchesEmployeeSearch(employee: ReturnType<ViewEmployeesComponent['enrichEmployees']>[number], search: string) {
+    return [
+      employee.email,
+      employee.fullNameAr,
+      employee.fullNameEn,
+      employee.searchableDesignationName,
+      employee.jobTitleAr,
+      employee.jobTitleEn,
+      employee.jobLevelName,
+      employee.jobLevelNameAr,
+      employee.jobLevelNameEn,
+      employee.searchableDepartmentName,
+      employee.departmentNameAr,
+      employee.departmentNameEn,
+      employee.staffCode,
+      employee.phone,
+      employee.nationalId,
+      employee.searchableEmploymentTypeName,
+      employee.displayEmploymentStatus,
+      employee.searchableNationalityName,
+      employee.searchableNationalityNameAr,
+      employee.searchableNationalityNameEn,
+    ].some((value) => this.normalizeSearch(value).includes(search));
+  }
+
+  private matchesHireDate(employeeHireDate: string | undefined, filterHireDate: string) {
+    if (!filterHireDate) {
+      return true;
+    }
+
+    const employeeDate = new Date(employeeHireDate || '');
+    const filterDate = new Date(filterHireDate);
+
+    if (Number.isNaN(employeeDate.getTime()) || Number.isNaN(filterDate.getTime())) {
+      return true;
+    }
+
+    return employeeDate >= filterDate;
+  }
+
+  private normalizeSearch(value: string | undefined | null) {
+    return String(value ?? '')
+      .toLocaleLowerCase()
+      .replace(/\s+/g, ' ')
+      .trim();
+  }
 
   handleCreateNavigation() {
     this.router.navigate(['/core-hr/employees/add']);

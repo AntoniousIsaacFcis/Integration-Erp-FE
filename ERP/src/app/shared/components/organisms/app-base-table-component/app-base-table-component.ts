@@ -11,6 +11,7 @@ import { PaginagtionComponent } from "../paginagtion-component/paginagtion-compo
 })
 export class AppBaseTableComponent {
   showHeader = input<boolean>(true);
+  searchPlaceholder = input<string>('HEADER.SEARCH_PLACEHOLDER');
 
   totalItems = input<number>(0);
   currentPage = model<number>(1); //for twoWayBinding [(currentPage)]

@@ -16,6 +16,7 @@ import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
 export class SearchbarComponent {
   //default => the header with transpet background
   variant = input<'default' | 'table'>('default');
+  placeholder = input<string>('HEADER.SEARCH_PLACEHOLDER');
 
   searchQuery = model<string>('');
 

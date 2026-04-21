@@ -3,7 +3,7 @@
   @if (showHeader()) {
   <div class="w-full  h-[42px] mb-3 shrink-0 relative z-50">
     <app-page-header-component (actionClicked)="onAdd.emit()" [(searchQuery)]="searchTerm" [filters]="extraFilters()"
-      [actions]="extraActions()" />
+      [actions]="extraActions()" [searchPlaceholder]="searchPlaceholder()" />
   </div>
   }
 
