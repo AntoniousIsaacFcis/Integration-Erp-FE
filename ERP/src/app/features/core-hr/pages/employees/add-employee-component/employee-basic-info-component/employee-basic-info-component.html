@@ -194,6 +194,34 @@
       [showErrors]="submitted()" />
 
     <div class="col-span-full ">
+      @if (hasExistingDocuments()) {
+      <div class="mb-4 space-y-3">
+        @for (doc of existingDocuments(); track doc.id || doc.fileReference || doc.name) {
+        <div class="flex items-center justify-between p-4 border border-[#F4F4F4] rounded-xl bg-white">
+          <div class="flex items-center gap-4 min-w-0">
+            <div class="w-10 h-10 rounded-lg flex items-center justify-center">
+              <ng-icon name="lucideFileText" size="20" color="black"></ng-icon>
+            </div>
+            <div class="flex flex-col min-w-0">
+              <span class="text-sm font-medium text-black truncate">{{ doc.name }}</span>
+              @if (doc.documentTypeName) {
+              <span class="text-xs text-[#878787]">{{ doc.documentTypeName }}</span>
+              }
+            </div>
+          </div>
+
+          <button
+            type="button"
+            (click)="onOpenExistingFile(doc)"
+            class="flex items-center gap-2 px-4 py-2 bg-[#0000001A] hover:bg-[#00000026] rounded-lg transition-colors text-sm font-medium text-black border border-[#F4F4F4]">
+            <ng-icon name="lucideEye" size="16"></ng-icon>
+            {{ t('COMMON.PREVIEW') }}
+          </button>
+        </div>
+        }
+      </div>
+      }
+
       <label class="text-sm font-medium text-black">
         {{ t('DOCUMENTS.JOB_FILES') }}
       </label>

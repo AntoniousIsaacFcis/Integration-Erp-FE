@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, input, output, signal } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AppInputComponent } from "@shared/components/atoms/app-input-component/app-input-component";
@@ -8,7 +8,7 @@ import { TranslocoModule } from '@jsverse/transloco';
 import { DepartmentsService } from '@features/organization/services/departments-service';
 import { NationalitiesService } from '@core/services/nationalities-service';
 import { NgIcon, provideIcons } from '@ng-icons/core';
-import { lucideOctagonX, lucideSaudiRiyal } from '@ng-icons/lucide';
+import { lucideEye, lucideFileText, lucideOctagonX, lucideSaudiRiyal } from '@ng-icons/lucide';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { startWith } from 'rxjs';
 import { IDocument } from '@shared/models/idocument';
@@ -81,7 +81,7 @@ function probationAfterHireValidator(): ValidatorFn {
   imports: [TranslocoModule, ReactiveFormsModule, AppInputComponent, AppSelectComponent, AppDateInputComponent, NgIcon, DocumentsComponent],
   templateUrl: './employee-basic-info-component.html',
   styleUrl: './employee-basic-info-component.css',
-  providers: [[provideIcons({ lucideSaudiRiyal, lucideOctagonX })]],
+  providers: [[provideIcons({ lucideSaudiRiyal, lucideOctagonX, lucideFileText, lucideEye })]],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EmployeeBasicInfoComponent {
@@ -94,6 +94,8 @@ export class EmployeeBasicInfoComponent {
 
   private fb = inject(FormBuilder);
   private readonly destroyRef = inject(DestroyRef);
+  existingDocuments = input<IDocument[]>([]);
+  openExistingDocument = output<IDocument>();
   submitted = signal(false);
   private departmentService = inject(DepartmentsService);
   protected nationalitiesService = inject(NationalitiesService);
@@ -299,6 +301,7 @@ export class EmployeeBasicInfoComponent {
   );
   documentMaxSizeMb = computed(() => this.documentUploadRules().maxFileSizeInMb);
   allowedDocumentMimeTypes = computed(() => this.documentUploadRules().allowedMimeTypes);
+  hasExistingDocuments = computed(() => this.existingDocuments().length > 0);
 
   genderOptions = STAFF_GENDER_OPTIONS;
   maritalStatusOptions = STAFF_MARITAL_STATUS_OPTIONS;
@@ -439,5 +442,9 @@ export class EmployeeBasicInfoComponent {
 
     const mimeTypes = extensions.flatMap((extension) => extensionToMimeTypes[extension] ?? []);
     return mimeTypes.length ? [...new Set(mimeTypes)] : this.DEFAULT_DOCUMENT_UPLOAD_RULES.allowedMimeTypes;
+  }
+
+  onOpenExistingFile(doc: IDocument) {
+    this.openExistingDocument.emit(doc);
   }
 }

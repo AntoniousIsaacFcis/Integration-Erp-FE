@@ -12,6 +12,9 @@ import { NotificationService } from '@core/services/notification-service';
 import { DocumentTypesService } from '@features/organization/services/document-types-service';
 import { EmploymentStatusesService } from '@features/organization/services/employment-statuses-service';
 import { IRemoteServiceError } from '@core/models/iremote-service-error';
+import { EmployeeDocumentService } from '@features/core-hr/services/employee-document-service';
+import { IDocument } from '@shared/models/idocument';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-add-employee-component',
@@ -28,11 +31,13 @@ export class AddEmployeeComponent implements OnInit {
   private notificationService = inject(NotificationService);
   private readonly documentTypesService = inject(DocumentTypesService);
   private readonly employmentStatusesService = inject(EmploymentStatusesService);
+  private readonly employeeDocumentService = inject(EmployeeDocumentService);
 
   activeSegment = signal(1);
   private pendingPayload = signal<IEmployeeForm | null>(null);
   private readonly employeeId = signal<string>('');
   private readonly initialEmployee = signal<IEmployeeForm | null>(null);
+  existingDocuments = signal<IDocument[]>([]);
   basicInfoComp = viewChild(EmployeeBasicInfoComponent);
   isFetching = signal(false);
   isSubmitting = signal(false);
@@ -219,6 +224,25 @@ export class AddEmployeeComponent implements OnInit {
     { id: 2, label: 'MENU.DOCUMENTS', anchor: 'docs' }
   ];
 
+  onOpenExistingDocument(doc: IDocument) {
+    if (doc.file instanceof File) {
+      const localUrl = URL.createObjectURL(doc.file);
+      window.open(localUrl, '_blank');
+      setTimeout(() => URL.revokeObjectURL(localUrl), 1000);
+      return;
+    }
+
+    if (!doc.id) {
+      return;
+    }
+
+    this.employeeDocumentService.downloadDocument(doc.id).subscribe((blob) => {
+      const downloadUrl = URL.createObjectURL(blob);
+      window.open(downloadUrl, '_blank');
+      setTimeout(() => URL.revokeObjectURL(downloadUrl), 1000);
+    });
+  }
+
   scrollTo(id: string, stepNumber: number) {
     this.activeSegment.set(stepNumber);
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -373,11 +397,18 @@ export class AddEmployeeComponent implements OnInit {
   private loadEmployee(employeeId: string) {
     this.isFetching.set(true);
 
-    this.employeeService.getEmployeeById(employeeId)
+    forkJoin({
+      employee: this.employeeService.getEmployeeById(employeeId),
+      documents: this.employeeDocumentService.getDocuments(employeeId),
+    })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: (employee) => {
-          this.initialEmployee.set(employee);
+        next: ({ employee, documents }) => {
+          this.initialEmployee.set({
+            ...employee,
+            documents,
+          });
+          this.existingDocuments.set(documents);
           this.isFetching.set(false);
         },
         error: (error) => {
