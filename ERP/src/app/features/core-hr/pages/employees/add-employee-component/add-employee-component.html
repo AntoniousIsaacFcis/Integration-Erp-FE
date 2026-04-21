@@ -12,7 +12,8 @@
           <section  class="col-span-full">
             <app-employee-basic-info-component
               [existingDocuments]="existingDocuments()"
-              (openExistingDocument)="onOpenExistingDocument($event)" />
+              (openExistingDocument)="onOpenExistingDocument($event)"
+              (downloadExistingDocument)="onDownloadExistingDocument($event)" />
           </section>
         </ng-container>
 

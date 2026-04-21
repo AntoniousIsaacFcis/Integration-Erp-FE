@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '@env/environment.development';
 import { IDocument } from '@shared/models/idocument';
@@ -61,8 +61,11 @@ export class EmployeeDocumentService {
     );
   }
 
-  downloadDocument(documentId: string): Observable<Blob> {
-    return this.http.post(`${this.API_URL}/${documentId}/download`, {}, { responseType: 'blob' });
+  downloadDocument(documentId: string): Observable<HttpResponse<Blob>> {
+    return this.http.get(`${this.API_URL}/${documentId}/download-file`, {
+      observe: 'response',
+      responseType: 'blob',
+    });
   }
 
   private upload(
@@ -97,5 +100,21 @@ export class EmployeeDocumentService {
       expiryDate: item.expiryDate ?? null,
       fileReference: item.fileReference ?? null,
     };
+  }
+
+  getDownloadFileName(headers: HttpHeaders, fallbackName?: string | null) {
+    const contentDisposition = headers.get('content-disposition') ?? '';
+    const utfMatch = contentDisposition.match(/filename\*=UTF-8''([^;]+)/i);
+
+    if (utfMatch?.[1]) {
+      return decodeURIComponent(utfMatch[1]);
+    }
+
+    const basicMatch = contentDisposition.match(/filename="?([^"]+)"?/i);
+    if (basicMatch?.[1]) {
+      return basicMatch[1];
+    }
+
+    return fallbackName?.trim() || 'document';
   }
 }

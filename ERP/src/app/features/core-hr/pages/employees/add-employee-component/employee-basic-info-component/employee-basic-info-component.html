@@ -217,6 +217,14 @@
             <ng-icon name="lucideEye" size="16"></ng-icon>
             {{ t('COMMON.PREVIEW') }}
           </button>
+
+          <button
+            type="button"
+            (click)="onDownloadExistingFile(doc)"
+            class="flex items-center gap-2 px-4 py-2 bg-[#0000001A] hover:bg-[#00000026] rounded-lg transition-colors text-sm font-medium text-black border border-[#F4F4F4]">
+            <ng-icon name="lucideDownload" size="16"></ng-icon>
+            {{ t('COMMON.DOWNLOAD') }}
+          </button>
         </div>
         }
       </div>

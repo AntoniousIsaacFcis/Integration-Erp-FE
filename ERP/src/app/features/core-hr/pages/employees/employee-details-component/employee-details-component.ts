@@ -292,7 +292,12 @@ export class EmployeeDetailsComponent {
       return;
     }
 
-    this.employeeDocumentService.downloadDocument(doc.id).subscribe((blob) => {
+    this.employeeDocumentService.downloadDocument(doc.id).subscribe((response) => {
+      const blob = response.body;
+      if (!blob) {
+        return;
+      }
+
       const downloadUrl = URL.createObjectURL(blob);
       window.open(downloadUrl, '_blank');
       setTimeout(() => URL.revokeObjectURL(downloadUrl), 1000);

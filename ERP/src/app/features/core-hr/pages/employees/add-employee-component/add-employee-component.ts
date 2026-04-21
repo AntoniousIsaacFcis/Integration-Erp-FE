@@ -236,9 +236,44 @@ export class AddEmployeeComponent implements OnInit {
       return;
     }
 
-    this.employeeDocumentService.downloadDocument(doc.id).subscribe((blob) => {
+    this.employeeDocumentService.downloadDocument(doc.id).subscribe((response) => {
+      const blob = response.body;
+      if (!blob) {
+        return;
+      }
+
       const downloadUrl = URL.createObjectURL(blob);
       window.open(downloadUrl, '_blank');
+      setTimeout(() => URL.revokeObjectURL(downloadUrl), 1000);
+    });
+  }
+
+  onDownloadExistingDocument(doc: IDocument) {
+    if (doc.file instanceof File) {
+      const localUrl = URL.createObjectURL(doc.file);
+      const anchor = document.createElement('a');
+      anchor.href = localUrl;
+      anchor.download = doc.name;
+      anchor.click();
+      setTimeout(() => URL.revokeObjectURL(localUrl), 1000);
+      return;
+    }
+
+    if (!doc.id) {
+      return;
+    }
+
+    this.employeeDocumentService.downloadDocument(doc.id).subscribe((response) => {
+      const blob = response.body;
+      if (!blob) {
+        return;
+      }
+
+      const downloadUrl = URL.createObjectURL(blob);
+      const anchor = document.createElement('a');
+      anchor.href = downloadUrl;
+      anchor.download = this.employeeDocumentService.getDownloadFileName(response.headers, doc.name);
+      anchor.click();
       setTimeout(() => URL.revokeObjectURL(downloadUrl), 1000);
     });
   }

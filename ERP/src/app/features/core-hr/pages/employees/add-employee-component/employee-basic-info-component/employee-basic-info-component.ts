@@ -8,7 +8,7 @@ import { TranslocoModule } from '@jsverse/transloco';
 import { DepartmentsService } from '@features/organization/services/departments-service';
 import { NationalitiesService } from '@core/services/nationalities-service';
 import { NgIcon, provideIcons } from '@ng-icons/core';
-import { lucideEye, lucideFileText, lucideOctagonX, lucideSaudiRiyal } from '@ng-icons/lucide';
+import { lucideDownload, lucideEye, lucideFileText, lucideOctagonX, lucideSaudiRiyal } from '@ng-icons/lucide';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { startWith } from 'rxjs';
 import { IDocument } from '@shared/models/idocument';
@@ -81,7 +81,7 @@ function probationAfterHireValidator(): ValidatorFn {
   imports: [TranslocoModule, ReactiveFormsModule, AppInputComponent, AppSelectComponent, AppDateInputComponent, NgIcon, DocumentsComponent],
   templateUrl: './employee-basic-info-component.html',
   styleUrl: './employee-basic-info-component.css',
-  providers: [[provideIcons({ lucideSaudiRiyal, lucideOctagonX, lucideFileText, lucideEye })]],
+  providers: [[provideIcons({ lucideSaudiRiyal, lucideOctagonX, lucideFileText, lucideEye, lucideDownload })]],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EmployeeBasicInfoComponent {
@@ -96,6 +96,7 @@ export class EmployeeBasicInfoComponent {
   private readonly destroyRef = inject(DestroyRef);
   existingDocuments = input<IDocument[]>([]);
   openExistingDocument = output<IDocument>();
+  downloadExistingDocument = output<IDocument>();
   submitted = signal(false);
   private departmentService = inject(DepartmentsService);
   protected nationalitiesService = inject(NationalitiesService);
@@ -446,5 +447,9 @@ export class EmployeeBasicInfoComponent {
 
   onOpenExistingFile(doc: IDocument) {
     this.openExistingDocument.emit(doc);
+  }
+
+  onDownloadExistingFile(doc: IDocument) {
+    this.downloadExistingDocument.emit(doc);
   }
 }
