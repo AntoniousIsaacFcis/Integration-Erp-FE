@@ -1,5 +1,5 @@
 <app-app-base-table-component [(searchTerm)]="searchTerm" [totalItems]="totalItems()" [(currentPage)]="currentPage"
-  [extraFilters]="departmentFilters" [extraActions]="departmentActions" *transloco="let t">
+  [extraFilters]="departmentFilters" [extraActions]="departmentActions" [searchPlaceholder]="'ORGANIZATION.DEPARTMENT_SEARCH_PLACEHOLDER'" *transloco="let t">
 
   <ng-template #departmentFilters>
     <app-status-badge-component label="FILTERS.STATUS" [(selectedStatus)]="selectedStatus"

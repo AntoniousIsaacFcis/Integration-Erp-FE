@@ -1,5 +1,5 @@
 <app-app-base-table-component [(searchTerm)]="searchTerm" [totalItems]="totalItems()" [(currentPage)]="currentPage"
-  [extraFilters]="empTypesFilters" [extraActions]="empTypesActions" *transloco="let t">
+  [extraFilters]="empTypesFilters" [extraActions]="empTypesActions" [searchPlaceholder]="'ORGANIZATION.EMPLOYMENT_TYPE_SEARCH_PLACEHOLDER'" *transloco="let t">
 
   <ng-template #empTypesFilters>
     <app-status-badge-component label="FILTERS.STATUS" [options]="statusOptions"
