@@ -158,17 +158,37 @@
   </div>
 
   <div class="col-span-full grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
-    <app-app-select-component [label]="t('DOCUMENTS.TYPE')" [control]="getControl('documentTypeId')"
-      [showErrors]="submitted()"
-      [placeholder]="isLoadingDocumentTypes() ? t('COMMON.LOADING') : t('PLACEHOLDER.DOCUMENTS_TYPE')">
-      @if (documentTypesService.resource.error()) {
-      <option disabled class="text-error">⚠️ {{ t('ERRORS.LOAD_FAILED') }}</option>
-      } @else {
-      @for (type of documentTypes(); track type.id) {
-      <option [value]="type.id">{{ type.displayName }}</option>
-      }
-      }
-    </app-app-select-component>
+    <div class="flex flex-col w-full gap-[12px] font-arabic">
+      <label class="text-base font-medium leading-none text-start text-black">
+        {{ t('DOCUMENTS.TYPE') }}
+      </label>
+
+      <div class="relative w-full group">
+        <select
+          [formControl]="getControl('documentTypeId')"
+          class="w-full h-[44px] px-md bg-white border border-[#0000001A] rounded-md outline-none transition-all text-sm font-normal appearance-none cursor-pointer focus:border-primary focus:ring-1 focus:ring-primary/20"
+          [class.text-black/20]="!getControl('documentTypeId').value"
+          [class.text-black]="!!getControl('documentTypeId').value"
+          [class.!border-error]="submitted() && getControl('documentTypeId').invalid"
+          [class.!border-2]="submitted() && getControl('documentTypeId').invalid">
+          <option value="" disabled hidden>
+            {{ isLoadingDocumentTypes() ? t('COMMON.LOADING') : t('PLACEHOLDER.DOCUMENTS_TYPE') }}
+          </option>
+
+          @if (documentTypesService.resource.error()) {
+          <option disabled value="">{{ t('ERRORS.LOAD_FAILED') }}</option>
+          } @else {
+          @for (type of documentTypes(); track type.id) {
+          <option [value]="type.id">{{ type.displayName }}</option>
+          }
+          }
+        </select>
+
+        <div class="absolute inset-y-0 end-[14px] flex items-center pointer-events-none transition-transform group-focus-within:rotate-180">
+          <ng-icon name="lucideChevronDown" color="black" size="18"></ng-icon>
+        </div>
+      </div>
+    </div>
 
     <app-app-date-input-component [label]="t('DOCUMENTS.EXPIRY_DATE')" [control]="getControl('expiryDate')"
       [showErrors]="submitted()" />
@@ -178,7 +198,11 @@
         {{ t('DOCUMENTS.JOB_FILES') }}
       </label>
 
-      <app-documents-component (onFilesChanged)="handleFilesChange($event)" />
+      <app-documents-component
+        [maxSizeMb]="documentMaxSizeMb()"
+        [allowedMimeTypes]="allowedDocumentMimeTypes()"
+        [accept]="documentAccept()"
+        (onFilesChanged)="handleFilesChange($event)" />
 
       @if (submitted() && getControl('attachedFiles').invalid) {
       <div class="flex items-center gap-xs text-error animate-fade-in ">
@@ -190,8 +214,8 @@
       }
 
       <div class="flex justify-between text-sm text-black  px-2 font-normal ">
-        <span>{{ t('DOCUMENTS.SUPPORTED_FORMATS') }}: PDF, JPG, PNG</span>
-        <span>{{ t('DOCUMENTS.MAX_SIZE') }}: 10MB</span>
+        <span>{{ t('DOCUMENTS.SUPPORTED_FORMATS') }}: {{ supportedDocumentFormatsLabel() }}</span>
+        <span>{{ t('DOCUMENTS.MAX_SIZE') }}: {{ documentMaxSizeMb() }}MB</span>
       </div>
     </div>
 

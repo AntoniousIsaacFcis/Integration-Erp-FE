@@ -3,6 +3,9 @@ export interface IDocumentType {
   name: string;
   description?: string;
   status: 'active' | 'inactive';
+  allowedFileExtensions: string[];
+  maxFileSizeInMb: number;
+  isExpiryDateRequired: boolean;
 }
 
 export interface IDocumentTypeApiItem {
@@ -11,6 +14,9 @@ export interface IDocumentTypeApiItem {
   description?: string;
   isActive?: boolean;
   isDeleted?: boolean;
+  allowedFileExtensions?: string[];
+  maxFileSizeInMb?: number;
+  isExpiryDateRequired?: boolean;
 }
 
 export interface IDocumentTypeApiResponse {

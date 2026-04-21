@@ -2,12 +2,10 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '@env/environment.development';
 import { IDocument } from '@shared/models/idocument';
-import { forkJoin, map, Observable, of, switchMap } from 'rxjs';
+import { forkJoin, map, Observable, of } from 'rxjs';
 import {
-  ICreateEmployeeDocumentPayload,
   IEmployeeDocumentApiItem,
   IEmployeeDocumentApiResponse,
-  IEmployeeDocumentUploadResponse,
 } from '../models/iemployee-document';
 
 @Injectable({
@@ -39,6 +37,7 @@ export class EmployeeDocumentService {
     documents: IDocument[],
     documentTypeId?: string,
     documentTypeName?: string,
+    expiryDate?: string,
   ): Observable<IDocument[]> {
     const uploadableDocuments = documents.filter((document): document is IDocument & { file: File } =>
       document.file instanceof File,
@@ -50,21 +49,12 @@ export class EmployeeDocumentService {
 
     return forkJoin(
       uploadableDocuments.map((document) =>
-        this.upload(document.file).pipe(
-          switchMap((uploadResponse) =>
-            this.create({
-              staffId,
-              documentTypeId,
-              fileName: document.name,
-              size: document.size,
-              uploadDate: this.toIsoString(document.uploadDate),
-              fileReference: this.extractFileReference(uploadResponse),
-            }),
-          ),
+        this.upload(staffId, documentTypeId, document.file, document.expiryDate ?? expiryDate).pipe(
           map((createdDocument) => ({
             ...createdDocument,
             documentTypeId,
             documentTypeName,
+            expiryDate: document.expiryDate ?? expiryDate ?? null,
           })),
         ),
       ),
@@ -75,16 +65,22 @@ export class EmployeeDocumentService {
     return this.http.post(`${this.API_URL}/${documentId}/download`, {}, { responseType: 'blob' });
   }
 
-  private upload(file: File): Observable<IEmployeeDocumentUploadResponse | string> {
+  private upload(
+    staffId: string,
+    documentTypeId: string,
+    file: File,
+    expiryDate?: string | null,
+  ): Observable<IDocument> {
     const formData = new FormData();
+    formData.append('staffId', staffId);
+    formData.append('documentTypeId', documentTypeId);
     formData.append('file', file, file.name);
+    if (expiryDate?.trim()) {
+      formData.append('expiryDate', expiryDate.trim());
+    }
 
-    return this.http.post<IEmployeeDocumentUploadResponse | string>(`${this.API_URL}/upload`, formData);
-  }
-
-  private create(payload: ICreateEmployeeDocumentPayload): Observable<IDocument> {
     return this.http
-      .post<IEmployeeDocumentApiItem>(this.API_URL, payload)
+      .post<IEmployeeDocumentApiItem>(`${this.API_URL}/upload`, formData)
       .pipe(map((response) => this.mapApiItem(response)));
   }
 
@@ -98,26 +94,8 @@ export class EmployeeDocumentService {
       size: item.size ?? 0,
       uploadDate: item.uploadDate ? new Date(item.uploadDate) : new Date(),
       type: item.mimeType?.trim() || 'application/octet-stream',
+      expiryDate: item.expiryDate ?? null,
       fileReference: item.fileReference ?? null,
     };
-  }
-
-  private extractFileReference(response: IEmployeeDocumentUploadResponse | string): string | null {
-    if (typeof response === 'string') {
-      return response;
-    }
-
-    return (
-      response.fileReference ??
-      response.reference ??
-      response.blobName ??
-      response.url ??
-      response.id ??
-      null
-    );
-  }
-
-  private toIsoString(value: Date | string): string {
-    return value instanceof Date ? value.toISOString() : new Date(value).toISOString();
   }
 }

@@ -307,7 +307,7 @@
     "GENDER": "Enter Gender",
     "MARITAL_STATUS": "Single",
     "JOB_TITLE": "Programmer",
-    "DOCUMENTS_TYPE": "pdf",
+    "DOCUMENTS_TYPE": "Select document type",
     "SELECT_JOB_TITLE": "Enter Employment Type"
   },
   "VALIDATION": {

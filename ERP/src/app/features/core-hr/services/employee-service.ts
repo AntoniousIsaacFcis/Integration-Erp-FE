@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '@env/environment.development';
-import { catchError, concatMap, map, Observable, of } from 'rxjs';
+import { concatMap, map, Observable } from 'rxjs';
 import { IEmployeeForm, IEmployeeResponse } from '../models/iemployee';
 import { ICreateStaffPayload, IStaffApiItem, IStaffApiResponse } from '../models/istaff';
 import { EmployeeDocumentService } from './employee-document-service';
@@ -25,12 +25,9 @@ export class EmployeeService {
             employeeData.documents ?? [],
             employeeData.documentTypeId,
             employeeData.documentTypeName,
+            employeeData.documentExpiryDate,
           )
           .pipe(
-            catchError((error) => {
-              console.warn('Employee created, but document upload failed:', error);
-              return of([]);
-            }),
             map((documents) => ({
               ...this.mapStaffToEmployee(staff),
               documents,
@@ -54,12 +51,9 @@ export class EmployeeService {
             employeeData.documents ?? [],
             employeeData.documentTypeId,
             employeeData.documentTypeName,
+            employeeData.documentExpiryDate,
           )
           .pipe(
-            catchError((error) => {
-              console.warn('Employee updated, but document upload failed:', error);
-              return of([]);
-            }),
             map((documents) => ({
               ...this.mapStaffToEmployee(staff),
               documents,

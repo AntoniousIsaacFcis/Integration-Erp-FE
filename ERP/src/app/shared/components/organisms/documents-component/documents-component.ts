@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, output, Renderer2, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, output, signal } from '@angular/core';
 import { IDocument } from '@shared/models/idocument';
 import { TranslocoModule } from "@jsverse/transloco";
 import { NgIcon, provideIcons } from '@ng-icons/core';
@@ -13,15 +13,12 @@ import { lucideDownload, lucideFileText, lucideRefreshCcw, lucideTrash2 } from '
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DocumentsComponent {
-  private renderer = inject(Renderer2);
-
   files = signal<IDocument[]>([]);
   onFilesChanged = output<IDocument[]>();
 
-  readonly MAX_SIZE_MB = 10;
-  readonly ALLOWED_TYPES = ['application/pdf', 'image/jpeg', 'image/png'];
-
-
+  maxSizeMb = input<number>(10);
+  allowedMimeTypes = input<string[]>(['application/pdf', 'image/jpeg', 'image/png']);
+  accept = input<string>('.pdf,.jpg,.jpeg,.png');
 
   getFiles() {
     return this.files();
@@ -60,8 +57,8 @@ export class DocumentsComponent {
   }
 
   isInvalid(doc: IDocument): boolean {
-    const isAllowedType = this.ALLOWED_TYPES.includes(doc.type);
-    const isAllowedSize = doc.size <= this.MAX_SIZE_MB * 1024 * 1024;
+    const isAllowedType = this.allowedMimeTypes().includes(doc.type);
+    const isAllowedSize = doc.size <= this.maxSizeMb() * 1024 * 1024;
     return !isAllowedType || !isAllowedSize;
   }
 
@@ -92,7 +89,7 @@ export class DocumentsComponent {
 updateFile(index: number) {
     const input = document.createElement('input');
     input.type = 'file';
-    input.accept = '.pdf,.jpg,.jpeg,.png';
+    input.accept = this.accept();
     input.onchange = (e: any) => {
       const file = e.target.files[0];
       if (file && this.validateFile(file)) {
@@ -112,6 +109,6 @@ updateFile(index: number) {
   }
 
   private validateFile(file: File): boolean {
-    return this.ALLOWED_TYPES.includes(file.type) && file.size <= this.MAX_SIZE_MB * 1024 * 1024;
+    return this.allowedMimeTypes().includes(file.type) && file.size <= this.maxSizeMb() * 1024 * 1024;
   }
 }

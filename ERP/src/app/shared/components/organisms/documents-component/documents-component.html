@@ -2,7 +2,7 @@
   <div (dragover)="$event.preventDefault()" (drop)="onFileDropped($event)"
     class="relative border-2 border-dashed border-black/10 rounded-[12px] h-[160px] flex flex-center flex-col bg-[#FBFBFB] hover:bg-slate-50 transition-all cursor-pointer group mb-4"
     (click)="fileInput.click()">
-    <input #fileInput type="file" multiple class="hidden" (change)="onFileSelected($event)">
+    <input #fileInput type="file" multiple class="hidden" [attr.accept]="accept()" (change)="onFileSelected($event)">
     <img src="assets/imgs/upload-icon.png" alt="upload" class="w-12 h-12 mb-2 opacity-70">
     <span class="font-arabic font-semibold text-sm text-black">{{ t('DOCUMENTS.UPLOAD_TEXT') }}</span>
   </div>

@@ -72,10 +72,11 @@ export class AddEmployeeComponent implements OnInit {
         allowances: String(employee.allowances ?? 0),
         deductions: String(employee.deductions ?? 0),
         totalSalary: employee.totalSalary ?? 0,
-        documentTypeId: employee.documentTypeId ?? '',
-        expiryDate: employee.documentExpiryDate ?? '',
         attachedFiles: [],
       }, { emitEvent: false });
+
+      basic.getControl('documentTypeId').setValue(employee.documentTypeId ?? '', { emitEvent: true });
+      basic.getControl('expiryDate').setValue(employee.documentExpiryDate ?? '', { emitEvent: false });
 
       basic.setProbationRequired(!this.isEditMode() || !!employee.probationPeriod);
       basic.mainForm.markAsPristine();

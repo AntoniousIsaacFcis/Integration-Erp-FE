@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, signal } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { AppInputComponent } from "@shared/components/atoms/app-input-component/app-input-component";
 import { AppSelectComponent } from "@shared/components/atoms/app-select-component/app-select-component";
 import { AppDateInputComponent } from "@shared/components/atoms/app-date-input-component/app-date-input-component";
@@ -19,6 +20,13 @@ import { DocumentTypesService } from '@features/organization/services/document-t
 import { STAFF_GENDER_OPTIONS, STAFF_MARITAL_STATUS_OPTIONS } from '@features/core-hr/models/employee-enum-options';
 import { EmploymentStatusesService } from '@features/organization/services/employment-statuses-service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+
+interface DocumentUploadRules {
+  allowedFileExtensions: string[];
+  allowedMimeTypes: string[];
+  maxFileSizeInMb: number;
+  isExpiryDateRequired: boolean;
+}
 
 function birthDateValidator(): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
@@ -70,13 +78,20 @@ function probationAfterHireValidator(): ValidatorFn {
 
 @Component({
   selector: 'app-employee-basic-info-component',
-  imports: [TranslocoModule, AppInputComponent, AppSelectComponent, AppDateInputComponent, NgIcon, DocumentsComponent],
+  imports: [TranslocoModule, ReactiveFormsModule, AppInputComponent, AppSelectComponent, AppDateInputComponent, NgIcon, DocumentsComponent],
   templateUrl: './employee-basic-info-component.html',
   styleUrl: './employee-basic-info-component.css',
   providers: [[provideIcons({ lucideSaudiRiyal, lucideOctagonX })]],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EmployeeBasicInfoComponent {
+  private readonly DEFAULT_DOCUMENT_UPLOAD_RULES: DocumentUploadRules = {
+    allowedFileExtensions: ['pdf', 'jpg', 'jpeg', 'png'],
+    allowedMimeTypes: ['application/pdf', 'image/jpeg', 'image/png'],
+    maxFileSizeInMb: 10,
+    isExpiryDateRequired: false,
+  };
+
   private fb = inject(FormBuilder);
   private readonly destroyRef = inject(DestroyRef);
   submitted = signal(false);
@@ -117,6 +132,10 @@ export class EmployeeBasicInfoComponent {
     this.getControl('attachedFiles').valueChanges
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((files) => this.syncDocumentValidators(files as IDocument[]));
+
+    this.getControl('documentTypeId').valueChanges
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => this.syncDocumentValidators(this.getControl('attachedFiles').value as IDocument[]));
 
     this.getControl('joiningDate').valueChanges
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -163,7 +182,7 @@ export class EmployeeBasicInfoComponent {
     //Documents
     documentTypeId: [''],
     expiryDate: [''],
-    attachedFiles: [[] as IDocument[], [fileValidation(10, ['application/pdf', 'image/jpeg', 'image/png'])]]
+    attachedFiles: [[] as IDocument[], []]
   }, {
     validators: [probationAfterHireValidator()],
   });
@@ -183,17 +202,16 @@ export class EmployeeBasicInfoComponent {
     const hasFiles = Array.isArray(files) && files.length > 0;
     const documentTypeControl = this.getControl('documentTypeId');
     const expiryDateControl = this.getControl('expiryDate');
+    const attachedFilesControl = this.getControl('attachedFiles');
+    const rules = this.documentUploadRules();
 
     documentTypeControl.setValidators(hasFiles ? [Validators.required] : []);
-    expiryDateControl.setValidators(hasFiles ? [Validators.required] : []);
-
-    if (!hasFiles) {
-      documentTypeControl.setValue('', { emitEvent: false });
-      expiryDateControl.setValue('', { emitEvent: false });
-    }
+    expiryDateControl.setValidators(hasFiles && rules.isExpiryDateRequired ? [Validators.required] : []);
+    attachedFilesControl.setValidators([fileValidation(rules.maxFileSizeInMb, rules.allowedMimeTypes)]);
 
     documentTypeControl.updateValueAndValidity({ emitEvent: false });
     expiryDateControl.updateValueAndValidity({ emitEvent: false });
+    attachedFilesControl.updateValueAndValidity({ emitEvent: false });
   }
 
   private basicSalaryValue = toSignal(
@@ -210,6 +228,9 @@ export class EmployeeBasicInfoComponent {
   );
   private jobTitleIdValue = toSignal(
     this.getControl('jobTitleId').valueChanges.pipe(startWith(this.getControl('jobTitleId').value))
+  );
+  private documentTypeIdValue = toSignal(
+    this.getControl('documentTypeId').valueChanges.pipe(startWith(this.getControl('documentTypeId').value))
   );
   totalSalaryCalc = computed(() => {
     const basic = Number(this.basicSalaryValue() ?? this.getControl('basicSalary').value) || 0;
@@ -252,6 +273,32 @@ export class EmployeeBasicInfoComponent {
 
   documentTypes = this.documentTypesService.lookupList;
   isLoadingDocumentTypes = this.documentTypesService.resource.isLoading;
+  documentUploadRules = computed<DocumentUploadRules>(() => {
+    const selectedDocumentType = this.documentTypesService.getById(this.documentTypeIdValue());
+
+    if (!selectedDocumentType) {
+      return this.DEFAULT_DOCUMENT_UPLOAD_RULES;
+    }
+
+    const allowedFileExtensions = selectedDocumentType.allowedFileExtensions?.length
+      ? selectedDocumentType.allowedFileExtensions
+      : this.DEFAULT_DOCUMENT_UPLOAD_RULES.allowedFileExtensions;
+
+    return {
+      allowedFileExtensions,
+      allowedMimeTypes: this.toMimeTypes(allowedFileExtensions),
+      maxFileSizeInMb: selectedDocumentType.maxFileSizeInMb || this.DEFAULT_DOCUMENT_UPLOAD_RULES.maxFileSizeInMb,
+      isExpiryDateRequired: selectedDocumentType.isExpiryDateRequired ?? false,
+    };
+  });
+  documentAccept = computed(() =>
+    this.documentUploadRules().allowedFileExtensions.map((extension) => `.${extension}`).join(','),
+  );
+  supportedDocumentFormatsLabel = computed(() =>
+    this.documentUploadRules().allowedFileExtensions.map((extension) => extension.toUpperCase()).join(', '),
+  );
+  documentMaxSizeMb = computed(() => this.documentUploadRules().maxFileSizeInMb);
+  allowedDocumentMimeTypes = computed(() => this.documentUploadRules().allowedMimeTypes);
 
   genderOptions = STAFF_GENDER_OPTIONS;
   maritalStatusOptions = STAFF_MARITAL_STATUS_OPTIONS;
@@ -381,4 +428,16 @@ export class EmployeeBasicInfoComponent {
       this.getControl('jobTitleId').setValue('', { emitEvent: false });
     }
   });
+
+  private toMimeTypes(extensions: string[]) {
+    const extensionToMimeTypes: Record<string, string[]> = {
+      pdf: ['application/pdf'],
+      jpg: ['image/jpeg'],
+      jpeg: ['image/jpeg'],
+      png: ['image/png'],
+    };
+
+    const mimeTypes = extensions.flatMap((extension) => extensionToMimeTypes[extension] ?? []);
+    return mimeTypes.length ? [...new Set(mimeTypes)] : this.DEFAULT_DOCUMENT_UPLOAD_RULES.allowedMimeTypes;
+  }
 }
