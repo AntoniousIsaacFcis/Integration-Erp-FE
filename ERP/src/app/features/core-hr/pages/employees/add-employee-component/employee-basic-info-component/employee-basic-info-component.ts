@@ -8,7 +8,8 @@ import { TranslocoModule } from '@jsverse/transloco';
 import { DepartmentsService } from '@features/organization/services/departments-service';
 import { NationalitiesService } from '@core/services/nationalities-service';
 import { NgIcon, provideIcons } from '@ng-icons/core';
-import { lucideDownload, lucideEye, lucideFileText, lucideOctagonX, lucideSaudiRiyal } from '@ng-icons/lucide';
+import { lucideDownload, lucideEye, lucideFileText, lucideOctagonX, lucidePencil, lucideSaudiRiyal, lucideTrash2 } from '@ng-icons/lucide';
+import { DatePipe } from '@angular/common';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { startWith } from 'rxjs';
 import { IDocument } from '@shared/models/idocument';
@@ -78,10 +79,10 @@ function probationAfterHireValidator(): ValidatorFn {
 
 @Component({
   selector: 'app-employee-basic-info-component',
-  imports: [TranslocoModule, ReactiveFormsModule, AppInputComponent, AppSelectComponent, AppDateInputComponent, NgIcon, DocumentsComponent],
+  imports: [TranslocoModule, ReactiveFormsModule, AppInputComponent, AppSelectComponent, AppDateInputComponent, NgIcon, DocumentsComponent, DatePipe],
   templateUrl: './employee-basic-info-component.html',
   styleUrl: './employee-basic-info-component.css',
-  providers: [[provideIcons({ lucideSaudiRiyal, lucideOctagonX, lucideFileText, lucideEye, lucideDownload })]],
+  providers: [[provideIcons({ lucideSaudiRiyal, lucideOctagonX, lucideFileText, lucideEye, lucideDownload, lucidePencil, lucideTrash2 })]],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EmployeeBasicInfoComponent {
@@ -95,8 +96,12 @@ export class EmployeeBasicInfoComponent {
   private fb = inject(FormBuilder);
   private readonly destroyRef = inject(DestroyRef);
   existingDocuments = input<IDocument[]>([]);
+  editingDocument = input<IDocument | null>(null);
   openExistingDocument = output<IDocument>();
   downloadExistingDocument = output<IDocument>();
+  editExistingDocument = output<IDocument>();
+  deleteExistingDocument = output<IDocument>();
+  cancelEditingDocument = output<void>();
   submitted = signal(false);
   private departmentService = inject(DepartmentsService);
   protected nationalitiesService = inject(NationalitiesService);
@@ -303,6 +308,7 @@ export class EmployeeBasicInfoComponent {
   documentMaxSizeMb = computed(() => this.documentUploadRules().maxFileSizeInMb);
   allowedDocumentMimeTypes = computed(() => this.documentUploadRules().allowedMimeTypes);
   hasExistingDocuments = computed(() => this.existingDocuments().length > 0);
+  isEditingDocument = computed(() => !!this.editingDocument());
 
   genderOptions = STAFF_GENDER_OPTIONS;
   maritalStatusOptions = STAFF_MARITAL_STATUS_OPTIONS;
@@ -451,5 +457,17 @@ export class EmployeeBasicInfoComponent {
 
   onDownloadExistingFile(doc: IDocument) {
     this.downloadExistingDocument.emit(doc);
+  }
+
+  onEditExistingFile(doc: IDocument) {
+    this.editExistingDocument.emit(doc);
+  }
+
+  onDeleteExistingFile(doc: IDocument) {
+    this.deleteExistingDocument.emit(doc);
+  }
+
+  onCancelDocumentEditing() {
+    this.cancelEditingDocument.emit();
   }
 }

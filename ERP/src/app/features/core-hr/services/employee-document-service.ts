@@ -68,6 +68,36 @@ export class EmployeeDocumentService {
     });
   }
 
+  updateDocument(
+    documentId: string,
+    payload: {
+      documentTypeId: string;
+      fileName?: string | null;
+      expiryDate?: string | null;
+    },
+  ): Observable<IDocument> {
+    return this.http
+      .put<IEmployeeDocumentApiItem>(`${this.API_URL}/${documentId}`, {
+        documentTypeId: payload.documentTypeId,
+        fileName: payload.fileName?.trim() || null,
+        expiryDate: payload.expiryDate?.trim() || null,
+      })
+      .pipe(map((response) => this.mapApiItem(response)));
+  }
+
+  replaceDocumentFile(documentId: string, file: File): Observable<IDocument> {
+    const formData = new FormData();
+    formData.append('file', file, file.name);
+
+    return this.http
+      .post<IEmployeeDocumentApiItem>(`${this.API_URL}/${documentId}/replace-file`, formData)
+      .pipe(map((response) => this.mapApiItem(response)));
+  }
+
+  deleteDocument(documentId: string): Observable<void> {
+    return this.http.delete<void>(`${this.API_URL}/${documentId}`);
+  }
+
   private upload(
     staffId: string,
     documentTypeId: string,

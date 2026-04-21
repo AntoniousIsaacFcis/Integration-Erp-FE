@@ -14,7 +14,7 @@ import { EmploymentStatusesService } from '@features/organization/services/emplo
 import { IRemoteServiceError } from '@core/models/iremote-service-error';
 import { EmployeeDocumentService } from '@features/core-hr/services/employee-document-service';
 import { IDocument } from '@shared/models/idocument';
-import { forkJoin } from 'rxjs';
+import { concatMap, forkJoin, map, Observable, of, tap } from 'rxjs';
 
 @Component({
   selector: 'app-add-employee-component',
@@ -38,6 +38,7 @@ export class AddEmployeeComponent implements OnInit {
   private readonly employeeId = signal<string>('');
   private readonly initialEmployee = signal<IEmployeeForm | null>(null);
   existingDocuments = signal<IDocument[]>([]);
+  editingDocument = signal<IDocument | null>(null);
   basicInfoComp = viewChild(EmployeeBasicInfoComponent);
   isFetching = signal(false);
   isSubmitting = signal(false);
@@ -150,7 +151,7 @@ export class AddEmployeeComponent implements OnInit {
         gender: rawData.gender,
         emergencyContact: rawData.emergencyPhone,
         emergencyPhone: rawData.emergencyPhone,
-        documents: rawData.attachedFiles,
+        documents: this.editingDocument() ? [] : rawData.attachedFiles,
         documentTypeId: rawData.documentTypeId,
         documentTypeName: selectedDocumentType?.displayName,
         documentExpiryDate: rawData.expiryDate || '',
@@ -171,6 +172,11 @@ export class AddEmployeeComponent implements OnInit {
         : this.employeeService.createEmployee(finalPayload);
 
       request$
+        .pipe(
+          concatMap((result) =>
+            this.persistExistingDocumentChanges(rawData).pipe(map(() => result)),
+          ),
+        )
         .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe({
           next: () => {
@@ -275,6 +281,66 @@ export class AddEmployeeComponent implements OnInit {
       anchor.download = this.employeeDocumentService.getDownloadFileName(response.headers, doc.name);
       anchor.click();
       setTimeout(() => URL.revokeObjectURL(downloadUrl), 1000);
+    });
+  }
+
+  onEditExistingDocument(doc: IDocument) {
+    const basic = this.basicInfoComp();
+    if (!basic) {
+      return;
+    }
+
+    this.editingDocument.set(doc);
+    basic.getControl('documentTypeId').setValue(doc.documentTypeId ?? '', { emitEvent: true });
+    basic.getControl('expiryDate').setValue(doc.expiryDate ?? '', { emitEvent: false });
+    basic.getControl('attachedFiles').setValue([], { emitEvent: true });
+    document.getElementById('docs-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  onCancelDocumentEditing() {
+    this.editingDocument.set(null);
+    this.resetDocumentEditor();
+  }
+
+  onDeleteExistingDocument(doc: IDocument) {
+    if (!doc.id) {
+      return;
+    }
+
+    this.notificationService.show({
+      type: 'warning',
+      title: 'DOCUMENTS.DELETE_DOCUMENT',
+      message: 'COMMON.MESSAGES.CONFIRM_DELETE',
+      isModal: true,
+      actionLabel: 'COMMON.YES',
+      cancelLabel: 'COMMON.NO',
+      onAction: () => {
+        this.employeeDocumentService.deleteDocument(doc.id!).subscribe({
+          next: () => {
+            this.existingDocuments.update((documents) => documents.filter((item) => item.id !== doc.id));
+            if (this.editingDocument()?.id === doc.id) {
+              this.onCancelDocumentEditing();
+            }
+
+            this.notificationService.show({
+              type: 'success',
+              title: 'COMMON.MESSAGES.DELETED_SUCCESSFULLY',
+              message: 'COMMON.MESSAGES.SUCCESS_MESSAGE',
+              isModal: false,
+              actionLabel: 'COMMON.CONFIRM',
+            });
+          },
+          error: () => {
+            this.notificationService.show({
+              type: 'error',
+              title: 'COMMON.MESSAGES.OPERATION_FAILED',
+              message: 'COMMON.MESSAGES.PLEASE_TRY_AGAIN',
+              isModal: false,
+              actionLabel: 'COMMON.CONFIRM',
+            });
+          },
+        });
+      },
     });
   }
 
@@ -444,6 +510,7 @@ export class AddEmployeeComponent implements OnInit {
             documents,
           });
           this.existingDocuments.set(documents);
+          this.editingDocument.set(null);
           this.isFetching.set(false);
         },
         error: (error) => {
@@ -452,6 +519,52 @@ export class AddEmployeeComponent implements OnInit {
           this.router.navigate(['/core-hr/employees/view']);
         },
       });
+  }
+
+  private persistExistingDocumentChanges(rawData: ReturnType<EmployeeBasicInfoComponent['mainForm']['getRawValue']>): Observable<void> {
+    const currentDocument = this.editingDocument();
+
+    if (!this.isEditMode() || !currentDocument?.id) {
+      return of(void 0);
+    }
+
+    const uploadableDocument = (rawData.attachedFiles ?? []).find(
+      (document) => document.file instanceof File,
+    );
+
+    return this.employeeDocumentService
+      .updateDocument(currentDocument.id, {
+        documentTypeId: rawData.documentTypeId,
+        fileName: uploadableDocument?.name ?? currentDocument.name,
+        expiryDate: rawData.expiryDate || null,
+      })
+      .pipe(
+        concatMap(() =>
+          uploadableDocument?.file instanceof File
+            ? this.employeeDocumentService.replaceDocumentFile(currentDocument.id!, uploadableDocument.file)
+            : of(null),
+        ),
+        concatMap(() => this.employeeDocumentService.getDocuments(this.employeeId())),
+        tap((documents) => {
+          this.existingDocuments.set(documents);
+          this.editingDocument.set(null);
+          this.resetDocumentEditor();
+        }),
+        map(() => void 0),
+      );
+  }
+
+  private resetDocumentEditor() {
+    const basic = this.basicInfoComp();
+    if (!basic) {
+      return;
+    }
+
+    basic.getControl('documentTypeId').setValue('', { emitEvent: true });
+    basic.getControl('expiryDate').setValue('', { emitEvent: false });
+    basic.getControl('attachedFiles').setValue([], { emitEvent: true });
+    basic.getControl('attachedFiles').markAsPristine();
+    basic.getControl('attachedFiles').markAsUntouched();
   }
 
 }

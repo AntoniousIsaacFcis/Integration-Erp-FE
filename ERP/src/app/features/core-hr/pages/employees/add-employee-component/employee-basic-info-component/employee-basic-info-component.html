@@ -157,63 +157,51 @@
     <div class="text-lg font-semibold text-black">{{ t('MENU.DOCUMENTS') }}</div>
   </div>
 
-  <div class="col-span-full grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
-    <div class="flex flex-col w-full gap-[12px] font-arabic">
-      <label class="text-base font-medium leading-none text-start text-black">
-        {{ t('DOCUMENTS.TYPE') }}
-      </label>
-
-      <div class="relative w-full group">
-        <select
-          [formControl]="getControl('documentTypeId')"
-          class="w-full h-[44px] px-md bg-white border border-[#0000001A] rounded-md outline-none transition-all text-sm font-normal appearance-none cursor-pointer focus:border-primary focus:ring-1 focus:ring-primary/20"
-          [class.text-black/20]="!getControl('documentTypeId').value"
-          [class.text-black]="!!getControl('documentTypeId').value"
-          [class.!border-error]="submitted() && getControl('documentTypeId').invalid"
-          [class.!border-2]="submitted() && getControl('documentTypeId').invalid">
-          <option value="" disabled hidden>
-            {{ isLoadingDocumentTypes() ? t('COMMON.LOADING') : t('PLACEHOLDER.DOCUMENTS_TYPE') }}
-          </option>
-
-          @if (documentTypesService.resource.error()) {
-          <option disabled value="">{{ t('ERRORS.LOAD_FAILED') }}</option>
-          } @else {
-          @for (type of documentTypes(); track type.id) {
-          <option [value]="type.id">{{ type.displayName }}</option>
-          }
-          }
-        </select>
-
-        <div class="absolute inset-y-0 end-[14px] flex items-center pointer-events-none transition-transform group-focus-within:rotate-180">
-          <ng-icon name="lucideChevronDown" color="black" size="18"></ng-icon>
-        </div>
+  <div class="col-span-full space-y-6">
+    @if (hasExistingDocuments()) {
+    <section class="space-y-3">
+      <div class="flex items-center justify-between">
+        <h3 class="text-base font-semibold text-black">{{ t('DOCUMENTS.EXISTING_FILES') }}</h3>
       </div>
-    </div>
 
-    <app-app-date-input-component [label]="t('DOCUMENTS.EXPIRY_DATE')" [control]="getControl('expiryDate')"
-      [showErrors]="submitted()" />
+      <div class="hidden lg:grid lg:grid-cols-[minmax(0,1.8fr)_140px_140px_110px_110px_110px_110px] gap-3 px-4 text-xs font-medium text-[#878787]">
+        <span>{{ t('COMMON.NAME') }}</span>
+        <span>{{ t('DOCUMENTS.TYPE') }}</span>
+        <span>{{ t('DOCUMENTS.EXPIRY_DATE') }}</span>
+        <span class="text-center">{{ t('COMMON.PREVIEW') }}</span>
+        <span class="text-center">{{ t('COMMON.DOWNLOAD') }}</span>
+        <span class="text-center">{{ t('COMMON.EDIT') }}</span>
+        <span class="text-center">{{ t('COMMON.DELETE') }}</span>
+      </div>
 
-    <div class="col-span-full ">
-      @if (hasExistingDocuments()) {
-      <div class="mb-4 space-y-3">
+      <div class="space-y-3">
         @for (doc of existingDocuments(); track doc.id || doc.fileReference || doc.name) {
-        <div class="flex items-center justify-between p-4 border border-[#F4F4F4] rounded-xl bg-white">
+        <div class="grid grid-cols-1 lg:grid-cols-[minmax(0,1.8fr)_140px_140px_110px_110px_110px_110px] gap-3 items-center p-4 border border-[#F4F4F4] rounded-xl bg-white">
           <div class="flex items-center gap-4 min-w-0">
-            <div class="w-10 h-10 rounded-lg flex items-center justify-center">
+            <div class="w-10 h-10 rounded-lg flex items-center justify-center shrink-0">
               <ng-icon name="lucideFileText" size="20" color="black"></ng-icon>
             </div>
-            <div class="flex flex-col min-w-0">
-              <span class="text-sm font-medium text-black truncate">{{ doc.name }}</span>
-              @if (doc.documentTypeName) {
-              <span class="text-xs text-[#878787]">{{ doc.documentTypeName }}</span>
-              }
+            <div class="min-w-0">
+              <span class="block text-sm font-medium text-black truncate max-w-[220px] lg:max-w-[320px]" [title]="doc.name">
+                {{ doc.name }}
+              </span>
             </div>
+          </div>
+
+          <div class="min-w-0">
+            <span class="text-xs text-[#878787] lg:hidden">{{ t('DOCUMENTS.TYPE') }}</span>
+            <span class="block text-sm text-black truncate">{{ doc.documentTypeName || t('COMMON.NO_DATA') }}</span>
+          </div>
+
+          <div class="min-w-0">
+            <span class="text-xs text-[#878787] lg:hidden">{{ t('DOCUMENTS.EXPIRY_DATE') }}</span>
+            <span class="block text-sm text-black">{{ doc.expiryDate ? (doc.expiryDate | date:'d-M-yyyy') : t('COMMON.NO_DATA') }}</span>
           </div>
 
           <button
             type="button"
             (click)="onOpenExistingFile(doc)"
-            class="flex items-center gap-2 px-4 py-2 bg-[#0000001A] hover:bg-[#00000026] rounded-lg transition-colors text-sm font-medium text-black border border-[#F4F4F4]">
+            class="flex items-center justify-center gap-2 px-3 py-2 bg-[#0000001A] hover:bg-[#00000026] rounded-lg transition-colors text-sm font-medium text-black border border-[#F4F4F4] w-full">
             <ng-icon name="lucideEye" size="16"></ng-icon>
             {{ t('COMMON.PREVIEW') }}
           </button>
@@ -221,38 +209,116 @@
           <button
             type="button"
             (click)="onDownloadExistingFile(doc)"
-            class="flex items-center gap-2 px-4 py-2 bg-[#0000001A] hover:bg-[#00000026] rounded-lg transition-colors text-sm font-medium text-black border border-[#F4F4F4]">
+            class="flex items-center justify-center gap-2 px-3 py-2 bg-[#0000001A] hover:bg-[#00000026] rounded-lg transition-colors text-sm font-medium text-black border border-[#F4F4F4] w-full">
             <ng-icon name="lucideDownload" size="16"></ng-icon>
             {{ t('COMMON.DOWNLOAD') }}
+          </button>
+
+          <button
+            type="button"
+            (click)="onEditExistingFile(doc)"
+            class="flex items-center justify-center gap-2 px-3 py-2 bg-[#EAF5DD] hover:bg-[#dcecc8] rounded-lg transition-colors text-sm font-medium text-black border border-[#D5E8BB] w-full">
+            <ng-icon name="lucidePencil" size="16"></ng-icon>
+            {{ t('COMMON.EDIT') }}
+          </button>
+
+          <button
+            type="button"
+            (click)="onDeleteExistingFile(doc)"
+            class="flex items-center justify-center gap-2 px-3 py-2 bg-[#FFEDEE] hover:bg-[#ffdfe1] rounded-lg transition-colors text-sm font-medium text-[#D93B46] border border-[#FFD4D7] w-full">
+            <ng-icon name="lucideTrash2" size="16"></ng-icon>
+            {{ t('COMMON.DELETE') }}
           </button>
         </div>
         }
       </div>
-      }
+    </section>
+    }
 
-      <label class="text-sm font-medium text-black">
-        {{ t('DOCUMENTS.JOB_FILES') }}
-      </label>
+    <section class="space-y-5 border-t border-[#F1F1F1] pt-6">
+      <div class="flex items-center justify-between gap-3">
+        <div>
+          <h3 class="text-base font-semibold text-black">
+            {{ isEditingDocument() ? t('DOCUMENTS.EDIT_DOCUMENT') : t('DOCUMENTS.ADD_NEW_DOCUMENT') }}
+          </h3>
+          @if (isEditingDocument() && editingDocument(); as activeDocument) {
+          <p class="text-sm text-[#878787] truncate max-w-[360px]" [title]="activeDocument.name">
+            {{ activeDocument.name }}
+          </p>
+          }
+        </div>
 
-      <app-documents-component
-        [maxSizeMb]="documentMaxSizeMb()"
-        [allowedMimeTypes]="allowedDocumentMimeTypes()"
-        [accept]="documentAccept()"
-        (onFilesChanged)="handleFilesChange($event)" />
-
-      @if (submitted() && getControl('attachedFiles').invalid) {
-      <div class="flex items-center gap-xs text-error animate-fade-in ">
-        <ng-icon name="lucideOctagonX" size="16" strokeWidth="3"></ng-icon>
-        <span class="text-xs font-medium text-start">
-          {{ t('ERRORS.REQUIRED_FILES') }}
-        </span>
+        @if (isEditingDocument()) {
+        <button
+          type="button"
+          (click)="onCancelDocumentEditing()"
+          class="px-4 py-2 rounded-lg border border-[#E5E5E5] text-sm font-medium text-black hover:bg-[#F8F8F8]">
+          {{ t('COMMON.CANCEL') }}
+        </button>
+        }
       </div>
-      }
 
-      <div class="flex justify-between text-sm text-black  px-2 font-normal ">
-        <span>{{ t('DOCUMENTS.SUPPORTED_FORMATS') }}: {{ supportedDocumentFormatsLabel() }}</span>
-        <span>{{ t('DOCUMENTS.MAX_SIZE') }}: {{ documentMaxSizeMb() }}MB</span>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+        <div class="flex flex-col w-full gap-[12px] font-arabic">
+          <label class="text-base font-medium leading-none text-start text-black">
+            {{ t('DOCUMENTS.TYPE') }}
+          </label>
+
+          <div class="relative w-full group">
+            <select
+              [formControl]="getControl('documentTypeId')"
+              class="w-full h-[44px] px-md bg-white border border-[#0000001A] rounded-md outline-none transition-all text-sm font-normal appearance-none cursor-pointer focus:border-primary focus:ring-1 focus:ring-primary/20"
+              [class.text-black/20]="!getControl('documentTypeId').value"
+              [class.text-black]="!!getControl('documentTypeId').value"
+              [class.!border-error]="submitted() && getControl('documentTypeId').invalid"
+              [class.!border-2]="submitted() && getControl('documentTypeId').invalid">
+              <option value="" disabled hidden>
+                {{ isLoadingDocumentTypes() ? t('COMMON.LOADING') : t('PLACEHOLDER.DOCUMENTS_TYPE') }}
+              </option>
+
+              @if (documentTypesService.resource.error()) {
+              <option disabled value="">{{ t('ERRORS.LOAD_FAILED') }}</option>
+              } @else {
+              @for (type of documentTypes(); track type.id) {
+              <option [value]="type.id">{{ type.displayName }}</option>
+              }
+              }
+            </select>
+
+            <div class="absolute inset-y-0 end-[14px] flex items-center pointer-events-none transition-transform group-focus-within:rotate-180">
+              <ng-icon name="lucideChevronDown" color="black" size="18"></ng-icon>
+            </div>
+          </div>
+        </div>
+
+        <app-app-date-input-component [label]="t('DOCUMENTS.EXPIRY_DATE')" [control]="getControl('expiryDate')"
+          [showErrors]="submitted()" />
+
+        <div class="col-span-full">
+          <label class="text-sm font-medium text-black">
+            {{ t('DOCUMENTS.JOB_FILES') }}
+          </label>
+
+          <app-documents-component
+            [maxSizeMb]="documentMaxSizeMb()"
+            [allowedMimeTypes]="allowedDocumentMimeTypes()"
+            [accept]="documentAccept()"
+            (onFilesChanged)="handleFilesChange($event)" />
+
+          @if (submitted() && getControl('attachedFiles').invalid) {
+          <div class="flex items-center gap-xs text-error animate-fade-in ">
+            <ng-icon name="lucideOctagonX" size="16" strokeWidth="3"></ng-icon>
+            <span class="text-xs font-medium text-start">
+              {{ t('ERRORS.REQUIRED_FILES') }}
+            </span>
+          </div>
+          }
+
+          <div class="flex justify-between text-sm text-black px-2 font-normal">
+            <span>{{ t('DOCUMENTS.SUPPORTED_FORMATS') }}: {{ supportedDocumentFormatsLabel() }}</span>
+            <span>{{ t('DOCUMENTS.MAX_SIZE') }}: {{ documentMaxSizeMb() }}MB</span>
+          </div>
+        </div>
       </div>
-    </div>
-
+    </section>
   </div>

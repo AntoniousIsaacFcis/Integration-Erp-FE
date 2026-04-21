@@ -39,6 +39,7 @@
     "INACTIVE": "غير نشط",
     "CODE": "الكود",
     "TOTAL": "الإجمالي",
+    "DOWNLOAD":"تحميل",
     "EMPTY_STATE": "لا توجد عناصر",
     "EMPTY_TABLE": {
       "TITLE": "لا يوجد أي محتوى في الجدول بعد، أضف الآن!"
@@ -772,6 +773,10 @@
     "TYPE": "نوع المستند",
     "EXPIRY_DATE": "تاريخ الإنتهاء",
     "JOB_FILES": "ملفات الموظف",
+    "EXISTING_FILES": "المستندات الحالية",
+    "ADD_NEW_DOCUMENT": "إضافة مستند جديد",
+    "EDIT_DOCUMENT": "تعديل المستند",
+    "DELETE_DOCUMENT": "حذف المستند",
     "UPLOAD_TEXT": "اضغط لرفع الملفات",
     "MAX_SIZE": "الحد الاقصي للحجم",
     "SUPPORTED_FORMATS": "الصيغ المدعومة",
