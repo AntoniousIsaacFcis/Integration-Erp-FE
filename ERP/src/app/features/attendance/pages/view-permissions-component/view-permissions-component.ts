@@ -52,9 +52,9 @@ private permissionService = inject(PermissionService);
   typeOptions = [
     { value: '', label: 'PERMISSIONS.ALL_TYPES' },
     { value: 'leave', label: 'Enum:AttendancePermissionType.Leave' },
-    { value: 'mission', label: 'Enum:AttendancePermissionType.Mission' },
-    { value: 'workFromHome', label: 'Enum:AttendancePermissionType.WorkFromHome' },
-    { value: 'permission', label: 'Enum:AttendancePermissionType.Permission' }
+    { value: 'halfLeave', label: 'Enum:AttendancePermissionType.HalfLeave' },
+    { value: 'lateArrival', label: 'Enum:AttendancePermissionType.LateArrival' },
+    { value: 'earlyLeave', label: 'Enum:AttendancePermissionType.EarlyLeave' }
   ];
 
   statusOptions = [
@@ -64,7 +64,7 @@ private permissionService = inject(PermissionService);
     { value: 'rejected', label: 'Enum:AttendancePermissionStatus.Rejected' }
   ];
 
-  permissionTypeKey(type: string) {
+  permissionTypeKey(type: string | number) {
     return `Enum:AttendancePermissionType.${this.toEnumMemberName(type)}`;
   }
 
@@ -84,7 +84,18 @@ private permissionService = inject(PermissionService);
     console.log('Delete permission:', id);
   }
 
-  private toEnumMemberName(value: string): string {
+  private toEnumMemberName(value: string | number): string {
+    const numericTypes: Record<number, string> = {
+      1: 'Leave',
+      2: 'HalfLeave',
+      3: 'LateArrival',
+      4: 'EarlyLeave'
+    };
+
+    if (typeof value === 'number') {
+      return numericTypes[value] ?? String(value);
+    }
+
     return value
       .trim()
       .split(/[\s_-]+/)

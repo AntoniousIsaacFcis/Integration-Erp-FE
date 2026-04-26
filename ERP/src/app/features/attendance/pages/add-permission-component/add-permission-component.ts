@@ -55,7 +55,7 @@ export class AddPermissionComponent {
     this.mainForm.controls.type.valueChanges.pipe(startWith(this.mainForm.controls.type.value))
   );
 
-  isLeave = computed(() => this.typeValue() === 'leave');
+  isLeave = computed(() => this.typeValue() === 'leave' || this.typeValue() === 'halfLeave');
 
   saveResource = rxResource({
     params: () => this.saveTrigger(),

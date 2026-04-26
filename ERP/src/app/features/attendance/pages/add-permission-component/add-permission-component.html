@@ -23,9 +23,9 @@
         <app-app-select-component [label]="t('LABEL.TYPE') + ' *'" [control]="getControl('type')"
           [showErrors]="submitted()" [placeholder]="'PLACEHOLDER.SELECT_ABSENCE_TYPE'">
           <option value="leave">{{ t('Enum:AttendancePermissionType.Leave') }}</option>
-          <option value="mission">{{ t('Enum:AttendancePermissionType.Mission') }}</option>
-          <option value="workFromHome">{{ t('Enum:AttendancePermissionType.WorkFromHome') }}</option>
-          <option value="permission">{{ t('Enum:AttendancePermissionType.Permission') }}</option>
+          <option value="halfLeave">{{ t('Enum:AttendancePermissionType.HalfLeave') }}</option>
+          <option value="lateArrival">{{ t('Enum:AttendancePermissionType.LateArrival') }}</option>
+          <option value="earlyLeave">{{ t('Enum:AttendancePermissionType.EarlyLeave') }}</option>
         </app-app-select-component>
 
         @if (isLeave()) {
