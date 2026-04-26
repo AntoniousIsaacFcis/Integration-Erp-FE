@@ -29,7 +29,7 @@ export interface IShift {
 export interface IPermission {
   id: string;
   employeeId: string;
-  type: 'holiday' | 'permission' | 'excuse';
+  type: 'leave' | 'mission' | 'workFromHome' | 'permission';
   date: string;
   reason: string;
   status: 'pending' | 'approved' | 'rejected';
@@ -43,7 +43,7 @@ export interface IAttendanceLog {
   date: string;
   checkIn: string;
   checkOut: string;
-  status: 'present' | 'absent' | 'late' | 'excused';
+  status: 'present' | 'absent' | 'onLeave' | 'holiday';
 }
 
 export interface IAttendanceResponse {
@@ -56,7 +56,7 @@ export interface IEditAttendanceDay {
   id: string;
   employeeName: string; // غالباً للعرض فقط
   date: string;
-  status: 'present' | 'absent' | 'late' | 'excused';
+  status: 'present' | 'absent' | 'onLeave' | 'holiday';
   shiftStart: string;
   shiftEnd: string;
   checkIn: string | null;

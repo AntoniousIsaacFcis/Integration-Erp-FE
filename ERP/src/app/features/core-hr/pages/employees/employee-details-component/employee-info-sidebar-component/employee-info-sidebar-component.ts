@@ -91,21 +91,27 @@ export class EmployeeInfoSidebarComponent {
     return [
       { label: 'EMPLOYEES.PERSONAL.BIRTH_DATE', value: e.birthDate, icon: 'lucideCalendar' },
       { label: 'EMPLOYEES.PERSONAL.FINGER_PRINT', value: e.fingerPrintNumber, icon: 'lucideFingerprint' },
-      { label: 'EMPLOYEES.PERSONAL.MARITAL_STATUS', value: this.formatOptionLabel(e.maritalStatus), icon: 'lucideHeart' },
-      { label: 'EMPLOYEES.PERSONAL.GENDER', value: this.formatOptionLabel(e.gender), icon: 'lucidePersonStanding' }
+      { label: 'EMPLOYEES.PERSONAL.MARITAL_STATUS', value: this.enumKey('StaffMaritalStatus', e.maritalStatus), icon: 'lucideHeart' },
+      { label: 'EMPLOYEES.PERSONAL.GENDER', value: this.enumKey('StaffGender', e.gender), icon: 'lucidePersonStanding' }
     ];
   });
 
-  private formatOptionLabel(value?: string): string {
+  private enumKey(enumName: string, value?: string): string {
     if (!value) {
       return '';
     }
 
-    return value
-      .split(/[_-]/g)
+    const memberName = value
+      .split(/[_\s-]/g)
       .filter(Boolean)
       .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
-      .join(' ');
+      .join('');
+
+    return `Enum:${enumName}.${memberName}`;
+  }
+
+  isTranslationKey(value: unknown): value is string {
+    return typeof value === 'string' && value.startsWith('Enum:');
   }
 }
 

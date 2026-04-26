@@ -34,7 +34,7 @@ export class ViewAttendanceDaysComponent {
   searchTerm = signal('');
   fromDate = signal<string>('');
   toDate = signal<string>('');
-  statusFilter = signal<'present' | 'absent' | 'late' | ''>('');
+  statusFilter = signal<'present' | 'absent' | 'onLeave' | 'holiday' | ''>('');
 
   attendanceResource = rxResource({
     params: () => ({
@@ -61,9 +61,10 @@ export class ViewAttendanceDaysComponent {
 
   attendanceStatusOptions = [
     { value: '', label: 'FILTERS.ALL' },
-    { value: 'present', label: 'ATTENDANCE.STATUS.PRESENT' },
-    { value: 'absent', label: 'ATTENDANCE.STATUS.ABSENT' },
-    { value: 'late', label: 'ATTENDANCE.STATUS.LATE' }
+    { value: 'present', label: 'Enum:AttendanceStatus.Present' },
+    { value: 'absent', label: 'Enum:AttendanceStatus.Absent' },
+    { value: 'onLeave', label: 'Enum:AttendanceStatus.OnLeave' },
+    { value: 'holiday', label: 'Enum:AttendanceStatus.Holiday' }
   ];
   calculateTotalHours(checkIn?: string, checkOut?: string): string {
     if (!checkIn || !checkOut) return '00:00';

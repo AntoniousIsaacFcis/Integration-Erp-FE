@@ -4,14 +4,14 @@ export interface IEmployeeEnumOption {
 }
 
 export const STAFF_GENDER_OPTIONS: IEmployeeEnumOption[] = [
-  { value: 'male', label: 'EMPLOYEES.MALE' },
-  { value: 'female', label: 'EMPLOYEES.FEMALE' },
-  { value: 'not-to-say', label: 'EMPLOYEES.NOT_TO_SAY' },
+  { value: 'male', label: 'Enum:StaffGender.Male' },
+  { value: 'female', label: 'Enum:StaffGender.Female' },
+  { value: 'notToSay', label: 'Enum:StaffGender.NotToSay' },
 ];
 
 export const STAFF_MARITAL_STATUS_OPTIONS: IEmployeeEnumOption[] = [
-  { value: 'single', label: 'EMPLOYEES.SINGLE' },
-  { value: 'married', label: 'EMPLOYEES.MARRIED' },
-  { value: 'divorced', label: 'EMPLOYEES.DIVORCED' },
-  { value: 'widowed', label: 'EMPLOYEES.WIDOWED' },
+  { value: 'single', label: 'Enum:StaffMaritalStatus.Single' },
+  { value: 'married', label: 'Enum:StaffMaritalStatus.Married' },
+  { value: 'divorced', label: 'Enum:StaffMaritalStatus.Divorced' },
+  { value: 'widowed', label: 'Enum:StaffMaritalStatus.Widowed' },
 ];

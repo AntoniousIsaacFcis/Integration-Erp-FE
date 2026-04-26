@@ -44,7 +44,7 @@
           <td class="py-4 px-4 text-sm">
             {{ perm.id }}
           </td>
-          <td class="py-4 px-4 text-sm">{{ t('PERMISSIONS.TYPE_' + perm.type.toUpperCase()) }}</td>
+          <td class="py-4 px-4 text-sm">{{ t(permissionTypeKey(perm.type)) }}</td>
           <td class="py-4 pe-16">
             <div class="flex gap-3 justify-end">
               <button (click)="handleEdit(perm.id)"

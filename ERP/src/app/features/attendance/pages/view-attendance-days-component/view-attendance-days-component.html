@@ -50,7 +50,7 @@
             <span class="text-sm">{{ t('COMMON.HOURS') }}</span>
           </td>
           <td class="py-4 px-4 text-center">
-            <app-table-status-badge-component [status]="log.status" translationPrefix="ATTENDANCE.STATUS" />
+            <app-table-status-badge-component [status]="log.status" enumName="AttendanceStatus" />
           </td>
           <td class="py-4 pe-12">
             <div class="flex gap-3 justify-end">

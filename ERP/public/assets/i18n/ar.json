@@ -59,9 +59,6 @@
     "TIME_SUFFIX": "صباحا",
     "HOURS": "ساعات",
     "ALL_STATUS": "تصنيف",
-    "STATUS_PENDING": "تحت الطلب",
-    "STATUS_APPROVED": "مقبول",
-    "STATUS_REJECTED": "مرفوض",
     "CURRENCY": {
       "SAR": "ر.س"
     },
@@ -600,14 +597,7 @@
     "CREATE_DATE": "تاريخ الإنشاء",
     "SOURCE": "المصدر",
     "SESSION_NUMBER": "رقم الجلسة",
-    "STATUS": {
-      "PRESENT": "حضور",
-      "ABSENT": "غياب",
-      "LATE": "تاخير",
-      "EXCUSED": "عذر",
-      "ACTIVE": "نشط",
-      "INACTIVE": "غير نشط"
-    }
+    "STATUS": "الحالة"
   },
   "SETTINGS": {
     "TITLE": "الإعدادات",
@@ -670,8 +660,6 @@
     "INVALID_FILE_OR_SIZE": "خطا في الصيغة او حجم الملف",
     "DUPLICATE_VALUE": "هذه القيمة مستخدمة من قبل",
     "DUPLICATE_SORT_ORDER": "ترتيب الفرز مستخدم من قبل",
-    "DUPLICATE_STAFF_EMAIL": "هذا البريد الإلكتروني مستخدم بالفعل لموظف آخر",
-    "DUPLICATE_STAFF_PHONE": "رقم الهاتف هذا مستخدم بالفعل لموظف آخر",
     "BIRTH_DATE_CANNOT_BE_IN_FUTURE": "تاريخ الميلاد لا يمكن أن يكون في المستقبل",
     "PROBATION_END_MUST_BE_ON_OR_AFTER_JOINING_DATE": "يجب أن تكون فترة الاختبار في نفس تاريخ التعيين أو بعده",
     "LEVEL_NAME_MIN_LENGTH": "اسم المستوى يجب ألا يقل عن 3 أحرف",
@@ -820,11 +808,6 @@
     "GREGORIAN": "الميلادي",
     "ISLAMIC": "الهجري"
   },
-  "ABSENCE_TYPE": {
-    "ABSENCE": "غياب",
-    "HOLIDAY": "اجازة",
-    "EXCUSE": "اذن"
-  },
   "LEAVE_TYPE": {
     "ANNUAL": "سنوية",
     "SICK": "مرضية"
@@ -834,15 +817,10 @@
     "TYPE_LABEL": "نوع الاجازة",
     "STATUS_LABEL": "تصنيف",
     "ALL_TYPES": "الكل",
-    "TYPE_HOLIDAY": "إجازة",
-    "TYPE_PERMISSION": "اجازة باذن",
-    "TYPE_EXCUSE": "اجازة بعذر",
     "TABLE_EMPLOYEE_NAME": "اسم الموظف",
     "TABLE_DATE": "التاريخ",
     "TABLE_PERMISSION_ID": "رقم إذن الحضور",
-    "TABLE_HOLIDAY_TYPE": "النوع",
-    "TYPE_LATE": "تاخير",
-    "TYPE_EARLY_LEAVE": "غادر قبل انتهاء العمل"
+    "TABLE_HOLIDAY_TYPE": "النوع"
   },
   "ROLES": {
     "ADD_ROLE": "إضافة دور وظيفي",

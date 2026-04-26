@@ -583,8 +583,6 @@
     "INVALID_TIME_RANGE": "End time must be after start time",
     "DUPLICATE_VALUE": "This value is already used",
     "DUPLICATE_SORT_ORDER": "Sort order is already used",
-    "DUPLICATE_STAFF_EMAIL": "This email is already used by another staff record.",
-    "DUPLICATE_STAFF_PHONE": "This phone number is already used by another staff record.",
     "BIRTH_DATE_CANNOT_BE_IN_FUTURE": "Birth date cannot be in the future.",
     "PROBATION_END_MUST_BE_ON_OR_AFTER_JOINING_DATE": "Probation end date must be on or after joining date.",
     "LEVEL_NAME_MIN_LENGTH": "Level name must be at least 3 characters",
@@ -733,11 +731,6 @@
     "SELECTED_PERMISSIONS": "selected",
     "PERMISSIONS_REQUIRED": "Please select at least one permission"
   },
-  "ABSENCE_TYPE": {
-    "ABSENCE": "Absence",
-    "HOLIDAY": "Holiday",
-    "EXCUSE": "Excuse"
-  },
   "LEAVE_TYPE": {
     "ANNUAL": "Annual",
     "SICK": "Sick"
@@ -747,14 +740,9 @@
     "TYPE_LABEL": "Leave Type",
     "STATUS_LABEL": "Classification",
     "ALL_TYPES": "All",
-    "TYPE_HOLIDAY": "Holiday",
-    "TYPE_PERMISSION": "Leave with Permission",
-    "TYPE_EXCUSE": "Leave with Excuse",
     "TABLE_EMPLOYEE_NAME": "Employee Name",
     "TABLE_DATE": "Date",
     "TABLE_PERMISSION_ID": "Permission ID",
-    "TABLE_HOLIDAY_TYPE": "Type",
-    "TYPE_LATE": "Late",
-    "TYPE_EARLY_LEAVE": "Left Before Work End"
+    "TABLE_HOLIDAY_TYPE": "Type"
   }
 }

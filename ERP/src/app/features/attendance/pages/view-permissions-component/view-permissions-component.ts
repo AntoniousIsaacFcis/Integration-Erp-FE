@@ -51,17 +51,22 @@ private permissionService = inject(PermissionService);
 
   typeOptions = [
     { value: '', label: 'PERMISSIONS.ALL_TYPES' },
-    { value: 'holiday', label: 'PERMISSIONS.TYPE_HOLIDAY' },
-    { value: 'permission', label: 'PERMISSIONS.TYPE_PERMISSION' },
-    { value: 'excuse', label: 'PERMISSIONS.TYPE_EXCUSE' }
+    { value: 'leave', label: 'Enum:AttendancePermissionType.Leave' },
+    { value: 'mission', label: 'Enum:AttendancePermissionType.Mission' },
+    { value: 'workFromHome', label: 'Enum:AttendancePermissionType.WorkFromHome' },
+    { value: 'permission', label: 'Enum:AttendancePermissionType.Permission' }
   ];
 
   statusOptions = [
     { value: '', label: 'COMMON.ALL_STATUS' },
-    { value: 'pending', label: 'COMMON.STATUS_PENDING' },
-    { value: 'approved', label: 'COMMON.STATUS_APPROVED' },
-    { value: 'rejected', label: 'COMMON.STATUS_REJECTED' }
+    { value: 'pending', label: 'Enum:AttendancePermissionStatus.Pending' },
+    { value: 'approved', label: 'Enum:AttendancePermissionStatus.Approved' },
+    { value: 'rejected', label: 'Enum:AttendancePermissionStatus.Rejected' }
   ];
+
+  permissionTypeKey(type: string) {
+    return `Enum:AttendancePermissionType.${this.toEnumMemberName(type)}`;
+  }
 
   handleAddPermission() {
     this.router.navigate(['/attendance/add-permission']);
@@ -77,5 +82,14 @@ private permissionService = inject(PermissionService);
 
   handleDelete(id: string) {
     console.log('Delete permission:', id);
+  }
+
+  private toEnumMemberName(value: string): string {
+    return value
+      .trim()
+      .split(/[\s_-]+/)
+      .filter(Boolean)
+      .map(part => part.charAt(0).toUpperCase() + part.slice(1))
+      .join('');
   }
 }

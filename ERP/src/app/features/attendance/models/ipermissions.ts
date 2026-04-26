@@ -1,6 +1,6 @@
 import { IDocument } from "@shared/models/idocument";
 
-export type PermissionType = 'holiday' | 'permission' | 'excuse';
+export type PermissionType = 'leave' | 'mission' | 'workFromHome' | 'permission';
 
 export interface ICreatePermissionRequest {
   employeeId: string;

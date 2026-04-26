@@ -46,11 +46,11 @@
 
   <app-app-input-component [label]="t('EMPLOYEES.PHONE') + '*'" [control]="getControl('phone')"
     [placeholder]="'012xxxxxxxx'" [showErrors]="submitted()" [patternErrorKey]="'ERRORS.INVALID_PHONE_FORMAT'"
-    autocomplete="tel" name="phone" [duplicateErrorKey]="'ERRORS.DUPLICATE_STAFF_PHONE'" />
+    autocomplete="tel" name="phone" [duplicateErrorKey]="'CoreHR:StaffPhoneAlreadyExists'" />
 
   <app-app-input-component [label]="t('EMPLOYEES.EMAIL') + '*'" [control]="getControl('email')"
     [placeholder]="'example@domain.com'" [showErrors]="submitted()" autocomplete="email" name="email"
-    [duplicateErrorKey]="'ERRORS.DUPLICATE_STAFF_EMAIL'" />
+    [duplicateErrorKey]="'CoreHR:StaffEmailAlreadyExists'" />
 
   <app-app-input-component [label]="t('EMPLOYEES.ADDRESS') + '*'" [control]="getControl('address')"
     [placeholder]="t('PLACEHOLDER.ADDRESS')" [showErrors]="submitted()" name="address" autocomplete="street-address" />

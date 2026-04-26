@@ -453,11 +453,11 @@ export class AddEmployeeComponent implements OnInit {
     });
 
     if (this.matchesEmailFieldError(backendError)) {
-      fieldErrors.email = 'ERRORS.DUPLICATE_STAFF_EMAIL';
+      fieldErrors.email = 'CoreHR:StaffEmailAlreadyExists';
     }
 
     if (this.matchesPhoneFieldError(backendError)) {
-      fieldErrors.phone = 'ERRORS.DUPLICATE_STAFF_PHONE';
+      fieldErrors.phone = 'CoreHR:StaffPhoneAlreadyExists';
     }
 
     if (!fieldErrors.nationalId && this.matchesNationalIdFieldError(backendError)) {

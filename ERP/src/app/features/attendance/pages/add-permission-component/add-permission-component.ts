@@ -55,7 +55,7 @@ export class AddPermissionComponent {
     this.mainForm.controls.type.valueChanges.pipe(startWith(this.mainForm.controls.type.value))
   );
 
-  isHoliday = computed(() => this.typeValue() === 'holiday');
+  isLeave = computed(() => this.typeValue() === 'leave');
 
   saveResource = rxResource({
     params: () => this.saveTrigger(),

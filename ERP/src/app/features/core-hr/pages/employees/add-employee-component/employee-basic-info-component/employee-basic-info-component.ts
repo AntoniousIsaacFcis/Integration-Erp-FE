@@ -365,13 +365,13 @@ export class EmployeeBasicInfoComponent {
           return;
         }
 
-        if (controlName === 'email' && message === 'ERRORS.DUPLICATE_STAFF_EMAIL') {
+        if (controlName === 'email' && message === 'CoreHR:StaffEmailAlreadyExists') {
           this.setDuplicateError(controlName);
           hasFieldError = true;
           return;
         }
 
-        if (controlName === 'phone' && message === 'ERRORS.DUPLICATE_STAFF_PHONE') {
+        if (controlName === 'phone' && message === 'CoreHR:StaffPhoneAlreadyExists') {
           this.setDuplicateError(controlName);
           hasFieldError = true;
           return;

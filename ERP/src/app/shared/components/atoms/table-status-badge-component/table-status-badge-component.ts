@@ -13,6 +13,7 @@ status = input.required<string>();
 label = input<string>('');
 
 translationPrefix = input<string>('COMMON');
+enumName = input<string>('');
 
 badgeClasses = computed(() => {
     const key = this.normalizeStatusKey(this.status());
@@ -39,6 +40,10 @@ badgeClasses = computed(() => {
   });
 
   translationKey = computed(() => {
+    if (this.enumName()) {
+      return `Enum:${this.enumName()}.${this.toEnumMemberName(this.status())}`;
+    }
+
     const key = this.status().toUpperCase();
     return `${this.translationPrefix()}.${key}`;
   });
@@ -51,5 +56,14 @@ badgeClasses = computed(() => {
       .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
       .replace(/[\s_]+/g, '-')
       .toLowerCase();
+  }
+
+  private toEnumMemberName(value: string): string {
+    return value
+      .trim()
+      .split(/[\s_-]+/)
+      .filter(Boolean)
+      .map(part => part.charAt(0).toUpperCase() + part.slice(1))
+      .join('');
   }
 }

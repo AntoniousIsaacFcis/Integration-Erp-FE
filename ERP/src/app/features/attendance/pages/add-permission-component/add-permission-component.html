@@ -22,12 +22,13 @@
 
         <app-app-select-component [label]="t('LABEL.TYPE') + ' *'" [control]="getControl('type')"
           [showErrors]="submitted()" [placeholder]="'PLACEHOLDER.SELECT_ABSENCE_TYPE'">
-          <option value="permission">{{ t('ABSENCE_TYPE.ABSENCE') }}</option>
-          <option value="holiday">{{ t('ABSENCE_TYPE.HOLIDAY') }}</option>
-          <option value="excuse">{{ t('ABSENCE_TYPE.EXCUSE') }}</option>
+          <option value="leave">{{ t('Enum:AttendancePermissionType.Leave') }}</option>
+          <option value="mission">{{ t('Enum:AttendancePermissionType.Mission') }}</option>
+          <option value="workFromHome">{{ t('Enum:AttendancePermissionType.WorkFromHome') }}</option>
+          <option value="permission">{{ t('Enum:AttendancePermissionType.Permission') }}</option>
         </app-app-select-component>
 
-        @if (isHoliday()) {
+        @if (isLeave()) {
         <app-app-select-component [label]="t('LABEL.LEAVE_TYPE') + ' *'" [control]="getControl('leaveType')"
           [showErrors]="submitted()" [placeholder]="'PLACEHOLDER.SELECT_LEAVE_TYPE'">
           <option value="annual">{{t('LEAVE_TYPE.ANNUAL')}}</option>
