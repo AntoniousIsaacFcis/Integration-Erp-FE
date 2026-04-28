@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '@env/environment.development';
-import { IVacation, IVacationResponse, IVacationStats } from '@features/attendance/models/ivacation';
+import { IEmployeeLeaveOverviewApiResponse, ILeaveApplicationApiDto, IVacationResponse, VacationStatus } from '@features/attendance/models/ivacation';
 import { ISelectOption } from '@shared/components/atoms/select-btn-component/select-btn-component';
 import { map, Observable, timeout } from 'rxjs';
 import { IAttendanceAvailablePeriod, IAttendanceDay, IAttendanceLogApiDto, IAttendanceLogListResponse, IAttendanceResponse, IEditAttendanceDay, IShift, IShiftListResponse, ISpecialShiftListResponse, IUpdateAttendancePayload } from '../models/iattendance';
@@ -97,9 +97,31 @@ export class AttendanceService {
   }
 
   getVacations(params: { employeeId: string; year: string; month?: string; page: number; limit: number }): Observable<IVacationResponse> {
-    return this.http.get<IVacationResponse>(
-      `${this.API_URL}/employees/${params.employeeId}/vacations`,
-      { params }
+    const month = params.month && params.month !== '0' ? params.month : undefined;
+
+    return this.http.get<IEmployeeLeaveOverviewApiResponse>(
+      `${this.API_URL}/core-hR/leave-application/employee-overview`,
+      {
+        params: {
+          StaffId: params.employeeId,
+          Year: params.year,
+          ...(month && { Month: month }),
+          SkipCount: String((params.page - 1) * params.limit),
+          MaxResultCount: String(params.limit),
+        }
+      }
+    ).pipe(
+      map(response => ({
+        data: response.items.map(item => this.toVacation(item)),
+        stats: {
+          annualBalance: response.annualBalance,
+          sickBalance: response.sickBalance,
+          remainingBalance: response.remainingBalance,
+        },
+        total: response.totalCount,
+        page: params.page,
+        limit: params.limit,
+      })),
     );
   }
 
@@ -289,5 +311,43 @@ export class AttendanceService {
 
   private toDateTimeParam(value: Date) {
     return `${this.toDateParam(value)}T${String(value.getHours()).padStart(2, '0')}:${String(value.getMinutes()).padStart(2, '0')}:${String(value.getSeconds()).padStart(2, '0')}`;
+  }
+
+  private toVacation(item: ILeaveApplicationApiDto) {
+    return {
+      id: item.id,
+      empId: item.staffId,
+      typeAr: item.leaveTypeName || this.toLeaveTypeLabel(item.type),
+      startDate: item.dateFrom,
+      endDate: this.toReturnDate(item.dateTo),
+      status: this.toVacationStatus(item.status),
+      reason: item.description?.trim() || '-',
+    };
+  }
+
+  private toLeaveTypeLabel(type: number) {
+    return type === 2 ? 'نصف يوم إجازة' : 'إجازة';
+  }
+
+  private toVacationStatus(status: number): VacationStatus {
+    const statuses: Record<number, VacationStatus> = {
+      1: 'EMPLOYEES.VACATIONS.PENDING',
+      2: 'EMPLOYEES.VACATIONS.APPROVED',
+      3: 'EMPLOYEES.VACATIONS.REJECTED',
+      4: 'EMPLOYEES.VACATIONS.CANCELLED',
+    };
+
+    return statuses[status] ?? 'EMPLOYEES.VACATIONS.PENDING';
+  }
+
+  private toReturnDate(dateValue: string) {
+    const date = new Date(`${dateValue}T00:00:00`);
+
+    if (Number.isNaN(date.getTime())) {
+      return dateValue;
+    }
+
+    date.setDate(date.getDate() + 1);
+    return this.toDateParam(date);
   }
 }

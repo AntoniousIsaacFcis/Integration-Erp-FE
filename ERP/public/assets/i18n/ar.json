@@ -474,6 +474,7 @@
       "APPROVED": "مقبولة",
       "PENDING": "معلقة",
       "REJECTED": "مرفوضة",
+      "CANCELLED": "ملغاة",
       "VACATION_TYPE": "نوع الاجازة",
       "VACATION_START_Date": "تاريخ الاجازة",
       "VACATION_END_DATE": "تاريخ العودة",

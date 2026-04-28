@@ -74,16 +74,16 @@
 
         @case ('vacations') {
         <div class="animate-in fade-in slide-in-from-bottom-4 duration-500 min-h-[720px] pb-12">
-          <div class="flex flex-col md:flex-row items-center justify-between mb-2">
+          <div class="flex flex-col md:flex-row-reverse items-start md:items-center justify-between gap-4 mb-8">
+            <div class="flex flex-row-reverse gap-4">
+              <app-select-btn-component [options]="yearOptions()" [value]="selectedYear()" borderColor="#333333"
+                (change)="onFilterChange('year', $event)" />
+              <app-select-btn-component [options]="availableMonths()" [value]="selectedMonth()" borderColor="#333333"
+                textColor="#333333" iconColor="#333333" (change)="onFilterChange('month', $event)" />
+            </div>
             <div class="text-right">
               <h3 class="text-xl font-semibold text-black">{{t('EMPLOYEES.VACATIONS.HISTORY')}}</h3>
               <p class="text-base font-normal text-[#797979]">{{t('EMPLOYEES.VACATIONS.VACATIONS_TABLE')}}</p>
-            </div>
-            <div class="flex gap-4 ">
-              <app-select-btn-component [options]="availableMonths()" [value]="selectedMonth()" borderColor="#333333"
-                textColor="#333333" iconColor="#333333" (change)="onFilterChange('month', $event)" />
-              <app-select-btn-component [options]="years()" [value]="selectedYear()" borderColor="#333333"
-                (change)="onFilterChange('year', $event)" />
             </div>
           </div>
 
@@ -91,16 +91,16 @@
           <div class="h-64 bg-gray-50 animate-pulse rounded-xl"></div>
           }
           @else {
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-lg mb-2">
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-lg mb-7">
             @for (card of vacationStatsCards(); track card.key) {
             <div
-              [class]="'px-lg py-sm rounded-2xl border border-[#F4F4F4] flex justify-between items-center transition-all hover:shadow-sm '">
+              [class]="'px-lg py-md rounded-lg border border-[#F4F4F4] flex justify-between items-center transition-all hover:shadow-sm bg-white'">
 
-              <span class="max-w-[60%] text-base text-black font-medium ">
+              <span class="max-w-[60%] text-sm text-black font-medium text-right">
                 {{ t(card.key) }}
               </span>
 
-              <span [class]="'text-2xl font-semibold text-[#9fcd3d]' ">
+              <span [class]="'text-xl font-semibold text-[#9fcd3d]' ">
                 {{ card.value }}
 
                 <small class="text-sm text-black font-normal">
@@ -114,21 +114,21 @@
           }
           <app-app-base-table-component [totalItems]="vacationTotal()" [(currentPage)]="currentPage"
             [showHeader]="false">
-            <table class="w-full text-start font-arabic">
+            <table class="w-full text-center font-arabic" dir="rtl">
               <thead class="bg-[#F4F4F4] text-black text-sm font-medium">
                 <tr>
-                  <th class="py-4 ps-9 pe-6 ">{{t('EMPLOYEES.VACATIONS.VACATION_TYPE')}}</th>
-                  <th class="py-4 px-6 ">{{t('EMPLOYEES.VACATIONS.VACATION_START_Date')}}</th>
-                  <th class="py-4 px-6 ">{{t('EMPLOYEES.VACATIONS.VACATION_END_DATE')}}</th>
-                  <th class="py-4 px-6 ">{{t('EMPLOYEES.VACATIONS.VACATIN_STATUS')}}</th>
-                  <th class="py-4 px-6 ">{{t('EMPLOYEES.VACATIONS.VACATION_REASON')}}</th>
+                  <th class="py-4 px-6">{{t('EMPLOYEES.VACATIONS.VACATION_TYPE')}}</th>
+                  <th class="py-4 px-6">{{t('EMPLOYEES.VACATIONS.VACATION_START_Date')}}</th>
+                  <th class="py-4 px-6">{{t('EMPLOYEES.VACATIONS.VACATION_END_DATE')}}</th>
+                  <th class="py-4 px-6">{{t('EMPLOYEES.VACATIONS.VACATIN_STATUS')}}</th>
+                  <th class="py-4 px-6">{{t('EMPLOYEES.VACATIONS.VACATION_REASON')}}</th>
                   <th class="py-4 px-6"></th>
                 </tr>
               </thead>
               <tbody class="divide-y divide-[#F4F4F4]">
                 @for (vac of vacationList(); track vac.id) {
                 <tr class="hover:bg-gray-50 transition-colors text-center">
-                  <td class="py-4 ps-9 pe-6 text-sm text-black font-medium">{{ vac.typeAr }}</td>
+                  <td class="py-4 px-6 text-sm text-black font-medium">{{ vac.typeAr }}</td>
                   <td class="py-4 px-6 text-sm text-black font-medium">{{ vac.startDate | date: 'dd/MM/yyyy' }}</td>
                   <td class="py-4 px-6 text-sm text-black font-medium">{{ vac.endDate | date: 'dd/MM/yyyy' }}</td>
                   <td class="py-4 px-6 text-xs font-semibold">
@@ -145,6 +145,10 @@
                       </ng-icon>
                     </button>
                   </td>
+                </tr>
+                } @empty {
+                <tr>
+                  <td colspan="6" class="py-16 text-center text-sm text-[#797979]">{{ t('COMMON.NO_DATA') }}</td>
                 </tr>
                 }
               </tbody>

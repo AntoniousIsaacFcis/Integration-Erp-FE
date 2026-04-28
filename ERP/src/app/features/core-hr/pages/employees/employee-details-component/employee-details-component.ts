@@ -9,7 +9,6 @@ import { AttendanceDayCardComponent } from "@shared/components/molecules/attenda
 import { ITabItem, TabSwitcherComponent } from '@shared/components/molecules/tab-switcher-component/tab-switcher-component';
 import { ISelectOption, SelectBtnComponent } from '@shared/components/atoms/select-btn-component/select-btn-component';
 import { ActivatedRoute, Router } from '@angular/router';
-import { MOCK_ATTENDANCE_DATA } from '@mocks/data/attendance.data';
 import { AppBaseTableComponent } from "@shared/components/organisms/app-base-table-component/app-base-table-component";
 import { IVacationResponse, VacationStatus } from '@features/attendance/models/ivacation';
 import { DatePipe } from '@angular/common';
@@ -57,10 +56,12 @@ export class EmployeeDetailsComponent {
 
     if (key === 'month') {
       this.selectedMonth.set(safeValue.toString());
+      this.currentPage.set(1);
       return;
     }
 
     this.selectedYear.set(safeValue.toString());
+    this.currentPage.set(1);
   }
 
   yearsResource = rxResource({
@@ -135,7 +136,11 @@ export class EmployeeDetailsComponent {
       }));
     }
 
-    const dataSource = tab === 'salary' ? MOCK_SALARY_STORE : MOCK_ATTENDANCE_DATA;
+    if (tab === 'vacations') {
+      return this.monthOptions();
+    }
+
+    const dataSource = MOCK_SALARY_STORE;
     const employeeData = (dataSource as any)[employeeId] || {};
     const yearData = employeeData[yearKey] || {};
 
@@ -352,7 +357,8 @@ export class EmployeeDetailsComponent {
   statusClasses: Record<VacationStatus, string> = {
     'EMPLOYEES.VACATIONS.APPROVED': 'bg-[#00A3891A] text-[#00A389]',
     'EMPLOYEES.VACATIONS.PENDING': 'bg-[#FFF3E6] text-[#FF8400]',
-    'EMPLOYEES.VACATIONS.REJECTED': 'bg-[#FFEDEE] text-[#FF4A55]'
+    'EMPLOYEES.VACATIONS.REJECTED': 'bg-[#FFEDEE] text-[#FF4A55]',
+    'EMPLOYEES.VACATIONS.CANCELLED': 'bg-[#F4F4F4] text-[#797979]',
   };
   //pagination
   currentPage = signal<number>(1);

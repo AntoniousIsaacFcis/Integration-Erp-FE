@@ -441,9 +441,10 @@
       "APPROVED": "Approved",
       "PENDING": "Pending",
       "REJECTED": "Rejected",
+      "CANCELLED": "Cancelled",
       "VACATION_TYPE": "Vacation Type",
       "VACATION_START_Date": "Vacation Start Date",
-      "VACATION_END_date": "Return Date",
+      "VACATION_END_DATE": "Return Date",
       "VACATIN_STATUS": "Vacation Status",
       "VACATION_REASON": "Vacation Reason"
     },
