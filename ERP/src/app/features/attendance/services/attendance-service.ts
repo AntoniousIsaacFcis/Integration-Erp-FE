@@ -3,8 +3,8 @@ import { inject, Injectable } from '@angular/core';
 import { environment } from '@env/environment.development';
 import { IVacation, IVacationResponse, IVacationStats } from '@features/attendance/models/ivacation';
 import { ISelectOption } from '@shared/components/atoms/select-btn-component/select-btn-component';
-import { Observable } from 'rxjs';
-import { IAttendanceDay, IAttendanceResponse, IEditAttendanceDay, IShift, IShiftListResponse, ISpecialShiftListResponse, IUpdateAttendancePayload } from '../models/iattendance';
+import { map, Observable, timeout } from 'rxjs';
+import { IAttendanceAvailablePeriod, IAttendanceDay, IAttendanceLogApiDto, IAttendanceLogListResponse, IAttendanceResponse, IEditAttendanceDay, IShift, IShiftListResponse, ISpecialShiftListResponse, IUpdateAttendancePayload } from '../models/iattendance';
 
 @Injectable({
   providedIn: 'root',
@@ -17,9 +17,25 @@ export class AttendanceService {
   private readonly API_URL = `${environment.baseUrl}/api`;
 
   getAttendance(empId: string, year: string, month: string): Observable<IAttendanceDay[]> {
-    return this.http.get<IAttendanceDay[]>(`${this.API_URL}/attendance/${empId}`, {
-      params: { year: year.toString(), month: month.toString() }
-    });
+    const yearNumber = Number(year);
+    const monthNumber = Number(month);
+    const fromDate = new Date(yearNumber, monthNumber - 1, 1);
+    const toDate = new Date(yearNumber, monthNumber, 0, 23, 59, 59);
+
+    return this.http.get<IAttendanceLogListResponse | { data?: IAttendanceLogApiDto[] } | IAttendanceLogApiDto[]>(`${this.API_URL}/attendance/attendance-log`, {
+      params: {
+        EmployeeId: empId,
+        FromLogDateTime: this.toDateTimeParam(fromDate),
+        ToLogDateTime: this.toDateTimeParam(toDate),
+        SkipCount: '0',
+        MaxResultCount: '1000',
+      }
+    }).pipe(
+      timeout(8000),
+      map(response => {
+        return this.toAttendanceDaysFromLogs(this.extractAttendanceLogs(response));
+      }),
+    );
   }
 
  getAllAttendance(params: {
@@ -67,6 +83,15 @@ export class AttendanceService {
     return this.http.get<ISelectOption[]>(`${this.API_URL}/attendance/available-years`);
   }
 
+  getAvailablePeriods(employeeId: string): Observable<IAttendanceAvailablePeriod[]> {
+    return this.http.get<IAttendanceAvailablePeriod[] | { result?: IAttendanceAvailablePeriod[] }>(
+      `${this.API_URL}/attendance/attendance-log/available-periods`,
+      { params: { EmployeeId: employeeId } },
+    ).pipe(
+      map(response => Array.isArray(response) ? response : response.result ?? []),
+    );
+  }
+
   createShift(shift: Partial<IShift>) {
     return this.http.post<IShift>(`${this.API_URL}/shifts`, shift);
   }
@@ -102,5 +127,167 @@ export class AttendanceService {
 
   updateAttendance(id: string, payload: IUpdateAttendancePayload): Observable<void> {
     return this.http.put<void>(`${this.API_URL}/attendance/${id}`, payload);
+  }
+
+  private extractAttendanceLogs(response: IAttendanceLogListResponse | { data?: IAttendanceLogApiDto[] } | IAttendanceLogApiDto[]) {
+    if (Array.isArray(response)) {
+      return response;
+    }
+
+    const record = response as IAttendanceLogListResponse & { data?: IAttendanceLogApiDto[] };
+    return record.items ?? record.data ?? [];
+  }
+
+  private toAttendanceDaysFromLogs(logs: IAttendanceLogApiDto[]): IAttendanceDay[] {
+    const logsByDate = new Map<string, IAttendanceLogApiDto[]>();
+
+    for (const log of logs) {
+      const dateKey = this.toLogDateKey(log);
+
+      if (!dateKey) {
+        continue;
+      }
+
+      const dayLogs = logsByDate.get(dateKey) ?? [];
+      dayLogs.push(log);
+      logsByDate.set(dateKey, dayLogs);
+    }
+
+    return Array.from(logsByDate.entries())
+      .sort(([dateA], [dateB]) => dateA.localeCompare(dateB))
+      .map(([dateKey, dayLogs]) => this.toAttendanceDayFromLogs(dateKey, dayLogs));
+  }
+
+  private toAttendanceDayFromLogs(dateKey: string, logs: IAttendanceLogApiDto[]): IAttendanceDay {
+    const sortedLogs = [...logs].sort(
+      (a, b) => new Date(this.getLogDateTime(a)).getTime() - new Date(this.getLogDateTime(b)).getTime(),
+    );
+    const signInLog = sortedLogs.find(log => this.getLogDirection(log) === 1) ?? sortedLogs[0];
+    const signOutLog = [...sortedLogs].reverse().find(log => this.getLogDirection(log) === 2) ?? sortedLogs.at(-1);
+    const date = new Date(`${dateKey}T00:00:00`);
+    const signInTime = this.getLogDateTime(signInLog);
+    const signOutTime = signOutLog ? this.getLogDateTime(signOutLog) : null;
+
+    return {
+      dayNumber: date.getDate(),
+      date: dateKey,
+      dayName: this.toDayNameKey(date),
+      isWorkDay: true,
+      checkIn: this.toTimeLabel(signInTime),
+      checkOut: signOutLog && this.getLogId(signOutLog) !== this.getLogId(signInLog)
+        ? this.toTimeLabel(signOutTime)
+        : null,
+      status: 'present',
+      statusText: 'STATUS.WORK',
+    };
+  }
+
+  private toLogDateKey(log: IAttendanceLogApiDto) {
+    const value = this.getLogAttendanceDate(log) || this.getLogDateTime(log);
+    return value ? value.slice(0, 10) : '';
+  }
+
+  private getLogId(log: IAttendanceLogApiDto | undefined) {
+    return this.getLogValue<string>(log, 'id', 'Id');
+  }
+
+  private getLogDateTime(log: IAttendanceLogApiDto | undefined) {
+    return this.getLogValue<string>(log, 'logDateTime', 'LogDateTime') ?? '';
+  }
+
+  private getLogAttendanceDate(log: IAttendanceLogApiDto | undefined) {
+    return this.getLogValue<string>(log, 'attendanceDate', 'AttendanceDate');
+  }
+
+  private getLogDirection(log: IAttendanceLogApiDto) {
+    const rawDirection = this.getLogValue<number | string>(log, 'direction', 'Direction');
+
+    if (typeof rawDirection === 'number') {
+      return rawDirection;
+    }
+
+    const normalizedDirection = String(rawDirection ?? '').trim().toLowerCase();
+
+    if (normalizedDirection === 'in' || normalizedDirection === 'signin' || normalizedDirection === 'sign in') {
+      return 1;
+    }
+
+    if (normalizedDirection === 'out' || normalizedDirection === 'signout' || normalizedDirection === 'sign out') {
+      return 2;
+    }
+
+    return Number(normalizedDirection);
+  }
+
+  private getLogValue<T>(log: IAttendanceLogApiDto | undefined, camelKey: string, pascalKey: string): T | undefined {
+    if (!log) {
+      return undefined;
+    }
+
+    const record = log as unknown as Record<string, T | undefined>;
+    return record[camelKey] ?? record[pascalKey];
+  }
+
+  private toDayNameKey(date: Date): IAttendanceDay['dayName'] {
+    const days: IAttendanceDay['dayName'][] = [
+      'DAYS.SUNDAY',
+      'DAYS.MONDAY',
+      'DAYS.TUESDAY',
+      'DAYS.WEDNESDAY',
+      'DAYS.THURSDAY',
+      'DAYS.FRIDAY',
+      'DAYS.SATURDAY',
+    ];
+
+    return days[date.getDay()];
+  }
+
+  private toTimeLabel(value?: string | null) {
+    if (!value) {
+      return null;
+    }
+
+    const timeOnlyMatch = value.match(/^(\d{1,2}):(\d{2})/);
+
+    if (timeOnlyMatch) {
+      const hours = Number(timeOnlyMatch[1]);
+      const minutes = Number(timeOnlyMatch[2]);
+      const date = new Date();
+      date.setHours(hours, minutes, 0, 0);
+
+      return this.formatTime(date);
+    }
+
+    const date = new Date(value);
+
+    if (Number.isNaN(date.getTime())) {
+      return null;
+    }
+
+    return this.formatTime(date);
+  }
+
+  private formatTime(value: Date) {
+    return new Intl.DateTimeFormat('en-US', {
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true,
+    }).format(value);
+  }
+
+  private toDateKey(value: string) {
+    return value.slice(0, 10);
+  }
+
+  private toDateParam(value: Date) {
+    const year = value.getFullYear();
+    const month = String(value.getMonth() + 1).padStart(2, '0');
+    const day = String(value.getDate()).padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
+  }
+
+  private toDateTimeParam(value: Date) {
+    return `${this.toDateParam(value)}T${String(value.getHours()).padStart(2, '0')}:${String(value.getMinutes()).padStart(2, '0')}:${String(value.getSeconds()).padStart(2, '0')}`;
   }
 }

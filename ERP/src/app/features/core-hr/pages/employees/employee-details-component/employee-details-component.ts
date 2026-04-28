@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, effect, inject, input, linkedSignal, signal, untracked } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, input, signal } from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { EmployeeService } from '@features/core-hr/services/employee-service';
 import { TranslocoModule } from '@jsverse/transloco';
@@ -16,14 +16,11 @@ import { DatePipe } from '@angular/common';
 import { SalaryService } from '@features/salary/services/salary-service';
 import { MOCK_SALARY_STORE } from '@mocks/data/salary.data';
 import { AttendanceService } from '@features/attendance/services/attendance-service';
+import { IAttendanceAvailablePeriod } from '@features/attendance/models/iattendance';
 import { EmployeeDocumentService } from '@features/core-hr/services/employee-document-service';
 import { IDocument } from '@shared/models/idocument';
 import { BreadcrumbService } from '@core/services/breadcrumb-service';
-
-interface YearFilterSource {
-  url: string;
-  api: ISelectOption[];
-}
+import { TranslationService } from '@core/services/translation-service';
 
 @Component({
   selector: 'app-employee-details-component',
@@ -40,21 +37,14 @@ export class EmployeeDetailsComponent {
   private readonly attendanceService = inject(AttendanceService);
   private readonly employeeDocumentService = inject(EmployeeDocumentService);
   private readonly breadcrumbService = inject(BreadcrumbService);
+  private readonly translationService = inject(TranslationService);
 
   empId = input.required<string>(); //from Route Path
   year = input<string>('2025');
   month = input<string>('10');
 
-  selectedMonth = linkedSignal<string[], string>({
-    source: () => this.availableMonths().map(m => m.value), // يراقب مصفوفة القيم فقط
-    computation: (months, previous) => {
-      const urlMonth = this.month();
-
-      if (urlMonth && months.includes(urlMonth)) return urlMonth;
-
-      return months[0] ?? '1';
-    }
-  });
+  selectedMonth = signal(String(new Date().getMonth() + 1));
+  selectedYear = signal(String(new Date().getFullYear()));
 
   activeTab = signal<string>('attendance');
 
@@ -65,44 +55,85 @@ export class EmployeeDetailsComponent {
 
     if (!safeValue) return;
 
-    this.router.navigate([], {
-      relativeTo: this.route,
-      queryParams: { [key]: safeValue.toString() },
-      queryParamsHandling: 'merge',
-      replaceUrl: true
-    });
+    if (key === 'month') {
+      this.selectedMonth.set(safeValue.toString());
+      return;
+    }
+
+    this.selectedYear.set(safeValue.toString());
   }
 
   yearsResource = rxResource({
-    params: () => ({ id: this.empId(), tab: this.activeTab() }),
+    params: () => {
+      const id = this.empId();
+      return id && this.activeTab() === 'salary' ? { id } : undefined;
+    },
     stream: ({ params }) => {
-      if (params.tab === 'salary') {
-        return this.salaryService.getAvailableYears(params.id);
-      } else {
-        return this.attendanceService.getAvailableYears();
-      }
+      return this.salaryService.getAvailableYears(params.id);
     }
   });
   years = computed(() => this.yearsResource.value() || []);
 
-  selectedYear = linkedSignal<YearFilterSource, string>({
-    source: () => ({
-      url: this.year(),
-      api: this.years()
-    }),
-    computation: (source, previous) => {
-      if (source.url) return String(source.url);
+  attendancePeriodsResource = rxResource({
+    params: () => {
+      const id = this.empId();
+      return id && this.activeTab() === 'attendance' ? { id } : undefined;
+    },
+    stream: ({ params }) => this.attendanceService.getAvailablePeriods(params.id),
+  });
 
-      if (source.api.length > 0) return String(source.api[0].value);
+  attendancePeriods = computed<IAttendanceAvailablePeriod[]>(() => {
+    return (this.attendancePeriodsResource.value() ?? [])
+      .map(period => ({
+        year: Number(period.year),
+        months: period.months
+          .map(month => Number(month))
+          .filter(month => month >= 1 && month <= 12)
+          .sort((a, b) => a - b),
+      }))
+      .filter(period => period.year && period.months.length)
+      .sort((a, b) => b.year - a.year);
+  });
 
-      return previous?.value ?? '2025';
+  selectedAttendancePeriod = computed(() => {
+    const selectedYear = Number(this.selectedYear());
+    return this.attendancePeriods().find(period => period.year === selectedYear);
+  });
+
+  yearOptions = computed(() => {
+    if (this.activeTab() === 'attendance') {
+      const periods = this.attendancePeriods();
+
+      return periods.map(period => ({
+        label: String(period.year),
+        value: String(period.year),
+      }));
     }
+
+    const apiYears = this.years();
+
+    if (apiYears.length) {
+      return apiYears;
+    }
+
+    const currentYear = new Date().getFullYear();
+    return [currentYear - 1, currentYear, currentYear + 1].map(year => ({
+      label: String(year),
+      value: String(year),
+    }));
   });
 
   availableMonths = computed(() => {
     const employeeId = this.empId();
     const yearKey = this.selectedYear();
     const tab = this.activeTab();
+
+    if (tab === 'attendance') {
+      return (this.selectedAttendancePeriod()?.months ?? []).map(month => ({
+        label: this.getMonthName(String(month).padStart(2, '0')),
+        value: String(month),
+      }));
+    }
 
     const dataSource = tab === 'salary' ? MOCK_SALARY_STORE : MOCK_ATTENDANCE_DATA;
     const employeeData = (dataSource as any)[employeeId] || {};
@@ -118,8 +149,19 @@ export class EmployeeDetailsComponent {
     return months;
   });
 
+  private monthOptions(): ISelectOption[] {
+    return Array.from({ length: 12 }, (_, index) => {
+      const month = String(index + 1);
+
+      return {
+        label: this.getMonthName(month.padStart(2, '0')),
+        value: month,
+      };
+    });
+  }
+
   private getMonthName(month: string): string {
-    const monthNames: Record<string, string> = {
+    const arabicMonthNames: Record<string, string> = {
       '01': 'يناير',
       '02': 'فبراير',
       '03': 'مارس',
@@ -133,6 +175,22 @@ export class EmployeeDetailsComponent {
       '11': 'نوفمبر',
       '12': 'ديسمبر'
     };
+    const englishMonthNames: Record<string, string> = {
+      '01': 'January',
+      '02': 'February',
+      '03': 'March',
+      '04': 'April',
+      '05': 'May',
+      '06': 'June',
+      '07': 'July',
+      '08': 'August',
+      '09': 'September',
+      '10': 'October',
+      '11': 'November',
+      '12': 'December'
+    };
+
+    const monthNames = this.translationService.lang() === 'ar' ? arabicMonthNames : englishMonthNames;
     return monthNames[month] || month;
   }
 
@@ -145,21 +203,39 @@ export class EmployeeDetailsComponent {
     }
 
     effect(() => {
-      const months = this.availableMonths();
-      const currentMonth = this.selectedMonth();
-
-      if (months.length > 0) {
-        const monthExists = months.find(m => m.value === currentMonth);
-
-        if (!monthExists) {
-          this.onFilterChange('month', months[0].value.toString());
-        }
+      if (this.activeTab() === 'vacations') {
+        this.currentPage.set(1);
       }
     });
 
     effect(() => {
-      if (this.activeTab() === 'vacations') {
-        this.currentPage.set(1);
+      if (this.activeTab() !== 'attendance') {
+        return;
+      }
+
+      const periods = this.attendancePeriods();
+
+      if (!periods.length) {
+        return;
+      }
+
+      const selectedYear = Number(this.selectedYear());
+      const period = periods.find(item => item.year === selectedYear) ?? periods[0];
+      const nextYear = String(period.year);
+
+      if (this.selectedYear() !== nextYear) {
+        this.selectedYear.set(nextYear);
+        return;
+      }
+
+      const selectedMonth = Number(this.selectedMonth());
+
+      if (!period.months.includes(selectedMonth)) {
+        const latestMonth = period.months.at(-1);
+
+        if (latestMonth) {
+          this.selectedMonth.set(String(latestMonth));
+        }
       }
     });
 
@@ -214,11 +290,16 @@ export class EmployeeDetailsComponent {
       if (!id || !year || !month || !isAttendance) return undefined;
 
       const cleanMonth = month.startsWith('0') ? month.replace(/^0+/, '') : month;
+      const periods = this.attendancePeriodsResource.value();
+      const period = this.attendancePeriods().find(item => item.year === Number(year));
+
+      if (!periods || !period?.months.includes(Number(cleanMonth))) {
+        return undefined;
+      }
 
       return { id, year, month: cleanMonth };
     },
     stream: ({ params }) => {
-      console.log('Resource Params:', params);
       return this.attendanceService.getAttendance(params.id, params.year, params.month);
     }
   });

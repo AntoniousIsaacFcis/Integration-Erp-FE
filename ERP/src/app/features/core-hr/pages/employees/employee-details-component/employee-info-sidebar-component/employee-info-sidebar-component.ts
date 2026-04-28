@@ -25,7 +25,7 @@ export class EmployeeInfoSidebarComponent {
   private readonly designationsService = inject(DesignationsService);
   private readonly translationService = inject(TranslationService);
 
-  emp = input.required<IEmployeeForm>();
+  emp = input<IEmployeeForm | null>(null);
 
   private readonly nationalitiesMap = computed(
     () => new Map(this.nationalitiesService.localizedNationalities().map((item) => [item.id, item.displayName])),
@@ -45,6 +45,8 @@ export class EmployeeInfoSidebarComponent {
 
   displayJobTitle = computed(() => {
     const employee = this.emp();
+    if (!employee) return '';
+
     const lang = this.translationService.lang();
     const fallbackLabel = lang === 'ar' ? employee.jobTitleAr : employee.jobTitleEn;
 

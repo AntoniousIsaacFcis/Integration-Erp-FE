@@ -4,11 +4,77 @@ export interface IAttendance {
 export interface IAttendanceDay {
   dayName: 'DAYS.SATURDAY' | 'DAYS.SUNDAY' | 'DAYS.MONDAY' | 'DAYS.TUESDAY' | 'DAYS.WEDNESDAY' | 'DAYS.THURSDAY' | 'DAYS.FRIDAY';
   dayNumber: number;
+  date?: string;
   isWorkDay: boolean;
   checkIn: string | null;
   checkOut: string | null;
   statusText: string;
+  status?: 'present' | 'absent' | 'onLeave' | 'holiday' | 'dayOff' | 'empty';
+  workedMinutes?: number;
+  delayMinutes?: number;
+  earlyLeaveMinutes?: number;
+  notes?: string | null;
 }
+
+export interface IAttendanceDayApiDto {
+  id: string;
+  employeeId: string;
+  shiftId?: string | null;
+  date: string;
+  status: number;
+  dayOffReason?: number | null;
+  onDutyTime?: string | null;
+  offDutyTime?: string | null;
+  signInTime?: string | null;
+  signOutTime?: string | null;
+  calculationType: number;
+  workedMinutes: number;
+  delayMinutes: number;
+  earlyLeaveMinutes: number;
+  calculatedAt?: string | null;
+  leaveTypeId?: string | null;
+  leaveCount: number;
+  notes?: string | null;
+  attendanceSheetId?: string | null;
+  attendancePermissionId?: string | null;
+}
+
+export interface IAttendanceDayListResponse {
+  items: IAttendanceDayApiDto[];
+  totalCount: number;
+}
+
+export interface IAttendanceLogApiDto {
+  id: string;
+  employeeId: string;
+  employeeName: string;
+  employeeCode?: string | null;
+  logDateTime: string;
+  direction: 1 | 2 | number;
+  source: number;
+  status: number;
+  sessionId?: string | null;
+  attendanceDate?: string | null;
+  attendanceDayId?: string | null;
+  attendanceLogSessionId?: string | null;
+  attendanceMachineId?: string | null;
+  sourceId?: string | null;
+  sourceName?: string | null;
+  sourceType?: string | null;
+  sourceMethod?: string | null;
+  invalidReason?: string | null;
+}
+
+export interface IAttendanceLogListResponse {
+  items: IAttendanceLogApiDto[];
+  totalCount: number;
+}
+
+export interface IAttendanceAvailablePeriod {
+  year: number;
+  months: number[];
+}
+
 export interface DayConfig {
   day: string;
   label: string;
