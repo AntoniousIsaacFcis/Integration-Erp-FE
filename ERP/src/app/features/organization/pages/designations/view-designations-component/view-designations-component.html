@@ -42,7 +42,7 @@
       </thead>
       <tbody>
         @for (designation of designationsList(); track designation.id) {
-        <tr class="bg-white hover:bg-gray-50/50 transition-all border-b border-gray-100">
+        <tr class="bg-white hover:bg-gray-50/50 transition-all border-b border-gray-100 cursor-pointer" (click)="handleView(designation.id)">
           <td class="py-4 ps-20 text-start font-normal text-sm">{{ designation.name }}</td>
           <td class="py-4 pe-16 text-start font-normal text-sm">
             {{ designation.departmentName || t('COMMON.NO_DATA') }}
@@ -52,15 +52,15 @@
           </td>
           <td class="py-4 px-20">
             <div class="flex gap-5 justify-end">
-              <button (click)="handleEdit(designation.id)"
+              <button (click)="$event.stopPropagation(); handleEdit(designation.id)"
                 class="flex size-[30px] items-center justify-center rounded-full bg-[#0000001A] transition-colors hover:bg-[#00000033]">
                 <ng-icon name="lucidePencil" size="16px" color="black" />
               </button>
-              <button (click)="handleDelete(designation.id)"
+              <button (click)="$event.stopPropagation(); handleDelete(designation.id)"
                 class="flex size-[30px] items-center justify-center rounded-full bg-[#0000001A] transition-colors hover:bg-[#00000033]">
                 <ng-icon name="lucideTrash2" size="16px" color="#F40552" />
               </button>
-              <button (click)="handleView(designation.id)"
+              <button (click)="$event.stopPropagation(); handleView(designation.id)"
                 class="flex size-[32px] items-center justify-center rounded-full bg-[#61BDDC33] hover:bg-gray-100 transition-colors">
                 <ng-icon name="lucideEye" size="16px" color="#61BDDC" />
               </button>

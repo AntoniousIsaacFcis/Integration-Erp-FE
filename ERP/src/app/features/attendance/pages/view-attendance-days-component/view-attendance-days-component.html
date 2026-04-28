@@ -40,7 +40,7 @@
       </thead>
       <tbody>
         @for (log of attendanceLogs(); track log.id) {
-        <tr class="bg-white border-b border-gray-200 hover:bg-gray-50/50 transition-all">
+        <tr class="bg-white border-b border-gray-200 hover:bg-gray-50/50 transition-all cursor-pointer" (click)="handleViewDetails(log.id)">
           <td class="py-4 ps-16 font-medium text-sm text-black">{{ log.employeeName }}</td>
           <td class="py-4 px-4 text-center text-sm">{{ log.date | date:'dd/MM/yyyy' }}</td>
           <td class="py-4 px-4 text-center text-sm">{{ log.checkIn || '--:--' }}</td>
@@ -54,11 +54,11 @@
           </td>
           <td class="py-4 pe-12">
             <div class="flex gap-3 justify-end">
-              <button (click)="handleEdit(log.id)"
+              <button (click)="$event.stopPropagation(); handleEdit(log.id)"
                 class="flex size-[32px] items-center justify-center rounded-full bg-[#0000001A] hover:bg-red-50 transition-colors">
                 <ng-icon name="lucidePencil" size="16" />
               </button>
-              <button (click)="handleViewDetails(log.id)"
+              <button (click)="$event.stopPropagation(); handleViewDetails(log.id)"
                 class="flex size-[32px] items-center justify-center rounded-full bg-[#61BDDC33] hover:bg-gray-100 transition-colors">
                 <ng-icon name="lucideEye" size="16" color="#61BDDC" />
               </button>

@@ -38,7 +38,7 @@
       </thead>
       <tbody>
         @for (perm of permissions(); track perm.id) {
-        <tr class="bg-white border-b border-gray-200 hover:bg-gray-50/50 transition-all">
+        <tr class="bg-white border-b border-gray-200 hover:bg-gray-50/50 transition-all cursor-pointer" (click)="handleView(perm.id)">
           <td class="py-4 ps-16 text-sm text-black">{{ perm.employeeId }}</td>
           <td class="py-4 px-4  text-sm">{{ perm.date | date:'dd/MM/yyyy' }}</td>
           <td class="py-4 px-4 text-sm">
@@ -47,17 +47,17 @@
           <td class="py-4 px-4 text-sm">{{ t(permissionTypeKey(perm.type)) }}</td>
           <td class="py-4 pe-16">
             <div class="flex gap-3 justify-end">
-              <button (click)="handleEdit(perm.id)"
+              <button (click)="$event.stopPropagation(); handleEdit(perm.id)"
                 class="flex size-[32px] items-center justify-center rounded-full bg-[#0000001A] hover:bg-gray-200 transition-colors">
                 <ng-icon name="lucidePencil" size="16" color="#000000" />
               </button>
 
-              <button (click)="handleView(perm.id)"
+              <button (click)="$event.stopPropagation(); handleView(perm.id)"
                 class="flex size-[32px] items-center justify-center rounded-full bg-[#61BDDC33] hover:bg-gray-100 transition-colors">
                 <ng-icon name="lucideEye" size="16" color="#61BDDC" />
               </button>
 
-              <button (click)="handleDelete(perm.id)"
+              <button (click)="$event.stopPropagation(); handleDelete(perm.id)"
                 class="flex size-[32px] items-center justify-center rounded-full bg-[#FF00001A] hover:bg-red-100 transition-colors">
                 <ng-icon name="lucideTrash2" size="16" color="#FF0000" />
               </button>

@@ -33,7 +33,7 @@
       </thead>
       <tbody>
         @for (shift of shiftsList(); track shift.id) {
-        <tr class="bg-white border-b border-gray-200 hover:bg-gray-50/50 transition-all">
+        <tr class="bg-white border-b border-gray-200 hover:bg-gray-50/50 transition-all cursor-pointer" (click)="handleEdit(shift.id)">
           <td class="py-4 ps-6 text-center font-medium text-sm text-black">{{ shift.displayName }}</td>
           <td class="py-4 px-4 text-center text-sm">{{ shift.type }}</td>
           <td class="py-4 px-4 text-center text-sm">{{ shift.daysCount }}</td>
@@ -48,11 +48,11 @@
 
           <td class="py-4 pe-12">
             <div class="flex gap-3 justify-end">
-              <button (click)="handleEdit(shift.id)"
+              <button (click)="$event.stopPropagation(); handleEdit(shift.id)"
                 class="flex size-[32px] items-center justify-center rounded-full bg-[#F4F4F4] hover:bg-gray-200 transition-colors">
                 <ng-icon name="lucidePencil" size="16px" color="black" />
               </button>
-              <button (click)="handleDelete(shift.id)"
+              <button (click)="$event.stopPropagation(); handleDelete(shift.id)"
                 class="flex size-[32px] items-center justify-center rounded-full bg-[#F4F4F4] hover:bg-red-50 transition-colors">
                 <ng-icon name="lucideTrash2" size="16px" color="#F40552" />
               </button>

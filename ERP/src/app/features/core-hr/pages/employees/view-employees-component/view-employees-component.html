@@ -44,7 +44,7 @@
       </thead>
       <tbody>
         @for (emp of employeesList(); track emp.id) {
-        <tr class="bg-white border-b border-gray-200 hover:bg-gray-50/50 transition-all ">
+        <tr class="bg-white border-b border-gray-200 hover:bg-gray-50/50 transition-all cursor-pointer" (click)="navigateToPreview(emp.id)">
           <td class="py-4 ps-12  text-start font-normal text-sm  ">{{ emp.staffCode || emp.id }}</td>
           <td class="py-4 pe-4 font-normal text-center text-sm  ">{{ emp.displayName }}</td>
           <td class="py-4  font-normal text-center text-sm ">{{ emp.displayJobTitle }}</td>
@@ -63,15 +63,15 @@
           </td>
           <td class="py-4 pe-6">
             <div class="flex gap-4 justify-end">
-              <button (click)="navigateToEdit(emp.id)"
+              <button (click)="$event.stopPropagation(); navigateToEdit(emp.id)"
                 class="flex size-[30px] items-center justify-center rounded-full bg-[#0000001A] hover:bg-[#00000033]">
                 <ng-icon name="lucidePencil" size="16px" color="black" />
               </button>
-              <button (click)="handleDelete(emp.id)"
+              <button (click)="$event.stopPropagation(); handleDelete(emp.id)"
                 class="flex size-[30px] items-center justify-center rounded-full bg-[#0000001A] hover:bg-[#00000033]">
                 <ng-icon name="lucideTrash2" size="16px" color="#F40552" />
               </button>
-              <button (click)="navigateToPreview(emp.id)"
+              <button (click)="$event.stopPropagation(); navigateToPreview(emp.id)"
                 class="flex size-[32px] items-center justify-center rounded-full bg-[#61BDDC33] hover:bg-gray-100 transition-colors">
                 <ng-icon name="lucideEye" size="16px" color="#61BDDC" />
               </button>
