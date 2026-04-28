@@ -10,6 +10,7 @@ import {
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { BreadcrumbService } from '@core/services/breadcrumb-service';
 import { DepartmentsService } from '@features/organization/services/departments-service';
 import { TranslocoModule } from '@jsverse/transloco';
 import { AppInputComponent } from '@shared/components/atoms/app-input-component/app-input-component';
@@ -42,6 +43,7 @@ export class PreviewDepartmentComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly breadcrumbService = inject(BreadcrumbService);
 
   isLoading = signal(true);
 
@@ -83,6 +85,7 @@ export class PreviewDepartmentComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (department) => {
+          this.breadcrumbService.setCurrentBreadcrumbLabel(department.name, this.route);
           this.departmentForm.patchValue({
             name: department.name,
             abbreviation: department.abbreviation ?? '',

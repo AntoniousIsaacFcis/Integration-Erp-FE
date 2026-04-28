@@ -11,7 +11,7 @@
             [routerLink]="crumb.url"
             class="text-black font-medium text-[20px] leading-none transition-opacity hover:opacity-100 whitespace-nowrap"
           >
-            {{ t(crumb.label) }}
+            {{ crumb.translate === false ? crumb.label : t(crumb.label) }}
           </a>
 
           <span class="inline-flex items-center justify-center px-2 text-[20px] font-medium font-arabic text-black  leading-none select-none">
@@ -24,7 +24,7 @@
           <span
             class="text-black font-medium text-[20px] leading-none whitespace-nowrap"
           >
-            {{ t(crumb.label) }}
+            {{ crumb.translate === false ? crumb.label : t(crumb.label) }}
           </span>
         }
 

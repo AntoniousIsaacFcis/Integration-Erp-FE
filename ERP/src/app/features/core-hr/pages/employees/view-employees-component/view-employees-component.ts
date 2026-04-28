@@ -215,8 +215,16 @@ export class ViewEmployeesComponent {
     if (id) this.router.navigate(['/core-hr/employees/edit', id]);
   }
 
-  navigateToPreview(id: string | undefined) {
-    if (id) this.router.navigate(['/core-hr/employees/details', id]);
+  navigateToPreview(employee: ReturnType<ViewEmployeesComponent['enrichEmployees']>[number] | undefined) {
+    if (!employee?.id) {
+      return;
+    }
+
+    this.router.navigate(['/core-hr/employees/details', employee.id], {
+      state: {
+        breadcrumbLabel: this.buildEmployeeBreadcrumbLabel(employee),
+      },
+    });
   }
 
   handleDelete(id: string | undefined) {
@@ -265,6 +273,19 @@ export class ViewEmployeesComponent {
       .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
       .replace(/[\s_]+/g, '-')
       .toLowerCase();
+  }
+
+  private buildEmployeeBreadcrumbLabel(employee: {
+    displayName?: string;
+    fullNameAr?: string;
+    fullNameEn?: string;
+    staffCode?: string;
+    id?: string;
+  }) {
+    const employeeName = employee.displayName || employee.fullNameAr || employee.fullNameEn || '';
+    const employeeCode = employee.staffCode || employee.id || '';
+
+    return [employeeCode, employeeName].filter(Boolean).join('-');
   }
 
 }

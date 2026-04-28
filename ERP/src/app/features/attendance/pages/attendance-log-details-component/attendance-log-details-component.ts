@@ -11,6 +11,7 @@ import { TimeInputComponent } from "@shared/components/atoms/time-input-componen
 import { FormCancelButtonComponent } from "@shared/components/molecules/form-cancel-button-component/form-cancel-button-component";
 import { DatePipe } from '@angular/common';
 import { FormSaveButtonComponent } from "@shared/components/molecules/form-save-button-component/form-save-button-component";
+import { BreadcrumbService } from '@core/services/breadcrumb-service';
 
 
 @Component({
@@ -27,6 +28,7 @@ export class AttendanceLogDetailsComponent {
   private router = inject(Router);
   private fb = inject(FormBuilder);
   private attendanceService = inject(AttendanceService);
+  private breadcrumbService = inject(BreadcrumbService);
 
   attendanceId = signal(this.route.snapshot.params['id']);
 
@@ -60,6 +62,7 @@ export class AttendanceLogDetailsComponent {
           checkOut: this.formatTimeForInput(rawData.checkOut)
         };
 
+        this.breadcrumbService.setCurrentBreadcrumbLabel(rawData.employeeName, this.route);
         this.detailsForm.patchValue(formattedData);
 
         this.isFormReady.set(true);

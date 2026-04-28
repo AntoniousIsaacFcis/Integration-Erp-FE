@@ -10,6 +10,7 @@ import {
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { BreadcrumbService } from '@core/services/breadcrumb-service';
 import { DepartmentsService } from '@features/organization/services/departments-service';
 import { DesignationsService } from '@features/organization/services/designations-service';
 import { TranslocoModule } from '@jsverse/transloco';
@@ -44,6 +45,7 @@ export class PreviewDesignationComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly breadcrumbService = inject(BreadcrumbService);
 
   isLoading = signal(true);
 
@@ -75,6 +77,7 @@ export class PreviewDesignationComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (designation) => {
+          this.breadcrumbService.setCurrentBreadcrumbLabel(designation.name, this.route);
           this.designationForm.patchValue({
             name: designation.name,
             departmentId: designation.departmentId ?? '',

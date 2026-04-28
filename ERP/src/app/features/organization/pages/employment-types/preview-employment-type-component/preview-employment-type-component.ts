@@ -11,6 +11,7 @@ import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { TranslocoModule } from '@jsverse/transloco';
+import { BreadcrumbService } from '@core/services/breadcrumb-service';
 import { EmploymentTypesService } from '@features/organization/services/employment-types-service';
 import { FormContainerComponent } from '@shared/components/organisms/form-container-component/form-container-component';
 import { AppInputComponent } from '@shared/components/atoms/app-input-component/app-input-component';
@@ -40,6 +41,7 @@ export class PreviewEmploymentTypeComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly breadcrumbService = inject(BreadcrumbService);
 
   isLoading = signal(true);
 
@@ -68,6 +70,7 @@ export class PreviewEmploymentTypeComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (type) => {
+          this.breadcrumbService.setCurrentBreadcrumbLabel(type.name, this.route);
           this.employmentTypeForm.patchValue({
             name: type.name,
             status: type.status,

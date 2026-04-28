@@ -18,6 +18,7 @@ import { MOCK_SALARY_STORE } from '@mocks/data/salary.data';
 import { AttendanceService } from '@features/attendance/services/attendance-service';
 import { EmployeeDocumentService } from '@features/core-hr/services/employee-document-service';
 import { IDocument } from '@shared/models/idocument';
+import { BreadcrumbService } from '@core/services/breadcrumb-service';
 
 interface YearFilterSource {
   url: string;
@@ -38,6 +39,7 @@ export class EmployeeDetailsComponent {
   private readonly route = inject(ActivatedRoute);
   private readonly attendanceService = inject(AttendanceService);
   private readonly employeeDocumentService = inject(EmployeeDocumentService);
+  private readonly breadcrumbService = inject(BreadcrumbService);
 
   empId = input.required<string>(); //from Route Path
   year = input<string>('2025');
@@ -135,6 +137,13 @@ export class EmployeeDetailsComponent {
   }
 
   constructor() {
+    const navigationState = this.router.getCurrentNavigation()?.extras.state;
+    const breadcrumbLabel = navigationState?.['breadcrumbLabel'];
+
+    if (typeof breadcrumbLabel === 'string') {
+      this.breadcrumbService.setCurrentBreadcrumbLabel(breadcrumbLabel, this.route);
+    }
+
     effect(() => {
       const months = this.availableMonths();
       const currentMonth = this.selectedMonth();
@@ -152,6 +161,15 @@ export class EmployeeDetailsComponent {
       if (this.activeTab() === 'vacations') {
         this.currentPage.set(1);
       }
+    });
+
+    effect(() => {
+      const employee = this.employeeResource.value();
+      const employeeName = employee?.fullNameAr || employee?.fullNameEn || '';
+      const employeeCode = employee?.staffCode || employee?.id || '';
+      const breadcrumbLabel = [employeeCode, employeeName].filter(Boolean).join('-');
+
+      this.breadcrumbService.setCurrentBreadcrumbLabel(breadcrumbLabel, this.route);
     });
   }
   readonly tabs: ITabItem[] = [

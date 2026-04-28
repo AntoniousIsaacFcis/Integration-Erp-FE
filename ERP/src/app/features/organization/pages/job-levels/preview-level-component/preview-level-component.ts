@@ -9,6 +9,7 @@ import {
 } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { BreadcrumbService } from '@core/services/breadcrumb-service';
 import { JobLevelService } from '@features/organization/services/job-level-service';
 import { TranslocoModule } from '@jsverse/transloco';
 import { AppInputComponent } from '@shared/components/atoms/app-input-component/app-input-component';
@@ -40,6 +41,7 @@ export class PreviewLevelComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly breadcrumbService = inject(BreadcrumbService);
 
   isLoading = signal(true);
 
@@ -69,6 +71,7 @@ export class PreviewLevelComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (level) => {
+          this.breadcrumbService.setCurrentBreadcrumbLabel(level.name, this.route);
           this.jobLevelForm.patchValue({
             levelOrder: level.levelOrder,
             name: level.name,
