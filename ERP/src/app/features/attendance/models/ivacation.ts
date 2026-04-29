@@ -6,9 +6,11 @@ export type VacationStatus = 'EMPLOYEES.VACATIONS.APPROVED'
 export interface IVacation {
   id: string;
   empId:string;
-  typeAr: string;
+  typeLabel: string;
+  typeLabelIsTranslationKey: boolean;
+  applicationDate?: string | null;
   startDate: string;
-  endDate: string;
+  endDate: string | null;
   status: VacationStatus;
   reason: string;
 }
@@ -35,8 +37,34 @@ export interface ILeaveApplicationApiDto {
   days: number;
   dateFrom: string;
   dateTo: string;
+  applicationDate?: string | null;
+  creationTime?: string | null;
+  creationDate?: string | null;
   type: number;
+  shiftName?: string | null;
+  shiftStartTime?: string | null;
+  shiftEndTime?: string | null;
+  durationMinutes?: number | null;
+  lateTime?: string | null;
+  earlyTime?: string | null;
   description?: string | null;
+  attachments?: string | null;
+  status: number;
+}
+
+export interface ILeaveApplicationUpdatePayload {
+  staffId: string;
+  leaveTypeId: string | null;
+  days: number;
+  dateFrom: string;
+  dateTo: string;
+  applicationDate: string | null;
+  type: number;
+  durationMinutes: number | null;
+  lateTime: string | null;
+  earlyTime: string | null;
+  description: string | null;
+  attachments: string | null;
   status: number;
 }
 
@@ -47,3 +75,16 @@ export interface IEmployeeLeaveOverviewApiResponse {
   totalCount: number;
   items: ILeaveApplicationApiDto[];
 }
+
+export interface ILeaveTypeApiDto {
+  id: string;
+  code?: string | null;
+  name: string;
+  maxDaysPerYear?: number | null;
+}
+
+export interface ILeaveTypeListResponse {
+  items: ILeaveTypeApiDto[];
+  totalCount: number;
+}
+

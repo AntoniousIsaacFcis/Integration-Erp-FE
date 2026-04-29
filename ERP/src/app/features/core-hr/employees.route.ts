@@ -31,6 +31,12 @@ export const EMPLOYEE_ROUTES: Routes = [
         }
       },
       {
+        path: 'details/:empId/leave-applications/edit/:leaveId',
+        loadComponent: () => import('./pages/employees/edit-leave-application-component/edit-leave-application-component')
+          .then(m => m.EditLeaveApplicationComponent),
+        data: { breadcrumb: 'EMPLOYEES.VACATIONS.EDIT_LEAVE_APPLICATION' }
+      },
+      {
         path: 'details/:empId',
         loadComponent: () => import('./pages/employees/employee-details-component/employee-details-component')
           .then(m => m.EmployeeDetailsComponent),

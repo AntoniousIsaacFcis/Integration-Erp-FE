@@ -25,6 +25,7 @@ export class AppDateInputComponent {
   minLengthErrorKey = input<string>('AUTH.MIN_LENGTH');
   dateRangeErrorKey = input<string>('ERRORS.START_DATE_MUST_BE_BEFORE_END_DATE');
   futureDateErrorKey = input<string>('ERRORS.FUTURE_DATE_NOT_ALLOWED');
+  pastDateErrorKey = input<string>('ERRORS.DATE_CANNOT_BE_IN_PAST');
 
   constructor() {
     effect(() => {
@@ -48,6 +49,7 @@ export class AppDateInputComponent {
       if (ctrl.errors?.['minlength']) return this.minLengthErrorKey();
       if (ctrl.errors?.['pattern']) return 'AUTH.INVALID_PATTERN';
       if (ctrl.errors?.['dateRangeInvalid']) return this.dateRangeErrorKey();
+      if (ctrl.errors?.['pastDate']) return this.pastDateErrorKey();
       if (ctrl.errors?.['futureBirthDate']) return this.futureDateErrorKey();
 
     }

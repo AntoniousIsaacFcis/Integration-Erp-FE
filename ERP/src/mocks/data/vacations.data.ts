@@ -7,7 +7,8 @@ export const MOCK_VACATIONS_STORE: Record<string, { stats: IVacationStats; data:
       {
         id: 'v1-1',
         empId: '1',
-        typeAr: 'إجازة سنوية',
+        typeLabel: 'إجازة سنوية',
+        typeLabelIsTranslationKey: false,
         startDate: '2025-10-20',
         endDate: '2025-10-29',
         status: 'EMPLOYEES.VACATIONS.APPROVED',

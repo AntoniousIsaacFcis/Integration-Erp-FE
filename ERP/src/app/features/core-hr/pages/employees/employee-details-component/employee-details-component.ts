@@ -202,6 +202,11 @@ export class EmployeeDetailsComponent {
   constructor() {
     const navigationState = this.router.getCurrentNavigation()?.extras.state;
     const breadcrumbLabel = navigationState?.['breadcrumbLabel'];
+    const initialTab = this.route.snapshot.queryParamMap.get('tab');
+
+    if (initialTab && this.tabs.some(tab => tab.id === initialTab)) {
+      this.activeTab.set(initialTab);
+    }
 
     if (typeof breadcrumbLabel === 'string') {
       this.breadcrumbService.setCurrentBreadcrumbLabel(breadcrumbLabel, this.route);
@@ -367,6 +372,10 @@ export class EmployeeDetailsComponent {
     const res = this.vacationsResource.value();
     return res?.total ?? res?.data?.length ?? 0;
   });
+
+  onEditVacation(id: string) {
+    this.router.navigate(['/core-hr/employees/details', this.empId(), 'leave-applications', 'edit', id]);
+  }
 
   //----salary section
   private readonly salaryService = inject(SalaryService);

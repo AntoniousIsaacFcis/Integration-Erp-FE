@@ -118,6 +118,7 @@
               <thead class="bg-[#F4F4F4] text-black text-sm font-medium">
                 <tr>
                   <th class="py-4 px-6">{{t('EMPLOYEES.VACATIONS.VACATION_TYPE')}}</th>
+                  <th class="py-4 px-6">{{t('EMPLOYEES.VACATIONS.APPLICATION_DATE')}}</th>
                   <th class="py-4 px-6">{{t('EMPLOYEES.VACATIONS.VACATION_START_Date')}}</th>
                   <th class="py-4 px-6">{{t('EMPLOYEES.VACATIONS.VACATION_END_DATE')}}</th>
                   <th class="py-4 px-6">{{t('EMPLOYEES.VACATIONS.VACATIN_STATUS')}}</th>
@@ -128,9 +129,14 @@
               <tbody class="divide-y divide-[#F4F4F4]">
                 @for (vac of vacationList(); track vac.id) {
                 <tr class="hover:bg-gray-50 transition-colors text-center">
-                  <td class="py-4 px-6 text-sm text-black font-medium">{{ vac.typeAr }}</td>
+                  <td class="py-4 px-6 text-sm text-black font-medium">
+                    {{ vac.typeLabelIsTranslationKey ? t(vac.typeLabel) : vac.typeLabel }}
+                  </td>
+                  <td class="py-4 px-6 text-sm text-black font-medium">{{ vac.applicationDate | date: 'dd/MM/yyyy' }}</td>
                   <td class="py-4 px-6 text-sm text-black font-medium">{{ vac.startDate | date: 'dd/MM/yyyy' }}</td>
-                  <td class="py-4 px-6 text-sm text-black font-medium">{{ vac.endDate | date: 'dd/MM/yyyy' }}</td>
+                  <td class="py-4 px-6 text-sm text-black font-medium">
+                    {{ vac.endDate ? (vac.endDate | date: 'dd/MM/yyyy') : '-' }}
+                  </td>
                   <td class="py-4 px-6 text-xs font-semibold">
                     <span [class]="statusClasses[vac.status] + ' px-3 py-1 rounded-sm text-xs font-medium'">
                       {{ t(vac.status) }}
@@ -138,7 +144,7 @@
                   </td>
                   <td class="py-4 px-6 text-xs text-[#878787] max-w-[200px] truncate">{{ vac.reason }}</td>
                   <td class="py-4 px-6">
-                    <button
+                    <button type="button" (click)="onEditVacation(vac.id)"
                       class="p-2 flex items-center justify-center  bg-[#0000001A] hover:bg-[#00000026] transition-colors"
                       style="border-radius: 232px; border: none; outline: none;">
                       <ng-icon name="lucidePencilLine" class="flex items-center justify-center" size="16" color="black">
@@ -148,7 +154,7 @@
                 </tr>
                 } @empty {
                 <tr>
-                  <td colspan="6" class="py-16 text-center text-sm text-[#797979]">{{ t('COMMON.NO_DATA') }}</td>
+                  <td colspan="7" class="py-16 text-center text-sm text-[#797979]">{{ t('COMMON.NO_DATA') }}</td>
                 </tr>
                 }
               </tbody>

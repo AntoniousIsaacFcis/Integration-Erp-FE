@@ -36,6 +36,8 @@ export class AppInputComponent {
   patternErrorKey = input<string>('AUTH.INVALID_PATTERN');
   minErrorKey = input<string>('ERRORS.MIN_VALUE');
   duplicateErrorKey = input<string>('ERRORS.DUPLICATE_VALUE');
+  pastDateErrorKey = input<string>('ERRORS.DATE_CANNOT_BE_IN_PAST');
+  dateRangeErrorKey = input<string>('ERRORS.END_DATE_MUST_BE_ON_OR_AFTER_START_DATE');
 
   constructor() {
     effect(() => {
@@ -63,6 +65,8 @@ export class AppInputComponent {
       if (ctrl.errors?.['pattern']) return this.patternErrorKey();
       if (ctrl.errors?.['min']) return this.minErrorKey();
       if (ctrl.errors?.['duplicate']) return this.duplicateErrorKey();
+      if (ctrl.errors?.['pastDate']) return this.pastDateErrorKey();
+      if (ctrl.errors?.['dateRangeInvalid']) return this.dateRangeErrorKey();
     }
 
     return null;

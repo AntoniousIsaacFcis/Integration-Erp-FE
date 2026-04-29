@@ -1,10 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '@env/environment.development';
-import { IEmployeeLeaveOverviewApiResponse, ILeaveApplicationApiDto, IVacationResponse, VacationStatus } from '@features/attendance/models/ivacation';
+import { IEmployeeLeaveOverviewApiResponse, ILeaveApplicationApiDto, ILeaveApplicationUpdatePayload, ILeaveTypeApiDto, ILeaveTypeListResponse, IVacationResponse, VacationStatus } from '@features/attendance/models/ivacation';
 import { ISelectOption } from '@shared/components/atoms/select-btn-component/select-btn-component';
 import { map, Observable, timeout } from 'rxjs';
-import { IAttendanceAvailablePeriod, IAttendanceDay, IAttendanceLogApiDto, IAttendanceLogListResponse, IAttendanceResponse, IEditAttendanceDay, IShift, IShiftListResponse, ISpecialShiftListResponse, IUpdateAttendancePayload } from '../models/iattendance';
+import { IAttendanceAvailablePeriod, IAttendanceDay, IAttendanceDayApiDto, IAttendanceDayListResponse, IAttendanceLogApiDto, IAttendanceLogListResponse, IAttendanceResponse, IEditAttendanceDay, IShift, IShiftListResponse, ISpecialShiftListResponse, IUpdateAttendancePayload } from '../models/iattendance';
 
 @Injectable({
   providedIn: 'root',
@@ -92,6 +92,20 @@ export class AttendanceService {
     );
   }
 
+  getAttendanceDayForDate(employeeId: string, date: string): Observable<IAttendanceDayApiDto | null> {
+    return this.http.get<IAttendanceDayListResponse>(`${this.API_URL}/attendance/attendance-day`, {
+      params: {
+        EmployeeId: employeeId,
+        FromDate: date,
+        ToDate: date,
+        SkipCount: '0',
+        MaxResultCount: '1',
+      },
+    }).pipe(
+      map(response => response.items?.[0] ?? null),
+    );
+  }
+
   createShift(shift: Partial<IShift>) {
     return this.http.post<IShift>(`${this.API_URL}/shifts`, shift);
   }
@@ -122,6 +136,37 @@ export class AttendanceService {
         page: params.page,
         limit: params.limit,
       })),
+    );
+  }
+
+  getLeaveApplicationById(id: string): Observable<ILeaveApplicationApiDto> {
+    return this.http.get<ILeaveApplicationApiDto>(`${this.API_URL}/core-hR/leave-application/${id}`);
+  }
+
+  updateLeaveApplication(id: string, payload: ILeaveApplicationUpdatePayload): Observable<ILeaveApplicationApiDto> {
+    return this.http.put<ILeaveApplicationApiDto>(`${this.API_URL}/core-hR/leave-application/${id}`, payload);
+  }
+
+  approveLeaveApplication(id: string): Observable<ILeaveApplicationApiDto> {
+    return this.http.post<ILeaveApplicationApiDto>(`${this.API_URL}/core-hR/leave-application/${id}/approve`, {});
+  }
+
+  rejectLeaveApplication(id: string): Observable<ILeaveApplicationApiDto> {
+    return this.http.post<ILeaveApplicationApiDto>(`${this.API_URL}/core-hR/leave-application/${id}/reject`, {});
+  }
+
+  cancelLeaveApplication(id: string): Observable<ILeaveApplicationApiDto> {
+    return this.http.post<ILeaveApplicationApiDto>(`${this.API_URL}/core-hR/leave-application/${id}/cancel`, {});
+  }
+
+  getLeaveTypes(): Observable<ILeaveTypeApiDto[]> {
+    return this.http.get<ILeaveTypeListResponse>(`${this.API_URL}/core-hR/leave-type`, {
+      params: {
+        SkipCount: '0',
+        MaxResultCount: '1000',
+      },
+    }).pipe(
+      map(response => response.items ?? []),
     );
   }
 
@@ -314,19 +359,41 @@ export class AttendanceService {
   }
 
   private toVacation(item: ILeaveApplicationApiDto) {
+    const isDurationBasedType = item.type === 3 || item.type === 4;
+    const isSameDayRequest = item.type === 2 || isDurationBasedType;
+    const leaveTypeName = this.toLeaveTypeDisplayName(item.leaveTypeName);
+
     return {
       id: item.id,
       empId: item.staffId,
-      typeAr: item.leaveTypeName || this.toLeaveTypeLabel(item.type),
+      typeLabel: isDurationBasedType
+        ? this.toLeaveTypeLabelKey(item.type)
+        : leaveTypeName || this.toLeaveTypeLabelKey(item.type),
+      typeLabelIsTranslationKey: isDurationBasedType || !leaveTypeName,
+      applicationDate: item.applicationDate ?? item.creationDate ?? item.creationTime ?? '',
       startDate: item.dateFrom,
-      endDate: this.toReturnDate(item.dateTo),
+      endDate: isSameDayRequest ? null : this.toReturnDate(item.dateTo),
       status: this.toVacationStatus(item.status),
       reason: item.description?.trim() || '-',
     };
   }
 
-  private toLeaveTypeLabel(type: number) {
-    return type === 2 ? 'نصف يوم إجازة' : 'إجازة';
+  private toLeaveTypeLabelKey(type: number) {
+    const labels: Record<number, string> = {
+      1: 'EMPLOYEES.VACATIONS.TYPE_FULL_DAY',
+      2: 'EMPLOYEES.VACATIONS.TYPE_HALF_DAY',
+      3: 'EMPLOYEES.VACATIONS.TYPE_LATE_ARRIVAL',
+      4: 'EMPLOYEES.VACATIONS.TYPE_EARLY_LEAVE',
+    };
+
+    return labels[type] ?? 'EMPLOYEES.VACATIONS.TYPE_FULL_DAY';
+  }
+
+  private toLeaveTypeDisplayName(value?: string | null) {
+    return (value ?? '')
+      .replace(/^\s*[A-Za-z0-9_]+\s*-\s*/u, '')
+      .replace(/\s*-\s*[A-Za-z0-9_]+\s*$/u, '')
+      .trim();
   }
 
   private toVacationStatus(status: number): VacationStatus {
@@ -351,3 +418,4 @@ export class AttendanceService {
     return this.toDateParam(date);
   }
 }
+

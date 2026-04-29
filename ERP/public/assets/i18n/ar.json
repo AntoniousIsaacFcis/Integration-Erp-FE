@@ -476,10 +476,26 @@
       "REJECTED": "مرفوضة",
       "CANCELLED": "ملغاة",
       "VACATION_TYPE": "نوع الاجازة",
-      "VACATION_START_Date": "تاريخ الاجازة",
+      "APPLICATION_DATE": "تاريخ تقديم طلب الاجازة",
+      "VACATION_START_Date": "تاريخ بداية الاجازة",
       "VACATION_END_DATE": "تاريخ العودة",
       "VACATIN_STATUS": "حالة الاجازة",
-      "VACATION_REASON": "سبب الاجازة"
+      "VACATION_REASON": "سبب الاجازة",
+      "EDIT_LEAVE_APPLICATION": "تعديل طلب الإجازة",
+      "SELECT_VACATION_TYPE": "اختر نوع الإجازة",
+      "APPLICATION_TYPE": "نوع الطلب",
+      "SELECT_APPLICATION_TYPE": "اختر نوع الطلب",
+      "TYPE_FULL_DAY": "إجازة",
+      "TYPE_HALF_DAY": "نصف يوم إجازة",
+      "TYPE_LATE_ARRIVAL": "حضور متأخر",
+      "TYPE_EARLY_LEAVE": "انصراف مبكر",
+      "DURATION_MINUTES": "المدة بالدقائق",
+      "LATE_ARRIVAL_MINUTES": "دقائق الحضور المتأخر",
+      "EARLY_LEAVE_MINUTES": "دقائق الانصراف المبكر",
+      "LATE_TIME": "وقت الحضور المتأخر",
+      "EARLY_TIME": "وقت الانصراف المبكر",
+      "DAYS": "عدد الأيام",
+      "SELECT_STATUS": "اختر الحالة"
     },
     "TABLE": {
       "EMPLOYEE_ID": "الرقم الوظيفي",
@@ -652,6 +668,8 @@
     "MIN_VALUE": "القيمة يجب أن تكون 0 أو أكثر",
     "REQUIRED_FILES": "يجب رفع ملف علي الاقل",
     "INVALID_TIME_RANGE": "وقت النهاية يجب أن يكون بعد وقت البداية",
+    "DATE_CANNOT_BE_IN_PAST": "لا يمكن أن يكون التاريخ في الماضي",
+    "END_DATE_MUST_BE_ON_OR_AFTER_START_DATE": "تاريخ العودة يجب أن يكون في نفس يوم بداية الإجازة أو بعده",
     "ACCESS_DENIED_TITLE": "ليس لديك صلاحية الوصول",
     "ACCESS_DENIED_SUB": "يبدو أنك لا تملك الصلاحيات اللازمة لعرض هذه الصفحة حالياً. إذا كنت تعتقد أن هذا خطأ، يمكنك التواصل مع مسؤول النظام.",
     "CONTACT_US": "تواصل معنا",
@@ -841,3 +859,5 @@
     "PERMISSIONS_REQUIRED": "يرجى اختيار صلاحية واحدة على الأقل"
   }
 }
+
+

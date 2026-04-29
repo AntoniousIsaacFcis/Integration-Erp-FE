@@ -1,0 +1,99 @@
+<div
+  class="w-full max-w-standard bg-white rounded-[20px] shadow-soft border border-black/5 p-spacing-xl flex flex-col gap-spacing-lg mx-auto">
+  <app-form-container-component *transloco="let t" [title]="t('EMPLOYEES.VACATIONS.EDIT_LEAVE_APPLICATION')"
+    (submit)="onSubmit()">
+    <ng-container formFields [formGroup]="leaveApplicationForm">
+      @if (isLoading()) {
+      <div class="col-span-2 flex justify-center py-10 text-gray-400">
+        {{ t('COMMON.MESSAGES.LOADING_DATA') }}
+      </div>
+      } @else {
+      <app-app-select-component [label]="'EMPLOYEES.VACATIONS.APPLICATION_TYPE'"
+        [control]="leaveApplicationForm.controls.type" [showErrors]="isFormSubmitted()"
+        [placeholder]="'EMPLOYEES.VACATIONS.SELECT_APPLICATION_TYPE'">
+        <option value="1">{{ t('EMPLOYEES.VACATIONS.TYPE_FULL_DAY') }}</option>
+        <option value="2">{{ t('EMPLOYEES.VACATIONS.TYPE_HALF_DAY') }}</option>
+        <option value="3">{{ t('EMPLOYEES.VACATIONS.TYPE_LATE_ARRIVAL') }}</option>
+        <option value="4">{{ t('EMPLOYEES.VACATIONS.TYPE_EARLY_LEAVE') }}</option>
+      </app-app-select-component>
+
+      @if (!isDurationBasedApplication()) {
+      <app-app-select-component [label]="'EMPLOYEES.VACATIONS.VACATION_TYPE'" [requiredErrorKey]="'AUTH.REQUIRED_FIELD'"
+        [control]="leaveApplicationForm.controls.leaveTypeId" [showErrors]="isFormSubmitted()"
+        [placeholder]="'EMPLOYEES.VACATIONS.SELECT_VACATION_TYPE'">
+        @for (leaveType of leaveTypeOptions(); track leaveType.id) {
+        <option [value]="leaveType.id">{{ leaveType.displayName }}</option>
+        }
+      </app-app-select-component>
+      }
+
+      <app-app-date-input-component [label]="'EMPLOYEES.VACATIONS.VACATION_START_Date'"
+        [control]="leaveApplicationForm.controls.dateFrom" [showErrors]="isFormSubmitted()"
+        [pastDateErrorKey]="'ERRORS.DATE_CANNOT_BE_IN_PAST'" />
+
+      @if (!isHalfDayApplication() && !isDurationBasedApplication()) {
+      <app-app-date-input-component [label]="'EMPLOYEES.VACATIONS.VACATION_END_DATE'"
+        [control]="leaveApplicationForm.controls.dateTo" [showErrors]="isFormSubmitted()"
+        [dateRangeErrorKey]="'ERRORS.END_DATE_MUST_BE_ON_OR_AFTER_START_DATE'" />
+      }
+
+      @if (!isDurationBasedApplication()) {
+      <app-app-input-component [label]="'EMPLOYEES.VACATIONS.DAYS'" [placeholder]="'EMPLOYEES.VACATIONS.DAYS'"
+        [control]="leaveApplicationForm.controls.days" [showErrors]="isFormSubmitted()" type="number" />
+      } @else {
+      @if (isLateArrivalApplication()) {
+      <app-app-input-component [label]="'SHIFT.WORK_START'" [placeholder]="'SHIFT.WORK_START'"
+        [control]="leaveApplicationForm.controls.shiftStartTime" type="time" />
+      }
+
+      @if (isEarlyLeaveApplication()) {
+      <app-app-input-component [label]="'SHIFT.WORK_END'" [placeholder]="'SHIFT.WORK_END'"
+        [control]="leaveApplicationForm.controls.shiftEndTime" type="time" />
+      }
+
+      <app-app-input-component [label]="durationMinutesLabelKey()"
+        [placeholder]="durationMinutesLabelKey()" [control]="leaveApplicationForm.controls.durationMinutes"
+        [showErrors]="isFormSubmitted()" type="number" />
+      }
+
+      @if (isLateArrivalApplication()) {
+      <app-time-input-component [label]="'EMPLOYEES.VACATIONS.LATE_TIME'"
+        [control]="leaveApplicationForm.controls.lateTime" [showErrors]="isFormSubmitted()" />
+      }
+
+      @if (isEarlyLeaveApplication()) {
+      <app-time-input-component [label]="'EMPLOYEES.VACATIONS.EARLY_TIME'"
+        [control]="leaveApplicationForm.controls.earlyTime" [showErrors]="isFormSubmitted()" />
+      }
+
+      @if (canManageStatus()) {
+      <app-app-select-component [label]="'EMPLOYEES.VACATIONS.VACATIN_STATUS'"
+        [control]="leaveApplicationForm.controls.status" [showErrors]="isFormSubmitted()"
+        [placeholder]="'EMPLOYEES.VACATIONS.SELECT_STATUS'">
+        @for (status of statusOptions(); track status.value) {
+        <option [value]="status.value">{{ t(status.labelKey) }}</option>
+        }
+      </app-app-select-component>
+      }
+
+      <div class="col-span-2">
+        <app-app-textarea-component [label]="'EMPLOYEES.VACATIONS.VACATION_REASON'"
+          [placeholder]="'PLACEHOLDER.DESCRIPTION_LIMIT'" [control]="leaveApplicationForm.controls.description"
+          [showErrors]="isFormSubmitted()" />
+
+        <div class="p-2">
+          <span class="text-xs font-medium transition-colors duration-200"
+            [class]="isFormSubmitted() && isOverLimit() ? 'text-red-500' : 'text-gray-400'">
+            {{ characterCount() }} / {{ descriptionCharacterLimit }} {{ t('COMMON.CHARACTERS') }}
+          </span>
+        </div>
+      </div>
+      }
+    </ng-container>
+
+    <ng-container formActions>
+      <app-form-cancel-button-component (clicked)="onCancel()" />
+      <app-form-save-button-component [isLoading]="isSubmitting()" [isDisabled]="isLoading()" type="submit" />
+    </ng-container>
+  </app-form-container-component>
+</div>

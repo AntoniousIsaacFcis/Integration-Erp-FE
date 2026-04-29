@@ -443,10 +443,26 @@
       "REJECTED": "Rejected",
       "CANCELLED": "Cancelled",
       "VACATION_TYPE": "Vacation Type",
+      "APPLICATION_DATE": "Leave Request Date",
       "VACATION_START_Date": "Vacation Start Date",
       "VACATION_END_DATE": "Return Date",
       "VACATIN_STATUS": "Vacation Status",
-      "VACATION_REASON": "Vacation Reason"
+      "VACATION_REASON": "Vacation Reason",
+      "EDIT_LEAVE_APPLICATION": "Edit Leave Application",
+      "SELECT_VACATION_TYPE": "Select vacation type",
+      "APPLICATION_TYPE": "Application Type",
+      "SELECT_APPLICATION_TYPE": "Select application type",
+      "TYPE_FULL_DAY": "Leave",
+      "TYPE_HALF_DAY": "Half-day leave",
+      "TYPE_LATE_ARRIVAL": "Late Arrival",
+      "TYPE_EARLY_LEAVE": "Early Leave",
+      "DURATION_MINUTES": "Duration in minutes",
+      "LATE_ARRIVAL_MINUTES": "Late arrival minutes",
+      "EARLY_LEAVE_MINUTES": "Early leave minutes",
+      "LATE_TIME": "Late arrival time",
+      "EARLY_TIME": "Early leave time",
+      "DAYS": "Days",
+      "SELECT_STATUS": "Select status"
     },
     "TABLE": {
       "EMPLOYEE_ID": "Employee ID",
@@ -582,6 +598,8 @@
     "MIN_VALUE": "Value must be 0 or greater",
     "REQUIRED_FILES": "At least one file must be uploaded",
     "INVALID_TIME_RANGE": "End time must be after start time",
+    "DATE_CANNOT_BE_IN_PAST": "Date cannot be in the past",
+    "END_DATE_MUST_BE_ON_OR_AFTER_START_DATE": "Return date must be on or after the leave start date",
     "DUPLICATE_VALUE": "This value is already used",
     "DUPLICATE_SORT_ORDER": "Sort order is already used",
     "BIRTH_DATE_CANNOT_BE_IN_FUTURE": "Birth date cannot be in the future.",
@@ -747,3 +765,5 @@
     "TABLE_HOLIDAY_TYPE": "Type"
   }
 }
+
+

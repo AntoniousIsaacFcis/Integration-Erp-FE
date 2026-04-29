@@ -1,26 +1,23 @@
 import { Directive, TemplateRef, ViewContainerRef, effect, inject, input } from '@angular/core';
 import { AuthService } from '@core/auth/services/auth-service';
-import { canAccess } from '@core/auth/utils/access-control';
+import { AccessRuleInput, canAccess } from '@core/auth/utils/access-control';
 
 @Directive({
-  selector: '[appHasPermission]',
+  selector: '[appCanAccess]',
 })
-export class HasPermissionDirective {
+export class CanAccessDirective {
   private readonly authService = inject(AuthService);
   private readonly vcr = inject(ViewContainerRef);
   private readonly templateRef = inject(TemplateRef);
 
-  permission = input.required<string>({ alias: 'appHasPermission' });
-  elseTemplate = input<TemplateRef<any>>();
+  rule = input.required<AccessRuleInput>({ alias: 'appCanAccess' });
 
   constructor() {
     effect(() => {
       this.vcr.clear();
 
-      if (canAccess(this.authService, this.permission())) {
+      if (canAccess(this.authService, this.rule())) {
         this.vcr.createEmbeddedView(this.templateRef);
-      } else if (this.elseTemplate()) {
-        this.vcr.createEmbeddedView(this.elseTemplate()!);
       }
     });
   }
