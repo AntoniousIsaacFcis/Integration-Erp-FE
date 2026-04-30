@@ -14,13 +14,13 @@ control = input.required<FormControl>();
 allowLateToleranceOverrides = input(false);
 
 gridData = signal<DayConfig[]>([
-    { day: 'sun', label: 'الأحد', isWorkDay: false, calculateOnHoliday: false, lateToleranceMinutes: null },
-    { day: 'mon', label: 'الاثنين', isWorkDay: false, calculateOnHoliday: false, lateToleranceMinutes: null },
-    { day: 'tue', label: 'الثلاثاء', isWorkDay: false, calculateOnHoliday: false, lateToleranceMinutes: null },
-    { day: 'wed', label: 'الأربعاء', isWorkDay: false, calculateOnHoliday: false, lateToleranceMinutes: null },
-    { day: 'thu', label: 'الخميس', isWorkDay: false, calculateOnHoliday: false, lateToleranceMinutes: null },
-    { day: 'fri', label: 'الجمعة', isWorkDay: false, calculateOnHoliday: false, lateToleranceMinutes: null },
-    { day: 'sat', label: 'السبت', isWorkDay: false, calculateOnHoliday: false, lateToleranceMinutes: null },
+    this.createDay('sun', 'الأحد'),
+    this.createDay('mon', 'الاثنين'),
+    this.createDay('tue', 'الثلاثاء'),
+    this.createDay('wed', 'الأربعاء'),
+    this.createDay('thu', 'الخميس'),
+    this.createDay('fri', 'الجمعة'),
+    this.createDay('sat', 'السبت'),
   ]);
 
   ngOnInit() {
@@ -53,4 +53,42 @@ gridData = signal<DayConfig[]>([
       return newData;
     });
   }
+
+  updateTimeOverride(index: number, field: TimeOverrideField, value: string) {
+    if (!this.allowLateToleranceOverrides()) {
+      return;
+    }
+
+    this.gridData.update(data => {
+      const newData = [...data];
+      newData[index] = { ...newData[index], [field]: value || null };
+
+      this.control().setValue(newData);
+      return newData;
+    });
+  }
+
+  private createDay(day: string, label: string): DayConfig {
+    return {
+      day,
+      label,
+      isWorkDay: false,
+      calculateOnHoliday: false,
+      onDutyTimeOverride: null,
+      offDutyTimeOverride: null,
+      signInStartTimeOverride: null,
+      signInEndTimeOverride: null,
+      signOutStartTimeOverride: null,
+      signOutEndTimeOverride: null,
+      lateToleranceMinutes: null,
+    };
+  }
 }
+
+type TimeOverrideField =
+  | 'onDutyTimeOverride'
+  | 'offDutyTimeOverride'
+  | 'signInStartTimeOverride'
+  | 'signInEndTimeOverride'
+  | 'signOutStartTimeOverride'
+  | 'signOutEndTimeOverride';

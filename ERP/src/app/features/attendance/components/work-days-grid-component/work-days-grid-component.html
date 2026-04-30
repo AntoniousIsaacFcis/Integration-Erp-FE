@@ -1,43 +1,125 @@
-<div class="w-full border border-black/5 rounded-xl overflow-hidden bg-white shadow-soft py-3 px-8" *transloco="let t">
-      <table class="w-full text-right border-collapse">
-        <thead>
-          <tr >
-            <th class="p-4 text-base font-normal text-black">{{t('SHIFT.DAY')}}</th>
-            <th class="ps-20 text-base font-normal text-black">{{t('SHIFT.WORK_DAY')}}</th>
-            <th class="ps-17 text-base font-normal text-black">{{t('SHIFT.CALCULTING_ATTENDACE_IN_HOLIDAY')}}</th>
-            @if (allowLateToleranceOverrides()) {
-            <th class="ps-8 text-base font-normal text-black">{{t('SHIFT.LATE_TOLERANCE_MINUTES')}}</th>
-            }
-          </tr>
-        </thead>
-        <tbody>
-          @for (day of gridData(); track day.day; let i = $index) {
-            <tr class=" hover:bg-gray-50/30 transition-colors">
-              <td class="px-4 py-1 text-sm font-medium text-[#C3C3C3]">{{ day.label }}</td>
-              <td class="ps-20">
-                <input type="checkbox"
-                       [checked]="day.isWorkDay"
-                       (change)="toggle(i, 'isWorkDay')"
-                       class="w-5 h-5 cursor-pointer rounded-[6px] border-[#C3C3C3] accent-[#C3C3C3] focus:ring-primary/20">
-              </td>
-              <td class="ps-17 py-1">
-                <input type="checkbox"
-                       [checked]="day.calculateOnHoliday"
-                       (change)="toggle(i, 'calculateOnHoliday')"
-                       class="w-5 h-5 rounded-[6px] border-black/10 text-primary focus:ring-primary/20 cursor-pointer">
-              </td>
-              @if (allowLateToleranceOverrides()) {
-              <td class="ps-8 py-1">
-                <input type="number"
-                       min="0"
-                       [value]="day.lateToleranceMinutes ?? ''"
-                       (input)="updateLateTolerance(i, $any($event.target).value)"
-                       class="w-24 h-9 rounded-md border border-black/10 px-3 text-sm text-black outline-none focus:border-primary/60"
-                       [placeholder]="t('COMMON.DEFAULT')">
-              </td>
-              }
-            </tr>
-          }
-        </tbody>
-      </table>
+<div class="w-full border border-black/5 rounded-xl bg-white shadow-soft py-3 px-4 md:px-8" *transloco="let t">
+  @if (allowLateToleranceOverrides()) {
+    <div class="grid grid-cols-3 px-4 py-3 text-base font-normal text-black">
+      <div>{{t('SHIFT.DAY')}}</div>
+      <div>{{t('SHIFT.WORK_DAY')}}</div>
+      <div>{{t('SHIFT.CALCULTING_ATTENDACE_IN_HOLIDAY')}}</div>
     </div>
+
+    <div class="flex flex-col gap-6">
+      @for (day of gridData(); track day.day; let i = $index) {
+        <section class="overflow-hidden rounded-lg border border-primary/30 bg-white">
+          <div class="grid grid-cols-3 items-center bg-primary/5 px-4 py-4 text-sm font-medium text-black">
+            <div class="inline-flex items-center gap-2">
+              <span class="text-lg leading-none">⌄</span>
+              {{ day.label }}
+            </div>
+
+            <div>
+              <input type="checkbox"
+                     [checked]="day.isWorkDay"
+                     (change)="toggle(i, 'isWorkDay')"
+                     class="w-5 h-5 cursor-pointer rounded-[6px] border-[#C3C3C3] accent-[#C3C3C3] focus:ring-primary/20">
+            </div>
+
+            <div>
+              <input type="checkbox"
+                     [checked]="day.calculateOnHoliday"
+                     (change)="toggle(i, 'calculateOnHoliday')"
+                     class="w-5 h-5 rounded-[6px] border-black/10 text-primary focus:ring-primary/20 cursor-pointer">
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5 px-4 py-6">
+            <label class="flex flex-col gap-2 text-sm font-medium text-black">
+              {{t('SHIFT.WORK_START')}} *
+              <input type="time"
+                     [value]="day.onDutyTimeOverride ?? ''"
+                     (input)="updateTimeOverride(i, 'onDutyTimeOverride', $any($event.target).value)"
+                     class="h-10 w-full rounded-md border border-black/10 px-3 text-sm text-black outline-none focus:border-primary/60">
+            </label>
+
+            <label class="flex flex-col gap-2 text-sm font-medium text-black">
+              {{t('SHIFT.WORK_END')}} *
+              <input type="time"
+                     [value]="day.offDutyTimeOverride ?? ''"
+                     (input)="updateTimeOverride(i, 'offDutyTimeOverride', $any($event.target).value)"
+                     class="h-10 w-full rounded-md border border-black/10 px-3 text-sm text-black outline-none focus:border-primary/60">
+            </label>
+
+            <label class="flex flex-col gap-2 text-sm font-medium text-black">
+              {{t('SHIFT.CHECKIN_START')}} *
+              <input type="time"
+                     [value]="day.signInStartTimeOverride ?? ''"
+                     (input)="updateTimeOverride(i, 'signInStartTimeOverride', $any($event.target).value)"
+                     class="h-10 w-full rounded-md border border-black/10 px-3 text-sm text-black outline-none focus:border-primary/60">
+            </label>
+
+            <label class="flex flex-col gap-2 text-sm font-medium text-black">
+              {{t('SHIFT.CHECKOUT_START')}} *
+              <input type="time"
+                     [value]="day.signOutStartTimeOverride ?? ''"
+                     (input)="updateTimeOverride(i, 'signOutStartTimeOverride', $any($event.target).value)"
+                     class="h-10 w-full rounded-md border border-black/10 px-3 text-sm text-black outline-none focus:border-primary/60">
+            </label>
+
+            <label class="flex flex-col gap-2 text-sm font-medium text-black">
+              {{t('SHIFT.CHECKIN_END')}} *
+              <input type="time"
+                     [value]="day.signInEndTimeOverride ?? ''"
+                     (input)="updateTimeOverride(i, 'signInEndTimeOverride', $any($event.target).value)"
+                     class="h-10 w-full rounded-md border border-black/10 px-3 text-sm text-black outline-none focus:border-primary/60">
+            </label>
+
+            <label class="flex flex-col gap-2 text-sm font-medium text-black">
+              {{t('SHIFT.CHECKOUT_END')}} *
+              <input type="time"
+                     [value]="day.signOutEndTimeOverride ?? ''"
+                     (input)="updateTimeOverride(i, 'signOutEndTimeOverride', $any($event.target).value)"
+                     class="h-10 w-full rounded-md border border-black/10 px-3 text-sm text-black outline-none focus:border-primary/60">
+            </label>
+
+            <label class="flex flex-col gap-2 text-sm font-medium text-black">
+              {{t('SHIFT.LATE_TOLERANCE_MINUTES')}} *
+              <input type="number"
+                     min="0"
+                     [value]="day.lateToleranceMinutes ?? ''"
+                     (input)="updateLateTolerance(i, $any($event.target).value)"
+                     class="h-10 w-full rounded-md border border-black/10 px-3 text-sm text-black outline-none focus:border-primary/60"
+                     [placeholder]="t('COMMON.DEFAULT')">
+            </label>
+          </div>
+        </section>
+      }
+    </div>
+  } @else {
+    <table class="w-full text-right border-collapse">
+      <thead>
+        <tr>
+          <th class="w-1/3 p-4 text-base font-normal text-black">{{t('SHIFT.DAY')}}</th>
+          <th class="w-1/3 p-4 text-base font-normal text-black">{{t('SHIFT.WORK_DAY')}}</th>
+          <th class="w-1/3 p-4 text-base font-normal text-black">{{t('SHIFT.CALCULTING_ATTENDACE_IN_HOLIDAY')}}</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (day of gridData(); track day.day; let i = $index) {
+          <tr class="border-t border-black/5 transition-colors hover:bg-gray-50/30">
+            <td class="px-4 py-3 text-sm font-medium text-[#C3C3C3]">{{ day.label }}</td>
+            <td class="px-4 py-3">
+              <input type="checkbox"
+                     [checked]="day.isWorkDay"
+                     (change)="toggle(i, 'isWorkDay')"
+                     class="w-5 h-5 cursor-pointer rounded-[6px] border-[#C3C3C3] accent-[#C3C3C3] focus:ring-primary/20">
+            </td>
+            <td class="px-4 py-3">
+              <input type="checkbox"
+                     [checked]="day.calculateOnHoliday"
+                     (change)="toggle(i, 'calculateOnHoliday')"
+                     class="w-5 h-5 rounded-[6px] border-black/10 text-primary focus:ring-primary/20 cursor-pointer">
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
+</div>

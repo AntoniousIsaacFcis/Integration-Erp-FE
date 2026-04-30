@@ -25,26 +25,28 @@
               [allowLateToleranceOverrides]="isFlexibleShift()" />
           </section>
 
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 col-span-full mt-6">
-            <app-time-input-component [label]="t('SHIFT.WORK_START')" [control]="shiftForm.controls.workStart"
-              [showErrors]="submitted()" />
-            <app-time-input-component [label]="t('SHIFT.WORK_END')" [control]="shiftForm.controls.workEnd"
-              [showErrors]="submitted()" />
+          @if (!isFlexibleShift()) {
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 col-span-full mt-6">
+              <app-time-input-component [label]="t('SHIFT.WORK_START')" [control]="shiftForm.controls.workStart"
+                [showErrors]="submitted()" />
+              <app-time-input-component [label]="t('SHIFT.WORK_END')" [control]="shiftForm.controls.workEnd"
+                [showErrors]="submitted()" />
 
-            <app-time-input-component [label]="t('SHIFT.CHECKIN_START')" [control]="shiftForm.controls.checkInStart"
-              [showErrors]="submitted()" />
-            <app-time-input-component [label]="t('SHIFT.CHECKIN_END')" [control]="shiftForm.controls.checkInEnd"
-              [showErrors]="submitted()" />
+              <app-time-input-component [label]="t('SHIFT.CHECKIN_START')" [control]="shiftForm.controls.checkInStart"
+                [showErrors]="submitted()" />
+              <app-time-input-component [label]="t('SHIFT.CHECKIN_END')" [control]="shiftForm.controls.checkInEnd"
+                [showErrors]="submitted()" />
 
-            <app-time-input-component [label]="t('SHIFT.CHECKOUT_START')" [control]="shiftForm.controls.checkOutStart"
-              [showErrors]="submitted()" />
-            <app-time-input-component [label]="t('SHIFT.CHECKOUT_END')" [control]="shiftForm.controls.checkOutEnd"
-              [showErrors]="submitted()" />
+              <app-time-input-component [label]="t('SHIFT.CHECKOUT_START')" [control]="shiftForm.controls.checkOutStart"
+                [showErrors]="submitted()" />
+              <app-time-input-component [label]="t('SHIFT.CHECKOUT_END')" [control]="shiftForm.controls.checkOutEnd"
+                [showErrors]="submitted()" />
 
-            <app-app-input-component [label]="t('SHIFT.LATE_TOLERANCE_MINUTES')+ ' *'"
-              [control]="shiftForm.controls.gracePeriod" type="number" [placeholder]="'15'"
-              [showErrors]="submitted()" />
-          </div>
+              <app-app-input-component [label]="t('SHIFT.LATE_TOLERANCE_MINUTES')+ ' *'"
+                [control]="shiftForm.controls.gracePeriod" type="number" [placeholder]="'15'"
+                [showErrors]="submitted()" />
+            </div>
+          }
         </ng-container>
 
         <ng-container formActions>

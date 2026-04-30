@@ -83,6 +83,10 @@ export class CreateShiftComponent {
 
   constructor() {
     effect(() => {
+      this.configureParentShiftValidators(this.isFlexibleShift());
+    });
+
+    effect(() => {
       const response = this.saveResource.value();
       const error = this.saveResource.error();
 
@@ -123,30 +127,40 @@ export class CreateShiftComponent {
   }
 
   private toCreateShiftPayload(value: ReturnType<typeof this.shiftForm.getRawValue>): IShiftPayload {
+    const isFlexibleShift = Number(value.type) === 2;
+    const days = Array.isArray(value.workDays) ? value.workDays : [];
+    const flexibleDefaults = isFlexibleShift ? this.getFlexibleParentDefaults(days) : null;
+
     return {
       name: value.name?.trim() ?? '',
       type: Number(value.type),
       isActive: true,
-      onDutyTime: this.toTimeSpan(value.workStart),
-      offDutyTime: this.toTimeSpan(value.workEnd),
-      signInStartTime: this.toTimeSpan(value.checkInStart),
-      signInEndTime: this.toTimeSpan(value.checkInEnd),
-      signOutStartTime: this.toTimeSpan(value.checkOutStart),
-      signOutEndTime: this.toTimeSpan(value.checkOutEnd),
+      onDutyTime: this.toTimeSpan(isFlexibleShift ? flexibleDefaults?.onDutyTimeOverride : value.workStart),
+      offDutyTime: this.toTimeSpan(isFlexibleShift ? flexibleDefaults?.offDutyTimeOverride : value.workEnd),
+      signInStartTime: this.toTimeSpan(isFlexibleShift ? flexibleDefaults?.signInStartTimeOverride : value.checkInStart),
+      signInEndTime: this.toTimeSpan(isFlexibleShift ? flexibleDefaults?.signInEndTimeOverride : value.checkInEnd),
+      signOutStartTime: this.toTimeSpan(isFlexibleShift ? flexibleDefaults?.signOutStartTimeOverride : value.checkOutStart),
+      signOutEndTime: this.toTimeSpan(isFlexibleShift ? flexibleDefaults?.signOutEndTimeOverride : value.checkOutEnd),
       lateToleranceMinutes: Number(value.gracePeriod ?? 0),
       lateStartRule: Number(value.lateStartRule ?? 2),
-      days: this.toShiftDays(Array.isArray(value.workDays) ? value.workDays : []),
+      days: this.toShiftDays(days),
     };
   }
 
   private toShiftDays(days: DayConfig[]) {
+    const isFlexibleShift = this.isFlexibleShift();
+
     return days.map(day => ({
       dayOfWeek: this.toBackendDayOfWeek(day.day),
       isWorkDay: day.isWorkDay,
       calculateAttendanceOnOffDay: day.calculateOnHoliday,
-      onDutyTimeOverride: null,
-      offDutyTimeOverride: null,
-      lateToleranceMinutes: this.isFlexibleShift() ? day.lateToleranceMinutes : null,
+      onDutyTimeOverride: this.toOptionalTimeSpan(isFlexibleShift ? day.onDutyTimeOverride : null),
+      offDutyTimeOverride: this.toOptionalTimeSpan(isFlexibleShift ? day.offDutyTimeOverride : null),
+      signInStartTimeOverride: this.toOptionalTimeSpan(isFlexibleShift ? day.signInStartTimeOverride : null),
+      signInEndTimeOverride: this.toOptionalTimeSpan(isFlexibleShift ? day.signInEndTimeOverride : null),
+      signOutStartTimeOverride: this.toOptionalTimeSpan(isFlexibleShift ? day.signOutStartTimeOverride : null),
+      signOutEndTimeOverride: this.toOptionalTimeSpan(isFlexibleShift ? day.signOutEndTimeOverride : null),
+      lateToleranceMinutes: isFlexibleShift ? day.lateToleranceMinutes : null,
     }));
   }
 
@@ -170,5 +184,41 @@ export class CreateShiftComponent {
     }
 
     return value.length === 5 ? `${value}:00` : value;
+  }
+
+  private toOptionalTimeSpan(value: string | null | undefined) {
+    return value ? this.toTimeSpan(value) : null;
+  }
+
+  private getFlexibleParentDefaults(days: DayConfig[]) {
+    return days.find(day =>
+      day.onDutyTimeOverride &&
+      day.offDutyTimeOverride &&
+      day.signInStartTimeOverride &&
+      day.signInEndTimeOverride &&
+      day.signOutStartTimeOverride &&
+      day.signOutEndTimeOverride);
+  }
+
+  private configureParentShiftValidators(isFlexibleShift: boolean) {
+    const requiredControls = [
+      this.shiftForm.controls.workStart,
+      this.shiftForm.controls.workEnd,
+      this.shiftForm.controls.checkInStart,
+      this.shiftForm.controls.checkInEnd,
+      this.shiftForm.controls.checkOutStart,
+      this.shiftForm.controls.checkOutEnd,
+    ];
+
+    for (const control of requiredControls) {
+      control.setValidators(isFlexibleShift ? null : Validators.required);
+      control.updateValueAndValidity({ emitEvent: false });
+    }
+
+    this.shiftForm.controls.gracePeriod.setValidators(
+      isFlexibleShift ? [Validators.min(0)] : [Validators.required, Validators.min(0)]
+    );
+    this.shiftForm.controls.gracePeriod.updateValueAndValidity({ emitEvent: false });
+    this.shiftForm.updateValueAndValidity({ emitEvent: false });
   }
 }

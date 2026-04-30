@@ -80,6 +80,12 @@ export interface DayConfig {
   label: string;
   isWorkDay: boolean;
   calculateOnHoliday: boolean;
+  onDutyTimeOverride: string | null;
+  offDutyTimeOverride: string | null;
+  signInStartTimeOverride: string | null;
+  signInEndTimeOverride: string | null;
+  signOutStartTimeOverride: string | null;
+  signOutEndTimeOverride: string | null;
   lateToleranceMinutes: number | null;
 }
 
@@ -110,6 +116,10 @@ export interface IShiftDay {
   calculateAttendanceOnOffDay?: boolean;
   onDutyTimeOverride?: string | null;
   offDutyTimeOverride?: string | null;
+  signInStartTimeOverride?: string | null;
+  signInEndTimeOverride?: string | null;
+  signOutStartTimeOverride?: string | null;
+  signOutEndTimeOverride?: string | null;
   lateToleranceMinutes?: number | null;
 }
 
@@ -178,6 +188,10 @@ export interface IShiftDayInput {
   calculateAttendanceOnOffDay: boolean;
   onDutyTimeOverride: string | null;
   offDutyTimeOverride: string | null;
+  signInStartTimeOverride: string | null;
+  signInEndTimeOverride: string | null;
+  signOutStartTimeOverride: string | null;
+  signOutEndTimeOverride: string | null;
   lateToleranceMinutes: number | null;
 }
 
