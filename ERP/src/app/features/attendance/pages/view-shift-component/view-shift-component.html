@@ -4,6 +4,8 @@
 
   <ng-template #shiftFilters>
     <div class="flex items-center gap-3">
+      <app-status-badge-component label="FILTERS.STATUS" [(selectedStatus)]="selectedStatus"
+        [options]="statusOptions" />
       <app-date-filter-component [(selectedDate)]="selectedDate" />
     </div>
   </ng-template>
@@ -66,7 +68,7 @@
 
           <td class="py-4 px-4">
             <div class="flex justify-center">
-            <app-table-status-badge-component [status]="shift.status" translationPrefix="COMMON" />
+            <app-table-status-badge-component [status]="shift.status" />
             </div>
           </td>
 

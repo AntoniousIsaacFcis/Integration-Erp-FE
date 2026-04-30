@@ -11,6 +11,7 @@ import { of, startWith } from 'rxjs';
 import { TranslocoModule } from '@jsverse/transloco';
 import { Router } from '@angular/router';
 import { AppSelectComponent } from "@shared/components/atoms/app-select-component/app-select-component";
+import { AppRadioComponent } from '@shared/components/atoms/app-radio-component/app-radio-component';
 import { WorkDaysGridComponent } from "@features/attendance/components/work-days-grid-component/work-days-grid-component";
 import { TimeInputComponent } from "@shared/components/atoms/time-input-component/time-input-component";
 import { timeRangeValidator } from '@shared/validators/time-range.validator';
@@ -26,6 +27,7 @@ import { DayConfig, IShiftPayload } from '@features/attendance/models/iattendanc
     FormSaveButtonComponent,
     FormCancelButtonComponent,
     AppSelectComponent,
+    AppRadioComponent,
     WorkDaysGridComponent,
     TimeInputComponent
   ],
@@ -57,6 +59,7 @@ export class CreateShiftComponent {
     checkOutEnd: ['', Validators.required],
     gracePeriod: [15, [Validators.required, Validators.min(0)]],
     lateStartRule: [2, Validators.required],
+    status: ['active' as 'active' | 'inactive', Validators.required],
   }, {
     validators: [
       timeRangeValidator('workStart', 'workEnd'),
@@ -134,7 +137,7 @@ export class CreateShiftComponent {
     return {
       name: value.name?.trim() ?? '',
       type: Number(value.type),
-      isActive: true,
+      isActive: value.status === 'active',
       onDutyTime: this.toTimeSpan(isFlexibleShift ? flexibleDefaults?.onDutyTimeOverride : value.workStart),
       offDutyTime: this.toTimeSpan(isFlexibleShift ? flexibleDefaults?.offDutyTimeOverride : value.workEnd),
       signInStartTime: this.toTimeSpan(isFlexibleShift ? flexibleDefaults?.signInStartTimeOverride : value.checkInStart),

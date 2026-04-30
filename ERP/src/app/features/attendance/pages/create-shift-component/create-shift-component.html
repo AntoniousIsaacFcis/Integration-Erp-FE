@@ -16,6 +16,12 @@
               <option [value]="option.value">{{ t(option.label) }}</option>
               }
             </app-app-select-component>
+
+            <app-app-radio-component [label]="t('COMMON.STATUS')" [required]="true"
+              [control]="shiftForm.controls.status" [options]="[
+                { label: 'COMMON.ACTIVE', value: 'active' },
+                { label: 'COMMON.INACTIVE', value: 'inactive' }
+              ]" />
           </div>
 
           <section class="col-span-full">

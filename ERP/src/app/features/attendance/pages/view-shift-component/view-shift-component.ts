@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, signal } from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import { NotificationService } from '@core/services/notification-service';
@@ -11,6 +11,7 @@ import { ActionBtnComponent } from "@shared/components/molecules/action-btn-comp
 import { DatePipe } from '@angular/common';
 import { IShiftListItem } from '@features/attendance/models/iattendance';
 import { DateFilterComponent } from "@shared/components/molecules/date-filter-component/date-filter-component";
+import { StatusBadgeComponent } from '@shared/components/molecules/status-badge-component/status-badge-component';
 import { TableStatusBadgeComponent } from "@shared/components/atoms/table-status-badge-component/table-status-badge-component";
 import { EmptyTablePlaceholderComponent } from '@shared/components/molecules/empty-table-placeholder-component/empty-table-placeholder-component';
 
@@ -20,7 +21,7 @@ type ShiftTypeLabelKey = 'SHIFT.TYPES.STANDARD' | 'SHIFT.TYPES.FLEXIBLE';
 @Component({
   selector: 'app-view-shift-component',
   standalone: true,
-  imports: [TranslocoModule, NgIcon, AppBaseTableComponent, ActionBtnComponent, DatePipe, DateFilterComponent, TableStatusBadgeComponent, EmptyTablePlaceholderComponent],
+  imports: [TranslocoModule, NgIcon, AppBaseTableComponent, ActionBtnComponent, DatePipe, DateFilterComponent, StatusBadgeComponent, TableStatusBadgeComponent, EmptyTablePlaceholderComponent],
   templateUrl: './view-shift-component.html',
   styleUrl: './view-shift-component.css',
   providers: [provideIcons({ lucidePencil, lucideTrash2, lucideCirclePlus, lucideEye })],
@@ -47,6 +48,22 @@ export class ViewShiftComponent {
   selectedStatus = signal<'active' | 'inactive' | ''>('');
 
   selectedDate = signal<string>('');
+
+  statusOptions = [
+    { value: '', label: 'FILTERS.ALL' },
+    { value: 'active', label: 'COMMON.ACTIVE' },
+    { value: 'inactive', label: 'COMMON.INACTIVE' },
+  ];
+
+  private readonly resetPageOnFiltersChange = effect(
+    () => {
+      this.searchTerm();
+      this.selectedStatus();
+      this.selectedDate();
+      this.currentPage.set(1);
+    },
+    { allowSignalWrites: true },
+  );
 
   shiftsResource = rxResource({
     params: () => ({

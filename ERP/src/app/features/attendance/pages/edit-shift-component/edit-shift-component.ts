@@ -8,6 +8,7 @@ import { AttendanceService } from '@features/attendance/services/attendance-serv
 import { DayConfig, IShift, IShiftDay, IShiftPayload } from '@features/attendance/models/iattendance';
 import { TranslocoModule } from '@jsverse/transloco';
 import { AppInputComponent } from '@shared/components/atoms/app-input-component/app-input-component';
+import { AppRadioComponent } from '@shared/components/atoms/app-radio-component/app-radio-component';
 import { AppSelectComponent } from '@shared/components/atoms/app-select-component/app-select-component';
 import { TimeInputComponent } from '@shared/components/atoms/time-input-component/time-input-component';
 import { FormCancelButtonComponent } from '@shared/components/molecules/form-cancel-button-component/form-cancel-button-component';
@@ -26,6 +27,7 @@ import { startWith } from 'rxjs';
     FormSaveButtonComponent,
     FormCancelButtonComponent,
     AppSelectComponent,
+    AppRadioComponent,
     WorkDaysGridComponent,
     TimeInputComponent,
   ],
@@ -65,7 +67,7 @@ export class EditShiftComponent {
     checkOutEnd: ['', Validators.required],
     gracePeriod: [15, [Validators.required, Validators.min(0)]],
     lateStartRule: [2, Validators.required],
-    isActive: [true],
+    status: ['active' as 'active' | 'inactive', Validators.required],
   }, {
     validators: [
       timeRangeValidator('workStart', 'workEnd'),
@@ -169,7 +171,7 @@ export class EditShiftComponent {
       checkOutEnd: this.toTimeInputValue(shift.signOutEndTime),
       gracePeriod: shift.lateToleranceMinutes ?? 0,
       lateStartRule: shift.lateStartRule ?? 2,
-      isActive: shift.isActive,
+      status: this.toStatus(shift),
     });
 
     this.initialDays.set(shift.days ?? []);
@@ -183,7 +185,7 @@ export class EditShiftComponent {
     return {
       name: value.name?.trim() ?? '',
       type: Number(value.type),
-      isActive: Boolean(value.isActive),
+      isActive: value.status === 'active',
       onDutyTime: this.toTimeSpan(isFlexibleShift ? flexibleDefaults?.onDutyTimeOverride : value.workStart),
       offDutyTime: this.toTimeSpan(isFlexibleShift ? flexibleDefaults?.offDutyTimeOverride : value.workEnd),
       signInStartTime: this.toTimeSpan(isFlexibleShift ? flexibleDefaults?.signInStartTimeOverride : value.checkInStart),
@@ -241,6 +243,10 @@ export class EditShiftComponent {
 
   private toTimeInputValue(value?: string | null) {
     return value ? value.slice(0, 5) : '';
+  }
+
+  private toStatus(shift: IShift): 'active' | 'inactive' {
+    return shift.isActive || shift.status === 'active' ? 'active' : 'inactive';
   }
 
   private getFlexibleParentDefaults(days: DayConfig[]) {

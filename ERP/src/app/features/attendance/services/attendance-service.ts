@@ -68,11 +68,12 @@ export class AttendanceService {
   }): Observable<IShiftListResponse> {
     const normalizedSearch = params.search?.trim();
     const typeSearch = this.getShiftTypeSearch(normalizedSearch);
-    const requestLimit = typeSearch ? 1000 : params.limit;
+    const requiresLocalFiltering = Boolean(typeSearch || params.status);
+    const requestLimit = requiresLocalFiltering ? 1000 : params.limit;
 
     return this.http.get<IShiftApiListResponse | IShiftListResponse>(this.SHIFT_API_URL, {
       params: {
-        skipCount: (typeSearch ? 0 : (params.page - 1) * params.limit).toString(),
+        skipCount: (requiresLocalFiltering ? 0 : (params.page - 1) * params.limit).toString(),
         maxResultCount: requestLimit.toString(),
         ...(normalizedSearch && !typeSearch && {
           filter: normalizedSearch,
@@ -87,12 +88,13 @@ export class AttendanceService {
         }),
         ...(params.status && {
           status: params.status,
-          isActive: params.status === 'active'
+          isActive: String(params.status === 'active'),
+          IsActive: String(params.status === 'active'),
         }),
         ...(params.createdAt && { creationTime: params.createdAt, createdAt: params.createdAt })
       }
     }).pipe(
-      map(response => this.toShiftListResponse(response, params.page, params.limit, params.createdAt, normalizedSearch))
+      map(response => this.toShiftListResponse(response, params.page, params.limit, params.createdAt, normalizedSearch, params.status))
     );
   }
 
@@ -110,30 +112,34 @@ export class AttendanceService {
     limit: number,
     createdAt?: string,
     search?: string,
+    status?: string,
   ): IShiftListResponse {
     if ('data' in response) {
       const data = response.data
         .filter(shift => this.matchesCreationDate(shift.createdAt, createdAt))
         .map(shift => this.normalizeShiftListItem(shift))
-        .filter(shift => this.matchesShiftSearch(shift, search));
+        .filter(shift => this.matchesShiftSearch(shift, search))
+        .filter(shift => this.matchesShiftStatus(shift, status));
+      const requiresLocalFiltering = Boolean(this.getShiftTypeSearch(search) || status);
 
       return {
         ...response,
-        data,
-        total: this.getShiftTypeSearch(search) ? data.length : response.total,
+        data: requiresLocalFiltering ? data.slice((page - 1) * limit, page * limit) : data,
+        total: requiresLocalFiltering ? data.length : response.total,
       };
     }
 
     const data = response.items
       .map(shift => this.normalizeShiftListItem(shift))
       .filter(shift => this.matchesCreationDate(shift.createdAt, createdAt))
-      .filter(shift => this.matchesShiftSearch(shift, search));
-    const typeSearch = this.getShiftTypeSearch(search);
-    const pagedData = typeSearch ? data.slice((page - 1) * limit, page * limit) : data;
+      .filter(shift => this.matchesShiftSearch(shift, search))
+      .filter(shift => this.matchesShiftStatus(shift, status));
+    const requiresLocalFiltering = Boolean(this.getShiftTypeSearch(search) || status);
+    const pagedData = requiresLocalFiltering ? data.slice((page - 1) * limit, page * limit) : data;
 
     return {
       data: pagedData,
-      total: typeSearch ? data.length : response.totalCount,
+      total: requiresLocalFiltering ? data.length : response.totalCount,
       page,
       limit,
     };
@@ -195,6 +201,10 @@ export class AttendanceService {
       shift.type,
       ...this.getShiftTypeSearchLabels(shift.type),
     ].some(value => this.normalizeSearchText(value).includes(normalizedSearch));
+  }
+
+  private matchesShiftStatus(shift: IShiftListItem, status?: string) {
+    return !status || shift.status === status;
   }
 
   private getShiftTypeSearch(search?: string) {
