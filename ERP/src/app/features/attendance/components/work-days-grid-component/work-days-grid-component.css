@@ -1,0 +1,46 @@
+.work-day-checkbox {
+  display: inline-grid;
+  width: 20px;
+  height: 20px;
+  place-content: center;
+  appearance: none;
+  cursor: pointer;
+  border: 1px solid #c3c3c3;
+  border-radius: 6px;
+  background: #fff;
+  opacity: 1;
+  transition: background-color 160ms ease, border-color 160ms ease;
+}
+
+.work-day-checkbox::before {
+  content: "";
+  width: 10px;
+  height: 10px;
+  transform: scale(0);
+  background: #fff;
+  clip-path: polygon(14% 44%, 0 59%, 40% 100%, 100% 22%, 85% 10%, 38% 70%);
+  transition: transform 120ms ease;
+}
+
+.work-day-checkbox:checked {
+  border-color: #537c0f;
+  background: #537c0f;
+}
+
+.work-day-checkbox:checked::before {
+  transform: scale(1);
+}
+
+.work-day-checkbox:focus-visible {
+  outline: 2px solid rgb(83 124 15 / 24%);
+  outline-offset: 2px;
+}
+
+.work-day-checkbox:disabled {
+  cursor: not-allowed;
+}
+
+.work-day-checkbox:disabled:not(:checked) {
+  border-color: #d8d8d8;
+  background: #fff;
+}

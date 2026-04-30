@@ -16,8 +16,9 @@
     </span>
     }
 
-    <div (click)="timeInput.showPicker()"
-      class="absolute inset-y-0 end-[14px] flex items-center cursor-pointer text-black/40 group-focus-within:text-primary transition-colors">
+    <div (click)="openPicker(timeInput)"
+      class="absolute inset-y-0 end-[14px] flex items-center cursor-pointer text-black/40 group-focus-within:text-primary transition-colors"
+      [class.cursor-not-allowed]="control().disabled">
       <ng-icon name="lucideClock" size="18"></ng-icon>
     </div>
   </div>

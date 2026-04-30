@@ -18,15 +18,17 @@
             <div>
               <input type="checkbox"
                      [checked]="day.isWorkDay"
+                     [disabled]="disabled()"
                      (change)="toggle(i, 'isWorkDay')"
-                     class="w-5 h-5 cursor-pointer rounded-[6px] border-[#C3C3C3] accent-[#C3C3C3] focus:ring-primary/20">
+                     class="work-day-checkbox">
             </div>
 
             <div>
               <input type="checkbox"
                      [checked]="day.calculateOnHoliday"
+                     [disabled]="disabled()"
                      (change)="toggle(i, 'calculateOnHoliday')"
-                     class="w-5 h-5 rounded-[6px] border-black/10 text-primary focus:ring-primary/20 cursor-pointer">
+                     class="work-day-checkbox">
             </div>
           </div>
 
@@ -35,48 +37,54 @@
               {{t('SHIFT.WORK_START')}} *
               <input type="time"
                      [value]="day.onDutyTimeOverride ?? ''"
+                     [disabled]="disabled()"
                      (input)="updateTimeOverride(i, 'onDutyTimeOverride', $any($event.target).value)"
-                     class="h-10 w-full rounded-md border border-black/10 px-3 text-sm text-black outline-none focus:border-primary/60">
+                     class="h-10 w-full rounded-md border border-black/10 px-3 text-sm text-black outline-none focus:border-primary/60 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:opacity-100">
             </label>
 
             <label class="flex flex-col gap-2 text-sm font-medium text-black">
               {{t('SHIFT.WORK_END')}} *
               <input type="time"
                      [value]="day.offDutyTimeOverride ?? ''"
+                     [disabled]="disabled()"
                      (input)="updateTimeOverride(i, 'offDutyTimeOverride', $any($event.target).value)"
-                     class="h-10 w-full rounded-md border border-black/10 px-3 text-sm text-black outline-none focus:border-primary/60">
+                     class="h-10 w-full rounded-md border border-black/10 px-3 text-sm text-black outline-none focus:border-primary/60 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:opacity-100">
             </label>
 
             <label class="flex flex-col gap-2 text-sm font-medium text-black">
               {{t('SHIFT.CHECKIN_START')}} *
               <input type="time"
                      [value]="day.signInStartTimeOverride ?? ''"
+                     [disabled]="disabled()"
                      (input)="updateTimeOverride(i, 'signInStartTimeOverride', $any($event.target).value)"
-                     class="h-10 w-full rounded-md border border-black/10 px-3 text-sm text-black outline-none focus:border-primary/60">
+                     class="h-10 w-full rounded-md border border-black/10 px-3 text-sm text-black outline-none focus:border-primary/60 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:opacity-100">
             </label>
 
             <label class="flex flex-col gap-2 text-sm font-medium text-black">
               {{t('SHIFT.CHECKOUT_START')}} *
               <input type="time"
                      [value]="day.signOutStartTimeOverride ?? ''"
+                     [disabled]="disabled()"
                      (input)="updateTimeOverride(i, 'signOutStartTimeOverride', $any($event.target).value)"
-                     class="h-10 w-full rounded-md border border-black/10 px-3 text-sm text-black outline-none focus:border-primary/60">
+                     class="h-10 w-full rounded-md border border-black/10 px-3 text-sm text-black outline-none focus:border-primary/60 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:opacity-100">
             </label>
 
             <label class="flex flex-col gap-2 text-sm font-medium text-black">
               {{t('SHIFT.CHECKIN_END')}} *
               <input type="time"
                      [value]="day.signInEndTimeOverride ?? ''"
+                     [disabled]="disabled()"
                      (input)="updateTimeOverride(i, 'signInEndTimeOverride', $any($event.target).value)"
-                     class="h-10 w-full rounded-md border border-black/10 px-3 text-sm text-black outline-none focus:border-primary/60">
+                     class="h-10 w-full rounded-md border border-black/10 px-3 text-sm text-black outline-none focus:border-primary/60 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:opacity-100">
             </label>
 
             <label class="flex flex-col gap-2 text-sm font-medium text-black">
               {{t('SHIFT.CHECKOUT_END')}} *
               <input type="time"
                      [value]="day.signOutEndTimeOverride ?? ''"
+                     [disabled]="disabled()"
                      (input)="updateTimeOverride(i, 'signOutEndTimeOverride', $any($event.target).value)"
-                     class="h-10 w-full rounded-md border border-black/10 px-3 text-sm text-black outline-none focus:border-primary/60">
+                     class="h-10 w-full rounded-md border border-black/10 px-3 text-sm text-black outline-none focus:border-primary/60 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:opacity-100">
             </label>
 
             <label class="flex flex-col gap-2 text-sm font-medium text-black">
@@ -84,8 +92,9 @@
               <input type="number"
                      min="0"
                      [value]="day.lateToleranceMinutes ?? ''"
+                     [disabled]="disabled()"
                      (input)="updateLateTolerance(i, $any($event.target).value)"
-                     class="h-10 w-full rounded-md border border-black/10 px-3 text-sm text-black outline-none focus:border-primary/60"
+                     class="h-10 w-full rounded-md border border-black/10 px-3 text-sm text-black outline-none focus:border-primary/60 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:opacity-100"
                      [placeholder]="t('COMMON.DEFAULT')">
             </label>
           </div>
@@ -104,18 +113,20 @@
       <tbody>
         @for (day of gridData(); track day.day; let i = $index) {
           <tr class="border-t border-black/5 transition-colors hover:bg-gray-50/30">
-            <td class="px-4 py-3 text-sm font-medium text-[#C3C3C3]">{{ day.label }}</td>
+            <td class="px-4 py-3 text-sm font-medium" [class.text-black]="disabled()" [class.text-[#C3C3C3]]="!disabled()">{{ day.label }}</td>
             <td class="px-4 py-3">
               <input type="checkbox"
                      [checked]="day.isWorkDay"
+                     [disabled]="disabled()"
                      (change)="toggle(i, 'isWorkDay')"
-                     class="w-5 h-5 cursor-pointer rounded-[6px] border-[#C3C3C3] accent-[#C3C3C3] focus:ring-primary/20">
+                     class="work-day-checkbox">
             </td>
             <td class="px-4 py-3">
               <input type="checkbox"
                      [checked]="day.calculateOnHoliday"
+                     [disabled]="disabled()"
                      (change)="toggle(i, 'calculateOnHoliday')"
-                     class="w-5 h-5 rounded-[6px] border-black/10 text-primary focus:ring-primary/20 cursor-pointer">
+                     class="work-day-checkbox">
             </td>
           </tr>
         }

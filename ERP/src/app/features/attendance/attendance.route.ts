@@ -23,6 +23,11 @@ export const ATTENDANCE_ROUTES: Routes = [
       }
       ,
       {
+        path: 'details/:id',
+        loadComponent: () => import('./pages/view-shift-details-component/view-shift-details-component').then(x => x.ViewShiftDetailsComponent),
+        data: { breadcrumb: 'SHIFT.VIEW_SHIFT' }
+      },
+      {
         path: 'special',
         loadComponent: () => import('./pages/view-specific-shift-component/view-specific-shift-component').then(x => x.ViewSpecificShiftComponent),
         data: { breadcrumb: 'MENU.VIEW_SPECIAL_SHIFTS' }

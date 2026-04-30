@@ -20,6 +20,12 @@ export class TimeInputComponent {
 
   requiredErrorKey = input<string>('AUTH.REQUIRED_FIELD');
 
+  openPicker(input: HTMLInputElement) {
+    if (!this.control().disabled) {
+      input.showPicker();
+    }
+  }
+
   get errorKey(): string | null {
     const ctrl = this.control();
     if (this.showErrors() && ctrl.invalid) {

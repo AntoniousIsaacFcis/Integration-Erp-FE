@@ -1,0 +1,66 @@
+<main class="flex justify-center" *transloco="let t">
+  <div
+    class="w-full max-w-standard bg-white rounded-[20px] shadow-soft border border-black/5 flex flex-col gap-spacing-lg mx-auto">
+
+    <div class="flex-1 scroll-smooth" id="main-content">
+      <app-form-container-component [title]="t('SHIFT.VIEW_SHIFT')">
+
+        <ng-container formFields>
+          @if (isLoading()) {
+            <div class="col-span-full flex justify-center py-10 text-gray-400">
+              {{ t('COMMON.MESSAGES.LOADING_DATA') }}
+            </div>
+          } @else {
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6 col-span-full">
+              <app-app-input-component [label]="t('SHIFT.SHIFT_NAME')" [control]="shiftForm.controls.name"
+                [placeholder]="t('PLACEHOLDER.GENERAL_MANAGER')" />
+
+              <app-app-select-component [label]="t('SHIFT.SHIFT_TYPE')" [control]="shiftForm.controls.type"
+                [placeholder]="t('PLACEHOLDER.NIGHT')">
+                @for (option of shiftTypeOptions; track option.value) {
+                  <option [value]="option.value">{{ t(option.label) }}</option>
+                }
+              </app-app-select-component>
+
+              <app-app-radio-component [label]="'COMMON.STATUS'" [control]="shiftForm.controls.status"
+                [options]="[
+                  { label: 'COMMON.ACTIVE', value: 'active' },
+                  { label: 'COMMON.INACTIVE', value: 'inactive' }
+                ]" />
+            </div>
+
+            <section class="col-span-full">
+              <h3 class="text-base font-medium mb-4 text-black">{{ t('SHIFT.SELECT_WORK_DAYS') }}</h3>
+              <app-work-days-grid-component
+                [control]="shiftForm.controls.workDays"
+                [allowLateToleranceOverrides]="isFlexibleShift()"
+                [initialDays]="initialDays()"
+                [disabled]="true" />
+            </section>
+
+            @if (!isFlexibleShift()) {
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6 col-span-full mt-6">
+                <app-time-input-component [label]="t('SHIFT.WORK_START')" [control]="shiftForm.controls.workStart" />
+                <app-time-input-component [label]="t('SHIFT.WORK_END')" [control]="shiftForm.controls.workEnd" />
+
+                <app-time-input-component [label]="t('SHIFT.CHECKIN_START')" [control]="shiftForm.controls.checkInStart" />
+                <app-time-input-component [label]="t('SHIFT.CHECKIN_END')" [control]="shiftForm.controls.checkInEnd" />
+
+                <app-time-input-component [label]="t('SHIFT.CHECKOUT_START')" [control]="shiftForm.controls.checkOutStart" />
+                <app-time-input-component [label]="t('SHIFT.CHECKOUT_END')" [control]="shiftForm.controls.checkOutEnd" />
+
+                <app-app-input-component [label]="t('SHIFT.LATE_TOLERANCE_MINUTES')"
+                  [control]="shiftForm.controls.gracePeriod" type="number" [placeholder]="'15'" />
+              </div>
+            }
+          }
+        </ng-container>
+
+        <ng-container formActions>
+          <app-form-save-button-component [label]="'COMMON.BACK'" (clicked)="goBack()" />
+        </ng-container>
+
+      </app-form-container-component>
+    </div>
+  </div>
+</main>

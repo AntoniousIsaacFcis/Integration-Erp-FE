@@ -13,6 +13,7 @@ export class WorkDaysGridComponent implements OnInit, OnChanges{
 control = input.required<FormControl>();
 allowLateToleranceOverrides = input(false);
 initialDays = input<IShiftDay[] | null>(null);
+disabled = input(false);
 
 gridData = signal<DayConfig[]>([
     this.createDay('sun', 'الأحد'),
@@ -35,6 +36,10 @@ gridData = signal<DayConfig[]>([
   }
 
   toggle(index: number, field: keyof Pick<DayConfig, 'isWorkDay' | 'calculateOnHoliday'>) {
+    if (this.disabled()) {
+      return;
+    }
+
     this.gridData.update(data => {
       const newData = [...data];
       newData[index] = { ...newData[index], [field]: !newData[index][field] };
@@ -45,7 +50,7 @@ gridData = signal<DayConfig[]>([
   }
 
   updateLateTolerance(index: number, value: string) {
-    if (!this.allowLateToleranceOverrides()) {
+    if (this.disabled() || !this.allowLateToleranceOverrides()) {
       return;
     }
 
@@ -61,7 +66,7 @@ gridData = signal<DayConfig[]>([
   }
 
   updateTimeOverride(index: number, field: TimeOverrideField, value: string) {
-    if (!this.allowLateToleranceOverrides()) {
+    if (this.disabled() || !this.allowLateToleranceOverrides()) {
       return;
     }
 
