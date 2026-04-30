@@ -518,6 +518,7 @@
     "ASSIGNED_EMPLOYEES": "Assigned Employees",
     "EMPLOYEE_COUNT": "Employee Count",
     "ADD_NEW_SHIFT": "Add New Shift",
+    "SEARCH_PLACEHOLDER": "Search by shift name or type...",
     "SELECT_WORK_DAYS": "Select Work Days",
     "WORK_START": "Work Start Time",
     "WORK_END": "Work End Time",

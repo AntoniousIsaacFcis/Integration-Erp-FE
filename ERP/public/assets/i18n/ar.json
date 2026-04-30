@@ -552,6 +552,7 @@
     "ASSIGNED_EMPLOYEES": "الموظفون المعينون",
     "EMPLOYEE_COUNT": "عدد الموظفين",
     "ADD_NEW_SHIFT": "اضافة وردية جديدة",
+    "SEARCH_PLACEHOLDER": "ابحث باسم الوردية أو النوع...",
     "SELECT_WORK_DAYS": "تحديد أيام العمل",
     "WORK_START": "وقت بداية العمل",
     "WORK_END": "وقت نهاية العمل",

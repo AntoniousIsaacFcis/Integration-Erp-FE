@@ -15,6 +15,7 @@ import { TableStatusBadgeComponent } from "@shared/components/atoms/table-status
 import { EmptyTablePlaceholderComponent } from '@shared/components/molecules/empty-table-placeholder-component/empty-table-placeholder-component';
 
 type DayNameKey = 'DAYS.SUNDAY' | 'DAYS.MONDAY' | 'DAYS.TUESDAY' | 'DAYS.WEDNESDAY' | 'DAYS.THURSDAY' | 'DAYS.FRIDAY' | 'DAYS.SATURDAY';
+type ShiftTypeLabelKey = 'SHIFT.TYPES.STANDARD' | 'SHIFT.TYPES.FLEXIBLE';
 
 @Component({
   selector: 'app-view-shift-component',
@@ -66,6 +67,7 @@ export class ViewShiftComponent {
     return response.map((shift: IShiftListItem) => ({
       ...shift,
       displayName: shift.name || shift.nameAr || shift.nameEn || '-',
+      typeLabelKey: this.getShiftTypeLabelKey(shift.type),
       holidayDayKeys: this.getHolidayDayKeys(shift),
       holidayDaysFallback: this.getHolidayDaysFallback(shift),
     }));
@@ -133,5 +135,9 @@ export class ViewShiftComponent {
     }
 
     return String(shift.holidayDaysCount);
+  }
+
+  private getShiftTypeLabelKey(type: string | number): ShiftTypeLabelKey {
+    return Number(type) === 2 ? 'SHIFT.TYPES.FLEXIBLE' : 'SHIFT.TYPES.STANDARD';
   }
 }

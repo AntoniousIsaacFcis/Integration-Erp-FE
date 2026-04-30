@@ -67,16 +67,23 @@ export class AttendanceService {
     createdAt?: string;
   }): Observable<IShiftListResponse> {
     const normalizedSearch = params.search?.trim();
+    const typeSearch = this.getShiftTypeSearch(normalizedSearch);
+    const requestLimit = typeSearch ? 1000 : params.limit;
 
     return this.http.get<IShiftApiListResponse | IShiftListResponse>(this.SHIFT_API_URL, {
       params: {
-        skipCount: ((params.page - 1) * params.limit).toString(),
-        maxResultCount: params.limit.toString(),
-        ...(normalizedSearch && {
+        skipCount: (typeSearch ? 0 : (params.page - 1) * params.limit).toString(),
+        maxResultCount: requestLimit.toString(),
+        ...(normalizedSearch && !typeSearch && {
           filter: normalizedSearch,
           search: normalizedSearch,
           searchTerm: normalizedSearch,
           q: normalizedSearch
+        }),
+        ...(typeSearch && {
+          type: typeSearch,
+          shiftType: typeSearch,
+          Type: typeSearch,
         }),
         ...(params.status && {
           status: params.status,
@@ -85,7 +92,7 @@ export class AttendanceService {
         ...(params.createdAt && { creationTime: params.createdAt, createdAt: params.createdAt })
       }
     }).pipe(
-      map(response => this.toShiftListResponse(response, params.page, params.limit, params.createdAt))
+      map(response => this.toShiftListResponse(response, params.page, params.limit, params.createdAt, normalizedSearch))
     );
   }
 
@@ -102,23 +109,31 @@ export class AttendanceService {
     page: number,
     limit: number,
     createdAt?: string,
+    search?: string,
   ): IShiftListResponse {
     if ('data' in response) {
+      const data = response.data
+        .filter(shift => this.matchesCreationDate(shift.createdAt, createdAt))
+        .map(shift => this.normalizeShiftListItem(shift))
+        .filter(shift => this.matchesShiftSearch(shift, search));
+
       return {
         ...response,
-        data: response.data
-          .filter(shift => this.matchesCreationDate(shift.createdAt, createdAt))
-          .map(shift => this.normalizeShiftListItem(shift)),
+        data,
+        total: this.getShiftTypeSearch(search) ? data.length : response.total,
       };
     }
 
     const data = response.items
       .map(shift => this.normalizeShiftListItem(shift))
-      .filter(shift => this.matchesCreationDate(shift.createdAt, createdAt));
+      .filter(shift => this.matchesCreationDate(shift.createdAt, createdAt))
+      .filter(shift => this.matchesShiftSearch(shift, search));
+    const typeSearch = this.getShiftTypeSearch(search);
+    const pagedData = typeSearch ? data.slice((page - 1) * limit, page * limit) : data;
 
     return {
-      data,
-      total: response.totalCount,
+      data: pagedData,
+      total: typeSearch ? data.length : response.totalCount,
       page,
       limit,
     };
@@ -164,6 +179,52 @@ export class AttendanceService {
     }
 
     return createdAt?.slice(0, 10) === selectedDate;
+  }
+
+  private matchesShiftSearch(shift: IShiftListItem, search?: string) {
+    const normalizedSearch = this.normalizeSearchText(search);
+
+    if (!normalizedSearch) {
+      return true;
+    }
+
+    return [
+      shift.name,
+      shift.nameAr,
+      shift.nameEn,
+      shift.type,
+      ...this.getShiftTypeSearchLabels(shift.type),
+    ].some(value => this.normalizeSearchText(value).includes(normalizedSearch));
+  }
+
+  private getShiftTypeSearch(search?: string) {
+    const normalizedSearch = this.normalizeSearchText(search);
+
+    if (!normalizedSearch) {
+      return '';
+    }
+
+    const labelsByType: Record<string, string[]> = {
+      '1': ['قياسية', 'قياسيه', 'standard'],
+      '2': ['مرنة', 'مرنه', 'flexible'],
+    };
+
+    return Object.entries(labelsByType)
+      .find(([, labels]) => labels.some(label => this.normalizeSearchText(label).includes(normalizedSearch)))?.[0] ?? '';
+  }
+
+  private getShiftTypeSearchLabels(type: string | number) {
+    return Number(type) === 2
+      ? ['مرنة', 'مرنه', 'flexible']
+      : ['قياسية', 'قياسيه', 'standard'];
+  }
+
+  private normalizeSearchText(value?: string | number | null) {
+    return String(value ?? '')
+      .trim()
+      .toLowerCase()
+      .replace(/[أإآ]/g, 'ا')
+      .replace(/ة/g, 'ه');
   }
 
   createShift(shift: IShiftPayload | ICustomShiftForm) {
