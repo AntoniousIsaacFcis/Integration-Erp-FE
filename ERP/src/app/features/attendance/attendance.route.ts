@@ -15,6 +15,11 @@ export const ATTENDANCE_ROUTES: Routes = [
         path: 'create',
         loadComponent: () => import('./pages/create-shift-component/create-shift-component').then(x => x.CreateShiftComponent),
         data: { breadcrumb: 'MENU.CREATE_SHIFT' }
+      },
+      {
+        path: 'edit/:id',
+        loadComponent: () => import('./pages/edit-shift-component/edit-shift-component').then(x => x.EditShiftComponent),
+        data: { breadcrumb: 'SHIFT.EDIT_SHIFT' }
       }
       ,
       {

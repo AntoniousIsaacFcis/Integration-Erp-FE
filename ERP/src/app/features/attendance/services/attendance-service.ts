@@ -170,7 +170,7 @@ export class AttendanceService {
     return this.http.post<IShift>(this.SHIFT_API_URL, shift);
   }
 
-  updateShift(id: string, shift: Partial<IShift>) {
+  updateShift(id: string, shift: IShiftPayload) {
     return this.http.put<IShift>(`${this.SHIFT_API_URL}/${id}`, shift);
   }
 

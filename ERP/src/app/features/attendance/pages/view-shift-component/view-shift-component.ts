@@ -81,7 +81,7 @@ export class ViewShiftComponent {
   }
 
   handleEdit(id: string) {
-    this.router.navigate(['/attendance/details', id]);
+    this.router.navigate(['/attendance/edit', id]);
   }
 
   handleDelete(id: string) {

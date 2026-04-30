@@ -1,6 +1,6 @@
-import { Component, input, OnInit, signal } from '@angular/core';
+import { Component, input, OnChanges, OnInit, signal, SimpleChanges } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { DayConfig } from '@features/attendance/models/iattendance';
+import { DayConfig, IShiftDay } from '@features/attendance/models/iattendance';
 import { TranslocoModule } from '@jsverse/transloco';
 
 @Component({
@@ -9,9 +9,10 @@ import { TranslocoModule } from '@jsverse/transloco';
   templateUrl: './work-days-grid-component.html',
   styleUrl: './work-days-grid-component.css',
 })
-export class WorkDaysGridComponent implements OnInit{
+export class WorkDaysGridComponent implements OnInit, OnChanges{
 control = input.required<FormControl>();
 allowLateToleranceOverrides = input(false);
+initialDays = input<IShiftDay[] | null>(null);
 
 gridData = signal<DayConfig[]>([
     this.createDay('sun', 'الأحد'),
@@ -24,8 +25,13 @@ gridData = signal<DayConfig[]>([
   ]);
 
   ngOnInit() {
-    // Sync initial state to form for once only
-    this.control().setValue(this.gridData());
+    this.applyInitialDays();
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['initialDays'] && !changes['initialDays'].firstChange) {
+      this.applyInitialDays();
+    }
   }
 
   toggle(index: number, field: keyof Pick<DayConfig, 'isWorkDay' | 'calculateOnHoliday'>) {
@@ -82,6 +88,53 @@ gridData = signal<DayConfig[]>([
       signOutEndTimeOverride: null,
       lateToleranceMinutes: null,
     };
+  }
+
+  private applyInitialDays() {
+    const days = this.initialDays();
+    const nextData = this.createDefaultDays();
+
+    if (days?.length) {
+      for (const shiftDay of days) {
+        const index = shiftDay.dayOfWeek;
+
+        if (index < 0 || index >= nextData.length) {
+          continue;
+        }
+
+        nextData[index] = {
+          ...nextData[index],
+          isWorkDay: shiftDay.isWorkDay,
+          calculateOnHoliday: Boolean(shiftDay.calculateAttendanceOnOffDay),
+          onDutyTimeOverride: this.toTimeInputValue(shiftDay.onDutyTimeOverride),
+          offDutyTimeOverride: this.toTimeInputValue(shiftDay.offDutyTimeOverride),
+          signInStartTimeOverride: this.toTimeInputValue(shiftDay.signInStartTimeOverride),
+          signInEndTimeOverride: this.toTimeInputValue(shiftDay.signInEndTimeOverride),
+          signOutStartTimeOverride: this.toTimeInputValue(shiftDay.signOutStartTimeOverride),
+          signOutEndTimeOverride: this.toTimeInputValue(shiftDay.signOutEndTimeOverride),
+          lateToleranceMinutes: shiftDay.lateToleranceMinutes ?? null,
+        };
+      }
+    }
+
+    this.gridData.set(nextData);
+    this.control().setValue(nextData);
+  }
+
+  private createDefaultDays() {
+    return [
+      this.createDay('sun', 'الأحد'),
+      this.createDay('mon', 'الاثنين'),
+      this.createDay('tue', 'الثلاثاء'),
+      this.createDay('wed', 'الأربعاء'),
+      this.createDay('thu', 'الخميس'),
+      this.createDay('fri', 'الجمعة'),
+      this.createDay('sat', 'السبت'),
+    ];
+  }
+
+  private toTimeInputValue(value?: string | null) {
+    return value ? value.slice(0, 5) : null;
   }
 }
 
