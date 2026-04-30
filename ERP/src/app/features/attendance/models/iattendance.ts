@@ -234,6 +234,47 @@ export interface ICustomShiftForm {
   excludedEmployeeIds: string[];
 }
 
+export interface IShiftAssignmentPayload {
+  name: string;
+  assignedShiftId: string;
+  startDate: string;
+  endDate: string;
+  criteriaType: 1 | 2;
+  priority: number;
+  departmentId: string | null;
+  designationId: string | null;
+  currentShiftId: string | null;
+  employeeIds: string[];
+  excludedEmployeeIds: string[];
+}
+
+export interface IShiftAssignment {
+  id: string;
+  name: string;
+  assignedShiftId: string;
+  assignedShiftName?: string | null;
+  startDate: string;
+  endDate: string;
+  criteriaType: 1 | 2 | number;
+  priority: number;
+  departmentId?: string | null;
+  designationId?: string | null;
+  currentShiftId?: string | null;
+  employeeIds: string[];
+  excludedEmployeeIds: string[];
+  creationTime?: string;
+}
+
+export interface IShiftAssignmentApiListResponse {
+  items: IShiftAssignment[];
+  totalCount: number;
+}
+
+export interface IShiftOption {
+  id: string;
+  displayName: string;
+}
+
 export interface ISpecificShiftDetails extends ICustomShiftForm {
   id: string;
   createdAt: string;

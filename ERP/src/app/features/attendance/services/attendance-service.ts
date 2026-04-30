@@ -4,7 +4,7 @@ import { environment } from '@env/environment.development';
 import { IEmployeeLeaveOverviewApiResponse, ILeaveApplicationApiDto, ILeaveApplicationUpdatePayload, ILeaveTypeApiDto, ILeaveTypeListResponse, IVacationResponse, VacationStatus } from '@features/attendance/models/ivacation';
 import { ISelectOption } from '@shared/components/atoms/select-btn-component/select-btn-component';
 import { map, Observable, timeout } from 'rxjs';
-import { IAttendanceAvailablePeriod, IAttendanceDay, IAttendanceDayApiDto, IAttendanceDayListResponse, IAttendanceLogApiDto, IAttendanceLogListResponse, IAttendanceResponse, ICustomShiftForm, IEditAttendanceDay, IShift, IShiftApiListResponse, IShiftListItem, IShiftListResponse, IShiftPayload, ISpecialShiftListResponse, IUpdateAttendancePayload } from '../models/iattendance';
+import { IAttendanceAvailablePeriod, IAttendanceDay, IAttendanceDayApiDto, IAttendanceDayListResponse, IAttendanceLogApiDto, IAttendanceLogListResponse, IAttendanceResponse, ICustomShiftForm, IEditAttendanceDay, IShift, IShiftApiListResponse, IShiftAssignment, IShiftAssignmentPayload, IShiftListItem, IShiftListResponse, IShiftOption, IShiftPayload, ISpecialShiftListResponse, IUpdateAttendancePayload } from '../models/iattendance';
 
 @Injectable({
   providedIn: 'root',
@@ -13,6 +13,7 @@ export class AttendanceService {
   private http = inject(HttpClient);
   private readonly API_URL = `${environment.baseUrl}/api`;
   private readonly SHIFT_API_URL = `${this.API_URL}/attendance/shift`;
+  private readonly SHIFT_ASSIGNMENT_API_URL = `${this.API_URL}/attendance/shift-assignment`;
 
   getAttendance(empId: string, year: string, month: string): Observable<IAttendanceDay[]> {
     const yearNumber = Number(year);
@@ -243,6 +244,26 @@ export class AttendanceService {
 
   updateShift(id: string, shift: IShiftPayload) {
     return this.http.put<IShift>(`${this.SHIFT_API_URL}/${id}`, shift);
+  }
+
+  getShiftOptions(): Observable<IShiftOption[]> {
+    return this.http.get<IShiftApiListResponse>(this.SHIFT_API_URL, {
+      params: {
+        skipCount: '0',
+        maxResultCount: '1000',
+      },
+    }).pipe(
+      map(response => response.items
+        .filter(shift => shift.isActive !== false)
+        .map(shift => ({
+          id: shift.id,
+          displayName: shift.name || shift.nameAr || shift.nameEn || shift.id,
+        }))),
+    );
+  }
+
+  createShiftAssignment(payload: IShiftAssignmentPayload) {
+    return this.http.post<IShiftAssignment>(this.SHIFT_ASSIGNMENT_API_URL, payload);
   }
 
   getAvailableYears(): Observable<ISelectOption[]> {

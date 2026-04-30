@@ -4,94 +4,159 @@
     <app-form-container-component [title]="t('MENU.CREATE_SPECIAL_SHIFT')" (submit)="onSave()">
 
       <ng-container formFields>
-        <app-app-input-component [label]="t('SHIFT.NAME') + ' *'" [control]="getControl('shiftName')"
-          [showErrors]="submitted()" [placeholder]="'PLACEHOLDER.EnTER_SHIFTNAME'" />
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6 col-span-full">
+          <app-app-input-component [label]="t('SHIFT.NAME') + ' *'" [control]="getControl('name')"
+            [showErrors]="submitted()" [placeholder]="t('PLACEHOLDER.EnTER_SHIFTNAME')" />
 
-        <app-app-date-input-component [label]="t('SHIFT.START_DATE') + ' *'" [control]="getControl('startDate')"
-          [showErrors]="submitted()" />
+          <app-app-select-component [label]="t('SHIFT.ASSIGNED_TO') + ' *'" [control]="getControl('assignedShiftId')"
+            [showErrors]="submitted()" [placeholder]="t('PLACEHOLDER.NIGHTSHIFT')">
+            @for (shift of shiftOptions(); track shift.id) {
+              <option [value]="shift.id">{{ shift.displayName }}</option>
+            }
+          </app-app-select-component>
 
-        <app-app-date-input-component [label]="t('SHIFT.END_DATE') + ' *'" [control]="getControl('endDate')"
-          [showErrors]="submitted()" />
+          <app-app-date-input-component [label]="t('SHIFT.START_DATE') + ' *'" [control]="getControl('startDate')"
+            [showErrors]="submitted()" />
 
-        <app-app-select-component [label]="t('SHIFT.ASSIGNED_TO') + ' *'" [control]="getControl('assignedShiftId')"
-          [showErrors]="submitted()" [placeholder]="'PLACEHOLDER.NIGHTSHIFT'">
-          <option value="1">نهاري</option>
-        </app-app-select-component>
+          <app-app-date-input-component [label]="t('SHIFT.END_DATE') + ' *'" [control]="getControl('endDate')"
+            [showErrors]="submitted()" />
+
+          <app-app-select-component [label]="t('SHIFT.SHIFT_TYPE') + ' *'" [control]="getControl('priority')"
+            [showErrors]="submitted()">
+            <option [value]="100">{{ t('SHIFT.PRIMARY') }}</option>
+            <option [value]="0">{{ t('SHIFT.SECONDARY') }}</option>
+          </app-app-select-component>
+        </div>
 
         <div class="col-span-full h-[1px] bg-black/10 my-2"></div>
 
-        <div class="col-span-1 flex flex-col gap-2">
-          <label class="text-base font-medium text-black">{{ t('LABEL.STATE') }} *</label>
-          <div class="flex items-center gap-6 h-[44px]">
-            <label class="flex items-center gap-2 cursor-pointer">
-              <input type="radio" value="active" [formControl]="getControl('status')" class="accent-primary">
-              <span class="text-sm">{{ t('COMMON.ACTIVE') }}</span>
-            </label>
-            <label class="flex items-center gap-2 cursor-pointer">
-              <input type="radio" value="inactive" [formControl]="getControl('status')" class="accent-primary">
-              <span class="text-sm">{{ t('COMMON.INACTIVE') }}</span>
-            </label>
-          </div>
-        </div>
+        <section class="col-span-full grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+          <div class="col-span-full flex flex-col gap-3">
+            <label class="text-base font-medium text-black">{{ t('SHIFT.ASSIGNMENT_METHOD') }} *</label>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <label class="flex h-12 items-center gap-3 rounded-lg border px-4 cursor-pointer"
+                [class]="isRuleSelection() ? 'border-primary bg-primary/5' : 'border-black/10'">
+                <input type="radio" value="rules" [formControl]="getControl('assignmentMethod')"
+                  class="accent-primary w-4 h-4">
+                <span class="text-sm font-medium">{{ t('SHIFT.RULES') }}</span>
+              </label>
 
-        <div class="col-span-1 flex flex-col gap-2">
-          <label class="text-base font-medium text-black">{{ t('SHIFT.ASSIGNMENT_METHOD') }} *</label>
-          <div class="flex items-center gap-6 h-[44px]">
-            <label class="flex items-center gap-2 cursor-pointer">
-              <input type="radio" value="auto" [formControl]="getControl('assignmentMethod')"
-                class="accent-primary w-4 h-4">
-              <span class="text-sm">{{ t('SHIFT.RULES') }}</span>
-            </label>
-            <label class="flex items-center gap-2 cursor-pointer">
-              <input type="radio" value="manual" [formControl]="getControl('assignmentMethod')"
-                class="accent-primary w-4 h-4">
-              <span class="text-sm">{{ t('SHIFT.MANUAL') }}</span>
-            </label>
-          </div>
-        </div>
-
-
-        <app-app-select-component [label]="t('LABEL.DEPARTMENT_NAME') + ' *'" [control]="getControl('departmentId')"
-          [showErrors]="submitted()" [placeholder]="'PLACEHOLDER.PROGRAMMING'">
-          <option value="1">حسابات</option>
-        </app-app-select-component>
-
-        <app-app-select-component [label]="t('LABEL.DESIGNATION_NAME') + ' *'" [control]="getControl('jobTitleId')"
-          [showErrors]="submitted()" [placeholder]="'PLACEHOLDER.JOB_TITLE'" ]>
-          <option value="1">مهندس شبكات</option>
-        </app-app-select-component>
-
-        <div class="col-span-full flex flex-col gap-3">
-          <label class="text-base font-medium text-black">{{ t('SHIFT.EXCLUDED_EMPLOYEES') }} *</label>
-
-          <div class="relative w-full">
-            <input type="text" placeholder="" [formControl]="getControl('excludedEmployeeIds')"
-              class="peer w-full h-[41px] rounded-xl border border-[#E0E0E0] outline-none text-center text-sm focus:border-primary" />
-            <div
-              class="absolute inset-0 flex items-center justify-center gap-2 pointer-events-none transition-opacity peer-focus:opacity-0 peer-[:not(:placeholder-shown)]:opacity-0">
-              <span class="text-sm text-black flex items-center gap-2">
-                <ng-icon name="lucideSearch" class="text-[18px]" />
-                {{ t('PLACEHOLDER.SEARCH_EMPLOYEE') }}
-              </span>
+              <label class="flex h-12 items-center gap-3 rounded-lg border px-4 cursor-pointer"
+                [class]="isManualSelection() ? 'border-primary bg-primary/5' : 'border-black/10'">
+                <input type="radio" value="manual" [formControl]="getControl('assignmentMethod')"
+                  class="accent-primary w-4 h-4">
+                <span class="text-sm font-medium">{{ t('SHIFT.MANUAL') }}</span>
+              </label>
             </div>
-
           </div>
 
-          <div class="flex flex-wrap gap-4 mt-2">
-            @for (emp of selectedEmployees(); track emp.id) {
-            <div class="flex items-center gap-2 bg-[#EDEDED] px-2.5 py-1 rounded-md">
-              <button (click)="removeEmployee(emp.id)"><ng-icon name="lucideX" size="14" /></button>
-              <span class="text-sm text-black">{{ emp.name }}</span>
+          @if (isRuleSelection()) {
+            <app-app-select-component [label]="t('LABEL.DEPARTMENT_NAME')" [control]="getControl('departmentId')"
+              [showErrors]="submitted()">
+              <option value="">{{ t('SHIFT.ALL_DEPARTMENTS') }}</option>
+              @for (department of departmentOptions(); track department.id) {
+                <option [value]="department.id">{{ department.displayName }}</option>
+              }
+            </app-app-select-component>
+
+            <app-app-select-component [label]="t('LABEL.DESIGNATION_NAME')" [control]="getControl('designationId')"
+              [showErrors]="submitted()">
+              <option value="">{{ t('SHIFT.ALL_DESIGNATIONS') }}</option>
+              @for (designation of designationOptions(); track designation.id) {
+                <option [value]="designation.id">{{ designation.displayName }}</option>
+              }
+            </app-app-select-component>
+
+            <app-app-select-component [label]="t('SHIFT.CURRENT_SHIFT')" [control]="getControl('currentShiftId')"
+              [showErrors]="submitted()">
+              <option value="">{{ t('SHIFT.ALL_SHIFTS') }}</option>
+              @for (shift of shiftOptions(); track shift.id) {
+                <option [value]="shift.id">{{ shift.displayName }}</option>
+              }
+            </app-app-select-component>
+
+            <div class="col-span-full flex flex-col gap-3">
+              <label class="text-base font-medium text-black">{{ t('SHIFT.EXCLUDED_EMPLOYEES') }}</label>
+
+              <div class="relative w-full">
+                <input type="text" [placeholder]="t('PLACEHOLDER.SEARCH_EMPLOYEE')"
+                  [formControl]="excludedEmployeeSearchControl"
+                  class="w-full h-[41px] rounded-xl border border-[#E0E0E0] outline-none text-center text-sm focus:border-primary" />
+                <ng-icon name="lucideSearch" class="absolute top-1/2 start-4 -translate-y-1/2 text-[18px] text-black/60" />
+
+                @if (excludedEmployeeSearchResults().length) {
+                  <div class="absolute z-20 mt-2 w-full rounded-lg border border-black/10 bg-white shadow-soft overflow-hidden">
+                    @for (employee of excludedEmployeeSearchResults(); track employee.id) {
+                      <button type="button" (click)="addExcludedEmployee(employee.id)"
+                        class="flex w-full items-center justify-between px-4 py-3 text-sm hover:bg-primary/5">
+                        <span>{{ employee.displayName }}</span>
+                        <span class="text-xs text-black/50">{{ employee.staffCode }}</span>
+                      </button>
+                    }
+                  </div>
+                }
+              </div>
+
+              <div class="flex flex-wrap gap-3 mt-1">
+                @for (emp of excludedEmployees(); track emp.id) {
+                  <div class="flex items-center gap-2 bg-[#EDEDED] px-2.5 py-1 rounded-md">
+                    <button type="button" (click)="removeExcludedEmployee(emp.id)">
+                      <ng-icon name="lucideX" size="14" />
+                    </button>
+                    <span class="text-sm text-black">{{ emp.displayName }}</span>
+                  </div>
+                }
+              </div>
             </div>
-            }
-          </div>
-        </div>
+          }
+
+          @if (isManualSelection()) {
+            <div class="col-span-full flex flex-col gap-3">
+              <label class="text-base font-medium text-black">{{ t('SHIFT.SELECTED_EMPLOYEES') }} *</label>
+
+              <div class="relative w-full">
+                <input type="text" [placeholder]="t('PLACEHOLDER.SEARCH_EMPLOYEE')"
+                  [formControl]="employeeSearchControl"
+                  class="w-full h-[41px] rounded-xl border outline-none text-center text-sm focus:border-primary"
+                  [class.border-red-500]="employeeSelectionError()"
+                  [class.border-[#E0E0E0]]="!employeeSelectionError()" />
+                <ng-icon name="lucideSearch" class="absolute top-1/2 start-4 -translate-y-1/2 text-[18px] text-black/60" />
+
+                @if (employeeSearchResults().length) {
+                  <div class="absolute z-20 mt-2 w-full rounded-lg border border-black/10 bg-white shadow-soft overflow-hidden">
+                    @for (employee of employeeSearchResults(); track employee.id) {
+                      <button type="button" (click)="addEmployee(employee.id)"
+                        class="flex w-full items-center justify-between px-4 py-3 text-sm hover:bg-primary/5">
+                        <span>{{ employee.displayName }}</span>
+                        <span class="text-xs text-black/50">{{ employee.staffCode }}</span>
+                      </button>
+                    }
+                  </div>
+                }
+              </div>
+
+              @if (employeeSelectionError()) {
+                <p class="text-sm text-red-500">{{ t('AUTH.REQUIRED_FIELD') }}</p>
+              }
+
+              <div class="flex flex-wrap gap-3 mt-1">
+                @for (emp of selectedEmployees(); track emp.id) {
+                  <div class="flex items-center gap-2 bg-[#EDEDED] px-2.5 py-1 rounded-md">
+                    <button type="button" (click)="removeEmployee(emp.id)">
+                      <ng-icon name="lucideX" size="14" />
+                    </button>
+                    <span class="text-sm text-black">{{ emp.displayName }}</span>
+                  </div>
+                }
+              </div>
+            </div>
+          }
+        </section>
       </ng-container>
 
       <ng-container formActions>
         <app-form-cancel-button-component (click)="onCancel()" />
-
-        <app-form-save-button-component [isLoading]="saveResource.isLoading()" [label]="'COMMON.SAVE'" type="submit" />
+        <app-form-save-button-component [isLoading]="isSaving()" [label]="'COMMON.SAVE'" type="submit" />
       </ng-container>
 
     </app-form-container-component>
