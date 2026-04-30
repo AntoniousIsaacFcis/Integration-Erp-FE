@@ -80,6 +80,7 @@ export interface DayConfig {
   label: string;
   isWorkDay: boolean;
   calculateOnHoliday: boolean;
+  lateToleranceMinutes: number | null;
 }
 
 export interface IShift {
@@ -109,6 +110,7 @@ export interface IShiftDay {
   calculateAttendanceOnOffDay?: boolean;
   onDutyTimeOverride?: string | null;
   offDutyTimeOverride?: string | null;
+  lateToleranceMinutes?: number | null;
 }
 
 export interface IPermission {
@@ -157,13 +159,26 @@ export type IUpdateAttendancePayload = Omit<IEditAttendanceDay, 'employeeName'>;
 
 export interface IShiftPayload {
   name: string;
-  type: 'daily' | 'weekly';
-  workDays: DayConfig[];
-  workStart: string;
-  workEnd: string;
-  checkInStart: string;
-  checkInEnd: string;
-  gracePeriod?: number;
+  type: number;
+  isActive: boolean;
+  onDutyTime: string;
+  offDutyTime: string;
+  signInStartTime: string;
+  signInEndTime: string;
+  signOutStartTime: string;
+  signOutEndTime: string;
+  lateToleranceMinutes: number;
+  lateStartRule: number;
+  days: IShiftDayInput[];
+}
+
+export interface IShiftDayInput {
+  dayOfWeek: number;
+  isWorkDay: boolean;
+  calculateAttendanceOnOffDay: boolean;
+  onDutyTimeOverride: string | null;
+  offDutyTimeOverride: string | null;
+  lateToleranceMinutes: number | null;
 }
 
 //for view page

@@ -11,12 +11,18 @@
               [placeholder]="t('PLACEHOLDER.GENERAL_MANAGER')" [showErrors]="submitted()" />
 
             <app-app-select-component [label]="t('SHIFT.SHIFT_TYPE')+ ' *'" [control]="shiftForm.controls.type"
-              [placeholder]="t('PLACEHOLDER.NIGHT')" [showErrors]="submitted()"/>
+              [placeholder]="t('PLACEHOLDER.NIGHT')" [showErrors]="submitted()">
+              @for (option of shiftTypeOptions; track option.value) {
+              <option [value]="option.value">{{ t(option.label) }}</option>
+              }
+            </app-app-select-component>
           </div>
 
           <section class="col-span-full">
             <h3 class="text-base font-medium mb-4 text-black ">{{ t('SHIFT.SELECT_WORK_DAYS') }} *</h3>
-            <app-work-days-grid-component [control]="shiftForm.controls.workDays" />
+            <app-work-days-grid-component
+              [control]="shiftForm.controls.workDays"
+              [allowLateToleranceOverrides]="isFlexibleShift()" />
           </section>
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6 col-span-full mt-6">
@@ -33,6 +39,10 @@
             <app-time-input-component [label]="t('SHIFT.CHECKOUT_START')" [control]="shiftForm.controls.checkOutStart"
               [showErrors]="submitted()" />
             <app-time-input-component [label]="t('SHIFT.CHECKOUT_END')" [control]="shiftForm.controls.checkOutEnd"
+              [showErrors]="submitted()" />
+
+            <app-app-input-component [label]="t('SHIFT.LATE_TOLERANCE_MINUTES')+ ' *'"
+              [control]="shiftForm.controls.gracePeriod" type="number" [placeholder]="'15'"
               [showErrors]="submitted()" />
           </div>
         </ng-container>

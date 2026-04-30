@@ -5,6 +5,9 @@
             <th class="p-4 text-base font-normal text-black">{{t('SHIFT.DAY')}}</th>
             <th class="ps-20 text-base font-normal text-black">{{t('SHIFT.WORK_DAY')}}</th>
             <th class="ps-17 text-base font-normal text-black">{{t('SHIFT.CALCULTING_ATTENDACE_IN_HOLIDAY')}}</th>
+            @if (allowLateToleranceOverrides()) {
+            <th class="ps-8 text-base font-normal text-black">{{t('SHIFT.LATE_TOLERANCE_MINUTES')}}</th>
+            }
           </tr>
         </thead>
         <tbody>
@@ -23,6 +26,16 @@
                        (change)="toggle(i, 'calculateOnHoliday')"
                        class="w-5 h-5 rounded-[6px] border-black/10 text-primary focus:ring-primary/20 cursor-pointer">
               </td>
+              @if (allowLateToleranceOverrides()) {
+              <td class="ps-8 py-1">
+                <input type="number"
+                       min="0"
+                       [value]="day.lateToleranceMinutes ?? ''"
+                       (input)="updateLateTolerance(i, $any($event.target).value)"
+                       class="w-24 h-9 rounded-md border border-black/10 px-3 text-sm text-black outline-none focus:border-primary/60"
+                       [placeholder]="t('COMMON.DEFAULT')">
+              </td>
+              }
             </tr>
           }
         </tbody>

@@ -557,11 +557,16 @@
     "WORK_END": "وقت نهاية العمل",
     "CHECKIN_START": "بداية وقت تسجيل الحضور",
     "CHECKIN_END": "نهاية وقت تسجيل الحضور",
+    "LATE_TOLERANCE_MINUTES": "فترة السماح للتأخير (بالدقائق)",
+    "TYPES": {
+      "STANDARD": "قياسية",
+      "FLEXIBLE": "مرنة"
+    },
     "DAY": "اليوم",
     "WORK_DAY": "يوم عمل",
     "CALCULTING_ATTENDACE_IN_HOLIDAY": "احتساب الحضور في أيام الإجازة",
-    "CHECKOUT_START": "فترة السماح للتأخير (بالدقائق) ",
-    "CHECKOUT_END": "احتساب التأخير يبدأ من",
+    "CHECKOUT_START": "بداية وقت تسجيل الانصراف",
+    "CHECKOUT_END": "نهاية وقت تسجيل الانصراف",
     "NAME": "اسم الوردية",
     "START_DATE": "تاريخ البداية",
     "ASSIGNED_TO": "تاريخ النهاية",

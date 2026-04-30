@@ -11,15 +11,16 @@ import { TranslocoModule } from '@jsverse/transloco';
 })
 export class WorkDaysGridComponent implements OnInit{
 control = input.required<FormControl>();
+allowLateToleranceOverrides = input(false);
 
 gridData = signal<DayConfig[]>([
-    { day: 'sun', label: 'الأحد', isWorkDay: false, calculateOnHoliday: false },
-    { day: 'mon', label: 'الاثنين', isWorkDay: false, calculateOnHoliday: false },
-    { day: 'tue', label: 'الثلاثاء', isWorkDay: false, calculateOnHoliday: false },
-    { day: 'wed', label: 'الأربعاء', isWorkDay: false, calculateOnHoliday: false },
-    { day: 'thu', label: 'الخميس', isWorkDay: false, calculateOnHoliday: false },
-    { day: 'fri', label: 'الجمعة', isWorkDay: false, calculateOnHoliday: false },
-    { day: 'sat', label: 'السبت', isWorkDay: false, calculateOnHoliday: false },
+    { day: 'sun', label: 'الأحد', isWorkDay: false, calculateOnHoliday: false, lateToleranceMinutes: null },
+    { day: 'mon', label: 'الاثنين', isWorkDay: false, calculateOnHoliday: false, lateToleranceMinutes: null },
+    { day: 'tue', label: 'الثلاثاء', isWorkDay: false, calculateOnHoliday: false, lateToleranceMinutes: null },
+    { day: 'wed', label: 'الأربعاء', isWorkDay: false, calculateOnHoliday: false, lateToleranceMinutes: null },
+    { day: 'thu', label: 'الخميس', isWorkDay: false, calculateOnHoliday: false, lateToleranceMinutes: null },
+    { day: 'fri', label: 'الجمعة', isWorkDay: false, calculateOnHoliday: false, lateToleranceMinutes: null },
+    { day: 'sat', label: 'السبت', isWorkDay: false, calculateOnHoliday: false, lateToleranceMinutes: null },
   ]);
 
   ngOnInit() {
@@ -31,6 +32,22 @@ gridData = signal<DayConfig[]>([
     this.gridData.update(data => {
       const newData = [...data];
       newData[index] = { ...newData[index], [field]: !newData[index][field] };
+
+      this.control().setValue(newData);
+      return newData;
+    });
+  }
+
+  updateLateTolerance(index: number, value: string) {
+    if (!this.allowLateToleranceOverrides()) {
+      return;
+    }
+
+    const numericValue = value === '' ? null : Math.max(0, Number(value));
+
+    this.gridData.update(data => {
+      const newData = [...data];
+      newData[index] = { ...newData[index], lateToleranceMinutes: Number.isFinite(numericValue) ? numericValue : null };
 
       this.control().setValue(newData);
       return newData;

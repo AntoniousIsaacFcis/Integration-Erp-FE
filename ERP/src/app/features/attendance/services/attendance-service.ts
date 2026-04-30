@@ -4,7 +4,7 @@ import { environment } from '@env/environment.development';
 import { IEmployeeLeaveOverviewApiResponse, ILeaveApplicationApiDto, ILeaveApplicationUpdatePayload, ILeaveTypeApiDto, ILeaveTypeListResponse, IVacationResponse, VacationStatus } from '@features/attendance/models/ivacation';
 import { ISelectOption } from '@shared/components/atoms/select-btn-component/select-btn-component';
 import { map, Observable, timeout } from 'rxjs';
-import { IAttendanceAvailablePeriod, IAttendanceDay, IAttendanceDayApiDto, IAttendanceDayListResponse, IAttendanceLogApiDto, IAttendanceLogListResponse, IAttendanceResponse, IEditAttendanceDay, IShift, IShiftApiListResponse, IShiftListItem, IShiftListResponse, ISpecialShiftListResponse, IUpdateAttendancePayload } from '../models/iattendance';
+import { IAttendanceAvailablePeriod, IAttendanceDay, IAttendanceDayApiDto, IAttendanceDayListResponse, IAttendanceLogApiDto, IAttendanceLogListResponse, IAttendanceResponse, ICustomShiftForm, IEditAttendanceDay, IShift, IShiftApiListResponse, IShiftListItem, IShiftListResponse, IShiftPayload, ISpecialShiftListResponse, IUpdateAttendancePayload } from '../models/iattendance';
 
 @Injectable({
   providedIn: 'root',
@@ -166,7 +166,7 @@ export class AttendanceService {
     return createdAt?.slice(0, 10) === selectedDate;
   }
 
-  createShift(shift: Partial<IShift>) {
+  createShift(shift: IShiftPayload | ICustomShiftForm) {
     return this.http.post<IShift>(this.SHIFT_API_URL, shift);
   }
 

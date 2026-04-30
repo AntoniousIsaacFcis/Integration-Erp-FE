@@ -1,20 +1,20 @@
 import { ChangeDetectionStrategy, Component, computed, effect, inject, signal } from '@angular/core';
 import { FormContainerComponent } from "@shared/components/organisms/form-container-component/form-container-component";
 import { AppInputComponent } from "@shared/components/atoms/app-input-component/app-input-component";
-import { SelectBtnComponent } from "@shared/components/atoms/select-btn-component/select-btn-component";
 import { FormSaveButtonComponent } from "@shared/components/molecules/form-save-button-component/form-save-button-component";
 import { FormCancelButtonComponent } from "@shared/components/molecules/form-cancel-button-component/form-cancel-button-component";
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AttendanceService } from '@features/attendance/services/attendance-service';
 import { NotificationService } from '@core/services/notification-service';
-import { rxResource } from '@angular/core/rxjs-interop';
-import { of } from 'rxjs';
+import { rxResource, toSignal } from '@angular/core/rxjs-interop';
+import { of, startWith } from 'rxjs';
 import { TranslocoModule } from '@jsverse/transloco';
 import { Router } from '@angular/router';
 import { AppSelectComponent } from "@shared/components/atoms/app-select-component/app-select-component";
 import { WorkDaysGridComponent } from "@features/attendance/components/work-days-grid-component/work-days-grid-component";
 import { TimeInputComponent } from "@shared/components/atoms/time-input-component/time-input-component";
 import { timeRangeValidator } from '@shared/validators/time-range.validator';
+import { DayConfig, IShiftPayload } from '@features/attendance/models/iattendance';
 
 @Component({
   selector: 'app-create-shift-component',
@@ -41,13 +41,13 @@ export class CreateShiftComponent {
   submitted = signal(false);
 
   shiftTypeOptions = [
-    { label: 'SHIFTS.TYPES.DAILY', value: 'daily' },
-    { label: 'SHIFTS.TYPES.WEEKLY', value: 'weekly' }
+    { label: 'SHIFT.TYPES.STANDARD', value: 1 },
+    { label: 'SHIFT.TYPES.FLEXIBLE', value: 2 },
   ];
 
   shiftForm = this.fb.group({
     name: ['', Validators.required],
-    type: ['', Validators.required],
+    type: [1, Validators.required],
     workDays: [[]], // Array of day objects
     workStart: ['', Validators.required],
     workEnd: ['', Validators.required],
@@ -55,7 +55,8 @@ export class CreateShiftComponent {
     checkInEnd: ['', Validators.required],
     checkOutStart: ['', Validators.required],
     checkOutEnd: ['', Validators.required],
-    gracePeriod: [10]
+    gracePeriod: [15, [Validators.required, Validators.min(0)]],
+    lateStartRule: [2, Validators.required],
   }, {
     validators: [
       timeRangeValidator('workStart', 'workEnd'),
@@ -64,7 +65,7 @@ export class CreateShiftComponent {
     ] //to ensure workStart  not befor workEnd
   });
 
-  private saveTrigger = signal<any | null>(null);
+  private saveTrigger = signal<IShiftPayload | null>(null);
 
   saveResource = rxResource({
     params: () => this.saveTrigger(),
@@ -75,6 +76,10 @@ export class CreateShiftComponent {
   });
 
   isLoading = computed(() => this.saveResource.isLoading());
+  private readonly shiftTypeValue = toSignal(
+    this.shiftForm.controls.type.valueChanges.pipe(startWith(this.shiftForm.controls.type.value)),
+  );
+  isFlexibleShift = computed(() => Number(this.shiftTypeValue()) === 2);
 
   constructor() {
     effect(() => {
@@ -89,6 +94,16 @@ export class CreateShiftComponent {
         });
         this.router.navigate(['/attendance']);
       }
+
+      if (error) {
+        this.notification.show({
+          type: 'error',
+          title: 'COMMON.MESSAGES.OPERATION_FAILED',
+          message: 'COMMON.MESSAGES.PLEASE_TRY_AGAIN',
+          isModal: false,
+          actionLabel: 'COMMON.CONFIRM',
+        });
+      }
     });
   }
 
@@ -97,7 +112,7 @@ export class CreateShiftComponent {
     this.submitted.set(true);
 
     if (this.shiftForm.valid) {
-      this.saveTrigger.set(this.shiftForm.getRawValue());
+      this.saveTrigger.set(this.toCreateShiftPayload(this.shiftForm.getRawValue()));
     } else {
       this.shiftForm.markAllAsTouched();
     }
@@ -105,5 +120,55 @@ export class CreateShiftComponent {
 
   onCancel() {
     this.router.navigate(['/attendance']);
+  }
+
+  private toCreateShiftPayload(value: ReturnType<typeof this.shiftForm.getRawValue>): IShiftPayload {
+    return {
+      name: value.name?.trim() ?? '',
+      type: Number(value.type),
+      isActive: true,
+      onDutyTime: this.toTimeSpan(value.workStart),
+      offDutyTime: this.toTimeSpan(value.workEnd),
+      signInStartTime: this.toTimeSpan(value.checkInStart),
+      signInEndTime: this.toTimeSpan(value.checkInEnd),
+      signOutStartTime: this.toTimeSpan(value.checkOutStart),
+      signOutEndTime: this.toTimeSpan(value.checkOutEnd),
+      lateToleranceMinutes: Number(value.gracePeriod ?? 0),
+      lateStartRule: Number(value.lateStartRule ?? 2),
+      days: this.toShiftDays(Array.isArray(value.workDays) ? value.workDays : []),
+    };
+  }
+
+  private toShiftDays(days: DayConfig[]) {
+    return days.map(day => ({
+      dayOfWeek: this.toBackendDayOfWeek(day.day),
+      isWorkDay: day.isWorkDay,
+      calculateAttendanceOnOffDay: day.calculateOnHoliday,
+      onDutyTimeOverride: null,
+      offDutyTimeOverride: null,
+      lateToleranceMinutes: this.isFlexibleShift() ? day.lateToleranceMinutes : null,
+    }));
+  }
+
+  private toBackendDayOfWeek(day: string) {
+    const dayMap: Record<string, number> = {
+      sun: 0,
+      mon: 1,
+      tue: 2,
+      wed: 3,
+      thu: 4,
+      fri: 5,
+      sat: 6,
+    };
+
+    return dayMap[day] ?? 0;
+  }
+
+  private toTimeSpan(value: string | null | undefined) {
+    if (!value) {
+      return '00:00:00';
+    }
+
+    return value.length === 5 ? `${value}:00` : value;
   }
 }

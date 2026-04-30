@@ -523,6 +523,13 @@
     "WORK_END": "Work End Time",
     "CHECKIN_START": "Check-in Start Time",
     "CHECKIN_END": "Check-in End Time",
+    "CHECKOUT_START": "Check-out Start Time",
+    "CHECKOUT_END": "Check-out End Time",
+    "LATE_TOLERANCE_MINUTES": "Late Tolerance (minutes)",
+    "TYPES": {
+      "STANDARD": "Standard",
+      "FLEXIBLE": "Flexible"
+    },
     "TABLE": {
       "NAME": "Shift Name",
       "TYPE": "Type",
