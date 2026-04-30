@@ -239,6 +239,7 @@ export interface IShiftAssignmentPayload {
   assignedShiftId: string;
   startDate: string;
   endDate: string;
+  isActive: boolean;
   criteriaType: 1 | 2;
   priority: number;
   departmentId: string | null;
@@ -255,6 +256,7 @@ export interface IShiftAssignment {
   assignedShiftName?: string | null;
   startDate: string;
   endDate: string;
+  isActive: boolean;
   criteriaType: 1 | 2 | number;
   priority: number;
   departmentId?: string | null;
@@ -287,13 +289,20 @@ export interface ISpecificShiftDetails extends ICustomShiftForm {
 
 export interface ISpecialShiftListItem {
   id: string;
+  name?: string;
   nameAr: string;
   nameEn: string;
+  assignedShiftName?: string | null;
   startDate: string;
   endDate: string;
-  departmentAr: string;
-  status: 'active' | 'inactive';
-  type: string;
+  criteriaType?: number;
+  priority?: number;
+  isActive?: boolean;
+  employeeCount?: number;
+  excludedEmployeeCount?: number;
+  departmentAr?: string;
+  status?: 'active' | 'inactive';
+  type?: string;
 }
 
 export interface ISpecialShiftListResponse {

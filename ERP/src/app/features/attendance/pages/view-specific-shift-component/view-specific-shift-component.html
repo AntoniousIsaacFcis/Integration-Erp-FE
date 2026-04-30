@@ -1,10 +1,13 @@
 <app-app-base-table-component [(searchTerm)]="searchTerm" [totalItems]="totalItems()" [(currentPage)]="currentPage"
-  (onAdd)="handleCreateNavigation()" [extraFilters]="specialFilters" [extraActions]="specialActions" *transloco="let t">
+  (onAdd)="handleCreateNavigation()" [extraFilters]="specialFilters" [extraActions]="specialActions"
+  searchPlaceholder="SHIFT.SPECIAL_SEARCH_PLACEHOLDER" *transloco="let t">
 
   <ng-template #specialFilters>
     <div class="flex items-center gap-3">
-      <app-date-filter-component [(selectedDate)]="fromDate" labelKey="SHIFT.START_DATE"/>
-      <app-date-filter-component [(selectedDate)]="toDate" labelKey="SHIFT.END_DATE"/>
+      <app-status-badge-component label="FILTERS.STATUS" [(selectedStatus)]="selectedStatus"
+        [options]="statusOptions" />
+      <app-date-filter-component [(selectedDate)]="fromDate" labelKey="SHIFT.START_DATE" />
+      <app-date-filter-component [(selectedDate)]="toDate" labelKey="SHIFT.END_DATE" />
     </div>
   </ng-template>
 
@@ -15,48 +18,68 @@
 
   <div class="w-full overflow-x-auto">
     @if (shiftsResource.isLoading()) {
-    <div class="flex justify-center py-20 text-gray-400">
-      {{ t('COMMON.MESSAGES.LOADING_DATA') }}
-    </div>
+      <div class="flex justify-center py-20 text-gray-400">
+        {{ t('COMMON.MESSAGES.LOADING_DATA') }}
+      </div>
     }
-        @if (shiftsResource.value()) {
-    <table class="w-full text-right font-arabic border border-[#F4F4F4]/50 rounded-xl overflow-hidden">
-      <thead class="text-sm bg-[#F4F4F4] sticky top-0 z-10">
-        <tr>
-          <th class="py-4 ps-16">{{ t('SHIFT.TABLE.NAME') }}</th>
-          <th class="py-4 px-4 text-center">{{ t('SHIFT.TABLE.TYPE') }}</th>
-          <th class="py-4 px-4 text-center">{{ t('SHIFT.START_DATE') }}</th>
-          <th class="py-4 px-4 text-center">{{ t('SHIFT.END_DATE') }}</th>
-          <th class="py-4 pe-6 text"></th>
-        </tr>
-      </thead>
-      <tbody>
-        @for (shift of specialShifts(); track shift.id) {
-        <tr class="bg-white border-b border-gray-200 hover:bg-gray-50/50 transition-all">
-          <td class="py-4 ps-16  font-medium text-sm text-black">{{ shift.displayName }}</td>
-          <td class="py-4 px-4 text-center text-sm">{{ shift.type }}</td>
-          <td class="py-4 px-4 text-center text-sm ">{{ shift.startDate | date:'dd/MM/yyyy' }}</td>
-          <td class="py-4 px-4 text-center text-sm ">{{ shift.endDate | date:'dd/MM/yyyy' }}</td>
-         <td class="py-4 pe-12">
-            <div class="flex gap-3 justify-end">
-              <button (click)="handleEdit(shift.id)"
-                class="flex size-[32px] items-center justify-center rounded-full bg-[#F4F4F4] hover:bg-gray-200 transition-colors">
-                <ng-icon name="lucidePencil" size="16px" color="black" />
-              </button>
-              <button (click)="handleDelete(shift.id)"
-                class="flex size-[32px] items-center justify-center rounded-full bg-[#F4F4F4] hover:bg-red-50 transition-colors">
-                <ng-icon name="lucideTrash2" size="16px" color="#F40552" />
-              </button>
-            </div>
-          </td>
-        </tr>
-        } @empty {
-        <tr>
-          <td colspan="6" class="py-20 text-center text-gray-400">{{ t('COMMON.NO_DATA') }}</td>
-        </tr>
-        }
-      </tbody>
-    </table>
-  }
+
+    @if (shiftsResource.error()) {
+      <div class="bg-red-50 text-red-600 p-6 rounded-xl text-center border border-red-100">
+        <p>{{ t('COMMON.MESSAGES.OPERATION_FAILED') }}</p>
+        <button (click)="shiftsResource.reload()" class="mt-3 px-4 py-2 bg-red-600 text-white rounded-lg">
+          {{ t('COMMON.MESSAGES.PLEASE_TRY_AGAIN') }}
+        </button>
+      </div>
+    }
+
+    @if (shiftsResource.value() && !specialShifts().length) {
+      <app-empty-table-placeholder-component />
+    }
+
+    @if (shiftsResource.value() && specialShifts().length) {
+      <table class="min-w-[1060px] w-full text-right font-arabic border border-[#F4F4F4]/50 rounded-xl overflow-hidden">
+        <thead class="text-sm bg-[#F4F4F4] sticky top-0 z-10">
+          <tr>
+            <th class="py-4 ps-10 text-start">{{ t('SHIFT.TABLE.NAME') }}</th>
+            <th class="py-4 px-4 text-center">{{ t('SHIFT.RELATED_SHIFT') }}</th>
+            <th class="py-4 px-4 text-center">{{ t('SHIFT.START_DATE') }}</th>
+            <th class="py-4 px-4 text-center">{{ t('SHIFT.END_DATE') }}</th>
+            <th class="py-4 px-4 text-center">{{ t('SHIFT.SHIFT_TYPE') }}</th>
+            <th class="py-4 px-4 text-center">{{ t('SHIFT.TABLE.STATUS') }}</th>
+            <th class="py-4 px-4 text-center">{{ t('SHIFT.ASSIGNMENT_METHOD') }}</th>
+            <th class="py-4 pe-6 text"></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (shift of specialShifts(); track shift.id) {
+            <tr class="bg-white border-b border-gray-200 hover:bg-gray-50/50 transition-all">
+              <td class="py-4 ps-10 text-start font-medium text-sm text-black">{{ shift.displayName }}</td>
+              <td class="py-4 px-4 text-center text-sm">{{ shift.relatedShift }}</td>
+              <td class="py-4 px-4 text-center text-sm">{{ shift.startDate | date:'dd/MM/yyyy' }}</td>
+              <td class="py-4 px-4 text-center text-sm">{{ shift.endDate | date:'dd/MM/yyyy' }}</td>
+              <td class="py-4 px-4 text-center text-sm">{{ t(shift.shiftTypeKey) }}</td>
+              <td class="py-4 px-4">
+                <div class="flex justify-center">
+                  <app-table-status-badge-component [status]="shift.status" />
+                </div>
+              </td>
+              <td class="py-4 px-4 text-center text-sm">{{ t(shift.assignmentMethodKey) }}</td>
+              <td class="py-4 pe-12">
+                <div class="flex gap-3 justify-end">
+                  <button (click)="$event.stopPropagation(); handleEdit(shift.id)"
+                    class="flex size-[32px] items-center justify-center rounded-full bg-[#0000001A] hover:bg-[#00000033] transition-colors">
+                    <ng-icon name="lucidePencil" size="16px" color="black" />
+                  </button>
+                  <button (click)="$event.stopPropagation(); handleDelete(shift.id)"
+                    class="flex size-[32px] items-center justify-center rounded-full bg-[#0000001A] hover:bg-[#00000033] transition-colors">
+                    <ng-icon name="lucideTrash2" size="16px" color="#F40552" />
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
   </div>
 </app-app-base-table-component>

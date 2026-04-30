@@ -4,7 +4,7 @@ import { environment } from '@env/environment.development';
 import { IEmployeeLeaveOverviewApiResponse, ILeaveApplicationApiDto, ILeaveApplicationUpdatePayload, ILeaveTypeApiDto, ILeaveTypeListResponse, IVacationResponse, VacationStatus } from '@features/attendance/models/ivacation';
 import { ISelectOption } from '@shared/components/atoms/select-btn-component/select-btn-component';
 import { map, Observable, timeout } from 'rxjs';
-import { IAttendanceAvailablePeriod, IAttendanceDay, IAttendanceDayApiDto, IAttendanceDayListResponse, IAttendanceLogApiDto, IAttendanceLogListResponse, IAttendanceResponse, ICustomShiftForm, IEditAttendanceDay, IShift, IShiftApiListResponse, IShiftAssignment, IShiftAssignmentPayload, IShiftListItem, IShiftListResponse, IShiftOption, IShiftPayload, ISpecialShiftListResponse, IUpdateAttendancePayload } from '../models/iattendance';
+import { IAttendanceAvailablePeriod, IAttendanceDay, IAttendanceDayApiDto, IAttendanceDayListResponse, IAttendanceLogApiDto, IAttendanceLogListResponse, IAttendanceResponse, ICustomShiftForm, IEditAttendanceDay, IShift, IShiftApiListResponse, IShiftAssignment, IShiftAssignmentApiListResponse, IShiftAssignmentPayload, IShiftListItem, IShiftListResponse, IShiftOption, IShiftPayload, ISpecialShiftListResponse, IUpdateAttendancePayload } from '../models/iattendance';
 
 @Injectable({
   providedIn: 'root',
@@ -266,6 +266,10 @@ export class AttendanceService {
     return this.http.post<IShiftAssignment>(this.SHIFT_ASSIGNMENT_API_URL, payload);
   }
 
+  deleteShiftAssignment(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.SHIFT_ASSIGNMENT_API_URL}/${id}`);
+  }
+
   getAvailableYears(): Observable<ISelectOption[]> {
     return this.http.get<ISelectOption[]>(`${this.API_URL}/attendance/available-years`);
   }
@@ -357,18 +361,52 @@ export class AttendanceService {
     page: number;
     limit?: number;
     search?: string;
+    status?: string;
     fromDate?: string;
     toDate?: string;
   }): Observable<ISpecialShiftListResponse> {
-    return this.http.get<ISpecialShiftListResponse>(`${this.API_URL}/special-shifts`, {
+    const limit = params.limit || 10;
+    const normalizedSearch = params.search?.trim();
+
+    return this.http.get<IShiftAssignmentApiListResponse>(this.SHIFT_ASSIGNMENT_API_URL, {
       params: {
-        page: params.page.toString(),
-        limit: (params.limit || 10).toString(),
-        ...(params.search && { search: params.search }),
-        ...(params.fromDate && { fromDate: params.fromDate }),
-        ...(params.toDate && { toDate: params.toDate })
+        skipCount: ((params.page - 1) * limit).toString(),
+        maxResultCount: limit.toString(),
+        ...(normalizedSearch && {
+          filter: normalizedSearch,
+          search: normalizedSearch,
+          searchTerm: normalizedSearch,
+          q: normalizedSearch,
+        }),
+        ...(params.fromDate && { startDate: params.fromDate }),
+        ...(params.toDate && { endDate: params.toDate }),
+        ...(params.status && {
+          status: params.status,
+          isActive: String(params.status === 'active'),
+          IsActive: String(params.status === 'active'),
+        }),
       }
-    });
+    }).pipe(
+      map(response => ({
+        data: (response.items ?? []).map(item => ({
+          id: item.id,
+          name: item.name,
+          nameAr: item.name,
+          nameEn: item.name,
+          assignedShiftName: item.assignedShiftName,
+          startDate: item.startDate,
+          endDate: item.endDate,
+          isActive: item.isActive !== false,
+          criteriaType: Number(item.criteriaType),
+          priority: Number(item.priority),
+          employeeCount: item.employeeIds?.length ?? 0,
+          excludedEmployeeCount: item.excludedEmployeeIds?.length ?? 0,
+        })),
+        total: response.totalCount,
+        page: params.page,
+        limit,
+      })),
+    );
   }
 
   getAttendanceById(id: string): Observable<IEditAttendanceDay> {

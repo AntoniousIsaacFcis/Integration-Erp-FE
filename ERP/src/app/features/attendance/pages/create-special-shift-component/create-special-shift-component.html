@@ -26,6 +26,12 @@
             <option [value]="100">{{ t('SHIFT.PRIMARY') }}</option>
             <option [value]="0">{{ t('SHIFT.SECONDARY') }}</option>
           </app-app-select-component>
+
+          <app-app-radio-component [label]="t('COMMON.STATUS')" [required]="true"
+            [control]="getControl('status')" [options]="[
+              { label: 'COMMON.ACTIVE', value: 'active' },
+              { label: 'COMMON.INACTIVE', value: 'inactive' }
+            ]" />
         </div>
 
         <div class="col-span-full h-[1px] bg-black/10 my-2"></div>
@@ -156,7 +162,7 @@
 
       <ng-container formActions>
         <app-form-cancel-button-component (click)="onCancel()" />
-        <app-form-save-button-component [isLoading]="isSaving()" [label]="'COMMON.SAVE'" type="submit" />
+        <app-form-save-button-component [isLoading]="isSaving()" [isDisabled]="isSaving()" [label]="'COMMON.SAVE'" type="submit" />
       </ng-container>
 
     </app-form-container-component>

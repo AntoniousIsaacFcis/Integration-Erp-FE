@@ -13,6 +13,7 @@ import { NgIcon, provideIcons } from '@ng-icons/core';
 import { lucideSearch, lucideX } from '@ng-icons/lucide';
 import { AppDateInputComponent } from '@shared/components/atoms/app-date-input-component/app-date-input-component';
 import { AppInputComponent } from '@shared/components/atoms/app-input-component/app-input-component';
+import { AppRadioComponent } from '@shared/components/atoms/app-radio-component/app-radio-component';
 import { AppSelectComponent } from '@shared/components/atoms/app-select-component/app-select-component';
 import { FormCancelButtonComponent } from '@shared/components/molecules/form-cancel-button-component/form-cancel-button-component';
 import { FormSaveButtonComponent } from '@shared/components/molecules/form-save-button-component/form-save-button-component';
@@ -28,6 +29,7 @@ type AssignmentMethod = 'rules' | 'manual';
   imports: [
     FormContainerComponent,
     AppInputComponent,
+    AppRadioComponent,
     AppDateInputComponent,
     AppSelectComponent,
     FormSaveButtonComponent,
@@ -61,6 +63,7 @@ export class CreateSpecialShiftComponent {
     startDate: ['', [Validators.required]],
     endDate: ['', [Validators.required]],
     assignedShiftId: ['', [Validators.required]],
+    status: ['active' as 'active' | 'inactive', [Validators.required]],
     priority: [100, [Validators.required]],
     assignmentMethod: ['rules' as AssignmentMethod, [Validators.required]],
     departmentId: [''],
@@ -118,6 +121,10 @@ export class CreateSpecialShiftComponent {
     this.filterStaff(this.excludedEmployeeSearchValue(), this.excludedEmployeeIds()));
 
   onSave() {
+    if (this.isSaving()) {
+      return;
+    }
+
     this.submitted.set(true);
     this.employeeSelectionError.set(this.isManualSelection() && this.selectedEmployeeIds().length === 0);
 
@@ -186,6 +193,7 @@ export class CreateSpecialShiftComponent {
       assignedShiftId: value.assignedShiftId,
       startDate: this.toDateTime(value.startDate),
       endDate: this.toDateTime(value.endDate),
+      isActive: value.status === 'active',
       criteriaType,
       priority: Number(value.priority),
       departmentId: criteriaType === 1 ? this.toNullableId(value.departmentId) : null,
