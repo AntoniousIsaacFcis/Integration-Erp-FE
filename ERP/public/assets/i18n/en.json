@@ -522,7 +522,16 @@
     "WORK_START": "Work Start Time",
     "WORK_END": "Work End Time",
     "CHECKIN_START": "Check-in Start Time",
-    "CHECKIN_END": "Check-in End Time"
+    "CHECKIN_END": "Check-in End Time",
+    "TABLE": {
+      "NAME": "Shift Name",
+      "TYPE": "Type",
+      "DAYS_COUNT": "Days Count",
+      "EMPLOYEE_COUNT": "Employee Count",
+      "HOLIDAY_DAYS": "Holiday Days",
+      "STATUS": "Status",
+      "CREATED_AT": "Creation Date"
+    }
   },
   "ATTENDANCE": {
     "TITLE": "Attendance",

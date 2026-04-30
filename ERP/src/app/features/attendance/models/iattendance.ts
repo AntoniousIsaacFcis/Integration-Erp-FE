@@ -84,12 +84,31 @@ export interface DayConfig {
 
 export interface IShift {
   id: string;
-  nameAr: string;
-  nameEn: string;
-  startTime: string;
-  endTime: string;
-  workDays: string[]; // ['sunday', 'monday']
+  name: string;
+  nameAr?: string;
+  nameEn?: string;
+  type: number | string;
+  isActive: boolean;
+  onDutyTime?: string;
+  offDutyTime?: string;
+  signInStartTime?: string;
+  signInEndTime?: string;
+  signOutStartTime?: string;
+  signOutEndTime?: string;
+  lateToleranceMinutes?: number;
+  lateStartRule?: number;
+  days?: IShiftDay[];
+  creationTime?: string;
   status: 'active' | 'inactive';
+}
+
+export interface IShiftDay {
+  id?: string;
+  dayOfWeek: number;
+  isWorkDay: boolean;
+  calculateAttendanceOnOffDay?: boolean;
+  onDutyTimeOverride?: string | null;
+  offDutyTimeOverride?: string | null;
 }
 
 export interface IPermission {
@@ -150,10 +169,15 @@ export interface IShiftPayload {
 //for view page
 export interface IShiftListItem {
   id: string;
+  name?: string;
   nameAr: string;
   nameEn: string;
-  type: string; // مثل 'ليلي' أو 'صباحي'
+  type: string;
+  isActive?: boolean;
+  days?: IShiftDay[];
   daysCount: number;
+  employeeCount?: number;
+  holidayDaysCount?: number;
   status: 'active' | 'inactive';
   createdAt: string;
 }
@@ -162,6 +186,11 @@ export interface IShiftListResponse {
   total: number;
   page: number;
   limit: number;
+}
+
+export interface IShiftApiListResponse {
+  items: IShift[];
+  totalCount: number;
 }
 
 export interface ICustomShiftForm {

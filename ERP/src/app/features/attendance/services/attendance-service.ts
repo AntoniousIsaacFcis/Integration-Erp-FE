@@ -4,17 +4,15 @@ import { environment } from '@env/environment.development';
 import { IEmployeeLeaveOverviewApiResponse, ILeaveApplicationApiDto, ILeaveApplicationUpdatePayload, ILeaveTypeApiDto, ILeaveTypeListResponse, IVacationResponse, VacationStatus } from '@features/attendance/models/ivacation';
 import { ISelectOption } from '@shared/components/atoms/select-btn-component/select-btn-component';
 import { map, Observable, timeout } from 'rxjs';
-import { IAttendanceAvailablePeriod, IAttendanceDay, IAttendanceDayApiDto, IAttendanceDayListResponse, IAttendanceLogApiDto, IAttendanceLogListResponse, IAttendanceResponse, IEditAttendanceDay, IShift, IShiftListResponse, ISpecialShiftListResponse, IUpdateAttendancePayload } from '../models/iattendance';
+import { IAttendanceAvailablePeriod, IAttendanceDay, IAttendanceDayApiDto, IAttendanceDayListResponse, IAttendanceLogApiDto, IAttendanceLogListResponse, IAttendanceResponse, IEditAttendanceDay, IShift, IShiftApiListResponse, IShiftListItem, IShiftListResponse, ISpecialShiftListResponse, IUpdateAttendancePayload } from '../models/iattendance';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AttendanceService {
-  getShiftById(params: any): Observable<unknown> {
-    throw new Error('Method not implemented.');
-  }
   private http = inject(HttpClient);
   private readonly API_URL = `${environment.baseUrl}/api`;
+  private readonly SHIFT_API_URL = `${this.API_URL}/attendance/shift`;
 
   getAttendance(empId: string, year: string, month: string): Observable<IAttendanceDay[]> {
     const yearNumber = Number(year);
@@ -68,15 +66,112 @@ export class AttendanceService {
     status?: string;
     createdAt?: string;
   }): Observable<IShiftListResponse> {
-    return this.http.get<IShiftListResponse>(`${this.API_URL}/shifts`, {
+    const normalizedSearch = params.search?.trim();
+
+    return this.http.get<IShiftApiListResponse | IShiftListResponse>(this.SHIFT_API_URL, {
       params: {
-        page: params.page.toString(),
-        limit: params.limit.toString(),
-        ...(params.search && { search: params.search }),
-        ...(params.status && { status: params.status }),
-        ...(params.createdAt && { createdAt: params.createdAt })
+        skipCount: ((params.page - 1) * params.limit).toString(),
+        maxResultCount: params.limit.toString(),
+        ...(normalizedSearch && {
+          filter: normalizedSearch,
+          search: normalizedSearch,
+          searchTerm: normalizedSearch,
+          q: normalizedSearch
+        }),
+        ...(params.status && {
+          status: params.status,
+          isActive: params.status === 'active'
+        }),
+        ...(params.createdAt && { creationTime: params.createdAt, createdAt: params.createdAt })
       }
-    });
+    }).pipe(
+      map(response => this.toShiftListResponse(response, params.page, params.limit, params.createdAt))
+    );
+  }
+
+  getShiftById(id: string): Observable<IShift> {
+    return this.http.get<IShift>(`${this.SHIFT_API_URL}/${id}`);
+  }
+
+  deleteShift(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.SHIFT_API_URL}/${id}`);
+  }
+
+  private toShiftListResponse(
+    response: IShiftApiListResponse | IShiftListResponse,
+    page: number,
+    limit: number,
+    createdAt?: string,
+  ): IShiftListResponse {
+    if ('data' in response) {
+      return {
+        ...response,
+        data: response.data
+          .filter(shift => this.matchesCreationDate(shift.createdAt, createdAt))
+          .map(shift => this.normalizeShiftListItem(shift)),
+      };
+    }
+
+    const data = response.items
+      .map(shift => this.normalizeShiftListItem(shift))
+      .filter(shift => this.matchesCreationDate(shift.createdAt, createdAt));
+
+    return {
+      data,
+      total: response.totalCount,
+      page,
+      limit,
+    };
+  }
+
+  private normalizeShiftListItem(shift: IShift | IShiftListItem): IShiftListItem {
+    const record = shift as unknown as Record<string, unknown>;
+    const days = shift.days ?? [];
+    const workDaysCount = days.filter(day => day.isWorkDay).length;
+    const daysCount = 'daysCount' in shift && typeof shift.daysCount === 'number'
+      ? shift.daysCount
+      : workDaysCount;
+    const holidayDaysCount = 'holidayDaysCount' in shift && typeof shift.holidayDaysCount === 'number'
+      ? shift.holidayDaysCount
+      : Math.max(days.length ? days.length - workDaysCount : 0, 0);
+    const employeeCount = this.getNumericField(shift, 'employeeCount', 'employeesCount', 'assignedEmployeesCount');
+    const isActive = typeof shift.isActive === 'boolean' ? shift.isActive : shift.status === 'active';
+
+    return {
+      ...shift,
+      name: shift.name || shift.nameAr || shift.nameEn || '',
+      nameAr: shift.nameAr || shift.name || shift.nameEn || '',
+      nameEn: shift.nameEn || shift.name || shift.nameAr || '',
+      type: String(shift.type ?? ''),
+      daysCount,
+      employeeCount,
+      holidayDaysCount,
+      status: isActive ? 'active' : 'inactive',
+      createdAt: String(record['createdAt'] ?? record['creationTime'] ?? ''),
+    };
+  }
+
+  private getNumericField(source: unknown, ...keys: string[]) {
+    const record = source as Record<string, unknown>;
+    const value = keys.map(key => record[key]).find(item => typeof item === 'number');
+
+    return typeof value === 'number' ? value : 0;
+  }
+
+  private matchesCreationDate(createdAt: string, selectedDate?: string) {
+    if (!selectedDate) {
+      return true;
+    }
+
+    return createdAt?.slice(0, 10) === selectedDate;
+  }
+
+  createShift(shift: Partial<IShift>) {
+    return this.http.post<IShift>(this.SHIFT_API_URL, shift);
+  }
+
+  updateShift(id: string, shift: Partial<IShift>) {
+    return this.http.put<IShift>(`${this.SHIFT_API_URL}/${id}`, shift);
   }
 
   getAvailableYears(): Observable<ISelectOption[]> {
@@ -104,10 +199,6 @@ export class AttendanceService {
     }).pipe(
       map(response => response.items?.[0] ?? null),
     );
-  }
-
-  createShift(shift: Partial<IShift>) {
-    return this.http.post<IShift>(`${this.API_URL}/shifts`, shift);
   }
 
   getVacations(params: { employeeId: string; year: string; month?: string; page: number; limit: number }): Observable<IVacationResponse> {

@@ -574,6 +574,8 @@
       "NAME": "اسم الوردية",
       "TYPE": "النوع",
       "DAYS_COUNT": "عدد الايام",
+      "EMPLOYEE_COUNT": "عدد الموظفين",
+      "HOLIDAY_DAYS": "ايام الاجازة",
       "STATUS": "الحالة",
       "CREATED_AT": "تاريخ الانشاء"
     }
