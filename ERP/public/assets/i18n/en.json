@@ -120,7 +120,18 @@
     "SALARY_DATA": "Salary Data",
     "EMPLOYEE_DETAILS": "Employee Details",
     "VIEW_TYPES": "View Employment Types",
-    "CREATE_TYPE": "Add Employment Type"
+    "CREATE_TYPE": "Add Employment Type",
+    "ACEESS_DENIED": "Access Denied",
+    "NOT_FOUND": "Page Not Found",
+    "CREATE_SPECIAL_SHIFT": "Add Specific Shift",
+    "VIEW_SPECIAL_SHIFTS": "Specific Shifts",
+    "EDIT_SPECIAL_SHIFT": "Edit Specific Shift",
+    "EDIT_ATTENDANCE_DAY": "Edit Attendance Day",
+    "VIEW_ATTENDANCE_DAYS": "Attendance Days",
+    "VIEW_ATTENDANCE_LOG_DETAILS": "Attendance Log Details",
+    "ADD_ATTENDANCE_PERMISSION": "Add Attendance Permission",
+    "VIEW_PERMISSIONS": "Attendance Permissions",
+    "CORE_HR": "Employees"
   },
   "BUTTON": {
     "ADD_LEVEL": "Add Level",

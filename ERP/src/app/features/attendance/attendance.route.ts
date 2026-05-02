@@ -38,6 +38,11 @@ export const ATTENDANCE_ROUTES: Routes = [
         data: { breadcrumb: 'MENU.CREATE_SPECIAL_SHIFT' }
       },
       {
+        path: 'special-edit/:id',
+        loadComponent: () => import('./pages/edit-special-shift-component/edit-special-shift-component').then(x => x.EditSpecialShiftComponent),
+        data: { breadcrumb: 'MENU.EDIT_SPECIAL_SHIFT' }
+      },
+      {
         path: 'edit-attendance-day',
         loadComponent: () => import('./pages/edit-attendance-day-component/edit-attendance-day-component').then(x => x.EditAttendanceDayComponent),
         data: { breadcrumb: 'MENU.EDIT_ATTENDANCE_DAY' }

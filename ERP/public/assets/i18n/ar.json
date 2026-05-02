@@ -129,6 +129,7 @@
     "NOT_FOUND": "الصفحة غير موجودة",
     "CREATE_SPECIAL_SHIFT": "إضافة وردية متخصصة",
     "VIEW_SPECIAL_SHIFTS": "الورديات المخصصة",
+    "EDIT_SPECIAL_SHIFT": "تعديل وردية مخصصة",
     "EDIT_ATTENDANCE_DAY": "تعديل يوم حضور",
     "VIEW_ATTENDANCE_DAYS": "أيام الحضور",
     "VIEW_ATTENDANCE_LOG_DETAILS": "معلومات سجل الحضور",

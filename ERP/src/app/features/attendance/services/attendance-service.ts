@@ -266,6 +266,14 @@ export class AttendanceService {
     return this.http.post<IShiftAssignment>(this.SHIFT_ASSIGNMENT_API_URL, payload);
   }
 
+  getShiftAssignmentById(id: string): Observable<IShiftAssignment> {
+    return this.http.get<IShiftAssignment>(`${this.SHIFT_ASSIGNMENT_API_URL}/${id}`);
+  }
+
+  updateShiftAssignment(id: string, payload: IShiftAssignmentPayload): Observable<IShiftAssignment> {
+    return this.http.put<IShiftAssignment>(`${this.SHIFT_ASSIGNMENT_API_URL}/${id}`, payload);
+  }
+
   deleteShiftAssignment(id: string): Observable<void> {
     return this.http.delete<void>(`${this.SHIFT_ASSIGNMENT_API_URL}/${id}`);
   }

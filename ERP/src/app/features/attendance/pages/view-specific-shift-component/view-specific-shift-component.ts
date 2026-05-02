@@ -90,7 +90,7 @@ pageSize = signal(10);
   }
 
   handleEdit(id: string) {
-    this.router.navigate(['/attendance/special/special-create', id]);
+    this.router.navigate(['/attendance/special-edit', id]);
   }
 
   handleDelete(id: string) {
