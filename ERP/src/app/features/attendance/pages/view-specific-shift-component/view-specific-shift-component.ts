@@ -10,7 +10,7 @@ import { AppBaseTableComponent } from "@shared/components/organisms/app-base-tab
 import { ActionBtnComponent } from "@shared/components/molecules/action-btn-component/action-btn-component";
 import { ISpecialShiftListItem } from '@features/attendance/models/iattendance';
 import { DateFilterComponent } from "@shared/components/molecules/date-filter-component/date-filter-component";
-import { lucideCirclePlus, lucidePencil, lucideTrash2 } from '@ng-icons/lucide';
+import { lucideCirclePlus, lucideEye, lucidePencil, lucideTrash2 } from '@ng-icons/lucide';
 import { EmptyTablePlaceholderComponent } from '@shared/components/molecules/empty-table-placeholder-component/empty-table-placeholder-component';
 import { StatusBadgeComponent } from '@shared/components/molecules/status-badge-component/status-badge-component';
 import { TableStatusBadgeComponent } from '@shared/components/atoms/table-status-badge-component/table-status-badge-component';
@@ -20,7 +20,7 @@ import { TableStatusBadgeComponent } from '@shared/components/atoms/table-status
   imports: [TranslocoModule, NgIcon, DatePipe, AppBaseTableComponent, ActionBtnComponent, DateFilterComponent, EmptyTablePlaceholderComponent, StatusBadgeComponent, TableStatusBadgeComponent],
   templateUrl: './view-specific-shift-component.html',
   styleUrl: './view-specific-shift-component.css',
-  providers:[provideIcons({lucidePencil,lucideTrash2,lucideCirclePlus})],
+  providers:[provideIcons({lucidePencil,lucideTrash2,lucideCirclePlus,lucideEye})],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ViewSpecificShiftComponent {
@@ -87,6 +87,10 @@ pageSize = signal(10);
 
   handleCreateNavigation() {
     this.router.navigate(['/attendance/special-create']);
+  }
+
+  handleView(id: string) {
+    this.router.navigate(['/attendance/special-details', id]);
   }
 
   handleEdit(id: string) {

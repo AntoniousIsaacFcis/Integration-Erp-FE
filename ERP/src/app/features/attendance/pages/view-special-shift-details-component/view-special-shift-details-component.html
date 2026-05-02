@@ -1,0 +1,131 @@
+<main class="flex justify-center" *transloco="let t">
+  <div class="w-full max-w-standard bg-white rounded-[20px] shadow-soft border border-black/5">
+
+    <app-form-container-component [title]="t('MENU.VIEW_SPECIAL_SHIFTS')">
+
+      <ng-container formFields>
+        @if (isLoading()) {
+          <div class="col-span-full flex justify-center py-10 text-gray-400">
+            {{ t('COMMON.MESSAGES.LOADING_DATA') }}
+          </div>
+        } @else {
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6 col-span-full">
+            <app-app-input-component [label]="t('SHIFT.NAME')" [control]="mainForm.controls.name"
+              [placeholder]="t('PLACEHOLDER.EnTER_SHIFTNAME')" />
+
+            <app-app-select-component [label]="t('SHIFT.ASSIGNED_TO')" [control]="mainForm.controls.assignedShiftId"
+              [placeholder]="t('PLACEHOLDER.NIGHTSHIFT')">
+              @for (shift of shiftOptions(); track shift.id) {
+                <option [value]="shift.id">{{ shift.displayName }}</option>
+              }
+            </app-app-select-component>
+
+            <app-app-date-input-component [label]="t('SHIFT.START_DATE')" [control]="mainForm.controls.startDate" />
+
+            <app-app-date-input-component [label]="t('SHIFT.END_DATE')" [control]="mainForm.controls.endDate" />
+
+            <app-app-select-component [label]="t('SHIFT.SHIFT_TYPE')" [control]="mainForm.controls.priority">
+              <option [value]="100">{{ t('SHIFT.PRIMARY') }}</option>
+              <option [value]="0">{{ t('SHIFT.SECONDARY') }}</option>
+            </app-app-select-component>
+
+            <app-app-radio-component [label]="t('COMMON.STATUS')"
+              [control]="mainForm.controls.status" [options]="[
+                { label: 'COMMON.ACTIVE', value: 'active' },
+                { label: 'COMMON.INACTIVE', value: 'inactive' }
+              ]" />
+          </div>
+
+          <div class="col-span-full h-[1px] bg-black/10 my-2"></div>
+
+          <section class="col-span-full grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+            <div class="col-span-full flex flex-col gap-3">
+              <label class="text-base font-medium text-black">{{ t('SHIFT.ASSIGNMENT_METHOD') }}</label>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <label class="flex h-12 items-center gap-3 rounded-lg border px-4"
+                  [class]="isRuleSelection() ? 'border-primary bg-primary/5' : 'border-black/10'">
+                  <input type="radio" value="rules" [formControl]="mainForm.controls.assignmentMethod"
+                    class="accent-primary w-4 h-4">
+                  <span class="text-sm font-medium">{{ t('SHIFT.RULES') }}</span>
+                </label>
+
+                <label class="flex h-12 items-center gap-3 rounded-lg border px-4"
+                  [class]="isManualSelection() ? 'border-primary bg-primary/5' : 'border-black/10'">
+                  <input type="radio" value="manual" [formControl]="mainForm.controls.assignmentMethod"
+                    class="accent-primary w-4 h-4">
+                  <span class="text-sm font-medium">{{ t('SHIFT.MANUAL') }}</span>
+                </label>
+              </div>
+            </div>
+
+            @if (isRuleSelection()) {
+              <app-app-select-component [label]="t('LABEL.DEPARTMENT_NAME')" [control]="mainForm.controls.departmentId">
+                <option value="">{{ t('SHIFT.ALL_DEPARTMENTS') }}</option>
+                @for (department of departmentOptions(); track department.id) {
+                  <option [value]="department.id">{{ department.displayName }}</option>
+                }
+              </app-app-select-component>
+
+              <app-app-select-component [label]="t('LABEL.DESIGNATION_NAME')" [control]="mainForm.controls.designationId">
+                <option value="">{{ t('SHIFT.ALL_DESIGNATIONS') }}</option>
+                @for (designation of designationOptions(); track designation.id) {
+                  <option [value]="designation.id">{{ designation.displayName }}</option>
+                }
+              </app-app-select-component>
+
+              <app-app-select-component [label]="t('SHIFT.CURRENT_SHIFT')" [control]="mainForm.controls.currentShiftId">
+                <option value="">{{ t('SHIFT.ALL_SHIFTS') }}</option>
+                @for (shift of shiftOptions(); track shift.id) {
+                  <option [value]="shift.id">{{ shift.displayName }}</option>
+                }
+              </app-app-select-component>
+
+              <div class="col-span-full flex flex-col gap-3">
+                <label class="text-base font-medium text-black">{{ t('SHIFT.EXCLUDED_EMPLOYEES') }}</label>
+
+                <div class="relative w-full">
+                  <input type="text" [placeholder]="t('PLACEHOLDER.SEARCH_EMPLOYEE')" disabled
+                    class="w-full h-[41px] rounded-xl border border-[#E0E0E0] outline-none text-center text-sm bg-gray-50" />
+                  <ng-icon name="lucideSearch" class="absolute top-1/2 start-4 -translate-y-1/2 text-[18px] text-black/60" />
+                </div>
+
+                <div class="flex flex-wrap gap-3 mt-1">
+                  @for (emp of excludedEmployees(); track emp.id) {
+                    <div class="flex items-center gap-2 bg-[#EDEDED] px-2.5 py-1 rounded-md">
+                      <span class="text-sm text-black">{{ emp.displayName }}</span>
+                    </div>
+                  }
+                </div>
+              </div>
+            }
+
+            @if (isManualSelection()) {
+              <div class="col-span-full flex flex-col gap-3">
+                <label class="text-base font-medium text-black">{{ t('SHIFT.SELECTED_EMPLOYEES') }}</label>
+
+                <div class="relative w-full">
+                  <input type="text" [placeholder]="t('PLACEHOLDER.SEARCH_EMPLOYEE')" disabled
+                    class="w-full h-[41px] rounded-xl border border-[#E0E0E0] outline-none text-center text-sm bg-gray-50" />
+                  <ng-icon name="lucideSearch" class="absolute top-1/2 start-4 -translate-y-1/2 text-[18px] text-black/60" />
+                </div>
+
+                <div class="flex flex-wrap gap-3 mt-1">
+                  @for (emp of selectedEmployees(); track emp.id) {
+                    <div class="flex items-center gap-2 bg-[#EDEDED] px-2.5 py-1 rounded-md">
+                      <span class="text-sm text-black">{{ emp.displayName }}</span>
+                    </div>
+                  }
+                </div>
+              </div>
+            }
+          </section>
+        }
+      </ng-container>
+
+      <ng-container formActions>
+        <app-form-save-button-component [label]="'COMMON.BACK'" (clicked)="onCancel()" />
+      </ng-container>
+
+    </app-form-container-component>
+  </div>
+</main>

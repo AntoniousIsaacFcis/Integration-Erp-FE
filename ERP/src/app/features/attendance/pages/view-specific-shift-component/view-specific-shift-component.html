@@ -52,7 +52,7 @@
         </thead>
         <tbody>
           @for (shift of specialShifts(); track shift.id) {
-            <tr class="bg-white border-b border-gray-200 hover:bg-gray-50/50 transition-all">
+            <tr class="bg-white border-b border-gray-200 hover:bg-gray-50/50 transition-all cursor-pointer" (click)="handleView(shift.id)">
               <td class="py-4 ps-10 text-start font-medium text-sm text-black">{{ shift.displayName }}</td>
               <td class="py-4 px-4 text-center text-sm">{{ shift.relatedShift }}</td>
               <td class="py-4 px-4 text-center text-sm">{{ shift.startDate | date:'dd/MM/yyyy' }}</td>
@@ -73,6 +73,10 @@
                   <button (click)="$event.stopPropagation(); handleDelete(shift.id)"
                     class="flex size-[32px] items-center justify-center rounded-full bg-[#0000001A] hover:bg-[#00000033] transition-colors">
                     <ng-icon name="lucideTrash2" size="16px" color="#F40552" />
+                  </button>
+                  <button (click)="$event.stopPropagation(); handleView(shift.id)"
+                    class="flex size-[32px] items-center justify-center rounded-full bg-[#61BDDC33] hover:bg-gray-100 transition-colors">
+                    <ng-icon name="lucideEye" size="16px" color="#61BDDC" />
                   </button>
                 </div>
               </td>
