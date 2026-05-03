@@ -24,6 +24,7 @@ export interface IStaffApiItem {
   address?: string | null;
   departmentId?: string | null;
   designationId?: string | null;
+  attendanceShiftId?: string | null;
   employmentTypeId?: string | null;
   employmentStatusId?: string | null;
   probationEndDate?: string | null;

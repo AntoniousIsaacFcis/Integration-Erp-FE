@@ -127,6 +127,7 @@
     "VIEW_SPECIAL_SHIFTS": "Specific Shifts",
     "EDIT_SPECIAL_SHIFT": "Edit Specific Shift",
     "EDIT_ATTENDANCE_DAY": "Edit Attendance Day",
+    "CREATE_ATTENDANCE_DAY": "Create Attendance Day",
     "VIEW_ATTENDANCE_DAYS": "Attendance Days",
     "VIEW_ATTENDANCE_LOG_DETAILS": "Attendance Log Details",
     "ADD_ATTENDANCE_PERMISSION": "Add Attendance Permission",
@@ -319,7 +320,8 @@
     "MARITAL_STATUS": "Single",
     "JOB_TITLE": "Programmer",
     "DOCUMENTS_TYPE": "Select document type",
-    "SELECT_JOB_TITLE": "Enter Employment Type"
+    "SELECT_JOB_TITLE": "Enter Employment Type",
+    "SELECT_SHIFT": "Select shift"
   },
   "VALIDATION": {
     "REQUIRED_FIELD": "This field is required",
@@ -572,6 +574,10 @@
   },
   "ATTENDANCE": {
     "TITLE": "Attendance",
+    "ATTENDANCE_INFO": "Attendance Information",
+    "ATTENDANCE_TIMES": "Attendance Times",
+    "AUTO_SHIFT": "Auto detect from assignment",
+    "NO_RELATED_SHIFT": "No related shift was found for this employee and date.",
     "CHECK_IN": "Check In",
     "CHECK_OUT": "Check Out",
     "CHECK_IN_TIME": "Check In Time",
@@ -583,6 +589,8 @@
     "EARLY_LEAVE": "Early Leave",
     "HALF_DAY": "Half Day",
     "ON_LEAVE": "On Leave",
+    "HOLIDAY": "Holiday",
+    "DAY_OFF": "Day Off",
     "ATTENDANCE_DATE": "Attendance Date",
     "WORKING_HOURS": "Working Hours",
     "OVERTIME_HOURS": "Overtime Hours",
@@ -590,7 +598,15 @@
     "ATTENDANCE_REPORT": "Attendance Report",
     "ATTENDANCE_SUMMARY": "Attendance Summary",
     "MARK_ATTENDANCE": "Mark Attendance",
-    "VIEW_REPORT": "View Report"
+    "VIEW_REPORT": "View Report",
+    "EMPLOYEE_NAME": "Employee Name",
+    "DATE": "Attendance Date",
+    "STATUS_LABEL": "Attendance Status",
+    "SHIFT_START": "Shift Start",
+    "SHIFT_END": "Shift End",
+    "WORKED_MINUTES": "Worked Minutes",
+    "DELAY_MINUTES": "Delay Minutes",
+    "EARLY_LEAVE_MINUTES": "Early Leave Minutes"
   },
   "SETTINGS": {
     "TITLE": "Settings",

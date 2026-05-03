@@ -3,8 +3,8 @@ import { inject, Injectable } from '@angular/core';
 import { environment } from '@env/environment.development';
 import { IEmployeeLeaveOverviewApiResponse, ILeaveApplicationApiDto, ILeaveApplicationUpdatePayload, ILeaveTypeApiDto, ILeaveTypeListResponse, IVacationResponse, VacationStatus } from '@features/attendance/models/ivacation';
 import { ISelectOption } from '@shared/components/atoms/select-btn-component/select-btn-component';
-import { map, Observable, timeout } from 'rxjs';
-import { IAttendanceAvailablePeriod, IAttendanceDay, IAttendanceDayApiDto, IAttendanceDayListResponse, IAttendanceLogApiDto, IAttendanceLogListResponse, IAttendanceResponse, ICustomShiftForm, IEditAttendanceDay, IShift, IShiftApiListResponse, IShiftAssignment, IShiftAssignmentApiListResponse, IShiftAssignmentPayload, IShiftListItem, IShiftListResponse, IShiftOption, IShiftPayload, ISpecialShiftListResponse, IUpdateAttendancePayload } from '../models/iattendance';
+import { map, Observable, shareReplay, tap, timeout } from 'rxjs';
+import { IAttendanceAvailablePeriod, IAttendanceDay, IAttendanceDayApiDto, IAttendanceDayListResponse, IAttendanceLogApiDto, IAttendanceLogListResponse, IAttendanceRelatedShift, IAttendanceResponse, ICreateAttendanceDayPayload, ICustomShiftForm, IEditAttendanceDay, IShift, IShiftApiListResponse, IShiftAssignment, IShiftAssignmentApiListResponse, IShiftAssignmentPayload, IShiftListItem, IShiftListResponse, IShiftOption, IShiftPayload, ISpecialShiftListResponse, IUpdateAttendancePayload } from '../models/iattendance';
 
 @Injectable({
   providedIn: 'root',
@@ -14,6 +14,7 @@ export class AttendanceService {
   private readonly API_URL = `${environment.baseUrl}/api`;
   private readonly SHIFT_API_URL = `${this.API_URL}/attendance/shift`;
   private readonly SHIFT_ASSIGNMENT_API_URL = `${this.API_URL}/attendance/shift-assignment`;
+  private readonly relatedShiftRequests = new Map<string, Observable<IAttendanceRelatedShift | null>>();
 
   getAttendance(empId: string, year: string, month: string): Observable<IAttendanceDay[]> {
     const yearNumber = Number(year);
@@ -303,6 +304,34 @@ export class AttendanceService {
     }).pipe(
       map(response => response.items?.[0] ?? null),
     );
+  }
+
+  createAttendanceDay(payload: ICreateAttendanceDayPayload): Observable<IAttendanceDayApiDto> {
+    return this.http.post<IAttendanceDayApiDto>(`${this.API_URL}/attendance/attendance-day`, payload);
+  }
+
+  getRelatedAttendanceShift(employeeId: string, date: string): Observable<IAttendanceRelatedShift | null> {
+    const key = `${employeeId}|${date}`;
+    const cachedRequest = this.relatedShiftRequests.get(key);
+
+    if (cachedRequest) {
+      return cachedRequest;
+    }
+
+    const request = this.http.get<IAttendanceRelatedShift | null>(
+      `${this.API_URL}/attendance/attendance-lookup/related-shift/${employeeId}`,
+      { params: { date } },
+    ).pipe(
+      tap(shift => {
+        if (!shift) {
+          this.relatedShiftRequests.delete(key);
+        }
+      }),
+      shareReplay({ bufferSize: 1, refCount: false }),
+    );
+
+    this.relatedShiftRequests.set(key, request);
+    return request;
   }
 
   getVacations(params: { employeeId: string; year: string; month?: string; page: number; limit: number }): Observable<IVacationResponse> {

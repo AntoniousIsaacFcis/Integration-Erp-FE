@@ -21,6 +21,7 @@ export class AppInputComponent {
   control = input.required<FormControl>();
   type = input<string>('text');
   isPassword = input<boolean>(false);
+  readonly = input<boolean>(false);
 
   showErrors = input<boolean>(false);
   showPassword = signal<boolean>(false);

@@ -44,6 +44,27 @@ export interface IAttendanceDayListResponse {
   totalCount: number;
 }
 
+export interface ICreateAttendanceDayPayload {
+  employeeId: string;
+  shiftId?: string | null;
+  date: string;
+  status: number;
+  dayOffReason?: number | null;
+  onDutyTime?: string | null;
+  offDutyTime?: string | null;
+  signInTime?: string | null;
+  signOutTime?: string | null;
+  calculationType: number;
+  workedMinutes?: number | null;
+  delayMinutes?: number | null;
+  earlyLeaveMinutes?: number | null;
+  leaveTypeId?: string | null;
+  leaveCount: number;
+  notes?: string | null;
+  attendanceSheetId?: string | null;
+  attendancePermissionId?: string | null;
+}
+
 export interface IAttendanceLogApiDto {
   id: string;
   employeeId: string;
@@ -121,6 +142,15 @@ export interface IShiftDay {
   signOutStartTimeOverride?: string | null;
   signOutEndTimeOverride?: string | null;
   lateToleranceMinutes?: number | null;
+}
+
+export interface IAttendanceRelatedShift {
+  id: string;
+  name: string;
+  onDutyTime: string;
+  offDutyTime: string;
+  assignmentStartDate?: string | null;
+  assignmentEndDate?: string | null;
 }
 
 export interface IPermission {

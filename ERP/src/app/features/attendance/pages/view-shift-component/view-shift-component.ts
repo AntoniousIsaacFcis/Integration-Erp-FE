@@ -81,9 +81,9 @@ export class ViewShiftComponent {
   shiftsList = computed(() => {
     const response = this.shiftsResource.value()?.data ?? [];
 
-    return response.map((shift: IShiftListItem) => ({
+    return response.map((shift: IShiftListItem, index) => ({
       ...shift,
-      displayName: shift.name || shift.nameAr || shift.nameEn || '-',
+      displayName: `${shift.name || shift.nameAr || shift.nameEn || '-'} #${index + 1}`,
       typeLabelKey: this.getShiftTypeLabelKey(shift.type),
       holidayDayKeys: this.getHolidayDayKeys(shift),
       holidayDaysFallback: this.getHolidayDaysFallback(shift),

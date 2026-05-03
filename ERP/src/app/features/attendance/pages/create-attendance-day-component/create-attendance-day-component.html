@@ -1,0 +1,92 @@
+<main class="flex justify-center" *transloco="let t">
+  <div class="w-full max-w-standard bg-white rounded-[20px] shadow-soft border border-black/5 flex flex-col mx-auto">
+    <app-form-container-component [title]="t('MENU.CREATE_ATTENDANCE_DAY')" (submit)="onSave()">
+      <ng-container formFields>
+        <section class="col-span-full">
+          <h3 class="text-base font-medium mb-4 text-black">{{ t('ATTENDANCE.ATTENDANCE_INFO') }}</h3>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+            <div class="relative">
+              <app-app-input-component [label]="t('ATTENDANCE.EMPLOYEE_NAME') + ' *'"
+                [control]="employeeSearchControl" [placeholder]="'PLACEHOLDER.EMPLOYEE_NAME'"
+                [showErrors]="submitted() && getControl('employeeId').invalid" autocomplete="off" />
+
+              @if (employeeSearchResults().length) {
+              <div
+                class="absolute z-20 mt-2 w-full overflow-hidden rounded-md border border-black/10 bg-white shadow-soft">
+                @for (employee of employeeSearchResults(); track employee.id) {
+                <button type="button" (click)="selectEmployee(employee)"
+                  class="block w-full px-4 py-3 text-start text-sm text-black transition-colors hover:bg-primary/5">
+                  <span class="block font-medium">{{ employee.displayName }}</span>
+                </button>
+                }
+              </div>
+              }
+            </div>
+
+            <app-app-date-input-component [label]="t('ATTENDANCE.ATTENDANCE_DATE') + ' *'"
+              [control]="getControl('date')" [showErrors]="submitted()" />
+
+            @if (showShiftSelector()) {
+            <app-app-select-component [label]="t('SHIFT.SHIFT_NAME')" [control]="getControl('shiftId')"
+              [placeholder]="'PLACEHOLDER.SELECT_SHIFT'">
+              @for (shift of shiftOptions(); track shift.id) {
+              <option [value]="shift.id">{{ shift.displayName }}</option>
+              }
+            </app-app-select-component>
+            } @else {
+            <app-app-input-component [label]="t('SHIFT.SHIFT_NAME')" [control]="getControl('shiftName')"
+              [placeholder]="'ATTENDANCE.AUTO_SHIFT'" [readonly]="true" />
+            }
+          </div>
+        </section>
+
+        <section class="col-span-full border-t border-black/10 pt-6">
+          <app-app-radio-component [label]="'ATTENDANCE.STATUS_LABEL'" [required]="true"
+            [control]="getControl('status')" [options]="statusOptions" />
+        </section>
+
+        @if (isLeave()) {
+        <section class="col-span-full border-t border-black/10 pt-6">
+          <app-app-select-component [label]="t('LABEL.LEAVE_TYPE') + ' *'" [control]="getControl('leaveTypeId')"
+            [placeholder]="'PLACEHOLDER.SELECT_LEAVE_TYPE'" [showErrors]="submitted()">
+            @for (leaveType of leaveTypeOptions(); track leaveType.id) {
+            <option [value]="leaveType.id">{{ leaveType.name }}</option>
+            }
+          </app-app-select-component>
+        </section>
+        }
+
+        @if (isPresent()) {
+        <section class="col-span-full border-t border-black/10 pt-6">
+          <h3 class="text-base font-medium mb-4 text-black">{{ t('ATTENDANCE.ATTENDANCE_TIMES') }}</h3>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+            <app-time-input-component [label]="t('ATTENDANCE.SHIFT_START')"
+              [control]="getControl('onDutyTime')" [readonly]="hasResolvedShift()" [showErrors]="submitted()" />
+
+            <app-time-input-component [label]="t('ATTENDANCE.SHIFT_END')"
+              [control]="getControl('offDutyTime')" [readonly]="hasResolvedShift()" [showErrors]="submitted()" />
+
+            <app-time-input-component [label]="t('ATTENDANCE.CHECK_IN_TIME')"
+              [control]="getControl('signInTime')" [showErrors]="submitted()" />
+
+            <app-time-input-component [label]="t('ATTENDANCE.CHECK_OUT_TIME')"
+              [control]="getControl('signOutTime')" [showErrors]="submitted()" />
+          </div>
+        </section>
+        }
+
+        <section class="col-span-full border-t border-black/10 pt-6">
+          <app-app-textarea-component [label]="t('LABEL.NOTES')" [control]="getControl('notes')"
+            [placeholder]="t('PLACEHOLDER.ENTER_NOTES')" [showErrors]="submitted()" />
+        </section>
+      </ng-container>
+
+      <ng-container formActions>
+        <app-form-cancel-button-component (click)="onCancel()" />
+        <app-form-save-button-component [isLoading]="isSaving()" [label]="'COMMON.SAVE'" type="submit" />
+      </ng-container>
+    </app-form-container-component>
+  </div>
+</main>
