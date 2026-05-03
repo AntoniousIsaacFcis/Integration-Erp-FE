@@ -2,13 +2,13 @@
   @if (isFormReady()) {
   <div class="w-full max-w-standard bg-white rounded-[20px] shadow-soft border border-black/5 flex flex-col mx-auto">
 
-    <app-form-container-component [title]="t('MENU.VIEW_ATTENDANCE_LOG_DETAILS')">
+    <app-form-container-component [title]="t('MENU.VIEW_ATTENDANCE_DAY_DETAILS')">
       <ng-container formFields>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6 col-span-full">
           <app-app-input-component [label]="t('ATTENDANCE.TABLE_EMPLOYEE_NAME')"
             [control]="detailsForm.controls.employeeName" />
 
-          <app-app-date-input-component [label]="t('ATTENDANCE.CREATE_DATE')" [control]="detailsForm.controls.date" />
+          <app-app-date-input-component [label]="t('ATTENDANCE.ATTENDANCE_DAY')" [control]="detailsForm.controls.date" />
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6 col-span-full mt-6">
@@ -33,6 +33,11 @@
                 <input type="radio" value="absent" [formControl]="detailsForm.controls.status"
                   class="accent-primary pointer-events-none">
                 <span class="text-sm">{{ t('Enum:AttendanceStatus.Absent') }}</span>
+              </label>
+              <label class="flex items-center gap-2">
+                <input type="radio" value="onLeave" [formControl]="detailsForm.controls.status"
+                  class="accent-primary pointer-events-none">
+                <span class="text-sm">{{ t('Enum:AttendanceStatus.OnLeave') }}</span>
               </label>
             </div>
           </div>

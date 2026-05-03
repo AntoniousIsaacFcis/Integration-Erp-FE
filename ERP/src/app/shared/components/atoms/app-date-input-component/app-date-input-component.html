@@ -7,7 +7,7 @@
   <div class="relative w-full group">
     <input type="date" [formControl]="control()" [class.has-value]="control().value"
       [class.!border-error]="showErrors() && control().invalid" [class.!border-2]="showErrors() && control().invalid"
-      class="custom-date-input w-full h-[44px] px-md bg-white border border-[#0000001A] rounded-md outline-none transition-all text-start text-sm font-normal text-black appearance-none focus:border-primary focus:ring-1 focus:ring-primary/20" />
+      class="custom-date-input w-full h-[44px] px-md bg-white border border-[#0000001A] rounded-md outline-none transition-all text-start text-sm font-normal text-black appearance-none focus:border-primary focus:ring-1 focus:ring-primary/20 disabled:opacity-70 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-black/70" />
     @if (!control().value) {
     <span class="absolute inset-y-0 start-md flex items-center pointer-events-none text-black/20 text-md font-normal">
       7-8-2001

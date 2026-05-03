@@ -91,6 +91,9 @@ export class CreateAttendanceDayComponent {
   private readonly statusValue = toSignal(
     this.attendanceForm.controls.status.valueChanges.pipe(startWith(this.attendanceForm.controls.status.value)),
   );
+  private readonly shiftIdValue = toSignal(
+    this.attendanceForm.controls.shiftId.valueChanges.pipe(startWith(this.attendanceForm.controls.shiftId.value)),
+  );
   private readonly dateValue = toSignal(
     this.attendanceForm.controls.date.valueChanges.pipe(startWith(this.attendanceForm.controls.date.value)),
   );
@@ -114,6 +117,17 @@ export class CreateAttendanceDayComponent {
 
   shiftOptionsResource = rxResource({
     stream: () => this.attendanceService.getShiftOptions().pipe(catchError(() => of([]))),
+  });
+
+  selectedShiftResource = rxResource({
+    params: () => this.shiftIdValue() || null,
+    stream: ({ params }) => {
+      if (!params) {
+        return of(null);
+      }
+
+      return this.attendanceService.getShiftById(params).pipe(catchError(() => of(null)));
+    },
   });
 
   staffOptions = computed(() => (this.staffResource.value() ?? []).map(staff => ({
@@ -150,10 +164,13 @@ export class CreateAttendanceDayComponent {
       : of(null),
   });
   resolvedShift = computed(() => this.relatedShiftResource.value() ?? null);
+  selectedShift = computed(() => this.selectedShiftResource.value() ?? null);
   hasResolvedShift = computed(() => Boolean(this.resolvedShift()));
+  hasSelectedShift = computed(() => Boolean(this.selectedShift()));
   showShiftSelector = computed(() => Boolean(this.selectedEmployee()) && !this.relatedShiftResource.isLoading() && !this.hasResolvedShift());
   shiftOptions = computed(() => this.shiftOptionsResource.value() ?? []);
   leaveTypeOptions = computed(() => this.leaveTypesResource.value() ?? []);
+  lockManualShiftTimes = computed(() => Boolean(this.shiftIdValue()) || this.hasResolvedShift());
 
   constructor() {
     effect(() => {
@@ -165,13 +182,15 @@ export class CreateAttendanceDayComponent {
     });
 
     effect(() => {
-      const selected = this.selectedEmployee();
-      const search = this.employeeSearchValue() ?? '';
+      const shiftId = this.shiftIdValue();
 
-      if (selected && search !== selected.displayName) {
-        this.selectedEmployee.set(null);
-        this.attendanceForm.controls.employeeId.setValue('');
+      if (!shiftId && !this.hasResolvedShift()) {
+        this.clearShiftFields();
       }
+    });
+
+    effect(() => {
+      this.patchSelectedShift(this.selectedShift());
     });
   }
 
@@ -180,6 +199,7 @@ export class CreateAttendanceDayComponent {
       return;
     }
 
+    this.isSaving.set(true);
     this.submitted.set(true);
 
     if (this.isPresent() && (!this.attendanceForm.controls.onDutyTime.value || !this.attendanceForm.controls.offDutyTime.value)) {
@@ -190,16 +210,18 @@ export class CreateAttendanceDayComponent {
         isModal: false,
         actionLabel: 'COMMON.CONFIRM',
       });
+      this.isSaving.set(false);
       return;
     }
 
     if (this.attendanceForm.invalid) {
       this.attendanceForm.markAllAsTouched();
+      this.isSaving.set(false);
       return;
     }
 
-    this.isSaving.set(true);
-    this.attendanceService.createAttendanceDay(this.toPayload()).subscribe({
+    const payload = this.toPayload();
+    this.attendanceService.createAttendanceDay(payload).subscribe({
       next: () => {
         this.notification.show({
           type: 'success',
@@ -208,12 +230,12 @@ export class CreateAttendanceDayComponent {
         });
         this.router.navigate(['/attendance/view-attendance-days']);
       },
-      error: () => {
+      error: (error: unknown) => {
         this.isSaving.set(false);
         this.notification.show({
           type: 'error',
           title: 'COMMON.MESSAGES.OPERATION_FAILED',
-          message: 'COMMON.MESSAGES.PLEASE_TRY_AGAIN',
+          message: this.getErrorMessage(error),
           isModal: false,
           actionLabel: 'COMMON.CONFIRM',
         });
@@ -242,6 +264,18 @@ export class CreateAttendanceDayComponent {
       shiftName: '',
       onDutyTime: '',
       offDutyTime: '',
+    }, { emitEvent: false });
+  }
+
+  private patchSelectedShift(shift: { name?: string; onDutyTime?: string; offDutyTime?: string } | null) {
+    if (!shift) {
+      return;
+    }
+
+    this.attendanceForm.patchValue({
+      shiftName: shift.name,
+      onDutyTime: this.toTimeInputValue(shift.onDutyTime),
+      offDutyTime: this.toTimeInputValue(shift.offDutyTime),
     }, { emitEvent: false });
   }
 
@@ -310,6 +344,16 @@ export class CreateAttendanceDayComponent {
 
     const timePart = value.includes('T') ? value.slice(11) : value;
     return timePart.slice(0, 5);
+  }
+
+  private getErrorMessage(error: unknown) {
+    const message = error && typeof error === 'object' && 'message' in error
+      ? (error as { message?: unknown }).message
+      : null;
+
+    return typeof message === 'string' && message.trim().length > 0
+      ? message
+      : 'COMMON.MESSAGES.PLEASE_TRY_AGAIN';
   }
 
   private toDateTime(date: string, time: string) {

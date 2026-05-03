@@ -56,6 +56,7 @@
     "DAYS_SINGLE": "Day",
     "PREVIEW": "Preview",
     "TIME_SUFFIX": "AM",
+    "HOURS": "hours",
     "CURRENCY": {
       "SAR": "SAR"
     },
@@ -69,6 +70,7 @@
       "DELETED_SUCCESSFULLY": "Deleted Successfully",
       "CREATED_SUCCESSFULLY": "Created Successfully",
       "UPDATED_SUCCESSFULLY": "Updated Successfully",
+      "SAVED_SUCCESSFULLY": "Saved Successfully",
       "LOADING_DATA": "Loading Data...",
       "NO_INTERNET": "No Internet Connection",
       "SESSION_EXPIRED": "Session Expired",
@@ -130,6 +132,7 @@
     "CREATE_ATTENDANCE_DAY": "Create Attendance Day",
     "VIEW_ATTENDANCE_DAYS": "Attendance Days",
     "VIEW_ATTENDANCE_LOG_DETAILS": "Attendance Log Details",
+    "VIEW_ATTENDANCE_DAY_DETAILS": "Attendance Day Details",
     "ADD_ATTENDANCE_PERMISSION": "Add Attendance Permission",
     "VIEW_PERMISSIONS": "Attendance Permissions",
     "CORE_HR": "Employees"
@@ -578,6 +581,7 @@
     "ATTENDANCE_TIMES": "Attendance Times",
     "AUTO_SHIFT": "Auto detect from assignment",
     "NO_RELATED_SHIFT": "No related shift was found for this employee and date.",
+    "ATTENDANCE_DAY_ALREADY_EXISTS": "An attendance day for this employee already exists.",
     "CHECK_IN": "Check In",
     "CHECK_OUT": "Check Out",
     "CHECK_IN_TIME": "Check In Time",
@@ -606,7 +610,17 @@
     "SHIFT_END": "Shift End",
     "WORKED_MINUTES": "Worked Minutes",
     "DELAY_MINUTES": "Delay Minutes",
-    "EARLY_LEAVE_MINUTES": "Early Leave Minutes"
+    "EARLY_LEAVE_MINUTES": "Early Leave Minutes",
+    "IMPORT": "Import",
+    "DAILY_REGISTRATION": "Daily Registration",
+    "TABLE_EMPLOYEE_NAME": "Employee Name",
+    "TABLE_DATE": "Date",
+    "TABLE_CHECK_IN": "Check In",
+    "TABLE_CHECK_OUT": "Check Out",
+    "TABLE_TOTAL_HOURS": "Total Working Hours",
+    "TABLE_STATUS": "Status",
+    "ATTENDANCE_DAY": "Attendance Day",
+    "SEARCH_PLACEHOLDER": "Search by employee name..."
   },
   "SETTINGS": {
     "TITLE": "Settings",

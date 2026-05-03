@@ -3,7 +3,7 @@ import { rxResource } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AttendanceService } from '@features/attendance/services/attendance-service';
-import { TranslocoModule } from '@jsverse/transloco';
+import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { FormContainerComponent } from "@shared/components/organisms/form-container-component/form-container-component";
 import { AppInputComponent } from "@shared/components/atoms/app-input-component/app-input-component";
 import { AppDateInputComponent } from "@shared/components/atoms/app-date-input-component/app-date-input-component";
@@ -29,6 +29,7 @@ export class AttendanceLogDetailsComponent {
   private fb = inject(FormBuilder);
   private attendanceService = inject(AttendanceService);
   private breadcrumbService = inject(BreadcrumbService);
+  private translocoService = inject(TranslocoService);
 
   attendanceId = signal(this.route.snapshot.params['id']);
 
@@ -62,7 +63,7 @@ export class AttendanceLogDetailsComponent {
           checkOut: this.formatTimeForInput(rawData.checkOut)
         };
 
-        this.breadcrumbService.setCurrentBreadcrumbLabel(rawData.employeeName, this.route);
+        this.breadcrumbService.setCurrentBreadcrumbLabel(this.toBreadcrumbLabel(rawData.employeeName), this.route);
         this.detailsForm.patchValue(formattedData);
 
         this.isFormReady.set(true);
@@ -89,6 +90,10 @@ export class AttendanceLogDetailsComponent {
     const formatted = this.datePipe.transform(`2026-01-01 ${cleanTime}`, 'HH:mm');
 
     return formatted || '';
+  }
+
+  private toBreadcrumbLabel(employeeName: string) {
+    return `${employeeName} - ${this.translocoService.translate('ATTENDANCE.ATTENDANCE_DAY')}`;
   }
 
   onBack() {

@@ -53,6 +53,11 @@ export const ATTENDANCE_ROUTES: Routes = [
         data: { breadcrumb: 'MENU.EDIT_ATTENDANCE_DAY' }
       },
       {
+        path: 'edit-attendance-day/:id',
+        loadComponent: () => import('./pages/edit-attendance-day-component/edit-attendance-day-component').then(x => x.EditAttendanceDayComponent),
+        data: { breadcrumb: 'MENU.EDIT_ATTENDANCE_DAY' }
+      },
+      {
         path: 'create-attendance-day',
         loadComponent: () => import('./pages/create-attendance-day-component/create-attendance-day-component').then(x => x.CreateAttendanceDayComponent),
         data: { breadcrumb: 'MENU.CREATE_ATTENDANCE_DAY' }
@@ -64,8 +69,16 @@ export const ATTENDANCE_ROUTES: Routes = [
       },
       {
         path: 'attendance-log-details/:id',
-        loadComponent: () => import('./pages/attendance-log-details-component/attendance-log-details-component').then(x => x.AttendanceLogDetailsComponent),
-        data: { breadcrumb: 'MENU.VIEW_ATTENDANCE_LOG_DETAILS' }
+        redirectTo: 'details-attendance-day/:id'
+      },
+      {
+        path: 'attendance-day-details/:id',
+        redirectTo: 'details-attendance-day/:id'
+      },
+      {
+        path: 'details-attendance-day/:id',
+        loadComponent: () => import('./pages/details-attendance-day-component/details-attendance-day-component').then(x => x.DetailsAttendanceDayComponent),
+        data: { breadcrumb: 'MENU.VIEW_ATTENDANCE_DAY_DETAILS' }
       },
       {
         path: 'add-permission',

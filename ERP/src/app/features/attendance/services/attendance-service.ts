@@ -2,8 +2,10 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '@env/environment.development';
 import { IEmployeeLeaveOverviewApiResponse, ILeaveApplicationApiDto, ILeaveApplicationUpdatePayload, ILeaveTypeApiDto, ILeaveTypeListResponse, IVacationResponse, VacationStatus } from '@features/attendance/models/ivacation';
+import { IStaffApiItem } from '@features/core-hr/models/istaff';
+import { StaffService } from '@features/core-hr/services/staff-service';
 import { ISelectOption } from '@shared/components/atoms/select-btn-component/select-btn-component';
-import { map, Observable, shareReplay, tap, timeout } from 'rxjs';
+import { catchError, forkJoin, map, Observable, of, shareReplay, switchMap, tap, timeout } from 'rxjs';
 import { IAttendanceAvailablePeriod, IAttendanceDay, IAttendanceDayApiDto, IAttendanceDayListResponse, IAttendanceLogApiDto, IAttendanceLogListResponse, IAttendanceRelatedShift, IAttendanceResponse, ICreateAttendanceDayPayload, ICustomShiftForm, IEditAttendanceDay, IShift, IShiftApiListResponse, IShiftAssignment, IShiftAssignmentApiListResponse, IShiftAssignmentPayload, IShiftListItem, IShiftListResponse, IShiftOption, IShiftPayload, ISpecialShiftListResponse, IUpdateAttendancePayload } from '../models/iattendance';
 
 @Injectable({
@@ -11,6 +13,7 @@ import { IAttendanceAvailablePeriod, IAttendanceDay, IAttendanceDayApiDto, IAtte
 })
 export class AttendanceService {
   private http = inject(HttpClient);
+  private staffService = inject(StaffService);
   private readonly API_URL = `${environment.baseUrl}/api`;
   private readonly SHIFT_API_URL = `${this.API_URL}/attendance/shift`;
   private readonly SHIFT_ASSIGNMENT_API_URL = `${this.API_URL}/attendance/shift-assignment`;
@@ -38,28 +41,56 @@ export class AttendanceService {
     );
   }
 
- getAllAttendance(params: {
-  page: number;
-  limit: number;
-  search?: string;
-  fromDate?: string;
-  toDate?: string;
-  status?: string;
-}): Observable<IAttendanceResponse> {
-  let httpParams: any = {
-    page: params.page.toString(),
-    limit: params.limit.toString(),
-  };
+  getAllAttendance(params: {
+    page: number;
+    limit: number;
+    search?: string;
+    fromDate?: string;
+    toDate?: string;
+    status?: string;
+  }): Observable<IAttendanceResponse> {
+    const mappedStatus = this.mapAttendanceStatusFilter(params.status);
+    const normalizedSearch = this.normalizeSearchText(params.search);
+    const requiresLocalSearch = Boolean(normalizedSearch);
 
-  if (params.search) httpParams.search = params.search;
-  if (params.fromDate) httpParams.fromDate = params.fromDate;
-  if (params.toDate) httpParams.toDate = params.toDate;
-  if (params.status) httpParams.status = params.status;
+    return forkJoin({
+      attendance: this.http.get<IAttendanceDayListResponse>(`${this.API_URL}/attendance/attendance-day`, {
+        params: {
+          skipCount: (requiresLocalSearch ? 0 : (params.page - 1) * params.limit).toString(),
+          maxResultCount: (requiresLocalSearch ? 1000 : params.limit).toString(),
+          sorting: 'Date DESC',
+          ...(params.fromDate && { fromDate: params.fromDate }),
+          ...(params.toDate && { toDate: params.toDate }),
+          ...(mappedStatus && { status: mappedStatus.toString() }),
+        }
+      }),
+      staff: this.staffService.getStaff({ skipCount: 0, maxResultCount: 1000, filter: '' }).pipe(
+        catchError(() => of({ totalCount: 0, items: [] })),
+      ),
+    }).pipe(
+      map(({ attendance, staff }) => {
+        const staffLookup = new Map(
+          staff.items
+            .filter((item): item is IStaffApiItem & { id: string } => Boolean(item.id))
+            .map(item => [item.id, this.getStaffDisplayName(item)]),
+        );
+        const data = attendance.items
+          .map(item => this.toAttendanceLog(item, staffLookup))
+          .filter(item => this.matchesAttendanceSearch(item, normalizedSearch))
+          .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+        const pagedData = requiresLocalSearch
+          ? data.slice((params.page - 1) * params.limit, params.page * params.limit)
+          : data;
 
-  return this.http.get<IAttendanceResponse>(`${this.API_URL}/attendance/all`, {
-    params: httpParams
-  });
-}
+        return {
+          data: pagedData,
+          total: requiresLocalSearch ? data.length : attendance.totalCount,
+          page: params.page,
+          limit: params.limit,
+        };
+      }),
+    );
+  }
 
   getShifts(params: {
     page: number;
@@ -310,6 +341,10 @@ export class AttendanceService {
     return this.http.post<IAttendanceDayApiDto>(`${this.API_URL}/attendance/attendance-day`, payload);
   }
 
+  deleteAttendanceDay(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.API_URL}/attendance/attendance-day/${id}`);
+  }
+
   getRelatedAttendanceShift(employeeId: string, date: string): Observable<IAttendanceRelatedShift | null> {
     const key = `${employeeId}|${date}`;
     const cachedRequest = this.relatedShiftRequests.get(key);
@@ -447,11 +482,34 @@ export class AttendanceService {
   }
 
   getAttendanceById(id: string): Observable<IEditAttendanceDay> {
-    return this.http.get<IEditAttendanceDay>(`${this.API_URL}/attendance/details/${id}`);
+    return forkJoin({
+      attendance: this.http.get<IAttendanceDayApiDto>(`${this.API_URL}/attendance/attendance-day/${id}`),
+      staff: this.staffService.getStaff({ skipCount: 0, maxResultCount: 1000, filter: '' }).pipe(
+        catchError(() => of({ totalCount: 0, items: [] })),
+      ),
+    }).pipe(
+      map(({ attendance, staff }) => {
+        const staffLookup = new Map(
+          staff.items
+            .filter((item): item is IStaffApiItem & { id: string } => Boolean(item.id))
+            .map(item => [item.id, this.getStaffDisplayName(item)]),
+        );
+
+        return this.toEditAttendanceDay(attendance, staffLookup);
+      }),
+    );
   }
 
   updateAttendance(id: string, payload: IUpdateAttendancePayload): Observable<void> {
-    return this.http.put<void>(`${this.API_URL}/attendance/${id}`, payload);
+    return this.http.get<IAttendanceDayApiDto>(`${this.API_URL}/attendance/attendance-day/${id}`).pipe(
+      switchMap(current =>
+        this.http.put<IAttendanceDayApiDto>(
+          `${this.API_URL}/attendance/attendance-day/${id}`,
+          this.toUpdateAttendanceDayPayload(current, payload),
+        ),
+      ),
+      map(() => undefined),
+    );
   }
 
   private extractAttendanceLogs(response: IAttendanceLogListResponse | { data?: IAttendanceLogApiDto[] } | IAttendanceLogApiDto[]) {
@@ -665,6 +723,160 @@ export class AttendanceService {
     return statuses[status] ?? 'EMPLOYEES.VACATIONS.PENDING';
   }
 
+  private toAttendanceLog(item: IAttendanceDayApiDto, staffLookup: Map<string, string>): IAttendanceResponse['data'][number] {
+    const checkIn = this.toClockTime(item.signInTime);
+    const checkOut = this.toClockTime(item.signOutTime);
+
+    return {
+      id: item.id,
+      employeeId: item.employeeId,
+      employeeName: staffLookup.get(item.employeeId) ?? item.employeeId,
+      department: '',
+      date: item.date,
+      checkIn: checkIn ?? '',
+      checkOut: checkOut ?? '',
+      status: this.toAttendanceStatusKey(item.status),
+      workedMinutes: item.workedMinutes,
+    };
+  }
+
+  private toEditAttendanceDay(item: IAttendanceDayApiDto, staffLookup: Map<string, string>): IEditAttendanceDay {
+    return {
+      id: item.id,
+      employeeId: item.employeeId,
+      employeeName: staffLookup.get(item.employeeId) ?? item.employeeId,
+      date: this.toDateKey(item.date),
+      status: this.toAttendanceStatusKey(item.status),
+      shiftId: item.shiftId ?? null,
+      shiftName: null,
+      shiftStart: this.toClockTime(item.onDutyTime) ?? '',
+      shiftEnd: this.toClockTime(item.offDutyTime) ?? '',
+      checkIn: this.toClockTime(item.signInTime),
+      checkOut: this.toClockTime(item.signOutTime),
+      leaveTypeId: item.leaveTypeId ?? null,
+      notes: item.notes ?? null,
+    };
+  }
+
+  private toUpdateAttendanceDayPayload(current: IAttendanceDayApiDto, payload: IUpdateAttendancePayload) {
+    const isPresent = payload.status === 'present';
+    const isOnLeave = payload.status === 'onLeave';
+
+    return {
+      employeeId: current.employeeId,
+      shiftId: payload.shiftId ?? current.shiftId ?? null,
+      date: payload.date,
+      status: this.mapAttendanceStatusFilter(payload.status) ?? current.status,
+      dayOffReason: current.dayOffReason ?? null,
+      onDutyTime: isPresent ? this.toApiDateTime(payload.date, payload.shiftStart) : null,
+      offDutyTime: isPresent ? this.toApiDateTime(payload.date, payload.shiftEnd) : null,
+      signInTime: isPresent ? this.toApiDateTime(payload.date, payload.checkIn) : null,
+      signOutTime: isPresent ? this.toApiDateTime(payload.date, payload.checkOut) : null,
+      calculationType: current.calculationType,
+      workedMinutes: current.workedMinutes,
+      delayMinutes: current.delayMinutes,
+      earlyLeaveMinutes: current.earlyLeaveMinutes,
+      calculatedAt: current.calculatedAt ?? null,
+      leaveTypeId: isOnLeave ? payload.leaveTypeId ?? null : null,
+      leaveCount: isOnLeave ? 1 : 0,
+      notes: payload.notes?.trim() || null,
+      attendanceSheetId: current.attendanceSheetId ?? null,
+      attendancePermissionId: current.attendancePermissionId ?? null,
+    };
+  }
+
+  private toAttendanceStatusKey(status: number): IAttendanceResponse['data'][number]['status'] {
+    switch (status) {
+      case 1:
+        return 'present';
+      case 2:
+        return 'absent';
+      case 3:
+        return 'onLeave';
+      default:
+        return 'absent';
+    }
+  }
+
+  private mapAttendanceStatusFilter(status?: string) {
+    switch (status) {
+      case 'present':
+        return 1;
+      case 'absent':
+        return 2;
+      case 'onLeave':
+        return 3;
+      default:
+        return undefined;
+    }
+  }
+
+  private toClockTime(value?: string | null) {
+    if (!value) {
+      return null;
+    }
+
+    const timeOnlyMatch = value.match(/^(\d{1,2}):(\d{2})/);
+
+    if (timeOnlyMatch) {
+      const hours = String(Number(timeOnlyMatch[1])).padStart(2, '0');
+      const minutes = timeOnlyMatch[2];
+
+      return `${hours}:${minutes}`;
+    }
+
+    const date = new Date(value);
+
+    if (Number.isNaN(date.getTime())) {
+      return null;
+    }
+
+    return `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
+  }
+
+  private toApiDateTime(dateValue: string, timeValue?: string | null) {
+    if (!timeValue) {
+      return null;
+    }
+
+    const timeOnlyMatch = timeValue.match(/^(\d{1,2}):(\d{2})(?::(\d{2}))?/);
+
+    if (!timeOnlyMatch) {
+      return timeValue;
+    }
+
+    const hours = String(Number(timeOnlyMatch[1])).padStart(2, '0');
+    const minutes = timeOnlyMatch[2];
+    const seconds = timeOnlyMatch[3] ?? '00';
+
+    return `${this.toDateKey(dateValue)}T${hours}:${minutes}:${seconds}`;
+  }
+
+  private getStaffDisplayName(staff: IStaffApiItem) {
+    const composedName = [staff.firstName, staff.middleName, staff.lastName]
+      .filter((part): part is string => Boolean(part?.trim()))
+      .join(' ')
+      .trim();
+
+    return staff.fullNameAr?.trim()
+      || staff.fullName?.trim()
+      || staff.fullNameEn?.trim()
+      || composedName
+      || staff.staffCode?.trim()
+      || staff.id;
+  }
+
+  private matchesAttendanceSearch(item: IAttendanceResponse['data'][number], normalizedSearch: string) {
+    if (!normalizedSearch) {
+      return true;
+    }
+
+    return [
+      item.employeeName,
+      item.employeeId,
+    ].some(value => this.normalizeSearchText(value).includes(normalizedSearch));
+  }
+
   private toReturnDate(dateValue: string) {
     const date = new Date(`${dateValue}T00:00:00`);
 
@@ -676,4 +888,5 @@ export class AttendanceService {
     return this.toDateParam(date);
   }
 }
+
 

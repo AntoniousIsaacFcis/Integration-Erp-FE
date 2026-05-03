@@ -9,7 +9,7 @@ export interface IAttendanceDay {
   checkIn: string | null;
   checkOut: string | null;
   statusText: string;
-  status?: 'present' | 'absent' | 'onLeave' | 'holiday' | 'dayOff' | 'empty';
+  status?: 'present' | 'absent' | 'onLeave' | 'empty';
   workedMinutes?: number;
   delayMinutes?: number;
   earlyLeaveMinutes?: number;
@@ -170,7 +170,8 @@ export interface IAttendanceLog {
   date: string;
   checkIn: string;
   checkOut: string;
-  status: 'present' | 'absent' | 'onLeave' | 'holiday';
+  status: 'present' | 'absent' | 'onLeave';
+  workedMinutes?: number;
 }
 
 export interface IAttendanceResponse {
@@ -181,13 +182,18 @@ export interface IAttendanceResponse {
 }
 export interface IEditAttendanceDay {
   id: string;
+  employeeId: string;
   employeeName: string; // غالباً للعرض فقط
   date: string;
-  status: 'present' | 'absent' | 'onLeave' | 'holiday';
+  status: 'present' | 'absent' | 'onLeave';
+  shiftId?: string | null;
+  shiftName?: string | null;
   shiftStart: string;
   shiftEnd: string;
   checkIn: string | null;
   checkOut: string | null;
+  leaveTypeId?: string | null;
+  notes?: string | null;
 }
 //for attendnce-log-page(readonly)
 export interface IAttendanceDetails extends IEditAttendanceDay {
@@ -195,7 +201,7 @@ export interface IAttendanceDetails extends IEditAttendanceDay {
   source?: string;
 }
 
-export type IUpdateAttendancePayload = Omit<IEditAttendanceDay, 'employeeName'>;
+export type IUpdateAttendancePayload = Omit<IEditAttendanceDay, 'employeeName' | 'shiftName'>;
 
 export interface IShiftPayload {
   name: string;

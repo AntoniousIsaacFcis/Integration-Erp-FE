@@ -10,6 +10,13 @@ export class NotificationService {
   hasActiveModal = computed(() => this.notifications().some(n => n.isModal));
 
   show(notification: Omit<INotification, 'id'>) {
+    const signature = this.getSignature(notification);
+    const alreadyVisible = this.notifications().some(existing => this.getSignature(existing) === signature);
+
+    if (alreadyVisible) {
+      return;
+    }
+
     const id = crypto.randomUUID();
     const newNotification = { ...notification, id };
 
@@ -27,5 +34,16 @@ export class NotificationService {
 
   dismissAll() {
     this.notifications.set([]);
+  }
+
+  private getSignature(notification: Pick<INotification, 'type' | 'title' | 'message' | 'isModal' | 'actionLabel' | 'cancelLabel'>) {
+    return [
+      notification.type,
+      notification.title,
+      notification.message ?? '',
+      notification.isModal ? '1' : '0',
+      notification.actionLabel,
+      notification.cancelLabel ?? '',
+    ].join('|');
   }
 }

@@ -63,10 +63,10 @@
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
             <app-time-input-component [label]="t('ATTENDANCE.SHIFT_START')"
-              [control]="getControl('onDutyTime')" [readonly]="hasResolvedShift()" [showErrors]="submitted()" />
+              [control]="getControl('onDutyTime')" [readonly]="lockManualShiftTimes()" [showErrors]="submitted()" />
 
             <app-time-input-component [label]="t('ATTENDANCE.SHIFT_END')"
-              [control]="getControl('offDutyTime')" [readonly]="hasResolvedShift()" [showErrors]="submitted()" />
+              [control]="getControl('offDutyTime')" [readonly]="lockManualShiftTimes()" [showErrors]="submitted()" />
 
             <app-time-input-component [label]="t('ATTENDANCE.CHECK_IN_TIME')"
               [control]="getControl('signInTime')" [showErrors]="submitted()" />

@@ -16,6 +16,10 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
       else if (remoteError?.message) {
         userFriendlyMessage = remoteError.message;
       }
+
+      if (remoteError?.code === 'Attendance:AttendanceDayAlreadyExists') {
+        userFriendlyMessage = 'ATTENDANCE.ATTENDANCE_DAY_ALREADY_EXISTS';
+      }
       else if (error.status === 400 || error.status === 401) {
         if (error.error?.error_description) {
           userFriendlyMessage = error.error.error_description;

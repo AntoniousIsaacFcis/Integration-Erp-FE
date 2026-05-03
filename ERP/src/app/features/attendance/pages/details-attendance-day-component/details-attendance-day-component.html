@@ -1,6 +1,7 @@
 <main class="flex justify-center" *transloco="let t">
+  @if (isFormReady()) {
   <div class="w-full max-w-standard bg-white rounded-[20px] shadow-soft border border-black/5 flex flex-col mx-auto">
-    <app-form-container-component [title]="t('MENU.EDIT_ATTENDANCE_DAY')" (submit)="onSave()">
+    <app-form-container-component [title]="t('MENU.VIEW_ATTENDANCE_DAY_DETAILS')">
       <ng-container formFields>
         <section class="col-span-full">
           <h3 class="text-base font-medium mb-4 text-black">{{ t('ATTENDANCE.ATTENDANCE_INFO') }}</h3>
@@ -13,25 +14,7 @@
 
             <app-app-date-input-component
               [label]="t('ATTENDANCE.ATTENDANCE_DATE') + ' *'"
-              [control]="getControl('date')"
-              [showErrors]="submitted()" />
-
-            @if (showShiftSelector()) {
-            <app-app-select-component
-              [label]="t('SHIFT.SHIFT_NAME')"
-              [control]="getControl('shiftId')"
-              [placeholder]="'PLACEHOLDER.SELECT_SHIFT'">
-              @for (shift of shiftOptions(); track shift.id) {
-              <option [value]="shift.id">{{ shift.displayName }}</option>
-              }
-            </app-app-select-component>
-            } @else if (hasResolvedShift()) {
-            <app-app-input-component
-              [label]="t('SHIFT.SHIFT_NAME')"
-              [control]="getControl('shiftName')"
-              [placeholder]="'ATTENDANCE.AUTO_SHIFT'"
-              [readonly]="true" />
-            }
+              [control]="getControl('date')" />
           </div>
         </section>
 
@@ -48,8 +31,7 @@
           <app-app-select-component
             [label]="t('LABEL.LEAVE_TYPE') + ' *'"
             [control]="getControl('leaveTypeId')"
-            [placeholder]="'PLACEHOLDER.SELECT_LEAVE_TYPE'"
-            [showErrors]="submitted()">
+            [placeholder]="'PLACEHOLDER.SELECT_LEAVE_TYPE'">
             @for (leaveType of leaveTypeOptions(); track leaveType.id) {
             <option [value]="leaveType.id">{{ leaveType.name }}</option>
             }
@@ -64,25 +46,19 @@
           <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
             <app-time-input-component
               [label]="t('ATTENDANCE.SHIFT_START')"
-              [control]="getControl('shiftStart')"
-              [readonly]="lockManualShiftTimes()"
-              [showErrors]="submitted()" />
+              [control]="getControl('shiftStart')" />
 
             <app-time-input-component
               [label]="t('ATTENDANCE.SHIFT_END')"
-              [control]="getControl('shiftEnd')"
-              [readonly]="lockManualShiftTimes()"
-              [showErrors]="submitted()" />
+              [control]="getControl('shiftEnd')" />
 
             <app-time-input-component
               [label]="t('ATTENDANCE.CHECK_IN_TIME')"
-              [control]="getControl('checkIn')"
-              [showErrors]="submitted()" />
+              [control]="getControl('checkIn')" />
 
             <app-time-input-component
               [label]="t('ATTENDANCE.CHECK_OUT_TIME')"
-              [control]="getControl('checkOut')"
-              [showErrors]="submitted()" />
+              [control]="getControl('checkOut')" />
           </div>
         </section>
         }
@@ -91,15 +67,14 @@
           <app-app-textarea-component
             [label]="t('LABEL.NOTES')"
             [control]="getControl('notes')"
-            [placeholder]="t('PLACEHOLDER.ENTER_NOTES')"
-            [showErrors]="submitted()" />
+            [placeholder]="t('PLACEHOLDER.ENTER_NOTES')" />
         </section>
       </ng-container>
 
       <ng-container formActions>
-        <app-form-cancel-button-component (click)="onCancel()" />
-        <app-form-save-button-component [isLoading]="isSaving()" [label]="'COMMON.SAVE'" type="submit" />
+        <app-form-save-button-component [label]="'COMMON.BACK'" (clicked)="onBack()" />
       </ng-container>
     </app-form-container-component>
   </div>
+  }
 </main>

@@ -41,6 +41,7 @@
     "TOTAL": "الإجمالي",
     "DOWNLOAD":"تحميل",
     "EMPTY_STATE": "لا توجد عناصر",
+    "OK":"تم",
     "EMPTY_TABLE": {
       "TITLE": "لا يوجد أي محتوى في الجدول بعد، أضف الآن!"
     },
@@ -73,6 +74,7 @@
       "DELETED_SUCCESSFULLY": "تم الحذف بنجاح",
       "CREATED_SUCCESSFULLY": "تم الإنشاء بنجاح",
       "UPDATED_SUCCESSFULLY": "تم التحديث بنجاح",
+      "SAVED_SUCCESSFULLY": "تم الحفظ بنجاح",
       "LOADING_DATA": "جاري تحميل البيانات...",
       "NO_INTERNET": "لا توجد اتصال بالإنترنت",
       "SESSION_EXPIRED": "انتهت جلستك",
@@ -134,6 +136,7 @@
     "CREATE_ATTENDANCE_DAY": "إضافة يوم حضور",
     "VIEW_ATTENDANCE_DAYS": "أيام الحضور",
     "VIEW_ATTENDANCE_LOG_DETAILS": "معلومات سجل الحضور",
+    "VIEW_ATTENDANCE_DAY_DETAILS": "تفاصيل يوم الحضور",
     "ADD_ATTENDANCE_PERMISSION": "إضافة إذن حضور",
     "VIEW_PERMISSIONS": "أذونات الحضور",
     "CORE_HR":"الموظفين"
@@ -605,6 +608,7 @@
     "ATTENDANCE_TIMES": "مواعيد الحضور",
     "AUTO_SHIFT": "تحديد تلقائي حسب التعيين",
     "NO_RELATED_SHIFT": "لا توجد وردية مرتبطة بهذا الموظف في هذا التاريخ.",
+    "ATTENDANCE_DAY_ALREADY_EXISTS": "يوم الحضور لهذا الموظف موجود بالفعل.",
     "CHECK_IN": "الحضور",
     "CHECK_OUT": "الانصراف",
     "CHECK_IN_TIME": "وقت الحضور",
@@ -641,6 +645,8 @@
     "TABLE_CHECK_OUT": "وقت الانصراف",
     "TABLE_TOTAL_HOURS": "إجمالي ساعات العمل",
     "TABLE_STATUS": "الحالة",
+    "ATTENDANCE_DAY": "يوم الحضور",
+    "SEARCH_PLACEHOLDER": "ابحث باسم الموظف...",
     "CREATE_DATE": "تاريخ الإنشاء",
     "SOURCE": "المصدر",
     "SESSION_NUMBER": "رقم الجلسة",
