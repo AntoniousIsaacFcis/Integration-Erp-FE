@@ -34,8 +34,7 @@ export class ViewLogSessionComponent {
   pageSize = signal(10);
   searchTerm = signal('');
   selectedStatus = signal('');
-  openedDate = signal('');
-  closedDate = signal('');
+  sessionDate = signal('');
 
   statusOptions = [
     { value: '', label: 'FILTERS.ALL' },
@@ -47,12 +46,11 @@ export class ViewLogSessionComponent {
     () => {
       this.searchTerm();
       this.selectedStatus();
-      this.openedDate();
-      this.closedDate();
+      this.sessionDate();
       this.currentPage.set(1);
     },
-    { allowSignalWrites: true },
-  );
+  { allowSignalWrites: true },
+);
 
   sessionsResource = rxResource({
     params: () => ({
@@ -60,8 +58,7 @@ export class ViewLogSessionComponent {
       limit: this.pageSize(),
       search: this.searchTerm() || undefined,
       status: this.selectedStatus() || undefined,
-      openedDate: this.openedDate() || undefined,
-      closedDate: this.closedDate() || undefined,
+      sessionDate: this.sessionDate() || undefined,
     }),
     stream: ({ params }) => this.attendanceService.getAttendanceLogSessions(params),
   });

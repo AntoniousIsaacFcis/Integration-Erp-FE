@@ -614,6 +614,7 @@
     "TABLE_SESSION_ID": "الرقم التعريفي",
     "OPENED_AT": "وقت الفتح",
     "CLOSED_AT": "وقت الاغلاق",
+    "SESSION_DATE": "تاريخ الجلسة",
     "SIGNS_COUNT": "عدد التسجيلات",
     "LOG_SESSION_SEARCH_PLACEHOLDER": "ابحث برقم الجلسة أو المصدر...",
     "LOG_SESSION_STATUS": {

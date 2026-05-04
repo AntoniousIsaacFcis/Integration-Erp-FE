@@ -587,6 +587,7 @@
     "TABLE_SESSION_ID": "Session ID",
     "OPENED_AT": "Opened At",
     "CLOSED_AT": "Closed At",
+    "SESSION_DATE": "Session Date",
     "SIGNS_COUNT": "Sign Count",
     "LOG_SESSION_SEARCH_PLACEHOLDER": "Search by session ID or source...",
     "LOG_SESSION_STATUS": {

@@ -12,8 +12,7 @@
         label="FILTERS.STATUS"
         [(selectedStatus)]="selectedStatus"
         [options]="statusOptions" />
-      <app-date-filter-component [(selectedDate)]="openedDate" [labelKey]="'ATTENDANCE.OPENED_AT'" />
-      <app-date-filter-component [(selectedDate)]="closedDate" [labelKey]="'ATTENDANCE.CLOSED_AT'" />
+      <app-date-filter-component [(selectedDate)]="sessionDate" [labelKey]="'ATTENDANCE.SESSION_DATE'" />
     </div>
   </ng-template>
 

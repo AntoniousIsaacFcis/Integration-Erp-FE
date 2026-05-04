@@ -94,43 +94,28 @@ export class AttendanceService {
     limit: number;
     search?: string;
     status?: string;
-    openedDate?: string;
-    closedDate?: string;
+    sessionDate?: string;
   }): Observable<IAttendanceLogSessionListViewResponse> {
-    const requiresLocalClosedDateFiltering = Boolean(params.closedDate?.trim());
-    const requestLimit = requiresLocalClosedDateFiltering ? 1000 : params.limit;
-    const openedDate = params.openedDate?.trim();
-    const closedDate = params.closedDate?.trim();
+    const sessionDate = params.sessionDate?.trim();
 
     return this.http.get<IAttendanceLogSessionListResponse>(this.ATTENDANCE_LOG_SESSION_API_URL, {
       params: {
-        SkipCount: String(requiresLocalClosedDateFiltering ? 0 : (params.page - 1) * params.limit),
-        MaxResultCount: String(requestLimit),
+        SkipCount: String((params.page - 1) * params.limit),
+        MaxResultCount: String(params.limit),
         Sorting: 'OpenedAt DESC',
         ...(params.search?.trim() && { SearchText: params.search.trim() }),
         ...(params.status?.trim() && { Status: params.status.trim() }),
-        ...(openedDate && {
-          OpenedFrom: `${openedDate}T00:00:00`,
-          OpenedTo: `${openedDate}T23:59:59`,
+        ...(sessionDate && {
+          OpenedFrom: `${sessionDate}T00:00:00`,
         }),
       },
     }).pipe(
-      map(response => {
-        const data = (response.items ?? [])
-          .map(item => this.toAttendanceLogSessionListItem(item))
-          .filter(item => this.matchesAttendanceLogSessionClosedDate(item.closedAt, closedDate));
-
-        const pagedData = requiresLocalClosedDateFiltering
-          ? data.slice((params.page - 1) * params.limit, params.page * params.limit)
-          : data;
-
-        return {
-          data: pagedData,
-          total: requiresLocalClosedDateFiltering ? data.length : response.totalCount ?? 0,
-          page: params.page,
-          limit: params.limit,
-        };
-      }),
+      map(response => ({
+        data: (response.items ?? []).map(item => this.toAttendanceLogSessionListItem(item)),
+        total: response.totalCount ?? 0,
+        page: params.page,
+        limit: params.limit,
+      })),
     );
   }
 
@@ -798,6 +783,7 @@ export class AttendanceService {
     return {
       id: item.id,
       code: item.code,
+      sessionDate: item.sessionDate,
       openedAt: item.openedAt,
       closedAt: item.closedAt ?? null,
       sourceDisplay: item.sourceName?.trim() || item.sourceType?.trim() || '',
@@ -961,18 +947,6 @@ export class AttendanceService {
       default:
         return 'ATTENDANCE.LOG_SOURCE.MACHINE';
     }
-  }
-
-  private matchesAttendanceLogSessionClosedDate(closedAt: string | null, selectedDate?: string) {
-    if (!selectedDate) {
-      return true;
-    }
-
-    if (!closedAt) {
-      return false;
-    }
-
-    return this.toDateKey(closedAt) === selectedDate;
   }
 
   private mapAttendanceStatusFilter(status?: string) {

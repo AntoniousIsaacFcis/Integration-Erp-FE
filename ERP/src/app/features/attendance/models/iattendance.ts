@@ -115,6 +115,7 @@ export interface IAttendanceLogSessionListResponse {
 export interface IAttendanceLogSessionListItem {
   id: string;
   code: string;
+  sessionDate: string;
   openedAt: string;
   closedAt: string | null;
   sourceDisplay: string;
