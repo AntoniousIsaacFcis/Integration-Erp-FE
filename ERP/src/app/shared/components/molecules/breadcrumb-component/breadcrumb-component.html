@@ -3,7 +3,7 @@
   class="flex items-center justify-start w-full h-[30px] overflow-hidden select-none font-arabic"
   [attr.dir]="dir()" *transloco="let t">
   <ol class="flex items-center flex-wrap list-none p-0 m-0">
-    @for (crumb of items(); track crumb.url; let isLast = $last) {
+    @for (crumb of items(); track crumb.url + '|' + crumb.label; let isLast = $last) {
       <li class="flex items-center">
 
         @if (!isLast) {

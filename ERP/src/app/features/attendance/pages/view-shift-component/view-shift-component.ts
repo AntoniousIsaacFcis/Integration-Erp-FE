@@ -92,15 +92,15 @@ export class ViewShiftComponent {
 
 
   handleCreateNavigation() {
-    this.router.navigate(['/attendance/create']);
+    this.router.navigate(['/attendance/view/create']);
   }
 
   handleView(id: string) {
-    this.router.navigate(['/attendance/details', id]);
+    this.router.navigate(['/attendance/view/details', id]);
   }
 
   handleEdit(id: string) {
-    this.router.navigate(['/attendance/edit', id]);
+    this.router.navigate(['/attendance/view/edit', id]);
   }
 
   handleDelete(id: string) {

@@ -69,7 +69,7 @@ private permissionService = inject(PermissionService);
   }
 
   handleAddPermission() {
-    this.router.navigate(['/attendance/add-permission']);
+    this.router.navigate(['/attendance/view-permissions/add']);
   }
 
   handleEdit(id: string) {

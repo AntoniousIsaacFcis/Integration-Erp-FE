@@ -91,15 +91,15 @@ export class ViewAttendanceDaysComponent {
   }
 
   handleDailyRegistration() {
-    this.router.navigate(['/attendance/create-attendance-day']);
+    this.router.navigate(['/attendance/view-attendance-days/create']);
   }
 
   handleViewDetails(id: string) {
-    this.router.navigate(['/attendance/details-attendance-day', id]);
+    this.router.navigate(['/attendance/view-attendance-days/details', id]);
   }
 
   handleEdit(id: string) {
-    this.router.navigate(['/attendance/edit-attendance-day', id]);
+    this.router.navigate(['/attendance/view-attendance-days/edit', id]);
   }
 
   handleDelete(id: string) {
@@ -166,5 +166,4 @@ export class ViewAttendanceDaysComponent {
     return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
   }
 }
-
 

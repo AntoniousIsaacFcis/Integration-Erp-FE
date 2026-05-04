@@ -86,15 +86,15 @@ pageSize = signal(10);
   });
 
   handleCreateNavigation() {
-    this.router.navigate(['/attendance/special-create']);
+    this.router.navigate(['/attendance/special/create']);
   }
 
   handleView(id: string) {
-    this.router.navigate(['/attendance/special-details', id]);
+    this.router.navigate(['/attendance/special/details', id]);
   }
 
   handleEdit(id: string) {
-    this.router.navigate(['/attendance/special-edit', id]);
+    this.router.navigate(['/attendance/special/edit', id]);
   }
 
   handleDelete(id: string) {

@@ -77,11 +77,11 @@ export class AddPermissionComponent {
     if (this.mainForm.valid) {
       const payload = this.mainForm.getRawValue() as ICreatePermissionRequest;
       this.saveTrigger.set(payload);
-      this.router.navigate(['attendance/view-permissions']);
+      this.router.navigate(['/attendance/view-permissions']);
     }
   }
 
   onCancel() {
-    this.router.navigate(['attendance/view-permissions']);
+    this.router.navigate(['/attendance/view-permissions']);
   }
 }
