@@ -3,20 +3,19 @@ import { Routes } from '@angular/router';
 export const DESIGNATION_ROUTES: Routes = [
   {
     path: '',
-    data: { breadcrumb: 'MENU.DESIGNATIONS' },
     children: [
       {
         path: '',
-        pathMatch: 'full',
-        redirectTo: 'view',
-      },
-      {
-        path: 'view',
         loadComponent: () =>
           import('./pages/designations/view-designations-component/view-designations-component').then(
             (x) => x.ViewDesignationsComponent,
           ),
         data: { breadcrumb: 'BREADCRUMB.DESIGNATIONS' },
+      },
+      {
+        path: 'view',
+        redirectTo: '',
+        pathMatch: 'full',
       },
       {
         path: 'create',

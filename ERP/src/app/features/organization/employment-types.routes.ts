@@ -3,12 +3,16 @@ import { Routes } from "@angular/router";
 export const EMPLOYMENT_TYPES_ROUTES: Routes = [
   {
     path: '',
-    data: { breadcrumb: 'MENU.EMPLOYMENT_TYPES' },
     children: [
       {
-        path: 'view',
+        path: '',
         loadComponent: () => import('./pages/employment-types/view-emloyment-types-component/view-emloyment-types-component').then(x => x.ViewEmloymentTypesComponent),
         data: { breadcrumb: 'BREADCRUMB.TYPES_TABLE' }
+      },
+      {
+        path: 'view',
+        redirectTo: '',
+        pathMatch: 'full',
       },
       {
         path: 'create',
@@ -24,11 +28,6 @@ export const EMPLOYMENT_TYPES_ROUTES: Routes = [
         path: 'preview/:id',
         loadComponent: () => import('./pages/employment-types/preview-employment-type-component/preview-employment-type-component').then(x => x.PreviewEmploymentTypeComponent),
         data: { breadcrumb: 'JOB_LEVEL.PREVIEW_TYPE' }
-      }
-      , {
-        path: '',
-        redirectTo: 'view',
-        pathMatch: 'full'
       }
     ]
   }
