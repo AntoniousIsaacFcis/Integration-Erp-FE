@@ -89,6 +89,17 @@ export interface IAttendanceLogApiDto {
   invalidReason?: string | null;
 }
 
+export interface IAttendanceLogSignRequest {
+  employeeId: string;
+  sessionId: string;
+}
+
+export interface IAttendanceLogSignResult {
+  id: string;
+  employeeName: string;
+  logDateTime: string;
+}
+
 export interface IAttendanceLogListResponse {
   items: IAttendanceLogApiDto[];
   totalCount: number;

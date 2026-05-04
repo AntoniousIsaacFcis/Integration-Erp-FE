@@ -1,0 +1,34 @@
+<div class="relative w-full font-arabic" *transloco="let t">
+  <app-app-input-component
+    [label]="label()"
+    [control]="searchControl"
+    [placeholder]="placeholder()"
+    [autocomplete]="'off'"
+    [showErrors]="false" />
+
+  @if (isDropdownOpen()) {
+    <button
+      type="button"
+      class="fixed inset-0 z-10 cursor-default bg-transparent"
+      aria-label="Close employee dropdown"
+      (click)="closeDropdown()">
+    </button>
+  }
+
+  @if (employeeSearchResults().length) {
+    <div class="absolute z-20 mt-2 w-full max-h-[340px] overflow-auto rounded-2xl border border-black/10 bg-white shadow-[0_24px_60px_rgba(0,0,0,0.18)]">
+      @for (employee of employeeSearchResults(); track employee.id) {
+        <button
+          type="button"
+          (click)="selectEmployee(employee)"
+          [class.bg-primary/5]="isSelected(employee)"
+          class="block w-full border-b border-black/5 px-4 py-3 text-start text-sm text-black transition-colors last:border-b-0 hover:bg-primary/5">
+          <span class="block font-medium">{{ employee.displayName }}</span>
+          <span class="mt-1 block text-xs text-black/50">
+            {{ employee.staffCode || employee.email || employee.id }}
+          </span>
+        </button>
+      }
+    </div>
+  }
+</div>

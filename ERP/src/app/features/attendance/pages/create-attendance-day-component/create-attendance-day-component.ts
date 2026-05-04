@@ -3,10 +3,9 @@ import { rxResource, toSignal } from '@angular/core/rxjs-interop';
 import { FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NotificationService } from '@core/services/notification-service';
-import { IAttendanceRelatedShift, ICreateAttendanceDayPayload } from '@features/attendance/models/iattendance';
+import { IAttendanceRelatedShift, ICreateAttendanceDayPayload, IShift } from '@features/attendance/models/iattendance';
+import { ILeaveTypeApiDto } from '@features/attendance/models/ivacation';
 import { AttendanceService } from '@features/attendance/services/attendance-service';
-import { IStaffApiItem } from '@features/core-hr/models/istaff';
-import { StaffService } from '@features/core-hr/services/staff-service';
 import { TranslocoModule } from '@jsverse/transloco';
 import { AppDateInputComponent } from '@shared/components/atoms/app-date-input-component/app-date-input-component';
 import { AppInputComponent } from '@shared/components/atoms/app-input-component/app-input-component';
@@ -18,17 +17,10 @@ import { FormCancelButtonComponent } from '@shared/components/molecules/form-can
 import { FormSaveButtonComponent } from '@shared/components/molecules/form-save-button-component/form-save-button-component';
 import { FormContainerComponent } from '@shared/components/organisms/form-container-component/form-container-component';
 import { timeRangeValidator } from '@shared/validators/time-range.validator';
-import { catchError, map, of, startWith } from 'rxjs';
+import { AttendanceEmployeeLookupComponent, IAttendanceEmployeeLookupItem } from '../../components/employee-lookup-component/employee-lookup-component';
+import { catchError, of, startWith } from 'rxjs';
 
 type AttendanceStatusValue = 'present' | 'absent' | 'onLeave';
-type EmployeeOption = {
-  id: string;
-  displayName: string;
-  staffCode: string;
-  departmentId: string | null;
-  designationId: string | null;
-  attendanceShiftId: string | null;
-};
 
 @Component({
   selector: 'app-create-attendance-day-component',
@@ -44,6 +36,7 @@ type EmployeeOption = {
     AppTextareaComponent,
     FormSaveButtonComponent,
     FormCancelButtonComponent,
+    AttendanceEmployeeLookupComponent,
   ],
   templateUrl: './create-attendance-day-component.html',
   styleUrl: './create-attendance-day-component.css',
@@ -53,7 +46,6 @@ export class CreateAttendanceDayComponent {
   private readonly fb = inject(FormBuilder);
   private readonly router = inject(Router);
   private readonly attendanceService = inject(AttendanceService);
-  private readonly staffService = inject(StaffService);
   private readonly notification = inject(NotificationService);
 
   private readonly today = new Date().toISOString().slice(0, 10);
@@ -86,8 +78,6 @@ export class CreateAttendanceDayComponent {
     { label: 'ATTENDANCE.ON_LEAVE', value: 'onLeave' },
   ];
 
-  employeeSearchControl = new FormControl('', { nonNullable: true });
-
   private readonly statusValue = toSignal(
     this.attendanceForm.controls.status.valueChanges.pipe(startWith(this.attendanceForm.controls.status.value)),
   );
@@ -97,61 +87,31 @@ export class CreateAttendanceDayComponent {
   private readonly dateValue = toSignal(
     this.attendanceForm.controls.date.valueChanges.pipe(startWith(this.attendanceForm.controls.date.value)),
   );
-  readonly employeeSearchValue = toSignal(
-    this.employeeSearchControl.valueChanges.pipe(startWith(this.employeeSearchControl.value)),
-  );
-
   isPresent = computed(() => this.statusValue() === 'present');
   isLeave = computed(() => this.statusValue() === 'onLeave');
 
-  staffResource = rxResource({
-    stream: () => this.staffService.getStaff({ skipCount: 0, maxResultCount: 1000, filter: '' }).pipe(
-      map(response => response.items.filter((staff): staff is IStaffApiItem & { id: string } => Boolean(staff.id))),
-      catchError(() => of([])),
-    ),
+  leaveTypesResource = rxResource<ILeaveTypeApiDto[], unknown>({
+    stream: () => this.attendanceService.getLeaveTypes().pipe(catchError(() => of([] as ILeaveTypeApiDto[]))),
   });
 
-  leaveTypesResource = rxResource({
-    stream: () => this.attendanceService.getLeaveTypes().pipe(catchError(() => of([]))),
+  shiftOptionsResource = rxResource<{ id: string; displayName: string }[], unknown>({
+    stream: () => this.attendanceService.getShiftOptions().pipe(catchError(() => of([] as { id: string; displayName: string }[]))),
   });
 
-  shiftOptionsResource = rxResource({
-    stream: () => this.attendanceService.getShiftOptions().pipe(catchError(() => of([]))),
-  });
-
-  selectedShiftResource = rxResource({
+  selectedShiftResource = rxResource<IShift | null, string | null>({
     params: () => this.shiftIdValue() || null,
     stream: ({ params }) => {
       if (!params) {
         return of(null);
       }
 
-      return this.attendanceService.getShiftById(params).pipe(catchError(() => of(null)));
+      return this.attendanceService.getShiftById(params).pipe(catchError(() => of(null as IShift | null)));
     },
   });
 
-  staffOptions = computed(() => (this.staffResource.value() ?? []).map(staff => ({
-    id: staff.id,
-    displayName: this.getStaffDisplayName(staff),
-    staffCode: staff.staffCode?.trim() ?? '',
-    departmentId: staff.departmentId ?? null,
-    designationId: staff.designationId ?? null,
-    attendanceShiftId: staff.attendanceShiftId ?? null,
-  })));
-  selectedEmployee = signal<EmployeeOption | null>(null);
-  employeeSearchResults = computed(() => {
-    const search = this.normalizeSearchText(this.employeeSearchValue());
+  selectedEmployee = signal<IAttendanceEmployeeLookupItem | null>(null);
 
-    if (!search || this.selectedEmployee()?.displayName === this.employeeSearchValue()) {
-      return [];
-    }
-
-    return this.staffOptions()
-      .filter(employee => this.matchesEmployeeSearch(employee, search))
-      .slice(0, 6);
-  });
-
-  relatedShiftResource = rxResource({
+  relatedShiftResource = rxResource<IAttendanceRelatedShift | null, { employeeId: string; date: string; employee: IAttendanceEmployeeLookupItem } | null>({
     params: () => {
       const employee = this.selectedEmployee();
       const employeeId = employee?.id ?? '';
@@ -161,18 +121,27 @@ export class CreateAttendanceDayComponent {
     },
     stream: ({ params }) => params
       ? this.attendanceService.getRelatedAttendanceShift(params.employeeId, params.date).pipe(catchError(() => of(null)))
-      : of(null),
+      : of(null as IAttendanceRelatedShift | null),
   });
-  resolvedShift = computed(() => this.relatedShiftResource.value() ?? null);
-  selectedShift = computed(() => this.selectedShiftResource.value() ?? null);
+  resolvedShift = computed(() => this.relatedShiftResource.value() as IAttendanceRelatedShift | null);
+  selectedShift = computed(() => this.selectedShiftResource.value() as IShift | null);
   hasResolvedShift = computed(() => Boolean(this.resolvedShift()));
   hasSelectedShift = computed(() => Boolean(this.selectedShift()));
   showShiftSelector = computed(() => Boolean(this.selectedEmployee()) && !this.relatedShiftResource.isLoading() && !this.hasResolvedShift());
-  shiftOptions = computed(() => this.shiftOptionsResource.value() ?? []);
-  leaveTypeOptions = computed(() => this.leaveTypesResource.value() ?? []);
+  shiftOptions = computed(() => (this.shiftOptionsResource.value() ?? []) as { id: string; displayName: string }[]);
+  leaveTypeOptions = computed(() => (this.leaveTypesResource.value() ?? []) as ILeaveTypeApiDto[]);
   lockManualShiftTimes = computed(() => Boolean(this.shiftIdValue()) || this.hasResolvedShift());
 
   constructor() {
+    effect(() => {
+      const employee = this.selectedEmployee();
+      this.attendanceForm.controls.employeeId.setValue(employee?.id ?? '');
+
+      if (employee) {
+        this.clearShiftFields();
+      }
+    });
+
     effect(() => {
       this.configureConditionalValidators(this.statusValue() ?? 'present');
     });
@@ -249,13 +218,6 @@ export class CreateAttendanceDayComponent {
 
   getControl(name: keyof typeof this.attendanceForm.controls): FormControl {
     return this.attendanceForm.controls[name] as FormControl;
-  }
-
-  selectEmployee(employee: EmployeeOption) {
-    this.clearShiftFields();
-    this.selectedEmployee.set(employee);
-    this.attendanceForm.controls.employeeId.setValue(employee.id);
-    this.employeeSearchControl.setValue(employee.displayName);
   }
 
   private clearShiftFields() {
@@ -374,34 +336,4 @@ export class CreateAttendanceDayComponent {
     return null;
   }
 
-  private getStaffDisplayName(staff: IStaffApiItem) {
-    const composedName = [staff.firstName, staff.middleName, staff.lastName]
-      .map(part => part?.trim())
-      .filter(Boolean)
-      .join(' ');
-
-    const displayName = staff.fullNameAr?.trim()
-      || staff.fullName?.trim()
-      || composedName
-      || staff.staffCode?.trim()
-      || staff.id;
-    const code = staff.staffCode?.trim();
-
-    return code ? `${displayName} #${code}` : displayName;
-  }
-
-  private matchesEmployeeSearch(employee: { displayName: string; staffCode: string }, search: string) {
-    return [
-      employee.displayName,
-      employee.staffCode,
-    ].some(value => this.normalizeSearchText(value).includes(search));
-  }
-
-  private normalizeSearchText(value?: string | null) {
-    return String(value ?? '')
-      .trim()
-      .toLowerCase()
-      .replace(/[أإآ]/g, 'ا')
-      .replace(/ة/g, 'ه');
-  }
 }

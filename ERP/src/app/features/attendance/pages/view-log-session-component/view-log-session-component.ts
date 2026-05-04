@@ -5,6 +5,9 @@ import { Router } from '@angular/router';
 import { AttendanceService } from '@features/attendance/services/attendance-service';
 import { IAttendanceLogSessionListItem } from '@features/attendance/models/iattendance';
 import { TranslocoModule } from '@jsverse/transloco';
+import { lucideCheckCircle } from '@ng-icons/lucide';
+import { provideIcons } from '@ng-icons/core';
+import { ActionBtnComponent } from '@shared/components/molecules/action-btn-component/action-btn-component';
 import { AppBaseTableComponent } from '@shared/components/organisms/app-base-table-component/app-base-table-component';
 import { DateFilterComponent } from '@shared/components/molecules/date-filter-component/date-filter-component';
 import { EmptyTablePlaceholderComponent } from '@shared/components/molecules/empty-table-placeholder-component/empty-table-placeholder-component';
@@ -17,6 +20,7 @@ import { TableStatusBadgeComponent } from '@shared/components/atoms/table-status
     TranslocoModule,
     DatePipe,
     AppBaseTableComponent,
+    ActionBtnComponent,
     DateFilterComponent,
     EmptyTablePlaceholderComponent,
     StatusBadgeComponent,
@@ -24,6 +28,7 @@ import { TableStatusBadgeComponent } from '@shared/components/atoms/table-status
   ],
   templateUrl: './view-log-session-component.html',
   styleUrl: './view-log-session-component.css',
+  providers: [provideIcons({ lucideCheckCircle })],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ViewLogSessionComponent {
@@ -68,6 +73,20 @@ export class ViewLogSessionComponent {
 
   normalizeSource(session: IAttendanceLogSessionListItem) {
     return session.sourceDisplay?.trim() || '';
+  }
+
+  openSessionDetails(sessionId: string) {
+    this.router.navigate(['/attendance/view-log-session/details', sessionId]);
+  }
+
+  handleDailyRegistration() {
+    const openSession = this.sessions().find(session => session.status === 1) ?? this.sessions()[0];
+
+    if (!openSession) {
+      return;
+    }
+
+    this.openSessionDetails(openSession.id);
   }
 
   handleBack() {

@@ -6,23 +6,10 @@
           <h3 class="text-base font-medium mb-4 text-black">{{ t('ATTENDANCE.ATTENDANCE_INFO') }}</h3>
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
-            <div class="relative">
-              <app-app-input-component [label]="t('ATTENDANCE.EMPLOYEE_NAME') + ' *'"
-                [control]="employeeSearchControl" [placeholder]="'PLACEHOLDER.EMPLOYEE_NAME'"
-                [showErrors]="submitted() && getControl('employeeId').invalid" autocomplete="off" />
-
-              @if (employeeSearchResults().length) {
-              <div
-                class="absolute z-20 mt-2 w-full overflow-hidden rounded-md border border-black/10 bg-white shadow-soft">
-                @for (employee of employeeSearchResults(); track employee.id) {
-                <button type="button" (click)="selectEmployee(employee)"
-                  class="block w-full px-4 py-3 text-start text-sm text-black transition-colors hover:bg-primary/5">
-                  <span class="block font-medium">{{ employee.displayName }}</span>
-                </button>
-                }
-              </div>
-              }
-            </div>
+            <app-attendance-employee-lookup-component
+              [(selectedEmployee)]="selectedEmployee"
+              [label]="'ATTENDANCE.EMPLOYEE_NAME'"
+              [placeholder]="'ATTENDANCE.EMPLOYEE_SEARCH_PLACEHOLDER'" />
 
             <app-app-date-input-component [label]="t('ATTENDANCE.ATTENDANCE_DATE') + ' *'"
               [control]="getControl('date')" [showErrors]="submitted()" />

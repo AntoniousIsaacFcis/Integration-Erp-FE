@@ -6,7 +6,7 @@ import { IStaffApiItem } from '@features/core-hr/models/istaff';
 import { StaffService } from '@features/core-hr/services/staff-service';
 import { ISelectOption } from '@shared/components/atoms/select-btn-component/select-btn-component';
 import { catchError, forkJoin, map, Observable, of, shareReplay, switchMap, tap, timeout } from 'rxjs';
-import { IAttendanceAvailablePeriod, IAttendanceDay, IAttendanceDayApiDto, IAttendanceDayListResponse, IAttendanceLogApiDto, IAttendanceLogDetails, IAttendanceLogListItem, IAttendanceLogListResponse, IAttendanceLogListViewResponse, IAttendanceLogSessionApiDto, IAttendanceLogSessionListItem, IAttendanceLogSessionListResponse, IAttendanceLogSessionListViewResponse, IAttendanceRelatedShift, IAttendanceResponse, ICreateAttendanceDayPayload, ICustomShiftForm, IEditAttendanceDay, IShift, IShiftApiListResponse, IShiftAssignment, IShiftAssignmentApiListResponse, IShiftAssignmentPayload, IShiftListItem, IShiftListResponse, IShiftOption, IShiftPayload, ISpecialShiftListResponse, IUpdateAttendancePayload } from '../models/iattendance';
+import { IAttendanceAvailablePeriod, IAttendanceDay, IAttendanceDayApiDto, IAttendanceDayListResponse, IAttendanceLogApiDto, IAttendanceLogDetails, IAttendanceLogListItem, IAttendanceLogListResponse, IAttendanceLogListViewResponse, IAttendanceLogSessionApiDto, IAttendanceLogSessionListItem, IAttendanceLogSessionListResponse, IAttendanceLogSessionListViewResponse, IAttendanceLogSignRequest, IAttendanceLogSignResult, IAttendanceRelatedShift, IAttendanceResponse, ICreateAttendanceDayPayload, ICustomShiftForm, IEditAttendanceDay, IShift, IShiftApiListResponse, IShiftAssignment, IShiftAssignmentApiListResponse, IShiftAssignmentPayload, IShiftListItem, IShiftListResponse, IShiftOption, IShiftPayload, ISpecialShiftListResponse, IUpdateAttendancePayload } from '../models/iattendance';
 
 @Injectable({
   providedIn: 'root',
@@ -64,6 +64,7 @@ export class AttendanceService {
     search?: string;
     status?: string;
     date?: string;
+    sessionId?: string;
   }): Observable<IAttendanceLogListViewResponse> {
     const selectedDate = params.date?.trim();
 
@@ -74,6 +75,7 @@ export class AttendanceService {
         Sorting: 'LogDateTime DESC',
         ...(params.search?.trim() && { SearchText: params.search.trim() }),
         ...(params.status?.trim() && { Status: params.status.trim() }),
+        ...(params.sessionId?.trim() && { AttendanceLogSessionId: params.sessionId.trim() }),
         ...(selectedDate && {
           FromLogDateTime: `${selectedDate}T00:00:00`,
           ToLogDateTime: `${selectedDate}T23:59:59`,
@@ -403,6 +405,14 @@ export class AttendanceService {
     return this.http.get<IAttendanceLogApiDto>(`${this.API_URL}/attendance/attendance-log/${id}`).pipe(
       map(item => this.toAttendanceLogDetails(item)),
     );
+  }
+
+  getAttendanceLogSessionById(id: string): Observable<IAttendanceLogSessionApiDto> {
+    return this.http.get<IAttendanceLogSessionApiDto>(`${this.ATTENDANCE_LOG_SESSION_API_URL}/${id}`);
+  }
+
+  signAttendanceLog(payload: IAttendanceLogSignRequest): Observable<IAttendanceLogSignResult> {
+    return this.http.post<IAttendanceLogSignResult>(`${this.API_URL}/attendance/attendance-log/sign`, payload);
   }
 
   deleteAttendanceLog(id: string): Observable<void> {

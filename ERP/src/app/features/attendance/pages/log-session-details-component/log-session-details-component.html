@@ -1,0 +1,126 @@
+<main class="flex justify-center" *transloco="let t">
+  @if (sessionResource.isLoading()) {
+    <div class="w-full max-w-standard rounded-[20px] bg-white px-6 py-16 text-center text-gray-400 shadow-soft border border-black/5 mx-auto">
+      {{ t('COMMON.LOADING') }}
+    </div>
+  } @else if (sessionResource.error()) {
+    <div class="w-full max-w-standard rounded-[20px] bg-red-50 px-6 py-10 text-center text-red-600 shadow-soft border border-red-100 mx-auto">
+      <p>{{ t('COMMON.MESSAGES.OPERATION_FAILED') }}</p>
+      <button
+        type="button"
+        (click)="navigateBack()"
+        class="mt-4 rounded-lg bg-red-600 px-4 py-2 text-white">
+        {{ t('COMMON.CLOSE') }}
+      </button>
+    </div>
+  } @else if (sessionResource.value()) {
+    <div class="w-full max-w-standard bg-white rounded-[20px] shadow-soft border border-black/5 mx-auto overflow-hidden">
+      <section class="flex items-start justify-between gap-4 border-b border-black/5 px-6 py-5">
+        <div>
+          <p class="text-xs uppercase tracking-[0.25em] text-black/40">{{ t('ATTENDANCE.SESSION_DETAILS') }}</p>
+          <h1 class="mt-2 text-2xl font-semibold text-black font-arabic">
+            {{ sessionForm.controls.code.value }}
+          </h1>
+          <div class="mt-2 text-sm text-black/55">
+            {{ sessionDateDisplay() }} - {{ sessionForm.controls.openedAt.value }}
+          </div>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <app-action-btn-component
+            [label]="'ATTENDANCE.DAILY_REGISTRATION'"
+            iconName="lucideCheckCircle"
+            (clicked)="handleDailyRegistration()" />
+
+          <button
+            type="button"
+            (click)="navigateBack()"
+            class="inline-flex h-11 items-center justify-center rounded-xl border border-black/10 bg-white px-5 text-sm font-medium text-black transition hover:bg-black/5">
+            {{ t('COMMON.CLOSE') }}
+          </button>
+        </div>
+      </section>
+
+      <div class="px-6 pt-6">
+        <app-tab-switcher-component
+          [tabs]="[
+            { id: 'details', label: 'ATTENDANCE.SESSION_INFO' },
+            { id: 'logs', label: 'ATTENDANCE.RECENT_SESSION_LOGS' }
+          ]"
+          [activeId]="activeTab()"
+          (tabClick)="activeTab.set($event)" />
+      </div>
+
+      <div class="px-6 py-6">
+        @if (activeTab() === 'details') {
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+            <app-app-input-component [label]="t('ATTENDANCE.SESSION_NUMBER')" [control]="getControl('code')" />
+            <app-app-input-component [label]="t('ATTENDANCE.STATUS')" [control]="getControl('status')" />
+            <app-app-date-input-component [label]="t('ATTENDANCE.SESSION_DATE')" [control]="getControl('sessionDate')" />
+            <app-app-input-component [label]="t('ATTENDANCE.OPENED_AT')" [control]="getControl('openedAt')" />
+            <app-app-input-component [label]="t('ATTENDANCE.CLOSED_AT')" [control]="getControl('closedAt')" />
+            <app-app-input-component [label]="t('ATTENDANCE.SOURCE')" [control]="getControl('source')" />
+            <app-app-input-component [label]="t('ATTENDANCE.SIGNS_COUNT')" [control]="getControl('signsCount')" />
+            <app-app-input-component [label]="t('LABEL.NOTES')" [control]="getControl('notes')" />
+          </div>
+        } @else {
+          @if (logsResource.isLoading()) {
+            <div class="py-10 text-center text-gray-400">{{ t('COMMON.LOADING') }}</div>
+          } @else if (logsResource.error()) {
+            <div class="rounded-xl border border-red-100 bg-red-50 p-6 text-center text-red-600">
+              <p>{{ t('COMMON.MESSAGES.OPERATION_FAILED') }}</p>
+              <button
+                type="button"
+                (click)="logsResource.reload()"
+                class="mt-3 rounded-lg bg-red-600 px-4 py-2 text-white">
+                {{ t('COMMON.MESSAGES.PLEASE_TRY_AGAIN') }}
+              </button>
+            </div>
+          } @else if (!logs.length) {
+            <div class="rounded-xl border border-dashed border-black/10 bg-[#FAFAFA] p-8 text-center text-black/45">
+              {{ t('ATTENDANCE.NO_SESSION_LOGS') }}
+            </div>
+          } @else {
+            <div class="overflow-x-auto">
+              <table class="min-w-[900px] w-full text-right font-arabic border border-[#F4F4F4]/50 rounded-xl overflow-hidden">
+                <thead class="text-sm bg-[#F4F4F4] sticky top-0 z-10">
+                  <tr>
+                    <th class="py-4 ps-10 text-start">{{ t('ATTENDANCE.TABLE_EMPLOYEE_NAME') }}</th>
+                    <th class="py-4 px-4 text-center">{{ t('ATTENDANCE.LOG_TIME') }}</th>
+                    <th class="py-4 px-4 text-center">{{ t('ATTENDANCE.SOURCE') }}</th>
+                    <th class="py-4 px-4 text-center">{{ t('ATTENDANCE.STATUS') }}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (log of logs; track log.id) {
+                    <tr class="bg-white border-b border-gray-200 hover:bg-gray-50/50 transition-all">
+                      <td class="py-4 ps-10 text-start font-medium text-sm text-black">{{ log.employeeName }}</td>
+                      <td class="py-4 px-4 text-center text-sm">{{ log.logDateTime | date:'dd/MM/yyyy HH:mm:ss' }}</td>
+                      <td class="py-4 px-4 text-center text-sm">
+                        {{ log.sourceDisplay || t(log.sourceLabelKey) }}
+                      </td>
+                      <td class="py-4 px-4 text-center">
+                        <div class="flex justify-center">
+                          <app-table-status-badge-component [status]="log.statusTone" [label]="t(log.statusLabelKey)" />
+                        </div>
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          }
+        }
+      </div>
+    </div>
+
+    @if (showSignModal()) {
+      <app-sign-attendance-log-modal-component
+        [sessionId]="sessionId()"
+        [sessionDate]="sessionDateRaw()"
+        [recentLogs]="logs"
+        (closed)="closeSignModal()"
+        (signed)="handleSigned()" />
+    }
+  }
+</main>

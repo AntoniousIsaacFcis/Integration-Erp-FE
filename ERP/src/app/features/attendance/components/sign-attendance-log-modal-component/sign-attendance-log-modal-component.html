@@ -1,0 +1,114 @@
+<div class="fixed inset-0 z-[1100] flex items-center justify-center p-4" *transloco="let t">
+  <button
+    type="button"
+    class="absolute inset-0 bg-black/50 backdrop-blur-[2px]"
+    (click)="onClose()"
+    aria-label="Close modal"></button>
+
+  <section class="relative z-[1101] w-[min(96vw,1180px)] overflow-hidden rounded-[24px] bg-white shadow-2xl border border-black/5">
+    <header class="flex items-start justify-between gap-4 border-b border-black/5 px-6 py-5">
+      <div class="space-y-1">
+        <h2 class="text-xl font-semibold text-black font-arabic">{{ sessionTitle() }}</h2>
+        <p class="text-sm text-black/50">{{ t('ATTENDANCE.SIGN_ATTENDANCE_HINT') }}</p>
+      </div>
+
+      <button
+        type="button"
+        (click)="onClose()"
+        class="flex size-10 items-center justify-center rounded-full border border-black/10 text-black/60 transition hover:bg-black/5 hover:text-black">
+        <ng-icon name="lucideX" size="18"></ng-icon>
+      </button>
+    </header>
+
+    <div class="grid gap-6 px-6 py-6 lg:grid-cols-[minmax(0,1.35fr)_380px]">
+      <section class="space-y-5">
+        <div class="rounded-2xl border border-black/5 bg-[#FAFAFA] p-4">
+          <div class="flex items-center justify-between gap-3">
+            <div>
+              <span class="text-xs uppercase tracking-[0.2em] text-black/40">{{ t('ATTENDANCE.SESSION_TIMER') }}</span>
+              <div class="mt-1 flex items-center gap-2 text-2xl font-semibold text-[#537C0F] font-mono">
+                <ng-icon name="lucideClock3" size="20"></ng-icon>
+                <span>{{ elapsedTime() }}</span>
+              </div>
+            </div>
+
+            <div class="rounded-2xl bg-white px-4 py-3 text-sm text-black/60 border border-black/5">
+              {{ t('ATTENDANCE.SESSION_LOGS_COUNT') }}: {{ recentLogs().length }}
+            </div>
+          </div>
+        </div>
+
+        <app-attendance-employee-lookup-component
+          [(selectedEmployee)]="selectedEmployee"
+          [resetKey]="lookupResetKey()"
+          [label]="'ATTENDANCE.EMPLOYEE_NAME'"
+          [placeholder]="'ATTENDANCE.EMPLOYEE_SEARCH_PLACEHOLDER'" />
+
+        @if (selectedEmployee(); as employee) {
+          <div class="rounded-2xl border border-[#537C0F]/15 bg-[#F8FAF2] px-4 py-3 text-sm text-[#35550A]">
+            <div class="font-medium">{{ employee.displayName }}</div>
+            <div class="mt-1 text-xs text-[#35550A]/70">
+              {{ employee.staffCode || employee.email || employee.id }}
+            </div>
+          </div>
+        }
+
+        <div class="flex flex-col gap-3 sm:flex-row sm:justify-end">
+          <button
+            type="button"
+            (click)="onClose()"
+            class="inline-flex h-11 items-center justify-center rounded-xl border border-black/10 bg-white px-5 text-sm font-medium text-black transition hover:bg-black/5">
+            {{ t('COMMON.CLOSE') }}
+          </button>
+
+          <button
+            type="button"
+            (click)="onSign()"
+            [disabled]="!selectedEmployee() || isSubmitting()"
+            class="inline-flex h-11 items-center justify-center rounded-xl bg-[#537C0F] px-6 text-sm font-medium text-white transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-60">
+            @if (isSubmitting()) {
+              <span>{{ t('COMMON.LOADING') }}</span>
+            } @else {
+              <span>{{ t('ATTENDANCE.SIGN_ATTENDANCE') }}</span>
+            }
+          </button>
+        </div>
+      </section>
+
+      <aside class="rounded-2xl border border-black/5 bg-white p-4">
+        <div class="flex items-center justify-between">
+          <h3 class="text-base font-semibold text-black">{{ t('ATTENDANCE.RECENT_SESSION_LOGS') }}</h3>
+          <span class="text-xs text-black/40">{{ recentLogs().length }}</span>
+        </div>
+
+        <div class="mt-4 space-y-3 max-h-[420px] overflow-auto pr-1">
+          @if (!recentLogs().length) {
+            <div class="rounded-xl border border-dashed border-black/10 bg-[#FAFAFA] p-4 text-sm text-black/40">
+              {{ t('ATTENDANCE.NO_SESSION_LOGS') }}
+            </div>
+          } @else {
+            @for (log of recentLogs(); track log.id) {
+              <article class="rounded-xl border border-black/5 bg-[#FAFAFA] p-4">
+                <div class="flex items-start justify-between gap-3">
+                  <div>
+                    <div class="font-medium text-black">{{ log.employeeName }}</div>
+                    <div class="mt-1 text-xs text-black/50">
+                      {{ log.employeeCode || log.employeeName }}
+                    </div>
+                  </div>
+
+                  <div class="text-xs text-black/40">{{ log.logDateTime | date:'HH:mm:ss' }}</div>
+                </div>
+
+                <div class="mt-3 flex items-center justify-between gap-2 text-xs text-black/55">
+                  <span>{{ log.sourceDisplay || t(log.sourceLabelKey) }}</span>
+                  <app-table-status-badge-component [status]="log.statusTone" [label]="t(log.statusLabelKey)" />
+                </div>
+              </article>
+            }
+          }
+        </div>
+      </aside>
+    </div>
+  </section>
+</div>

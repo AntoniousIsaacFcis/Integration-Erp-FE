@@ -17,6 +17,11 @@ export const ATTENDANCE_ROUTES: Routes = [
                 path: '',
                 loadComponent: () => import('./pages/view-log-session-component/view-log-session-component').then(x => x.ViewLogSessionComponent),
               },
+              {
+                path: 'details/:id',
+                loadComponent: () => import('./pages/log-session-details-component/log-session-details-component').then(x => x.LogSessionDetailsComponent),
+                data: { breadcrumb: 'ATTENDANCE.SESSION_DETAILS' },
+              },
             ],
           },
           {
@@ -140,6 +145,14 @@ export const ATTENDANCE_ROUTES: Routes = [
           {
             path: 'details/:id',
             redirectTo: 'view/details/:id',
+          },
+          {
+            path: 'log-session-details/:id',
+            redirectTo: 'view-log-session/details/:id',
+          },
+          {
+            path: 'view-log-session-details/:id',
+            redirectTo: 'view-log-session/details/:id',
           },
           {
             path: 'special-create',

@@ -3,6 +3,7 @@
   [totalItems]="totalItems()"
   [(currentPage)]="currentPage"
   [extraFilters]="sessionFilters"
+  [extraActions]="sessionActions"
   [searchPlaceholder]="'ATTENDANCE.LOG_SESSION_SEARCH_PLACEHOLDER'"
   *transloco="let t">
 
@@ -13,6 +14,15 @@
         [(selectedStatus)]="selectedStatus"
         [options]="statusOptions" />
       <app-date-filter-component [(selectedDate)]="sessionDate" [labelKey]="'ATTENDANCE.SESSION_DATE'" />
+    </div>
+  </ng-template>
+
+  <ng-template #sessionActions>
+    <div class="flex items-center gap-3">
+      <app-action-btn-component
+        [label]="'ATTENDANCE.DAILY_REGISTRATION'"
+        (clicked)="handleDailyRegistration()"
+        iconName="lucideCheckCircle" />
     </div>
   </ng-template>
 
@@ -46,6 +56,7 @@
             <th class="py-4 px-4 text-center">{{ t('ATTENDANCE.SOURCE') }}</th>
             <th class="py-4 px-4 text-center">{{ t('ATTENDANCE.SIGNS_COUNT') }}</th>
             <th class="py-4 px-4 text-center">{{ t('ATTENDANCE.STATUS') }}</th>
+            <th class="py-4 px-4 text-center">{{ t('COMMON.VIEW') }}</th>
           </tr>
         </thead>
         <tbody>
@@ -66,6 +77,14 @@
                     [status]="session.statusTone"
                     [label]="t(session.statusLabelKey)" />
                 </div>
+              </td>
+              <td class="py-4 px-4 text-center">
+                <button
+                  type="button"
+                  (click)="openSessionDetails(session.id)"
+                  class="inline-flex items-center justify-center rounded-lg border border-black/10 px-4 py-2 text-sm font-medium text-black transition hover:bg-black/5">
+                  {{ t('COMMON.VIEW') }}
+                </button>
               </td>
             </tr>
           }
