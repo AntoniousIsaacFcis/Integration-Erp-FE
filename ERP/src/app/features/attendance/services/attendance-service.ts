@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { environment } from '@env/environment.development';
 import { IEmployeeLeaveOverviewApiResponse, ILeaveApplicationApiDto, ILeaveApplicationUpdatePayload, ILeaveTypeApiDto, ILeaveTypeListResponse, IVacationResponse, VacationStatus } from '@features/attendance/models/ivacation';
 import { IStaffApiItem } from '@features/core-hr/models/istaff';
@@ -19,26 +19,42 @@ export class AttendanceService {
   private readonly SHIFT_ASSIGNMENT_API_URL = `${this.API_URL}/attendance/shift-assignment`;
   private readonly ATTENDANCE_LOG_SESSION_API_URL = `${this.API_URL}/attendance/attendance-log-session`;
   private readonly relatedShiftRequests = new Map<string, Observable<IAttendanceRelatedShift | null>>();
+  readonly attendanceDayRefreshVersion = signal(0);
 
   getAttendance(empId: string, year: string, month: string): Observable<IAttendanceDay[]> {
-    const yearNumber = Number(year);
-    const monthNumber = Number(month);
+    return this.getAttendanceDays({
+      employeeId: empId,
+      year,
+      month,
+    });
+  }
+
+  getAttendanceDays(params: {
+    employeeId: string;
+    year: string;
+    month: string;
+    page?: number;
+    limit?: number;
+  }): Observable<IAttendanceDay[]> {
+    const yearNumber = Number(params.year);
+    const monthNumber = Number(params.month);
     const fromDate = new Date(yearNumber, monthNumber - 1, 1);
     const toDate = new Date(yearNumber, monthNumber, 0, 23, 59, 59);
+    const page = params.page ?? 1;
+    const limit = params.limit ?? 1000;
 
-    return this.http.get<IAttendanceLogListResponse | { data?: IAttendanceLogApiDto[] } | IAttendanceLogApiDto[]>(`${this.API_URL}/attendance/attendance-log`, {
+    return this.http.get<IAttendanceDayListResponse>(`${this.API_URL}/attendance/attendance-day`, {
       params: {
-        EmployeeId: empId,
-        FromLogDateTime: this.toDateTimeParam(fromDate),
-        ToLogDateTime: this.toDateTimeParam(toDate),
-        SkipCount: '0',
-        MaxResultCount: '1000',
-      }
+        EmployeeId: params.employeeId,
+        FromDate: this.toDateParam(fromDate),
+        ToDate: this.toDateParam(toDate),
+        SkipCount: String((page - 1) * limit),
+        MaxResultCount: String(limit),
+        Sorting: 'Date ASC',
+      },
     }).pipe(
       timeout(8000),
-      map(response => {
-        return this.toAttendanceDaysFromLogs(this.extractAttendanceLogs(response));
-      }),
+      map(response => (response.items ?? []).map(item => this.toAttendanceDay(item))),
     );
   }
 
@@ -125,21 +141,19 @@ export class AttendanceService {
     fromDate?: string;
     toDate?: string;
     status?: string;
+    refreshVersion?: number;
   }): Observable<IAttendanceResponse> {
     const mappedStatus = this.mapAttendanceStatusFilter(params.status);
     const normalizedSearch = this.normalizeSearchText(params.search);
-    const requiresLocalSearch = Boolean(normalizedSearch);
 
     return forkJoin({
-      attendance: this.http.get<IAttendanceDayListResponse>(`${this.API_URL}/attendance/attendance-day`, {
-        params: {
-          skipCount: (requiresLocalSearch ? 0 : (params.page - 1) * params.limit).toString(),
-          maxResultCount: (requiresLocalSearch ? 1000 : params.limit).toString(),
-          sorting: 'Date DESC',
-          ...(params.fromDate && { fromDate: params.fromDate }),
-          ...(params.toDate && { toDate: params.toDate }),
-          ...(mappedStatus && { status: mappedStatus.toString() }),
-        }
+      attendance: this.getAttendanceDaysResponse({
+        page: params.page,
+        limit: params.limit,
+        fromDate: params.fromDate,
+        toDate: params.toDate,
+        status: mappedStatus,
+        search: normalizedSearch || undefined,
       }),
       staff: this.staffService.getStaff({ skipCount: 0, maxResultCount: 1000, filter: '' }).pipe(
         catchError(() => of({ totalCount: 0, items: [] })),
@@ -153,20 +167,20 @@ export class AttendanceService {
         );
         const data = attendance.items
           .map(item => this.toAttendanceLog(item, staffLookup))
-          .filter(item => this.matchesAttendanceSearch(item, normalizedSearch))
           .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-        const pagedData = requiresLocalSearch
-          ? data.slice((params.page - 1) * params.limit, params.page * params.limit)
-          : data;
 
         return {
-          data: pagedData,
-          total: requiresLocalSearch ? data.length : attendance.totalCount,
+          data,
+          total: attendance.totalCount,
           page: params.page,
           limit: params.limit,
         };
       }),
     );
+  }
+
+  getAttendanceDayById(id: string): Observable<IAttendanceDayApiDto> {
+    return this.http.get<IAttendanceDayApiDto>(`${this.API_URL}/attendance/attendance-day/${id}`);
   }
 
   getShifts(params: {
@@ -407,7 +421,9 @@ export class AttendanceService {
   }
 
   deleteAttendanceLog(id: string): Observable<void> {
-    return this.http.delete<void>(`${this.API_URL}/attendance/attendance-log/${id}`);
+    return this.http.delete<void>(`${this.API_URL}/attendance/attendance-log/${id}`).pipe(
+      tap(() => this.requestAttendanceDayRefresh()),
+    );
   }
 
   getAttendanceDayForDate(employeeId: string, date: string): Observable<IAttendanceDayApiDto | null> {
@@ -570,7 +586,7 @@ export class AttendanceService {
 
   getAttendanceById(id: string): Observable<IEditAttendanceDay> {
     return forkJoin({
-      attendance: this.http.get<IAttendanceDayApiDto>(`${this.API_URL}/attendance/attendance-day/${id}`),
+      attendance: this.getAttendanceDayById(id),
       staff: this.staffService.getStaff({ skipCount: 0, maxResultCount: 1000, filter: '' }).pipe(
         catchError(() => of({ totalCount: 0, items: [] })),
       ),
@@ -588,7 +604,7 @@ export class AttendanceService {
   }
 
   updateAttendance(id: string, payload: IUpdateAttendancePayload): Observable<void> {
-    return this.http.get<IAttendanceDayApiDto>(`${this.API_URL}/attendance/attendance-day/${id}`).pipe(
+    return this.getAttendanceDayById(id).pipe(
       switchMap(current =>
         this.http.put<IAttendanceDayApiDto>(
           `${this.API_URL}/attendance/attendance-day/${id}`,
@@ -599,150 +615,26 @@ export class AttendanceService {
     );
   }
 
-  private extractAttendanceLogs(response: IAttendanceLogListResponse | { data?: IAttendanceLogApiDto[] } | IAttendanceLogApiDto[]) {
-    if (Array.isArray(response)) {
-      return response;
-    }
-
-    const record = response as IAttendanceLogListResponse & { data?: IAttendanceLogApiDto[] };
-    return record.items ?? record.data ?? [];
-  }
-
-  private toAttendanceDaysFromLogs(logs: IAttendanceLogApiDto[]): IAttendanceDay[] {
-    const logsByDate = new Map<string, IAttendanceLogApiDto[]>();
-
-    for (const log of logs) {
-      const dateKey = this.toLogDateKey(log);
-
-      if (!dateKey) {
-        continue;
-      }
-
-      const dayLogs = logsByDate.get(dateKey) ?? [];
-      dayLogs.push(log);
-      logsByDate.set(dateKey, dayLogs);
-    }
-
-    return Array.from(logsByDate.entries())
-      .sort(([dateA], [dateB]) => dateA.localeCompare(dateB))
-      .map(([dateKey, dayLogs]) => this.toAttendanceDayFromLogs(dateKey, dayLogs));
-  }
-
-  private toAttendanceDayFromLogs(dateKey: string, logs: IAttendanceLogApiDto[]): IAttendanceDay {
-    const sortedLogs = [...logs].sort(
-      (a, b) => new Date(this.getLogDateTime(a)).getTime() - new Date(this.getLogDateTime(b)).getTime(),
-    );
-    const signInLog = sortedLogs.find(log => this.getLogDirection(log) === 1) ?? sortedLogs[0];
-    const signOutLog = [...sortedLogs].reverse().find(log => this.getLogDirection(log) === 2) ?? sortedLogs.at(-1);
-    const date = new Date(`${dateKey}T00:00:00`);
-    const signInTime = this.getLogDateTime(signInLog);
-    const signOutTime = signOutLog ? this.getLogDateTime(signOutLog) : null;
+  private toAttendanceDay(item: IAttendanceDayApiDto): IAttendanceDay {
+    const date = new Date(item.date);
 
     return {
       dayNumber: date.getDate(),
-      date: dateKey,
+      date: item.date,
       dayName: this.toDayNameKey(date),
       isWorkDay: true,
-      checkIn: this.toTimeLabel(signInTime),
-      checkOut: signOutLog && this.getLogId(signOutLog) !== this.getLogId(signInLog)
-        ? this.toTimeLabel(signOutTime)
-        : null,
-      status: 'present',
-      statusText: 'STATUS.WORK',
+      checkIn: this.toClockTime(item.signInTime),
+      checkOut: this.toClockTime(item.signOutTime),
+      status: this.toAttendanceStatusKey(item.status),
+      statusText: this.toAttendanceStatusTextKey(item.status),
+      workedMinutes: item.workedMinutes,
+      delayMinutes: item.delayMinutes,
+      earlyLeaveMinutes: item.earlyLeaveMinutes,
+      leaveCount: item.leaveCount,
+      shiftId: item.shiftId ?? null,
+      dayOffReason: item.dayOffReason ?? null,
+      notes: item.notes ?? null,
     };
-  }
-
-  private toLogDateKey(log: IAttendanceLogApiDto) {
-    const value = this.getLogAttendanceDate(log) || this.getLogDateTime(log);
-    return value ? value.slice(0, 10) : '';
-  }
-
-  private getLogId(log: IAttendanceLogApiDto | undefined) {
-    return this.getLogValue<string>(log, 'id', 'Id');
-  }
-
-  private getLogDateTime(log: IAttendanceLogApiDto | undefined) {
-    return this.getLogValue<string>(log, 'logDateTime', 'LogDateTime') ?? '';
-  }
-
-  private getLogAttendanceDate(log: IAttendanceLogApiDto | undefined) {
-    return this.getLogValue<string>(log, 'attendanceDate', 'AttendanceDate');
-  }
-
-  private getLogDirection(log: IAttendanceLogApiDto) {
-    const rawDirection = this.getLogValue<number | string>(log, 'direction', 'Direction');
-
-    if (typeof rawDirection === 'number') {
-      return rawDirection;
-    }
-
-    const normalizedDirection = String(rawDirection ?? '').trim().toLowerCase();
-
-    if (normalizedDirection === 'in' || normalizedDirection === 'signin' || normalizedDirection === 'sign in') {
-      return 1;
-    }
-
-    if (normalizedDirection === 'out' || normalizedDirection === 'signout' || normalizedDirection === 'sign out') {
-      return 2;
-    }
-
-    return Number(normalizedDirection);
-  }
-
-  private getLogValue<T>(log: IAttendanceLogApiDto | undefined, camelKey: string, pascalKey: string): T | undefined {
-    if (!log) {
-      return undefined;
-    }
-
-    const record = log as unknown as Record<string, T | undefined>;
-    return record[camelKey] ?? record[pascalKey];
-  }
-
-  private toDayNameKey(date: Date): IAttendanceDay['dayName'] {
-    const days: IAttendanceDay['dayName'][] = [
-      'DAYS.SUNDAY',
-      'DAYS.MONDAY',
-      'DAYS.TUESDAY',
-      'DAYS.WEDNESDAY',
-      'DAYS.THURSDAY',
-      'DAYS.FRIDAY',
-      'DAYS.SATURDAY',
-    ];
-
-    return days[date.getDay()];
-  }
-
-  private toTimeLabel(value?: string | null) {
-    if (!value) {
-      return null;
-    }
-
-    const timeOnlyMatch = value.match(/^(\d{1,2}):(\d{2})/);
-
-    if (timeOnlyMatch) {
-      const hours = Number(timeOnlyMatch[1]);
-      const minutes = Number(timeOnlyMatch[2]);
-      const date = new Date();
-      date.setHours(hours, minutes, 0, 0);
-
-      return this.formatTime(date);
-    }
-
-    const date = new Date(value);
-
-    if (Number.isNaN(date.getTime())) {
-      return null;
-    }
-
-    return this.formatTime(date);
-  }
-
-  private formatTime(value: Date) {
-    return new Intl.DateTimeFormat('en-US', {
-      hour: 'numeric',
-      minute: '2-digit',
-      hour12: true,
-    }).format(value);
   }
 
   private toDateKey(value: string) {
@@ -759,6 +651,59 @@ export class AttendanceService {
 
   private toDateTimeParam(value: Date) {
     return `${this.toDateParam(value)}T${String(value.getHours()).padStart(2, '0')}:${String(value.getMinutes()).padStart(2, '0')}:${String(value.getSeconds()).padStart(2, '0')}`;
+  }
+
+  private toDayNameKey(date: Date): IAttendanceDay['dayName'] {
+    const days: IAttendanceDay['dayName'][] = [
+      'DAYS.SUNDAY',
+      'DAYS.MONDAY',
+      'DAYS.TUESDAY',
+      'DAYS.WEDNESDAY',
+      'DAYS.THURSDAY',
+      'DAYS.FRIDAY',
+      'DAYS.SATURDAY',
+    ];
+
+    return days[date.getDay()];
+  }
+
+  private toAttendanceStatusTextKey(status: number) {
+    // Keep the label purely descriptive: no calculation, only backend-field mapping.
+    if (status === 3) {
+      return 'STATUS.ON_LEAVE';
+    }
+
+    const labels: Record<number, string> = {
+      1: 'STATUS.WORK',
+      2: 'STATUS.ABSENT',
+    };
+
+    return labels[status] ?? 'STATUS.ABSENT';
+  }
+
+  private getAttendanceDaysResponse(params: {
+    page: number;
+    limit: number;
+    fromDate?: string;
+    toDate?: string;
+    status?: number;
+    search?: string;
+  }): Observable<IAttendanceDayListResponse> {
+    return this.http.get<IAttendanceDayListResponse>(`${this.API_URL}/attendance/attendance-day`, {
+      params: {
+        skipCount: ((params.page - 1) * params.limit).toString(),
+        maxResultCount: params.limit.toString(),
+        sorting: 'Date DESC',
+        ...(params.fromDate && { fromDate: params.fromDate }),
+        ...(params.toDate && { toDate: params.toDate }),
+        ...(typeof params.status === 'number' && { status: params.status.toString() }),
+        ...(params.search && { search: params.search, SearchText: params.search }),
+      }
+    });
+  }
+
+  requestAttendanceDayRefresh() {
+    this.attendanceDayRefreshVersion.update(version => version + 1);
   }
 
   private toVacation(item: ILeaveApplicationApiDto) {
@@ -824,6 +769,9 @@ export class AttendanceService {
       checkOut: checkOut ?? '',
       status: this.toAttendanceStatusKey(item.status),
       workedMinutes: item.workedMinutes,
+      delayMinutes: item.delayMinutes,
+      earlyLeaveMinutes: item.earlyLeaveMinutes,
+      leaveCount: item.leaveCount,
     };
   }
 
@@ -1093,17 +1041,6 @@ export class AttendanceService {
       || composedName
       || staff.staffCode?.trim()
       || staff.id;
-  }
-
-  private matchesAttendanceSearch(item: IAttendanceResponse['data'][number], normalizedSearch: string) {
-    if (!normalizedSearch) {
-      return true;
-    }
-
-    return [
-      item.employeeName,
-      item.employeeId,
-    ].some(value => this.normalizeSearchText(value).includes(normalizedSearch));
   }
 
   private toReturnDate(dateValue: string) {

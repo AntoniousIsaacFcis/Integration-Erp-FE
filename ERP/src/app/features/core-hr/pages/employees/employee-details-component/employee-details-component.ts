@@ -307,7 +307,7 @@ export class EmployeeDetailsComponent {
         return undefined;
       }
 
-      return { id, year, month: cleanMonth };
+      return { id, year, month: cleanMonth, refreshVersion: this.attendanceService.attendanceDayRefreshVersion() };
     },
     stream: ({ params }) => {
       return this.attendanceService.getAttendance(params.id, params.year, params.month);

@@ -47,7 +47,8 @@ export class ViewAttendanceDaysComponent {
       search: this.searchTerm() || undefined,
       fromDate: this.fromDate() || undefined,
       toDate: this.toDate() || undefined,
-      status: this.statusFilter() || undefined
+      status: this.statusFilter() || undefined,
+      refreshVersion: this.attendanceService.attendanceDayRefreshVersion(),
     }),
     stream: ({ params }) => {
       return this.attendanceService.getAllAttendance(params);
@@ -68,22 +69,32 @@ export class ViewAttendanceDaysComponent {
     { value: 'absent', label: 'Enum:AttendanceStatus.Absent' },
     { value: 'onLeave', label: 'Enum:AttendanceStatus.OnLeave' }
   ];
-  calculateTotalHours(checkIn?: string, checkOut?: string, workedMinutes?: number): string {
-    if (typeof workedMinutes === 'number' && workedMinutes > 0) {
-      return this.formatDuration(workedMinutes);
+
+  formatDuration(totalMinutes?: number | null) {
+    if (totalMinutes === null || totalMinutes === undefined) {
+      return '--';
     }
 
-    const checkInMinutes = this.toMinutes(checkIn);
-    const checkOutMinutes = this.toMinutes(checkOut);
+    const hours = Math.floor(totalMinutes / 60);
+    const minutes = totalMinutes % 60;
 
-    if (checkInMinutes === null || checkOutMinutes === null) {
-      return '00:00';
+    return `${hours}h ${minutes.toString().padStart(2, '0')}m`;
+  }
+
+  formatLeaveCount(value?: number | null) {
+    if (value === null || value === undefined) {
+      return '--';
     }
 
-    let diffInMinutes = checkOutMinutes - checkInMinutes;
-    if (diffInMinutes < 0) diffInMinutes += 24 * 60;
+    if (value === 1) {
+      return 'Full leave';
+    }
 
-    return this.formatDuration(diffInMinutes);
+    if (value === 0.5) {
+      return 'Half leave';
+    }
+
+    return `Leave count: ${value}`;
   }
 
   handleImport() {
@@ -137,33 +148,4 @@ export class ViewAttendanceDaysComponent {
       },
     });
   }
-
-  private toMinutes(value?: string | null) {
-    if (!value) {
-      return null;
-    }
-
-    const match = value.trim().match(/^(\d{1,2}):(\d{2})/);
-
-    if (!match) {
-      return null;
-    }
-
-    const hours = Number(match[1]);
-    const minutes = Number(match[2]);
-
-    if (!Number.isFinite(hours) || !Number.isFinite(minutes)) {
-      return null;
-    }
-
-    return (hours * 60) + minutes;
-  }
-
-  private formatDuration(totalMinutes: number) {
-    const hours = Math.floor(totalMinutes / 60);
-    const minutes = totalMinutes % 60;
-
-    return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
-  }
 }
-

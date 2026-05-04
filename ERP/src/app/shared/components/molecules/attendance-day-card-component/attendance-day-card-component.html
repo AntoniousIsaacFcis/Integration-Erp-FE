@@ -18,8 +18,31 @@
     </div>
     } @else {
     <span class="text-xs font-normal text-[#797979] text-center w-full block py-1">
-      {{ t(statusText()) }}
+      {{ displayStateLabel() }}
     </span>
+    }
+
+    @if (shouldShowStateLabel() && (checkIn() || checkOut())) {
+    <span class="text-[10px] font-medium text-[#797979] text-center w-full block">
+      {{ displayStateLabel() }}
+    </span>
+    }
+
+    @if ((workedMinutes() ?? null) !== null || (delayMinutes() ?? null) !== null || (earlyLeaveMinutes() ?? null) !== null || (leaveCount() ?? null) !== null) {
+    <div class="flex flex-wrap items-center justify-end gap-x-2 gap-y-1 pt-1 text-[10px] font-medium text-[#797979]">
+      @if ((workedMinutes() ?? null) !== null) {
+      <span>{{ t('ATTENDANCE.WORKED_MINUTES') }}: {{ formatMinutes(workedMinutes()) }}</span>
+      }
+      @if ((delayMinutes() ?? null) !== null) {
+      <span>{{ t('ATTENDANCE.DELAY_MINUTES') }}: {{ formatMinutes(delayMinutes()) }}</span>
+      }
+      @if ((earlyLeaveMinutes() ?? null) !== null) {
+      <span>{{ t('ATTENDANCE.EARLY_LEAVE_MINUTES') }}: {{ formatMinutes(earlyLeaveMinutes()) }}</span>
+      }
+      @if ((leaveCount() ?? null) !== null) {
+      <span>{{ t('ATTENDANCE.LEAVE_COUNT') }}: {{ formatLeaveCount(leaveCount()) }}</span>
+      }
+    </div>
     }
   </div>
 </div>

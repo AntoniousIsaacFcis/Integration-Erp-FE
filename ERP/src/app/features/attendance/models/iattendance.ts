@@ -13,6 +13,9 @@ export interface IAttendanceDay {
   workedMinutes?: number;
   delayMinutes?: number;
   earlyLeaveMinutes?: number;
+  leaveCount?: number;
+  shiftId?: string | null;
+  dayOffReason?: number | null;
   notes?: string | null;
 }
 
@@ -232,6 +235,9 @@ export interface IAttendanceLog {
   checkOut: string;
   status: 'present' | 'absent' | 'onLeave';
   workedMinutes?: number;
+  delayMinutes?: number | null;
+  earlyLeaveMinutes?: number | null;
+  leaveCount?: number | null;
 }
 
 export interface IAttendanceResponse {
