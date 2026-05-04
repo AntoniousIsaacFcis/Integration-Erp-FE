@@ -4,7 +4,7 @@ import { rxResource } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import { NotificationService } from '@core/services/notification-service';
 import { AttendanceService } from '@features/attendance/services/attendance-service';
-import { TranslocoModule } from '@jsverse/transloco';
+import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { lucideCheckCircle, lucideCloudUpload, lucideEye, lucidePencil, lucideTrash2 } from '@ng-icons/lucide';
 import { ActionBtnComponent } from '@shared/components/molecules/action-btn-component/action-btn-component';
@@ -32,6 +32,7 @@ export class ViewAttendanceDaysComponent {
   private attendanceService = inject(AttendanceService);
   private router = inject(Router);
   private notificationService = inject(NotificationService);
+  private translocoService = inject(TranslocoService);
 
   currentPage = signal(1);
   pageSize = signal(10);
@@ -87,14 +88,14 @@ export class ViewAttendanceDaysComponent {
     }
 
     if (value === 1) {
-      return 'Full leave';
+      return this.translocoService.translate('ATTENDANCE.LEAVE_COUNT_FULL');
     }
 
     if (value === 0.5) {
-      return 'Half leave';
+      return this.translocoService.translate('ATTENDANCE.LEAVE_COUNT_HALF');
     }
 
-    return `Leave count: ${value}`;
+    return this.translocoService.translate('ATTENDANCE.LEAVE_COUNT_VALUE', { value });
   }
 
   handleImport() {

@@ -36,7 +36,7 @@
     }
 
     @if (attendanceResource.value() && !attendanceLogs().length) {
-      <app-empty-table-placeholder-component />
+    <app-empty-table-placeholder-component />
     }
 
     @if (attendanceResource.value() && attendanceLogs().length) {
@@ -49,12 +49,12 @@
           <th class="py-4 px-4 text-center">{{ t('ATTENDANCE.TABLE_CHECK_OUT') }}</th>
           <th class="py-4 px-4 text-center">{{ t('ATTENDANCE.TABLE_TOTAL_HOURS') }}</th>
           <th class="py-4 px-4 text-center">{{ t('ATTENDANCE.TABLE_STATUS') }}</th>
-          <th class="py-4 pe-12">{{ t('COMMON.ACTIONS') }}</th>
         </tr>
       </thead>
       <tbody>
         @for (log of attendanceLogs(); track log.id) {
-        <tr class="bg-white border-b border-gray-200 hover:bg-gray-50/50 transition-all cursor-pointer" (click)="handleViewDetails(log.id)">
+        <tr class="bg-white border-b border-gray-200 hover:bg-gray-50/50 transition-all cursor-pointer"
+          (click)="handleViewDetails(log.id)">
           <td class="py-4 ps-16 font-medium text-sm text-black">{{ log.employeeName }}</td>
           <td class="py-4 px-4 text-center text-sm">{{ log.date | date:'dd/MM/yyyy' }}</td>
           <td class="py-4 px-4 text-center text-sm">{{ log.checkIn || '--:--' }}</td>
@@ -66,7 +66,8 @@
               <span>{{ t('ATTENDANCE.DELAY_MINUTES') }}: {{ formatDuration(log.delayMinutes ?? null) }}</span>
               }
               @if ((log.earlyLeaveMinutes ?? null) !== null) {
-              <span>{{ t('ATTENDANCE.EARLY_LEAVE_MINUTES') }}: {{ formatDuration(log.earlyLeaveMinutes ?? null) }}</span>
+              <span>{{ t('ATTENDANCE.EARLY_LEAVE_MINUTES') }}: {{ formatDuration(log.earlyLeaveMinutes ?? null)
+                }}</span>
               }
               @if ((log.leaveCount ?? null) !== null) {
               <span>{{ t('ATTENDANCE.LEAVE_COUNT') }}: {{ formatLeaveCount(log.leaveCount ?? null) }}</span>
