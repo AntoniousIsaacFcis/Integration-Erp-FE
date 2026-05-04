@@ -13,10 +13,11 @@ import { TranslocoDirective } from "@jsverse/transloco";
 export class StatusBadgeComponent {
   containerClasses = computed(() => {
     return `
-     flex items-center justify-between
-    w-[109.74px] h-[42px] px-3 py-2.5
+     inline-flex items-center gap-2
+    w-fit max-w-fit h-[38px] px-2 py-2
     bg-[#BBBBBB33] border border-[#BBBBBB] rounded-md
-     hover-lift cursor-pointer transition-all
+    hover-lift cursor-pointer transition-all
+    whitespace-nowrap
     `;
   });
 

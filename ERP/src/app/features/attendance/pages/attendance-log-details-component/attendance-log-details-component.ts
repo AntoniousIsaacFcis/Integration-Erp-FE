@@ -1,102 +1,122 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, effect, inject, signal } from '@angular/core';
+import { DatePipe } from '@angular/common';
+import { ChangeDetectionStrategy, Component, effect, inject, signal } from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AttendanceService } from '@features/attendance/services/attendance-service';
 import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
-import { FormContainerComponent } from "@shared/components/organisms/form-container-component/form-container-component";
-import { AppInputComponent } from "@shared/components/atoms/app-input-component/app-input-component";
-import { AppDateInputComponent } from "@shared/components/atoms/app-date-input-component/app-date-input-component";
-import { TimeInputComponent } from "@shared/components/atoms/time-input-component/time-input-component";
-import { FormCancelButtonComponent } from "@shared/components/molecules/form-cancel-button-component/form-cancel-button-component";
-import { DatePipe } from '@angular/common';
-import { FormSaveButtonComponent } from "@shared/components/molecules/form-save-button-component/form-save-button-component";
+import { AppDateInputComponent } from '@shared/components/atoms/app-date-input-component/app-date-input-component';
+import { AppInputComponent } from '@shared/components/atoms/app-input-component/app-input-component';
+import { TimeInputComponent } from '@shared/components/atoms/time-input-component/time-input-component';
+import { FormContainerComponent } from '@shared/components/organisms/form-container-component/form-container-component';
+import { FormSaveButtonComponent } from '@shared/components/molecules/form-save-button-component/form-save-button-component';
 import { BreadcrumbService } from '@core/services/breadcrumb-service';
-
+import { IAttendanceLogDetails } from '@features/attendance/models/iattendance';
 
 @Component({
   selector: 'app-attendance-log-details-component',
-  imports: [ReactiveFormsModule, TranslocoModule, FormContainerComponent, AppInputComponent, AppDateInputComponent, TimeInputComponent, FormSaveButtonComponent],
+  imports: [
+    ReactiveFormsModule,
+    TranslocoModule,
+    FormContainerComponent,
+    AppInputComponent,
+    AppDateInputComponent,
+    TimeInputComponent,
+    FormSaveButtonComponent,
+  ],
   templateUrl: './attendance-log-details-component.html',
   styleUrl: './attendance-log-details-component.css',
   providers: [DatePipe],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AttendanceLogDetailsComponent {
-  private datePipe = inject(DatePipe);
-  private route = inject(ActivatedRoute);
-  private router = inject(Router);
-  private fb = inject(FormBuilder);
-  private attendanceService = inject(AttendanceService);
-  private breadcrumbService = inject(BreadcrumbService);
-  private translocoService = inject(TranslocoService);
+  private readonly datePipe = inject(DatePipe);
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
+  private readonly fb = inject(FormBuilder);
+  private readonly attendanceService = inject(AttendanceService);
+  private readonly breadcrumbService = inject(BreadcrumbService);
+  private readonly translocoService = inject(TranslocoService);
 
   attendanceId = signal(this.route.snapshot.params['id']);
 
   detailsForm = this.fb.group({
     employeeName: [{ value: '', disabled: true }],
-    date: [{ value: '', disabled: true }],
-    status: [{ value: '', disabled: true }],
-    checkIn: [{ value: '', disabled: true }],
-    checkOut: [{ value: '', disabled: true }],
-    sessionNumber: [{ value: '', disabled: true }],
+    logDate: [{ value: '', disabled: true }],
+    logTime: [{ value: '', disabled: true }],
     source: [{ value: '', disabled: true }],
+    sessionId: [{ value: '', disabled: true }],
+    status: [{ value: '', disabled: true }],
+    invalidReason: [{ value: '', disabled: true }],
   });
 
   detailsResource = rxResource({
     params: () => ({ id: this.attendanceId() }),
-    stream: ({ params }) => this.attendanceService.getAttendanceById(params.id)
+    stream: ({ params }) => this.attendanceService.getAttendanceLogById(params.id),
   });
 
-  isFormReady = signal<boolean>(false);
+  isFormReady = signal(false);
+
   constructor() {
-    // update the form => when fetching data completed
     effect(() => {
-      const res = this.detailsResource.value();
-      if (res) {
-        const rawData = (res as any).data ? (res as any).data : res;
+      const details = this.detailsResource.value();
 
-        const formattedData = {
-          ...rawData,
-          date: this.formatDateForInput(rawData.date),
-          checkIn: this.formatTimeForInput(rawData.checkIn),
-          checkOut: this.formatTimeForInput(rawData.checkOut)
-        };
-
-        this.breadcrumbService.setCurrentBreadcrumbLabel(this.toBreadcrumbLabel(rawData.employeeName), this.route);
-        this.detailsForm.patchValue(formattedData);
-
-        this.isFormReady.set(true);
-
-        console.log('formatted data:', {
-          date: formattedData.date,
-          checkIn: formattedData.checkIn,
-          checkOut: formattedData.checkOut
-        });
+      if (!details) {
+        return;
       }
+
+      const formattedData = this.toFormValue(details);
+      this.breadcrumbService.setCurrentBreadcrumbLabel(
+        this.toBreadcrumbLabel(details.employeeName, details.logDateTime),
+        this.route,
+      );
+      this.detailsForm.patchValue(formattedData);
+      this.isFormReady.set(true);
     });
   }
 
-  private formatDateForInput(dateStr: string | null): string {
-    if (!dateStr) return '';
-    return this.datePipe.transform(dateStr, 'yyyy-MM-dd') || '';
+  private toFormValue(details: IAttendanceLogDetails) {
+    return {
+      employeeName: details.employeeName,
+      logDate: this.formatDateForInput(details.logDateTime),
+      logTime: this.formatTimeForInput(details.logDateTime),
+      source: this.formatSource(details),
+      sessionId: details.sessionId,
+      status: this.translocoService.translate(details.statusLabelKey),
+      invalidReason: details.invalidReason ?? '',
+    };
   }
 
-  private formatTimeForInput(timeStr: string | null): string {
-    if (!timeStr) return '';
+  private formatDateForInput(value: string | null): string {
+    if (!value) {
+      return '';
+    }
 
-    const cleanTime = timeStr.replace('صباحاً', 'AM').replace('مساءً', 'PM').trim();
-
-    const formatted = this.datePipe.transform(`2026-01-01 ${cleanTime}`, 'HH:mm');
-
-    return formatted || '';
+    return this.datePipe.transform(value, 'yyyy-MM-dd') || '';
   }
 
-  private toBreadcrumbLabel(employeeName: string) {
-    return `${employeeName} - ${this.translocoService.translate('ATTENDANCE.ATTENDANCE_DAY')}`;
+  private formatTimeForInput(value: string | null): string {
+    if (!value) {
+      return '';
+    }
+
+    return this.datePipe.transform(value, 'HH:mm') || '';
+  }
+
+  private formatSource(details: IAttendanceLogDetails) {
+    return details.sourceDisplay?.trim()
+      || this.translocoService.translate(details.sourceLabelKey);
+  }
+
+  private toBreadcrumbLabel(employeeName: string, logDateTime: string) {
+    const formattedDateTime = this.datePipe.transform(logDateTime, 'dd-MMM-yyyy HH:mm');
+
+    return formattedDateTime
+      ? `${employeeName} - ${formattedDateTime}`
+      : employeeName;
   }
 
   onBack() {
-    this.router.navigate(['/attendance/view-attendance-days']);
+    this.router.navigate(['/attendance/view-attendance-log']);
   }
 }

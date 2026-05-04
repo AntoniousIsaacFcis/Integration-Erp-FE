@@ -27,6 +27,14 @@ badgeClasses = computed(() => {
       'present': { bg: 'bg-[#00A3891A]', text: 'text-[#00A389]' },
       'late': { bg: 'bg-orange-100', text: 'text-orange-700' },
       'absent': { bg: 'bg-red-100', text: 'text-red-700' },
+      'pending': { bg: 'bg-[#8181811A]', text: 'text-[#818181]' },
+      'valid': { bg: 'bg-[#00A3891A]', text: 'text-[#00A389]' },
+      'invalid': { bg: 'bg-[#EF44441A]', text: 'text-[#EF4444]' },
+      'check-in': { bg: 'bg-[#61BDDC33]', text: 'text-[#0B84B5]' },
+      'check-out': { bg: 'bg-[#E0E7FF]', text: 'text-[#4F46E5]' },
+      'invalid-outside-period': { bg: 'bg-[#FDE68A]', text: 'text-[#B45309]' },
+      'invalid-weekend': { bg: 'bg-[#FECACA]', text: 'text-[#B91C1C]' },
+      'invalid-no-open-period': { bg: 'bg-[#E5E7EB]', text: 'text-[#6B7280]' },
 
       // Employees
       'probation': { bg: 'bg-[#FFF3E6]', text: 'text-[#FF8400]' },

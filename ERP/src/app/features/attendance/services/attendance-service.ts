@@ -6,7 +6,7 @@ import { IStaffApiItem } from '@features/core-hr/models/istaff';
 import { StaffService } from '@features/core-hr/services/staff-service';
 import { ISelectOption } from '@shared/components/atoms/select-btn-component/select-btn-component';
 import { catchError, forkJoin, map, Observable, of, shareReplay, switchMap, tap, timeout } from 'rxjs';
-import { IAttendanceAvailablePeriod, IAttendanceDay, IAttendanceDayApiDto, IAttendanceDayListResponse, IAttendanceLogApiDto, IAttendanceLogListResponse, IAttendanceRelatedShift, IAttendanceResponse, ICreateAttendanceDayPayload, ICustomShiftForm, IEditAttendanceDay, IShift, IShiftApiListResponse, IShiftAssignment, IShiftAssignmentApiListResponse, IShiftAssignmentPayload, IShiftListItem, IShiftListResponse, IShiftOption, IShiftPayload, ISpecialShiftListResponse, IUpdateAttendancePayload } from '../models/iattendance';
+import { IAttendanceAvailablePeriod, IAttendanceDay, IAttendanceDayApiDto, IAttendanceDayListResponse, IAttendanceLogApiDto, IAttendanceLogDetails, IAttendanceLogListItem, IAttendanceLogListResponse, IAttendanceLogListViewResponse, IAttendanceRelatedShift, IAttendanceResponse, ICreateAttendanceDayPayload, ICustomShiftForm, IEditAttendanceDay, IShift, IShiftApiListResponse, IShiftAssignment, IShiftAssignmentApiListResponse, IShiftAssignmentPayload, IShiftListItem, IShiftListResponse, IShiftOption, IShiftPayload, ISpecialShiftListResponse, IUpdateAttendancePayload } from '../models/iattendance';
 
 @Injectable({
   providedIn: 'root',
@@ -38,6 +38,37 @@ export class AttendanceService {
       map(response => {
         return this.toAttendanceDaysFromLogs(this.extractAttendanceLogs(response));
       }),
+    );
+  }
+
+  getAttendanceLogs(params: {
+    page: number;
+    limit: number;
+    search?: string;
+    status?: string;
+    date?: string;
+  }): Observable<IAttendanceLogListViewResponse> {
+    const selectedDate = params.date?.trim();
+
+    return this.http.get<IAttendanceLogListResponse>(`${this.API_URL}/attendance/attendance-log`, {
+      params: {
+        SkipCount: String((params.page - 1) * params.limit),
+        MaxResultCount: String(params.limit),
+        Sorting: 'LogDateTime DESC',
+        ...(params.search?.trim() && { SearchText: params.search.trim() }),
+        ...(params.status?.trim() && { Status: params.status.trim() }),
+        ...(selectedDate && {
+          FromLogDateTime: `${selectedDate}T00:00:00`,
+          ToLogDateTime: `${selectedDate}T23:59:59`,
+        }),
+      },
+    }).pipe(
+      map(response => ({
+        data: (response.items ?? []).map(item => this.toAttendanceLogListItem(item)),
+        total: response.totalCount ?? 0,
+        page: params.page,
+        limit: params.limit,
+      })),
     );
   }
 
@@ -321,6 +352,16 @@ export class AttendanceService {
     ).pipe(
       map(response => Array.isArray(response) ? response : response.result ?? []),
     );
+  }
+
+  getAttendanceLogById(id: string): Observable<IAttendanceLogDetails> {
+    return this.http.get<IAttendanceLogApiDto>(`${this.API_URL}/attendance/attendance-log/${id}`).pipe(
+      map(item => this.toAttendanceLogDetails(item)),
+    );
+  }
+
+  deleteAttendanceLog(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.API_URL}/attendance/attendance-log/${id}`);
   }
 
   getAttendanceDayForDate(employeeId: string, date: string): Observable<IAttendanceDayApiDto | null> {
@@ -740,6 +781,46 @@ export class AttendanceService {
     };
   }
 
+  private toAttendanceLogListItem(item: IAttendanceLogApiDto): IAttendanceLogListItem {
+    return {
+      id: item.id,
+      employeeName: item.employeeName,
+      employeeCode: item.employeeCode ?? null,
+      logDateTime: item.logDateTime,
+      sourceDisplay: item.sourceName?.trim()
+        || item.sourceMethod?.trim()
+        || item.sourceType?.trim()
+        || '',
+      sourceLabelKey: this.getAttendanceLogSourceLabelKey(item.source),
+      sessionId: item.sessionId?.trim() ?? '',
+      status: item.status,
+      statusLabelKey: this.getAttendanceLogStatusLabelKey(item.status),
+      statusTone: this.getAttendanceLogStatusTone(item.status),
+      invalidReason: item.invalidReason ?? null,
+    };
+  }
+
+  private toAttendanceLogDetails(item: IAttendanceLogApiDto): IAttendanceLogDetails {
+    return {
+      id: item.id,
+      employeeName: item.employeeName,
+      employeeCode: item.employeeCode ?? null,
+      logDateTime: item.logDateTime,
+      logDate: this.toDateKey(item.logDateTime),
+      logTime: this.toClockTime(item.logDateTime) ?? '',
+      sourceDisplay: item.sourceName?.trim()
+        || item.sourceMethod?.trim()
+        || item.sourceType?.trim()
+        || '',
+      sourceLabelKey: this.getAttendanceLogSourceLabelKey(item.source),
+      sessionId: item.sessionId?.trim() ?? '',
+      status: item.status,
+      statusLabelKey: this.getAttendanceLogStatusLabelKey(item.status),
+      statusTone: this.getAttendanceLogStatusTone(item.status),
+      invalidReason: item.invalidReason ?? null,
+    };
+  }
+
   private toEditAttendanceDay(item: IAttendanceDayApiDto, staffLookup: Map<string, string>): IEditAttendanceDay {
     return {
       id: item.id,
@@ -796,6 +877,46 @@ export class AttendanceService {
       default:
         return 'absent';
     }
+  }
+
+  private getAttendanceLogStatusLabelKey(status: number) {
+    const labels: Record<number, string> = {
+      1: 'ATTENDANCE.LOG_STATUS.PENDING',
+      2: 'ATTENDANCE.LOG_STATUS.VALID',
+      3: 'ATTENDANCE.LOG_STATUS.INVALID',
+      4: 'ATTENDANCE.LOG_STATUS.CHECK_IN',
+      5: 'ATTENDANCE.LOG_STATUS.CHECK_OUT',
+      6: 'ATTENDANCE.LOG_STATUS.INVALID_OUTSIDE_PERIOD',
+      7: 'ATTENDANCE.LOG_STATUS.INVALID_WEEKEND',
+      8: 'ATTENDANCE.LOG_STATUS.INVALID_NO_OPEN_PERIOD',
+    };
+
+    return labels[status] ?? 'ATTENDANCE.LOG_STATUS.PENDING';
+  }
+
+  private getAttendanceLogStatusTone(status: number) {
+    const tones: Record<number, string> = {
+      1: 'pending',
+      2: 'valid',
+      3: 'invalid',
+      4: 'check-in',
+      5: 'check-out',
+      6: 'invalid-outside-period',
+      7: 'invalid-weekend',
+      8: 'invalid-no-open-period',
+    };
+
+    return tones[status] ?? 'pending';
+  }
+
+  private getAttendanceLogSourceLabelKey(source: number) {
+    const labels: Record<number, string> = {
+      1: 'ATTENDANCE.LOG_SOURCE.MACHINE',
+      2: 'ATTENDANCE.LOG_SOURCE.SELF_SERVICE',
+      3: 'ATTENDANCE.LOG_SOURCE.ADMIN',
+    };
+
+    return labels[source] ?? 'ATTENDANCE.LOG_SOURCE.MACHINE';
   }
 
   private mapAttendanceStatusFilter(status?: string) {

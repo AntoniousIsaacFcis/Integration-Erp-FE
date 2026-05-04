@@ -1,0 +1,81 @@
+<app-app-base-table-component [(searchTerm)]="searchTerm" [totalItems]="totalItems()" [(currentPage)]="currentPage"
+  [extraFilters]="attendanceFilters" [searchPlaceholder]="'ATTENDANCE.SEARCH_LOG_PLACEHOLDER_SHORT'" *transloco="let t">
+
+  <ng-template #attendanceFilters>
+    <div class="flex flex-wrap items-center gap-3">
+      <app-date-filter-component [(selectedDate)]="selectedDate" [labelKey]="'ATTENDANCE.LOG_DATE_FILTER'" />
+      <app-status-badge-component class="!inline-flex !w-auto !flex-none px-2" label="FILTERS.STATUS"
+        [(selectedStatus)]="statusFilter" [options]="attendanceStatusOptions" />
+    </div>
+  </ng-template>
+
+  <div class="w-full">
+    @if (attendanceLogsResource.isLoading()) {
+    <div class="flex justify-center py-20 text-gray-400">
+      {{ t('COMMON.LOADING') }}
+    </div>
+    }
+
+    @if (attendanceLogsResource.error()) {
+    <div class="bg-red-50 text-red-600 p-6 rounded-xl text-center border border-red-100">
+      <p>{{ t('COMMON.MESSAGES.OPERATION_FAILED') }}</p>
+      <button (click)="attendanceLogsResource.reload()" class="mt-3 px-4 py-2 bg-red-600 text-white rounded-lg">
+        {{ t('COMMON.MESSAGES.PLEASE_TRY_AGAIN') }}
+      </button>
+    </div>
+    }
+
+    @if (attendanceLogsResource.value() && !attendanceLogs().length) {
+    <app-empty-table-placeholder-component />
+    }
+
+    @if (attendanceLogsResource.value() && attendanceLogs().length) {
+    <table class="w-full table-fixed text-right font-arabic border border-[#F4F4F4]/50 rounded-xl overflow-hidden">
+      <thead class="text-sm bg-[#F4F4F4] sticky top-0 z-10">
+        <tr>
+          <th class="w-[13%] py-4 px-4 text-center">{{ t('ATTENDANCE.TABLE_EMPLOYEE_NAME') }}</th>
+          <th class="w-[13%] py-4 px-4 text-center">{{ t('ATTENDANCE.SOURCE') }}</th>
+          <th class="w-[13%] py-4 px-4 text-center">{{ t('ATTENDANCE.SESSION_NUMBER') }}</th>
+          <th class="w-[13%] py-4 px-4 text-center">{{ t('ATTENDANCE.LOG_TIME') }}</th>
+          <th class="w-[13%] py-4 px-4 text-center">{{ t('ATTENDANCE.STATUS') }}</th>
+          <th class="w-[13%] py-4 px-4 text-center">{{ t('COMMON.ACTIONS') }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (log of attendanceLogs(); track log.id) {
+        <tr class="bg-white border-b border-gray-200 hover:bg-gray-50/50 transition-all cursor-pointer"
+          (click)="handleViewDetails(log.id)">
+          <td class="py-4 px-4 text-center font-medium text-sm text-black truncate">{{ log.employeeName }}</td>
+          <td class="py-4 px-4 text-center text-sm truncate">
+            {{ normalizeSource(log) || t(log.sourceLabelKey) }}
+          </td>
+          <td class="py-4 px-4 text-center text-sm">
+            {{ log.sessionId || '-' }}
+          </td>
+          <td class="py-4 px-4 text-center text-sm truncate">
+            {{ log.logDateTime | date:'dd/MM/yyyy HH:mm' }}
+          </td>
+          <td class="py-4 px-4 text-center">
+            <div class="flex justify-center">
+              <app-table-status-badge-component [status]="log.statusTone" [label]="t(log.statusLabelKey)" />
+            </div>
+          </td>
+          <td class="py-4 px-4">
+            <div class="flex gap-4 justify-center">
+              <button (click)="$event.stopPropagation(); handleViewDetails(log.id)"
+                class="flex size-[32px] items-center justify-center rounded-full bg-[#61BDDC33] hover:bg-gray-100 transition-colors">
+                <ng-icon name="lucideEye" size="16" color="#61BDDC" />
+              </button>
+              <button (click)="$event.stopPropagation(); handleDelete(log.id)"
+                class="flex size-[32px] items-center justify-center rounded-full bg-[#0000001A] hover:bg-red-50 transition-colors">
+                <ng-icon name="lucideTrash2" size="16" color="#F40552" />
+              </button>
+            </div>
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+    }
+  </div>
+</app-app-base-table-component>

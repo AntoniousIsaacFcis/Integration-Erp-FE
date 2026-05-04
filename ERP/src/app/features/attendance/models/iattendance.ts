@@ -91,6 +91,27 @@ export interface IAttendanceLogListResponse {
   totalCount: number;
 }
 
+export interface IAttendanceLogListItem {
+  id: string;
+  employeeName: string;
+  employeeCode?: string | null;
+  logDateTime: string;
+  sourceDisplay: string;
+  sourceLabelKey: string;
+  sessionId: string;
+  status: number;
+  statusLabelKey: string;
+  statusTone: string;
+  invalidReason?: string | null;
+}
+
+export interface IAttendanceLogListViewResponse {
+  data: IAttendanceLogListItem[];
+  total: number;
+  page: number;
+  limit: number;
+}
+
 export interface IAttendanceAvailablePeriod {
   year: number;
   months: number[];
@@ -199,6 +220,22 @@ export interface IEditAttendanceDay {
 export interface IAttendanceDetails extends IEditAttendanceDay {
   sessionNumber?: string;
   source?: string;
+}
+
+export interface IAttendanceLogDetails {
+  id: string;
+  employeeName: string;
+  employeeCode?: string | null;
+  logDateTime: string;
+  logDate: string;
+  logTime: string;
+  sourceDisplay: string;
+  sourceLabelKey: string;
+  sessionId: string;
+  status: number;
+  statusLabelKey: string;
+  statusTone: string;
+  invalidReason?: string | null;
 }
 
 export type IUpdateAttendancePayload = Omit<IEditAttendanceDay, 'employeeName' | 'shiftName'>;

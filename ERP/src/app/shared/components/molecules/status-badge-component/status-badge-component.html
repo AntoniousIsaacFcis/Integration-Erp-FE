@@ -3,7 +3,7 @@
   <div [class]="containerClasses()" (click)="toggle(); $event.stopPropagation()">
     <ng-icon name="lucideSettings2" size="16"  color="#bbbbbb" strokeWidth="3"></ng-icon>
 
-    <span class="text-[14px] font-[700]  leading-none flex-1 text-center ">
+    <span class="text-[12px] font-[700] leading-none whitespace-nowrap text-center">
       {{ t(currentLabel()) }}
     </span>
 
@@ -20,7 +20,7 @@
 
     @for (option of options(); track option.value) {
   <button (click)="selectStatus(option.value); $event.stopPropagation()"
-    class="flex items-center justify-between w-full px-4 py-2 text-[13px] hover:bg-primary/5 hover:text-primary transition-colors text-black border-b last:border-none border-gray-50">
+    class="flex items-center justify-between w-full px-3 py-2 text-[12px] hover:bg-primary/5 hover:text-primary transition-colors text-black border-b last:border-none border-gray-50">
     <span class="flex-1 text-start">{{ t(option.label) }}</span>
 
     @if (selectedStatus() === option.value) {

@@ -10,6 +10,21 @@ export const ATTENDANCE_ROUTES: Routes = [
         path: '',
         children: [
           {
+            path: 'view-attendance-log',
+            data: { breadcrumb: 'MENU.VIEW_ATTENDANCE_LOGS' },
+            children: [
+              {
+                path: '',
+                loadComponent: () => import('./pages/view-attendance-log-component/view-attendance-log-component').then(x => x.ViewAttendanceLogComponent),
+              },
+              {
+                path: 'details/:id',
+                loadComponent: () => import('./pages/attendance-log-details-component/attendance-log-details-component').then(x => x.AttendanceLogDetailsComponent),
+                data: { breadcrumb: 'MENU.VIEW_ATTENDANCE_LOG_DETAILS' }
+              },
+            ],
+          },
+          {
             path: 'view',
             data: { breadcrumb: 'MENU.VIEW_SHIFTS' },
             children: [
@@ -101,7 +116,7 @@ export const ATTENDANCE_ROUTES: Routes = [
           },
           {
             path: '',
-            redirectTo: 'view',
+            redirectTo: 'view-attendance-log',
             pathMatch: 'full'
           },
           {
@@ -142,7 +157,7 @@ export const ATTENDANCE_ROUTES: Routes = [
           },
           {
             path: 'attendance-log-details/:id',
-            redirectTo: 'view-attendance-days/details/:id',
+            redirectTo: 'view-attendance-log/details/:id',
           },
           {
             path: 'attendance-day-details/:id',

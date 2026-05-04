@@ -179,7 +179,7 @@ export const routes: Routes = [
       },
       {
         path: 'shifts/attendance-log-details/:id',
-        redirectTo: 'attendance/details-attendance-day/:id',
+        redirectTo: 'attendance/view-attendance-log/details/:id',
       },
       {
         path: 'shifts/add-permission',
