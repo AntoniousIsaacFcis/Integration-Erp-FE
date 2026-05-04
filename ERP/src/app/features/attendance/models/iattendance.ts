@@ -118,6 +118,15 @@ export interface IAttendanceLogSessionApiDto {
   notes?: string | null;
 }
 
+export interface ICreateAttendanceLogSessionPayload {
+  code?: string | null;
+  sessionDate: string;
+  openedAt?: string | null;
+  sourceName?: string | null;
+  sourceType?: string | null;
+  notes?: string | null;
+}
+
 export interface IAttendanceLogSessionListResponse {
   items: IAttendanceLogSessionApiDto[];
   totalCount: number;

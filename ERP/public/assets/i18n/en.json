@@ -657,6 +657,7 @@
     "EARLY_LEAVE_MINUTES": "Early Leave Minutes",
     "IMPORT": "Import",
     "DAILY_REGISTRATION": "Daily Registration",
+    "SIGN_EMPLOYEES_SESSION": "Sign Employee Attendance",
     "TABLE_EMPLOYEE_NAME": "Employee Name",
     "TABLE_DATE": "Date",
     "TABLE_CHECK_IN": "Check In",

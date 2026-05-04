@@ -1,9 +1,10 @@
 import { DatePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, effect, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, signal } from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { FormBuilder, FormControl, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BreadcrumbService } from '@core/services/breadcrumb-service';
+import { NotificationService } from '@core/services/notification-service';
 import { AttendanceService } from '@features/attendance/services/attendance-service';
 import { IAttendanceLogListItem, IAttendanceLogSessionApiDto } from '@features/attendance/models/iattendance';
 import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
@@ -39,13 +40,16 @@ export class LogSessionDetailsComponent {
   private readonly fb = inject(FormBuilder);
   private readonly attendanceService = inject(AttendanceService);
   private readonly breadcrumbService = inject(BreadcrumbService);
+  private readonly notificationService = inject(NotificationService);
   private readonly translocoService = inject(TranslocoService);
 
   sessionId = signal(this.route.snapshot.paramMap.get('id') ?? '');
   activeTab = signal<'details' | 'logs'>('details');
   showSignModal = signal(false);
+  isClosingSession = signal(false);
   sessionDateRaw = signal('');
   sessionDateDisplay = signal('');
+  canCloseSession = computed(() => (this.sessionResource.value()?.status ?? 0) === 1);
 
   sessionForm = this.fb.nonNullable.group({
     code: [{ value: '', disabled: true }],
@@ -109,11 +113,45 @@ export class LogSessionDetailsComponent {
     this.openSignModal();
   }
 
+  closeSession() {
+    if (this.isClosingSession() || !this.canCloseSession()) {
+      return;
+    }
+
+    this.isClosingSession.set(true);
+
+    this.attendanceService.closeAttendanceLogSession(this.sessionId()).subscribe({
+      next: () => {
+        this.isClosingSession.set(false);
+        this.sessionResource.reload();
+        this.logsResource.reload();
+        this.notificationService.show({
+          type: 'success',
+          title: 'COMMON.MESSAGES.SAVED_SUCCESSFULLY',
+          message: 'COMMON.MESSAGES.SUCCESS_MESSAGE',
+          isModal: false,
+          actionLabel: 'COMMON.OK',
+        });
+      },
+      error: () => {
+        this.isClosingSession.set(false);
+        this.notificationService.show({
+          type: 'error',
+          title: 'COMMON.MESSAGES.OPERATION_FAILED',
+          message: 'COMMON.MESSAGES.PLEASE_TRY_AGAIN',
+          isModal: false,
+          actionLabel: 'COMMON.CONFIRM',
+        });
+      },
+    });
+  }
+
   closeSignModal() {
     this.showSignModal.set(false);
   }
 
   handleSigned() {
+    this.sessionResource.reload();
     this.logsResource.reload();
     this.activeTab.set('logs');
   }

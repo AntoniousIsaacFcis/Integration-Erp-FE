@@ -682,6 +682,7 @@
     "EARLY_LEAVE_MINUTES": "دقائق الانصراف المبكر",
     "IMPORT": "استيراد",
     "DAILY_REGISTRATION": "تسجيل الحضور",
+    "SIGN_EMPLOYEES_SESSION": "تسجيل حضور الموظفين",
     "TABLE_EMPLOYEE_NAME": "اسم الموظف",
     "TABLE_DATE": "التاريخ",
     "TABLE_CHECK_IN": "وقت الحضور",

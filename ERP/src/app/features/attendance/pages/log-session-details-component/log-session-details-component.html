@@ -28,15 +28,23 @@
 
         <div class="flex items-center gap-3">
           <app-action-btn-component
-            [label]="'ATTENDANCE.DAILY_REGISTRATION'"
+            [label]="'ATTENDANCE.SIGN_ATTENDANCE'"
             iconName="lucideCheckCircle"
             (clicked)="handleDailyRegistration()" />
+
+          @if (canCloseSession()) {
+            <app-action-btn-component
+              [label]="'COMMON.CLOSE'"
+              iconName="lucideCircleX"
+              [isLoading]="isClosingSession()"
+              (clicked)="closeSession()" />
+          }
 
           <button
             type="button"
             (click)="navigateBack()"
             class="inline-flex h-11 items-center justify-center rounded-xl border border-black/10 bg-white px-5 text-sm font-medium text-black transition hover:bg-black/5">
-            {{ t('COMMON.CLOSE') }}
+            {{ t('COMMON.BACK') }}
           </button>
         </div>
       </section>

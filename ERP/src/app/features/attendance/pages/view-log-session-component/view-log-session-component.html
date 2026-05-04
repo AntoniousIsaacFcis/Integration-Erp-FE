@@ -20,9 +20,10 @@
   <ng-template #sessionActions>
     <div class="flex items-center gap-3">
       <app-action-btn-component
-        [label]="'ATTENDANCE.DAILY_REGISTRATION'"
+        [label]="'ATTENDANCE.SIGN_EMPLOYEES_SESSION'"
         (clicked)="handleDailyRegistration()"
-        iconName="lucideCheckCircle" />
+        iconName="lucideCheckCircle"
+        [isLoading]="isCreatingSession()" />
     </div>
   </ng-template>
 
@@ -50,19 +51,21 @@
       <table class="min-w-[1080px] w-full text-right font-arabic border border-[#F4F4F4]/50 rounded-xl overflow-hidden">
         <thead class="text-sm bg-[#F4F4F4] sticky top-0 z-10">
           <tr>
-            <th class="py-4 ps-10 text-start">{{ t('ATTENDANCE.TABLE_SESSION_ID') }}</th>
+            <th class="py-4 ps-10 text-center">{{ t('ATTENDANCE.TABLE_SESSION_ID') }}</th>
             <th class="py-4 px-4 text-center">{{ t('ATTENDANCE.OPENED_AT') }}</th>
             <th class="py-4 px-4 text-center">{{ t('ATTENDANCE.CLOSED_AT') }}</th>
             <th class="py-4 px-4 text-center">{{ t('ATTENDANCE.SOURCE') }}</th>
             <th class="py-4 px-4 text-center">{{ t('ATTENDANCE.SIGNS_COUNT') }}</th>
             <th class="py-4 px-4 text-center">{{ t('ATTENDANCE.STATUS') }}</th>
-            <th class="py-4 px-4 text-center">{{ t('COMMON.VIEW') }}</th>
+            <th class="py-4 px-4 text-center">{{ t('COMMON.ACTIONS') }}</th>
           </tr>
         </thead>
         <tbody>
           @for (session of sessions(); track session.id) {
-            <tr class="bg-white border-b border-gray-200 hover:bg-gray-50/50 transition-all">
-              <td class="py-4 ps-10 text-start font-medium text-sm text-black">{{ session.code }}</td>
+            <tr
+              class="bg-white border-b border-gray-200 hover:bg-gray-50/50 transition-all cursor-pointer"
+              (click)="openSessionDetails(session.id)">
+              <td class="py-4 ps-10 text-center font-medium text-sm text-black">{{ session.code }}</td>
               <td class="py-4 px-4 text-center text-sm">{{ session.openedAt | date:'dd/MM/yyyy HH:mm' }}</td>
               <td class="py-4 px-4 text-center text-sm">
                 {{ session.closedAt ? (session.closedAt | date:'dd/MM/yyyy HH:mm') : '-' }}
@@ -79,12 +82,20 @@
                 </div>
               </td>
               <td class="py-4 px-4 text-center">
-                <button
-                  type="button"
-                  (click)="openSessionDetails(session.id)"
-                  class="inline-flex items-center justify-center rounded-lg border border-black/10 px-4 py-2 text-sm font-medium text-black transition hover:bg-black/5">
-                  {{ t('COMMON.VIEW') }}
-                </button>
+                <div class="flex justify-center gap-3">
+                  <button
+                    type="button"
+                    (click)="$event.stopPropagation(); openSessionDetails(session.id)"
+                    class="flex size-[32px] items-center justify-center rounded-full bg-[#61BDDC33] hover:bg-gray-100 transition-colors">
+                    <ng-icon name="lucideEye" size="16" color="#61BDDC" />
+                  </button>
+                  <button
+                    type="button"
+                    (click)="$event.stopPropagation(); handleDelete(session.id)"
+                    class="flex size-[32px] items-center justify-center rounded-full bg-[#0000001A] hover:bg-red-50 transition-colors">
+                    <ng-icon name="lucideTrash2" size="16" color="#F40552" />
+                  </button>
+                </div>
               </td>
             </tr>
           }
