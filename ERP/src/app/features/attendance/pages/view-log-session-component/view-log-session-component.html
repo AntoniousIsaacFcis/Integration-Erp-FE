@@ -1,0 +1,77 @@
+<app-app-base-table-component
+  [(searchTerm)]="searchTerm"
+  [totalItems]="totalItems()"
+  [(currentPage)]="currentPage"
+  [extraFilters]="sessionFilters"
+  [searchPlaceholder]="'ATTENDANCE.LOG_SESSION_SEARCH_PLACEHOLDER'"
+  *transloco="let t">
+
+  <ng-template #sessionFilters>
+    <div class="flex items-center gap-3">
+      <app-status-badge-component
+        label="FILTERS.STATUS"
+        [(selectedStatus)]="selectedStatus"
+        [options]="statusOptions" />
+      <app-date-filter-component [(selectedDate)]="openedDate" [labelKey]="'ATTENDANCE.OPENED_AT'" />
+      <app-date-filter-component [(selectedDate)]="closedDate" [labelKey]="'ATTENDANCE.CLOSED_AT'" />
+    </div>
+  </ng-template>
+
+  <div class="w-full overflow-x-auto">
+    @if (sessionsResource.isLoading()) {
+      <div class="flex justify-center py-20 text-gray-400">
+        {{ t('COMMON.LOADING') }}
+      </div>
+    }
+
+    @if (sessionsResource.error()) {
+      <div class="bg-red-50 text-red-600 p-6 rounded-xl text-center border border-red-100">
+        <p>{{ t('COMMON.MESSAGES.OPERATION_FAILED') }}</p>
+        <button (click)="sessionsResource.reload()" class="mt-3 px-4 py-2 bg-red-600 text-white rounded-lg">
+          {{ t('COMMON.MESSAGES.PLEASE_TRY_AGAIN') }}
+        </button>
+      </div>
+    }
+
+    @if (sessionsResource.value() && !sessions().length) {
+      <app-empty-table-placeholder-component />
+    }
+
+    @if (sessionsResource.value() && sessions().length) {
+      <table class="min-w-[1080px] w-full text-right font-arabic border border-[#F4F4F4]/50 rounded-xl overflow-hidden">
+        <thead class="text-sm bg-[#F4F4F4] sticky top-0 z-10">
+          <tr>
+            <th class="py-4 ps-10 text-start">{{ t('ATTENDANCE.TABLE_SESSION_ID') }}</th>
+            <th class="py-4 px-4 text-center">{{ t('ATTENDANCE.OPENED_AT') }}</th>
+            <th class="py-4 px-4 text-center">{{ t('ATTENDANCE.CLOSED_AT') }}</th>
+            <th class="py-4 px-4 text-center">{{ t('ATTENDANCE.SOURCE') }}</th>
+            <th class="py-4 px-4 text-center">{{ t('ATTENDANCE.SIGNS_COUNT') }}</th>
+            <th class="py-4 px-4 text-center">{{ t('ATTENDANCE.STATUS') }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (session of sessions(); track session.id) {
+            <tr class="bg-white border-b border-gray-200 hover:bg-gray-50/50 transition-all">
+              <td class="py-4 ps-10 text-start font-medium text-sm text-black">{{ session.code }}</td>
+              <td class="py-4 px-4 text-center text-sm">{{ session.openedAt | date:'dd/MM/yyyy HH:mm' }}</td>
+              <td class="py-4 px-4 text-center text-sm">
+                {{ session.closedAt ? (session.closedAt | date:'dd/MM/yyyy HH:mm') : '-' }}
+              </td>
+              <td class="py-4 px-4 text-center text-sm">
+                {{ normalizeSource(session) || t(session.sourceLabelKey) }}
+              </td>
+              <td class="py-4 px-4 text-center text-sm">{{ session.signsCount }}</td>
+              <td class="py-4 px-4 text-center">
+                <div class="flex justify-center">
+                  <app-table-status-badge-component
+                    [status]="session.statusTone"
+                    [label]="t(session.statusLabelKey)" />
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+  </div>
+</app-app-base-table-component>

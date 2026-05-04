@@ -10,6 +10,16 @@ export const ATTENDANCE_ROUTES: Routes = [
         path: '',
         children: [
           {
+            path: 'view-log-session',
+            data: { breadcrumb: 'MENU.VIEW_ATTENDANCE_LOG_SESSIONS' },
+            children: [
+              {
+                path: '',
+                loadComponent: () => import('./pages/view-log-session-component/view-log-session-component').then(x => x.ViewLogSessionComponent),
+              },
+            ],
+          },
+          {
             path: 'view-attendance-log',
             data: { breadcrumb: 'MENU.VIEW_ATTENDANCE_LOGS' },
             children: [
@@ -116,7 +126,7 @@ export const ATTENDANCE_ROUTES: Routes = [
           },
           {
             path: '',
-            redirectTo: 'view-attendance-log',
+            redirectTo: 'view-log-session',
             pathMatch: 'full'
           },
           {

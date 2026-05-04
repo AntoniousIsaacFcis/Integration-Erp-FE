@@ -127,6 +127,7 @@
     "NOT_FOUND": "Page Not Found",
     "CREATE_SPECIAL_SHIFT": "Add Specific Shift",
       "VIEW_SPECIAL_SHIFTS": "Specific Shifts",
+      "VIEW_ATTENDANCE_LOG_SESSIONS": "Attendance Sessions",
       "VIEW_ATTENDANCE_LOGS": "Attendance Logs",
       "EDIT_SPECIAL_SHIFT": "Edit Specific Shift",
       "EDIT_ATTENDANCE_DAY": "Edit Attendance Day",
@@ -583,6 +584,15 @@
     "AUTO_SHIFT": "Auto detect from assignment",
     "NO_RELATED_SHIFT": "No related shift was found for this employee and date.",
     "ATTENDANCE_DAY_ALREADY_EXISTS": "An attendance day for this employee already exists.",
+    "TABLE_SESSION_ID": "Session ID",
+    "OPENED_AT": "Opened At",
+    "CLOSED_AT": "Closed At",
+    "SIGNS_COUNT": "Sign Count",
+    "LOG_SESSION_SEARCH_PLACEHOLDER": "Search by session ID or source...",
+    "LOG_SESSION_STATUS": {
+      "OPEN": "Open",
+      "CLOSED": "Closed"
+    },
     "LOG_TIME": "Attendance Log Time",
     "LOG_DATE_FILTER": "Attendance Log Date",
     "SEARCH_LOG_PLACEHOLDER": "Search attendance logs...",

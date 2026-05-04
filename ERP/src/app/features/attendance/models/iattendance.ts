@@ -91,6 +91,45 @@ export interface IAttendanceLogListResponse {
   totalCount: number;
 }
 
+export interface IAttendanceLogSessionApiDto {
+  id: string;
+  code: string;
+  sessionDate: string;
+  openedAt: string;
+  closedAt?: string | null;
+  signsCount: number;
+  status: number;
+  sourceName?: string | null;
+  sourceType?: string | null;
+  notes?: string | null;
+}
+
+export interface IAttendanceLogSessionListResponse {
+  items: IAttendanceLogSessionApiDto[];
+  totalCount: number;
+}
+
+export interface IAttendanceLogSessionListItem {
+  id: string;
+  code: string;
+  openedAt: string;
+  closedAt: string | null;
+  sourceDisplay: string;
+  sourceLabelKey: string;
+  signsCount: number;
+  status: number;
+  statusLabelKey: string;
+  statusTone: string;
+  notes?: string | null;
+}
+
+export interface IAttendanceLogSessionListViewResponse {
+  data: IAttendanceLogSessionListItem[];
+  total: number;
+  page: number;
+  limit: number;
+}
+
 export interface IAttendanceLogListItem {
   id: string;
   employeeName: string;

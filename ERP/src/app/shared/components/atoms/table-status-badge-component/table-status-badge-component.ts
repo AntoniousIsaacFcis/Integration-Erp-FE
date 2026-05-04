@@ -35,6 +35,8 @@ badgeClasses = computed(() => {
       'invalid-outside-period': { bg: 'bg-[#FDE68A]', text: 'text-[#B45309]' },
       'invalid-weekend': { bg: 'bg-[#FECACA]', text: 'text-[#B91C1C]' },
       'invalid-no-open-period': { bg: 'bg-[#E5E7EB]', text: 'text-[#6B7280]' },
+      'open': { bg: 'bg-[#61BDDC33]', text: 'text-[#0B84B5]' },
+      'closed': { bg: 'bg-[#8181811A]', text: 'text-[#818181]' },
 
       // Employees
       'probation': { bg: 'bg-[#FFF3E6]', text: 'text-[#FF8400]' },

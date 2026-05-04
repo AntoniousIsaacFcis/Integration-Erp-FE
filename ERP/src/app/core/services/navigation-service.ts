@@ -37,11 +37,12 @@ export const MENU_ITEMS: INavItem[] = [
     path: '/attendance',
     icon: 'lucideCalendar',
     children: [
-      { id: '6-1', label: 'MENU.VIEW_ATTENDANCE_LOGS', path: '/attendance/view-attendance-log', icon: 'lucideFileText' },
-      { id: '6-2', label: 'MENU.VIEW_SHIFTS', path: '/attendance/view', icon: 'lucideCalendarDays' },
-      { id: '6-3', label: 'MENU.VIEW_SPECIAL_SHIFTS', path: '/attendance/special', icon: 'lucideUsers' },
-      { id: '6-4', label: 'MENU.VIEW_ATTENDANCE_DAYS', path: '/attendance/view-attendance-days', icon: 'lucideCheckCircle' },
-      { id: '6-5', label: 'MENU.VIEW_PERMISSIONS', path: '/attendance/view-permissions', icon: 'lucideShieldCheck' }
+      { id: '6-1', label: 'MENU.VIEW_ATTENDANCE_LOG_SESSIONS', path: '/attendance/view-log-session', icon: 'lucideFileText' },
+      { id: '6-2', label: 'MENU.VIEW_ATTENDANCE_LOGS', path: '/attendance/view-attendance-log', icon: 'lucideFileText' },
+      { id: '6-3', label: 'MENU.VIEW_SHIFTS', path: '/attendance/view', icon: 'lucideCalendarDays' },
+      { id: '6-4', label: 'MENU.VIEW_SPECIAL_SHIFTS', path: '/attendance/special', icon: 'lucideUsers' },
+      { id: '6-5', label: 'MENU.VIEW_ATTENDANCE_DAYS', path: '/attendance/view-attendance-days', icon: 'lucideCheckCircle' },
+      { id: '6-6', label: 'MENU.VIEW_PERMISSIONS', path: '/attendance/view-permissions', icon: 'lucideShieldCheck' }
     ]
   },
   {

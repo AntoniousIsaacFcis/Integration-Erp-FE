@@ -6,7 +6,7 @@ import { IStaffApiItem } from '@features/core-hr/models/istaff';
 import { StaffService } from '@features/core-hr/services/staff-service';
 import { ISelectOption } from '@shared/components/atoms/select-btn-component/select-btn-component';
 import { catchError, forkJoin, map, Observable, of, shareReplay, switchMap, tap, timeout } from 'rxjs';
-import { IAttendanceAvailablePeriod, IAttendanceDay, IAttendanceDayApiDto, IAttendanceDayListResponse, IAttendanceLogApiDto, IAttendanceLogDetails, IAttendanceLogListItem, IAttendanceLogListResponse, IAttendanceLogListViewResponse, IAttendanceRelatedShift, IAttendanceResponse, ICreateAttendanceDayPayload, ICustomShiftForm, IEditAttendanceDay, IShift, IShiftApiListResponse, IShiftAssignment, IShiftAssignmentApiListResponse, IShiftAssignmentPayload, IShiftListItem, IShiftListResponse, IShiftOption, IShiftPayload, ISpecialShiftListResponse, IUpdateAttendancePayload } from '../models/iattendance';
+import { IAttendanceAvailablePeriod, IAttendanceDay, IAttendanceDayApiDto, IAttendanceDayListResponse, IAttendanceLogApiDto, IAttendanceLogDetails, IAttendanceLogListItem, IAttendanceLogListResponse, IAttendanceLogListViewResponse, IAttendanceLogSessionApiDto, IAttendanceLogSessionListItem, IAttendanceLogSessionListResponse, IAttendanceLogSessionListViewResponse, IAttendanceRelatedShift, IAttendanceResponse, ICreateAttendanceDayPayload, ICustomShiftForm, IEditAttendanceDay, IShift, IShiftApiListResponse, IShiftAssignment, IShiftAssignmentApiListResponse, IShiftAssignmentPayload, IShiftListItem, IShiftListResponse, IShiftOption, IShiftPayload, ISpecialShiftListResponse, IUpdateAttendancePayload } from '../models/iattendance';
 
 @Injectable({
   providedIn: 'root',
@@ -17,6 +17,7 @@ export class AttendanceService {
   private readonly API_URL = `${environment.baseUrl}/api`;
   private readonly SHIFT_API_URL = `${this.API_URL}/attendance/shift`;
   private readonly SHIFT_ASSIGNMENT_API_URL = `${this.API_URL}/attendance/shift-assignment`;
+  private readonly ATTENDANCE_LOG_SESSION_API_URL = `${this.API_URL}/attendance/attendance-log-session`;
   private readonly relatedShiftRequests = new Map<string, Observable<IAttendanceRelatedShift | null>>();
 
   getAttendance(empId: string, year: string, month: string): Observable<IAttendanceDay[]> {
@@ -69,6 +70,51 @@ export class AttendanceService {
         page: params.page,
         limit: params.limit,
       })),
+    );
+  }
+
+  getAttendanceLogSessions(params: {
+    page: number;
+    limit: number;
+    search?: string;
+    status?: string;
+    openedDate?: string;
+    closedDate?: string;
+  }): Observable<IAttendanceLogSessionListViewResponse> {
+    const requiresLocalClosedDateFiltering = Boolean(params.closedDate?.trim());
+    const requestLimit = requiresLocalClosedDateFiltering ? 1000 : params.limit;
+    const openedDate = params.openedDate?.trim();
+    const closedDate = params.closedDate?.trim();
+
+    return this.http.get<IAttendanceLogSessionListResponse>(this.ATTENDANCE_LOG_SESSION_API_URL, {
+      params: {
+        SkipCount: String(requiresLocalClosedDateFiltering ? 0 : (params.page - 1) * params.limit),
+        MaxResultCount: String(requestLimit),
+        Sorting: 'OpenedAt DESC',
+        ...(params.search?.trim() && { SearchText: params.search.trim() }),
+        ...(params.status?.trim() && { Status: params.status.trim() }),
+        ...(openedDate && {
+          OpenedFrom: `${openedDate}T00:00:00`,
+          OpenedTo: `${openedDate}T23:59:59`,
+        }),
+      },
+    }).pipe(
+      map(response => {
+        const data = (response.items ?? [])
+          .map(item => this.toAttendanceLogSessionListItem(item))
+          .filter(item => this.matchesAttendanceLogSessionClosedDate(item.closedAt, closedDate));
+
+        const pagedData = requiresLocalClosedDateFiltering
+          ? data.slice((params.page - 1) * params.limit, params.page * params.limit)
+          : data;
+
+        return {
+          data: pagedData,
+          total: requiresLocalClosedDateFiltering ? data.length : response.totalCount ?? 0,
+          page: params.page,
+          limit: params.limit,
+        };
+      }),
     );
   }
 
@@ -800,6 +846,22 @@ export class AttendanceService {
     };
   }
 
+  private toAttendanceLogSessionListItem(item: IAttendanceLogSessionApiDto): IAttendanceLogSessionListItem {
+    return {
+      id: item.id,
+      code: item.code,
+      openedAt: item.openedAt,
+      closedAt: item.closedAt ?? null,
+      sourceDisplay: item.sourceName?.trim() || item.sourceType?.trim() || '',
+      sourceLabelKey: this.getAttendanceLogSessionSourceLabelKey(item.sourceType),
+      signsCount: item.signsCount,
+      status: item.status,
+      statusLabelKey: this.getAttendanceLogSessionStatusLabelKey(item.status),
+      statusTone: this.getAttendanceLogSessionStatusTone(item.status),
+      notes: item.notes ?? null,
+    };
+  }
+
   private toAttendanceLogDetails(item: IAttendanceLogApiDto): IAttendanceLogDetails {
     return {
       id: item.id,
@@ -917,6 +979,52 @@ export class AttendanceService {
     };
 
     return labels[source] ?? 'ATTENDANCE.LOG_SOURCE.MACHINE';
+  }
+
+  private getAttendanceLogSessionStatusLabelKey(status: number) {
+    const labels: Record<number, string> = {
+      1: 'ATTENDANCE.LOG_SESSION_STATUS.OPEN',
+      2: 'ATTENDANCE.LOG_SESSION_STATUS.CLOSED',
+    };
+
+    return labels[status] ?? 'ATTENDANCE.LOG_SESSION_STATUS.OPEN';
+  }
+
+  private getAttendanceLogSessionStatusTone(status: number) {
+    const tones: Record<number, string> = {
+      1: 'open',
+      2: 'closed',
+    };
+
+    return tones[status] ?? 'open';
+  }
+
+  private getAttendanceLogSessionSourceLabelKey(sourceType?: string | null) {
+    const normalized = this.normalizeSearchText(sourceType);
+
+    switch (normalized) {
+      case 'self':
+      case 'self service':
+      case 'self-service':
+        return 'ATTENDANCE.LOG_SOURCE.SELF_SERVICE';
+      case 'admin':
+      case 'supervisor':
+        return 'ATTENDANCE.LOG_SOURCE.ADMIN';
+      default:
+        return 'ATTENDANCE.LOG_SOURCE.MACHINE';
+    }
+  }
+
+  private matchesAttendanceLogSessionClosedDate(closedAt: string | null, selectedDate?: string) {
+    if (!selectedDate) {
+      return true;
+    }
+
+    if (!closedAt) {
+      return false;
+    }
+
+    return this.toDateKey(closedAt) === selectedDate;
   }
 
   private mapAttendanceStatusFilter(status?: string) {
