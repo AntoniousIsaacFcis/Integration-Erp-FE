@@ -925,7 +925,10 @@
     "TABLE_EMPLOYEE_NAME": "اسم الموظف",
     "TABLE_DATE": "التاريخ",
     "TABLE_PERMISSION_ID": "رقم إذن الحضور",
-    "TABLE_HOLIDAY_TYPE": "النوع"
+    "TABLE_HOLIDAY_TYPE": "النوع",
+    "STATUS_PENDING": "قيد الانتظار",
+    "STATUS_APPROVED": "معتمد",
+    "STATUS_REJECTED": "مرفوض"
   },
   "ROLES": {
     "ADD_ROLE": "إضافة دور وظيفي",

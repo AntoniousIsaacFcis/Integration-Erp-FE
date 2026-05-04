@@ -68,6 +68,31 @@ export interface ILeaveApplicationUpdatePayload {
   status: number;
 }
 
+export interface ILeaveApplicationListApiResponse {
+  items: ILeaveApplicationApiDto[];
+  totalCount: number;
+}
+
+export interface ILeaveApplicationListItem {
+  id: string;
+  employeeId: string;
+  employeeName: string;
+  dateFrom: string;
+  dateTo: string;
+  type: number;
+  leaveTypeName?: string | null;
+  typeLabelKey: string;
+  dateRange: string;
+  status: number;
+}
+
+export interface ILeaveApplicationListViewResponse {
+  data: ILeaveApplicationListItem[];
+  total: number;
+  page: number;
+  limit: number;
+}
+
 export interface IEmployeeLeaveOverviewApiResponse {
   annualBalance: number;
   sickBalance: number;

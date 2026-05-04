@@ -888,7 +888,10 @@
     "TABLE_EMPLOYEE_NAME": "Employee Name",
     "TABLE_DATE": "Date",
     "TABLE_PERMISSION_ID": "Permission ID",
-    "TABLE_HOLIDAY_TYPE": "Type"
+    "TABLE_HOLIDAY_TYPE": "Type",
+    "STATUS_PENDING": "Pending",
+    "STATUS_APPROVED": "Approved",
+    "STATUS_REJECTED": "Rejected"
   }
 }
 

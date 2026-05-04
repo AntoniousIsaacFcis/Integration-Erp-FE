@@ -1,7 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { environment } from '@env/environment.development';
-import { IEmployeeLeaveOverviewApiResponse, ILeaveApplicationApiDto, ILeaveApplicationUpdatePayload, ILeaveTypeApiDto, ILeaveTypeListResponse, IVacationResponse, VacationStatus } from '@features/attendance/models/ivacation';
+import { IEmployeeLeaveOverviewApiResponse, ILeaveApplicationApiDto, ILeaveApplicationListApiResponse, ILeaveApplicationListItem, ILeaveApplicationListViewResponse, ILeaveApplicationUpdatePayload, ILeaveTypeApiDto, ILeaveTypeListResponse, IVacationResponse, VacationStatus } from '@features/attendance/models/ivacation';
+import { IAttendancePermissionApiDto, IAttendancePermissionListItem, IAttendancePermissionListResponse } from '@features/attendance/models/ipermissions';
 import { IStaffApiItem } from '@features/core-hr/models/istaff';
 import { StaffService } from '@features/core-hr/services/staff-service';
 import { ISelectOption } from '@shared/components/atoms/select-btn-component/select-btn-component';
@@ -516,6 +517,96 @@ export class AttendanceService {
     return this.http.get<ILeaveApplicationApiDto>(`${this.API_URL}/core-hR/leave-application/${id}`);
   }
 
+  getLeaveApplications(params: {
+    page: number;
+    limit: number;
+    search?: string;
+    status?: string;
+    type?: string;
+    fromDate?: string;
+    toDate?: string;
+  }): Observable<ILeaveApplicationListViewResponse> {
+    const normalizedSearch = params.search?.trim();
+    const fromDate = params.fromDate?.trim();
+    const toDate = params.toDate?.trim();
+
+    return forkJoin({
+      leaveApplications: this.http.get<ILeaveApplicationListApiResponse>(
+        `${this.API_URL}/core-hR/leave-application`,
+        {
+          params: {
+            SkipCount: String((params.page - 1) * params.limit),
+            MaxResultCount: String(params.limit),
+            Sorting: 'CreationTime DESC',
+            ...(normalizedSearch && { SearchText: normalizedSearch }),
+            ...(params.status?.trim() && { Status: params.status.trim() }),
+            ...(params.type?.trim() && { Type: params.type.trim() }),
+            ...(fromDate && { FromDate: fromDate }),
+            ...(toDate && { ToDate: toDate }),
+          },
+        },
+      ),
+      staff: this.staffService.getStaff({ skipCount: 0, maxResultCount: 1000, filter: '' }).pipe(
+        catchError(() => of({ totalCount: 0, items: [] })),
+      ),
+    }).pipe(
+      map(({ leaveApplications, staff }) => {
+        const staffLookup = new Map(
+          staff.items
+            .filter((item): item is IStaffApiItem & { id: string } => Boolean(item.id))
+            .map(item => [item.id, this.getStaffDisplayName(item)]),
+        );
+
+        return {
+          data: (leaveApplications.items ?? []).map(item => this.toLeaveApplicationListItem(item, staffLookup)),
+          total: leaveApplications.totalCount ?? 0,
+          page: params.page,
+          limit: params.limit,
+        };
+      }),
+    );
+  }
+
+  getAttendancePermissions(params: {
+    page: number;
+    limit: number;
+    search?: string;
+    status?: string;
+    type?: string;
+    fromDate?: string;
+    toDate?: string;
+  }): Observable<{ data: IAttendancePermissionListItem[]; total: number; page: number; limit: number }> {
+    const normalizedSearch = params.search?.trim();
+    const requestType = params.type?.trim();
+    const requestStatus = params.status?.trim();
+
+    return this.http.get<IAttendancePermissionListResponse>(`${this.API_URL}/attendance/attendance-permission`, {
+      params: {
+        SkipCount: String((params.page - 1) * params.limit),
+        MaxResultCount: String(params.limit),
+        Sorting: 'ApplicationDate DESC',
+        ...(normalizedSearch && {
+          SearchText: normalizedSearch,
+          SearchTerm: normalizedSearch,
+          Search: normalizedSearch,
+          Q: normalizedSearch,
+          Filter: normalizedSearch,
+        }),
+        ...(requestType && { Type: requestType }),
+        ...(requestStatus && { Status: requestStatus }),
+        ...(params.fromDate && { FromDate: params.fromDate }),
+        ...(params.toDate && { ToDate: params.toDate }),
+      },
+    }).pipe(
+      map(response => ({
+        data: ((response.items ?? response.data ?? []) as IAttendancePermissionApiDto[]).map(item => this.toAttendancePermissionListItem(item)),
+        total: response.totalCount ?? response.total ?? 0,
+        page: params.page,
+        limit: params.limit,
+      })),
+    );
+  }
+
   updateLeaveApplication(id: string, payload: ILeaveApplicationUpdatePayload): Observable<ILeaveApplicationApiDto> {
     return this.http.put<ILeaveApplicationApiDto>(`${this.API_URL}/core-hR/leave-application/${id}`, payload);
   }
@@ -822,6 +913,40 @@ export class AttendanceService {
     };
   }
 
+  private toLeaveApplicationListItem(
+    item: ILeaveApplicationApiDto,
+    staffLookup: Map<string, string>,
+  ): ILeaveApplicationListItem {
+    return {
+      id: item.id,
+      employeeId: item.staffId,
+      employeeName: staffLookup.get(item.staffId) ?? item.staffId,
+      dateFrom: item.dateFrom,
+      dateTo: item.dateTo,
+      type: item.type,
+      leaveTypeName: item.leaveTypeName ?? null,
+      typeLabelKey: this.getLeaveApplicationTypeLabelKey(item.type),
+      dateRange: `${this.formatDisplayDate(item.dateFrom)} - ${this.formatDisplayDate(item.dateTo)}`,
+      status: item.status,
+    };
+  }
+
+  private toAttendancePermissionListItem(item: IAttendancePermissionApiDto): IAttendancePermissionListItem {
+    return {
+      id: item.id,
+      employeeId: item.employeeId,
+      employeeName: item.employeeName?.trim() || item.employeeCode?.trim() || item.employeeId,
+      employeeCode: item.employeeCode?.trim() || null,
+      dateRange: `${this.formatDisplayDate(item.fromDate)} - ${this.formatDisplayDate(item.toDate)}`,
+      type: item.type,
+      typeLabelKey: this.getAttendancePermissionTypeLabelKey(item.type),
+      leaveTypeName: item.leaveTypeName?.trim() || null,
+      status: item.status,
+      statusLabelKey: this.getAttendancePermissionStatusLabelKey(item.status),
+      statusTone: this.getAttendancePermissionStatusTone(item.status),
+    };
+  }
+
   private toAttendanceLogDetails(item: IAttendanceLogApiDto): IAttendanceLogDetails {
     return {
       id: item.id,
@@ -973,6 +1098,59 @@ export class AttendanceService {
       default:
         return 'ATTENDANCE.LOG_SOURCE.MACHINE';
     }
+  }
+
+  private getLeaveApplicationTypeLabelKey(type: number) {
+    const labels: Record<number, string> = {
+      1: 'Enum:AttendancePermissionType.Leave',
+      2: 'Enum:AttendancePermissionType.HalfLeave',
+      3: 'Enum:AttendancePermissionType.LateArrival',
+      4: 'Enum:AttendancePermissionType.EarlyLeave',
+    };
+
+    return labels[type] ?? 'Enum:AttendancePermissionType.Leave';
+  }
+
+  private getAttendancePermissionTypeLabelKey(type: number) {
+    const labels: Record<number, string> = {
+      1: 'Enum:AttendancePermissionType.Leave',
+      2: 'Enum:AttendancePermissionType.HalfLeave',
+      3: 'Enum:AttendancePermissionType.LateArrival',
+      4: 'Enum:AttendancePermissionType.EarlyLeave',
+    };
+
+    return labels[type] ?? 'Enum:AttendancePermissionType.Leave';
+  }
+
+  private getAttendancePermissionStatusLabelKey(status: number) {
+    const labels: Record<number, string> = {
+      1: 'PERMISSIONS.STATUS_PENDING',
+      2: 'PERMISSIONS.STATUS_APPROVED',
+      3: 'PERMISSIONS.STATUS_REJECTED',
+    };
+
+    return labels[status] ?? 'PERMISSIONS.STATUS_PENDING';
+  }
+
+  private getAttendancePermissionStatusTone(status: number) {
+    const tones: Record<number, string> = {
+      1: 'pending',
+      2: 'valid',
+      3: 'invalid',
+    };
+
+    return tones[status] ?? 'pending';
+  }
+
+  private formatDisplayDate(value: string) {
+    const datePart = value.slice(0, 10);
+    const match = datePart.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+
+    if (!match) {
+      return datePart || value;
+    }
+
+    return `${match[3]}/${match[2]}/${match[1]}`;
   }
 
   private mapAttendanceStatusFilter(status?: string) {

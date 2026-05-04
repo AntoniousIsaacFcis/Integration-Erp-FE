@@ -22,3 +22,46 @@ export interface IPermission {
   reason: string;
   status: 'pending' | 'approved' | 'rejected';
 }
+
+export interface IAttendancePermissionApiDto {
+  id: string;
+  employeeId: string;
+  employeeName?: string | null;
+  employeeCode?: string | null;
+  fromDate: string;
+  toDate: string;
+  applicationDate: string;
+  type: number;
+  leaveTypeId?: string | null;
+  leaveTypeName?: string | null;
+  leaveCount: number;
+  durationMinutes?: number | null;
+  note?: string | null;
+  status: number;
+  leaveApplicationId?: string | null;
+  attendanceFlagId?: string | null;
+  attendanceSheetId?: string | null;
+}
+
+export interface IAttendancePermissionListItem {
+  id: string;
+  employeeId: string;
+  employeeName: string;
+  employeeCode: string | null;
+  dateRange: string;
+  type: number;
+  typeLabelKey: string;
+  leaveTypeName: string | null;
+  status: number;
+  statusLabelKey: string;
+  statusTone: string;
+}
+
+export interface IAttendancePermissionListResponse {
+  data?: IAttendancePermissionListItem[];
+  total?: number;
+  items?: IAttendancePermissionApiDto[];
+  totalCount?: number;
+  page?: number;
+  limit?: number;
+}
