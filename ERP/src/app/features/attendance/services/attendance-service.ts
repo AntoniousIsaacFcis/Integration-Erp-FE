@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { environment } from '@env/environment.development';
 import { IEmployeeLeaveOverviewApiResponse, ILeaveApplicationApiDto, ILeaveApplicationListApiResponse, ILeaveApplicationListItem, ILeaveApplicationListViewResponse, ILeaveApplicationUpdatePayload, ILeaveTypeApiDto, ILeaveTypeListResponse, IVacationResponse, VacationStatus } from '@features/attendance/models/ivacation';
-import { IAttendancePermissionApiDto, IAttendancePermissionListItem, IAttendancePermissionListResponse } from '@features/attendance/models/ipermissions';
+import { IAttendancePermissionApiDto, IAttendancePermissionListItem, IAttendancePermissionListResponse, ICreateAttendancePermissionPayload } from '@features/attendance/models/ipermissions';
 import { IStaffApiItem } from '@features/core-hr/models/istaff';
 import { StaffService } from '@features/core-hr/services/staff-service';
 import { ISelectOption } from '@shared/components/atoms/select-btn-component/select-btn-component';
@@ -605,6 +605,10 @@ export class AttendanceService {
         limit: params.limit,
       })),
     );
+  }
+
+  createAttendancePermission(payload: ICreateAttendancePermissionPayload): Observable<IAttendancePermissionApiDto> {
+    return this.http.post<IAttendancePermissionApiDto>(`${this.API_URL}/attendance/attendance-permission`, payload);
   }
 
   updateLeaveApplication(id: string, payload: ILeaveApplicationUpdatePayload): Observable<ILeaveApplicationApiDto> {

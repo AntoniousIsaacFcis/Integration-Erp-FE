@@ -14,6 +14,22 @@ export interface ICreatePermissionRequest {
   attachedFiles?: [IDocument]
 }
 
+export interface ICreateAttendancePermissionPayload {
+  employeeId: string;
+  fromDate: string;
+  toDate: string;
+  applicationDate?: string | null;
+  type: number;
+  leaveTypeId?: string | null;
+  leaveCount?: number | null;
+  durationMinutes?: number | null;
+  note?: string | null;
+  status?: number;
+  leaveApplicationId?: string | null;
+  attendanceFlagId?: string | null;
+  attendanceSheetId?: string | null;
+}
+
 export interface IPermission {
   id: string;
   employeeId: string;
