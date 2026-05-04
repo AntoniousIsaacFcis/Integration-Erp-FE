@@ -6,7 +6,7 @@ import { IStaffApiItem } from '@features/core-hr/models/istaff';
 import { StaffService } from '@features/core-hr/services/staff-service';
 import { ISelectOption } from '@shared/components/atoms/select-btn-component/select-btn-component';
 import { catchError, forkJoin, map, Observable, of, shareReplay, switchMap, tap, timeout } from 'rxjs';
-import { IAttendanceAvailablePeriod, IAttendanceDay, IAttendanceDayApiDto, IAttendanceDayListResponse, IAttendanceLogApiDto, IAttendanceLogDetails, IAttendanceLogListItem, IAttendanceLogListResponse, IAttendanceLogListViewResponse, IAttendanceLogSessionApiDto, IAttendanceLogSessionListItem, IAttendanceLogSessionListResponse, IAttendanceLogSessionListViewResponse, IAttendanceLogSignRequest, IAttendanceLogSignResult, IAttendanceRelatedShift, IAttendanceResponse, ICreateAttendanceDayPayload, ICreateAttendanceLogSessionPayload, ICustomShiftForm, IEditAttendanceDay, IShift, IShiftApiListResponse, IShiftAssignment, IShiftAssignmentApiListResponse, IShiftAssignmentPayload, IShiftListItem, IShiftListResponse, IShiftOption, IShiftPayload, ISpecialShiftListResponse, IUpdateAttendancePayload } from '../models/iattendance';
+import { IAttendanceAvailablePeriod, IAttendanceDay, IAttendanceDayApiDto, IAttendanceDayListResponse, IAttendanceLogApiDto, IAttendanceLogDetails, IAttendanceLogListItem, IAttendanceLogListResponse, IAttendanceLogListViewResponse, IAttendanceLogSessionApiDto, IAttendanceLogSessionListItem, IAttendanceLogSessionListResponse, IAttendanceLogSessionListViewResponse, IAttendanceLogSignRequest, IAttendanceLogSignResult, IAttendanceRelatedShift, IAttendanceResponse, ICreateAttendanceDayPayload, ICreateAttendanceLogSessionPayload, ICustomShiftForm, IEditAttendanceDay, IShift, IShiftApiListResponse, IShiftAssignment, IShiftAssignmentApiListResponse, IShiftAssignmentPayload, IShiftListItem, IShiftListResponse, IShiftOption, IShiftPayload, ISpecialShiftListResponse, IUpdateAttendanceLogSessionPayload, IUpdateAttendancePayload } from '../models/iattendance';
 
 @Injectable({
   providedIn: 'root',
@@ -123,6 +123,10 @@ export class AttendanceService {
 
   createAttendanceLogSession(payload: ICreateAttendanceLogSessionPayload): Observable<IAttendanceLogSessionApiDto> {
     return this.http.post<IAttendanceLogSessionApiDto>(this.ATTENDANCE_LOG_SESSION_API_URL, payload);
+  }
+
+  updateAttendanceLogSession(id: string, payload: IUpdateAttendanceLogSessionPayload): Observable<IAttendanceLogSessionApiDto> {
+    return this.http.put<IAttendanceLogSessionApiDto>(`${this.ATTENDANCE_LOG_SESSION_API_URL}/${id}`, payload);
   }
 
   closeAttendanceLogSession(id: string): Observable<void> {

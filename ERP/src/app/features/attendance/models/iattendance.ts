@@ -127,6 +127,15 @@ export interface ICreateAttendanceLogSessionPayload {
   notes?: string | null;
 }
 
+export interface IUpdateAttendanceLogSessionPayload {
+  code: string;
+  sessionDate: string;
+  openedAt?: string | null;
+  sourceName?: string | null;
+  sourceType?: string | null;
+  notes?: string | null;
+}
+
 export interface IAttendanceLogSessionListResponse {
   items: IAttendanceLogSessionApiDto[];
   totalCount: number;

@@ -47,6 +47,7 @@ export class LogSessionDetailsComponent {
   activeTab = signal<'details' | 'logs'>('details');
   showSignModal = signal(false);
   isClosingSession = signal(false);
+  isSavingNotes = signal(false);
   sessionDateRaw = signal('');
   sessionDateDisplay = signal('');
   canCloseSession = computed(() => (this.sessionResource.value()?.status ?? 0) === 1);
@@ -59,7 +60,7 @@ export class LogSessionDetailsComponent {
     source: [{ value: '', disabled: true }],
     status: [{ value: '', disabled: true }],
     signsCount: [{ value: '', disabled: true }],
-    notes: [{ value: '', disabled: true }],
+    notes: [''],
   });
 
   sessionResource = rxResource({
@@ -85,8 +86,8 @@ export class LogSessionDetailsComponent {
       }
 
       this.sessionForm.patchValue({
-        code: session.code,
-        sessionDate: session.sessionDate,
+        code: this.formatSessionCode(session.code),
+        sessionDate: this.toDateInputValue(session.sessionDate),
         openedAt: this.formatDateTime(session.openedAt),
         closedAt: session.closedAt ? this.formatDateTime(session.closedAt) : '-',
         source: this.formatSource(session),
@@ -97,7 +98,7 @@ export class LogSessionDetailsComponent {
       this.sessionDateRaw.set(session.sessionDate);
       this.sessionDateDisplay.set(this.formatDate(session.sessionDate));
 
-      this.breadcrumbService.setCurrentBreadcrumbLabel(session.code, this.route);
+      this.breadcrumbService.setCurrentBreadcrumbLabel(this.formatSessionCode(session.code), this.route);
     });
   }
 
@@ -156,6 +157,54 @@ export class LogSessionDetailsComponent {
     this.activeTab.set('logs');
   }
 
+  saveNotes() {
+    if (this.isSavingNotes()) {
+      return;
+    }
+
+    const session = this.sessionResource.value();
+    if (!session) {
+      return;
+    }
+
+    this.isSavingNotes.set(true);
+
+    this.attendanceService.updateAttendanceLogSession(this.sessionId(), {
+      code: this.stripSessionCode(this.sessionForm.controls.code.value || session.code),
+      sessionDate: session.sessionDate,
+      openedAt: session.openedAt,
+      sourceName: session.sourceName ?? null,
+      sourceType: session.sourceType ?? null,
+      notes: this.sessionForm.controls.notes.value?.trim() || null,
+    }).subscribe({
+      next: updatedSession => {
+        this.isSavingNotes.set(false);
+        this.sessionResource.reload();
+        this.notificationService.show({
+          type: 'success',
+          title: 'COMMON.MESSAGES.SAVED_SUCCESSFULLY',
+          message: 'COMMON.MESSAGES.SUCCESS_MESSAGE',
+          isModal: false,
+          actionLabel: 'COMMON.OK',
+        });
+
+        this.sessionForm.patchValue({
+          notes: updatedSession.notes ?? '',
+        }, { emitEvent: false });
+      },
+      error: () => {
+        this.isSavingNotes.set(false);
+        this.notificationService.show({
+          type: 'error',
+          title: 'COMMON.MESSAGES.OPERATION_FAILED',
+          message: 'COMMON.MESSAGES.PLEASE_TRY_AGAIN',
+          isModal: false,
+          actionLabel: 'COMMON.CONFIRM',
+        });
+      },
+    });
+  }
+
   navigateBack() {
     this.router.navigate(['/attendance/view-log-session']);
   }
@@ -172,12 +221,29 @@ export class LogSessionDetailsComponent {
     return this.datePipe.transform(value, 'dd/MM/yyyy') ?? value;
   }
 
+  private toDateInputValue(value?: string | null) {
+    if (!value) {
+      return '';
+    }
+
+    return value.length >= 10 ? value.slice(0, 10) : value;
+  }
+
   private formatDateTime(value?: string | null) {
     if (!value) {
       return '';
     }
 
     return this.datePipe.transform(value, 'dd/MM/yyyy HH:mm') ?? value;
+  }
+
+  private formatSessionCode(code?: string | null) {
+    const normalized = String(code ?? '').trim();
+    return normalized ? `#${normalized}` : '-';
+  }
+
+  private stripSessionCode(code?: string | null) {
+    return String(code ?? '').trim().replace(/^#/, '');
   }
 
   private formatSource(session: IAttendanceLogSessionApiDto) {

@@ -65,7 +65,7 @@
             <tr
               class="bg-white border-b border-gray-200 hover:bg-gray-50/50 transition-all cursor-pointer"
               (click)="openSessionDetails(session.id)">
-              <td class="py-4 ps-10 text-center font-medium text-sm text-black">{{ session.code }}</td>
+              <td class="py-4 ps-10 text-center font-medium text-sm text-black">{{ formatSessionCode(session.code) }}</td>
               <td class="py-4 px-4 text-center text-sm">{{ session.openedAt | date:'dd/MM/yyyy HH:mm' }}</td>
               <td class="py-4 px-4 text-center text-sm">
                 {{ session.closedAt ? (session.closedAt | date:'dd/MM/yyyy HH:mm') : '-' }}

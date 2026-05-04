@@ -81,6 +81,11 @@ export class ViewLogSessionComponent {
     return session.sourceDisplay?.trim() || '';
   }
 
+  formatSessionCode(code: string | null | undefined) {
+    const normalized = String(code ?? '').trim();
+    return normalized ? `#${normalized}` : '-';
+  }
+
   openSessionDetails(sessionId: string) {
     this.router.navigate(['/attendance/view-log-session/details', sessionId]);
   }
