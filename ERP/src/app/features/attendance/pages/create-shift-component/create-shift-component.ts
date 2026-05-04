@@ -1,13 +1,13 @@
-import { ChangeDetectionStrategy, Component, computed, effect, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, computed, effect, inject, signal } from '@angular/core';
 import { FormContainerComponent } from "@shared/components/organisms/form-container-component/form-container-component";
 import { AppInputComponent } from "@shared/components/atoms/app-input-component/app-input-component";
 import { FormSaveButtonComponent } from "@shared/components/molecules/form-save-button-component/form-save-button-component";
 import { FormCancelButtonComponent } from "@shared/components/molecules/form-cancel-button-component/form-cancel-button-component";
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { AttendanceService } from '@features/attendance/services/attendance-service';
 import { NotificationService } from '@core/services/notification-service';
-import { rxResource, toSignal } from '@angular/core/rxjs-interop';
-import { of, startWith } from 'rxjs';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
+import { startWith } from 'rxjs';
 import { TranslocoModule } from '@jsverse/transloco';
 import { Router } from '@angular/router';
 import { AppSelectComponent } from "@shared/components/atoms/app-select-component/app-select-component";
@@ -40,7 +40,9 @@ export class CreateShiftComponent {
   private fb = inject(FormBuilder);
   private shiftService = inject(AttendanceService);
   private notification = inject(NotificationService);
+  private destroyRef = inject(DestroyRef);
   submitted = signal(false);
+  isSaving = signal(false);
 
   shiftTypeOptions = [
     { label: 'SHIFT.TYPES.STANDARD', value: 1 },
@@ -68,17 +70,7 @@ export class CreateShiftComponent {
     ] //to ensure workStart  not befor workEnd
   });
 
-  private saveTrigger = signal<IShiftPayload | null>(null);
-
-  saveResource = rxResource({
-    params: () => this.saveTrigger(),
-    stream: ({ params }) => {
-      if (!params) return of(null);
-      return this.shiftService.createShift(params);
-    }
-  });
-
-  isLoading = computed(() => this.saveResource.isLoading());
+  isLoading = computed(() => this.isSaving());
   private readonly shiftTypeValue = toSignal(
     this.shiftForm.controls.type.valueChanges.pipe(startWith(this.shiftForm.controls.type.value)),
   );
@@ -88,41 +80,48 @@ export class CreateShiftComponent {
     effect(() => {
       this.configureParentShiftValidators(this.isFlexibleShift());
     });
-
-    effect(() => {
-      const response = this.saveResource.value();
-      const error = this.saveResource.error();
-
-      if (response && !error) {
-        this.notification.show({
-          type: 'success',
-          title: 'SHIFTS.SUCCESS_TITLE',
-          actionLabel: 'COMMON.OK'
-        });
-        this.router.navigate(['/attendance']);
-      }
-
-      if (error) {
-        this.notification.show({
-          type: 'error',
-          title: 'COMMON.MESSAGES.OPERATION_FAILED',
-          message: 'COMMON.MESSAGES.PLEASE_TRY_AGAIN',
-          isModal: false,
-          actionLabel: 'COMMON.CONFIRM',
-        });
-      }
-    });
   }
 
 
   onSave() {
+    if (this.isSaving()) {
+      return;
+    }
+
     this.submitted.set(true);
 
-    if (this.shiftForm.valid) {
-      this.saveTrigger.set(this.toCreateShiftPayload(this.shiftForm.getRawValue()));
-    } else {
+    if (this.shiftForm.invalid) {
       this.shiftForm.markAllAsTouched();
+      return;
     }
+
+    this.isSaving.set(true);
+
+    this.shiftService.createShift(this.toCreateShiftPayload(this.shiftForm.getRawValue()))
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => {
+          this.isSaving.set(false);
+          this.notification.show({
+            type: 'success',
+            title: 'SHIFT.SUCCESS_TITLE',
+            actionLabel: 'COMMON.OK'
+          });
+          this.router.navigate(['/attendance/view']);
+        },
+        error: (error) => {
+          this.isSaving.set(false);
+          const errorPresentation = this.resolveSaveError(error);
+
+          this.notification.show({
+            type: 'error',
+            title: 'COMMON.MESSAGES.OPERATION_FAILED',
+            message: errorPresentation.message,
+            isModal: errorPresentation.isModal,
+            actionLabel: 'COMMON.CONFIRM',
+          });
+        },
+      });
   }
 
   onCancel() {
@@ -222,6 +221,66 @@ export class CreateShiftComponent {
       isFlexibleShift ? [Validators.min(0)] : [Validators.required, Validators.min(0)]
     );
     this.shiftForm.controls.gracePeriod.updateValueAndValidity({ emitEvent: false });
+
+    this.shiftForm.controls.workDays.setValidators(
+      isFlexibleShift ? [this.flexibleWorkDaysValidator()] : null
+    );
+    this.shiftForm.controls.workDays.updateValueAndValidity({ emitEvent: false });
     this.shiftForm.updateValueAndValidity({ emitEvent: false });
+  }
+
+  private flexibleWorkDaysValidator(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      if (!this.isFlexibleShift()) {
+        return null;
+      }
+
+      const days = control.value as DayConfig[] | null | undefined;
+
+      if (!Array.isArray(days) || !days.length) {
+        return { flexibleWorkDaysRequired: true };
+      }
+
+      const selectedDays = days.filter(day => day?.isWorkDay);
+
+      if (!selectedDays.length) {
+        return null;
+      }
+
+      const hasMissingRequiredTime = selectedDays.some(day =>
+        this.isMissingRequiredValue(day?.onDutyTimeOverride) ||
+        this.isMissingRequiredValue(day?.offDutyTimeOverride) ||
+        this.isMissingRequiredValue(day?.signInStartTimeOverride) ||
+        this.isMissingRequiredValue(day?.signInEndTimeOverride) ||
+        this.isMissingRequiredValue(day?.signOutStartTimeOverride) ||
+        this.isMissingRequiredValue(day?.signOutEndTimeOverride) ||
+        this.isMissingRequiredValue(day?.lateToleranceMinutes)
+      );
+
+      return hasMissingRequiredTime ? { flexibleWorkDaysRequired: true } : null;
+    };
+  }
+
+  private isMissingRequiredValue(value: string | number | null | undefined) {
+    return value === null || value === undefined || value === '';
+  }
+
+  private resolveSaveError(error: unknown) {
+    const backendError = error as { message?: string; code?: string };
+
+    if (
+      backendError?.code === 'Attendance:FlexibleShiftRequiresCompleteDayTimes' ||
+      backendError?.message === 'ERRORS.FLEXIBLE_SHIFT_REQUIRES_COMPLETE_DAY_TIMES'
+    ) {
+      return {
+        message: 'ERRORS.FLEXIBLE_SHIFT_REQUIRES_COMPLETE_DAY_TIMES',
+        isModal: false,
+      };
+    }
+
+    return {
+      message: 'COMMON.MESSAGES.PLEASE_TRY_AGAIN',
+      isModal: false,
+    };
   }
 }

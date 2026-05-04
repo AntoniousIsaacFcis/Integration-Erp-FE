@@ -34,7 +34,8 @@
               <app-work-days-grid-component
                 [control]="shiftForm.controls.workDays"
                 [allowLateToleranceOverrides]="isFlexibleShift()"
-                [initialDays]="initialDays()" />
+                [initialDays]="initialDays()"
+                [showErrors]="submitted()" />
             </section>
 
             @if (!isFlexibleShift()) {

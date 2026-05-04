@@ -1,19 +1,26 @@
-import { Component, input, OnChanges, OnInit, signal, SimpleChanges } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, OnChanges, OnInit, signal, SimpleChanges } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { DayConfig, IShiftDay } from '@features/attendance/models/iattendance';
 import { TranslocoModule } from '@jsverse/transloco';
+import { NgIcon, provideIcons } from '@ng-icons/core';
+import { lucideOctagonX } from '@ng-icons/lucide';
 
 @Component({
   selector: 'app-work-days-grid-component',
-  imports: [ReactiveFormsModule,TranslocoModule],
+  imports: [ReactiveFormsModule, TranslocoModule, NgIcon],
   templateUrl: './work-days-grid-component.html',
   styleUrl: './work-days-grid-component.css',
+  providers: [provideIcons({ lucideOctagonX })],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WorkDaysGridComponent implements OnInit, OnChanges{
 control = input.required<FormControl>();
 allowLateToleranceOverrides = input(false);
 initialDays = input<IShiftDay[] | null>(null);
 disabled = input(false);
+showErrors = input(false);
+requiredErrorKey = input<string>('AUTH.REQUIRED_FIELD');
+timeRangeErrorKey = input<string>('ERRORS.INVALID_TIME_RANGE');
 
 gridData = signal<DayConfig[]>([
     this.createDay('sun', 'الأحد'),
@@ -77,6 +84,26 @@ gridData = signal<DayConfig[]>([
       this.control().setValue(newData);
       return newData;
     });
+  }
+
+  isMissingRequiredValue(value: string | number | null | undefined) {
+    return value === null || value === undefined || value === '';
+  }
+
+  isTimeRangeInvalid(
+    day: DayConfig,
+    startValue: string | null | undefined,
+    endValue: string | null | undefined,
+  ) {
+    if (!this.allowLateToleranceOverrides() || !day.isWorkDay) {
+      return false;
+    }
+
+    if (this.isMissingRequiredValue(startValue) || this.isMissingRequiredValue(endValue)) {
+      return false;
+    }
+
+    return String(startValue) >= String(endValue);
   }
 
   private createDay(day: string, label: string): DayConfig {

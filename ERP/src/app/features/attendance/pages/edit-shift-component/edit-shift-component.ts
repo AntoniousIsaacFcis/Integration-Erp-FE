@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, computed, effect, inject, signal } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NotificationService } from '@core/services/notification-service';
 import { WorkDaysGridComponent } from '@features/attendance/components/work-days-grid-component/work-days-grid-component';
@@ -108,6 +108,7 @@ export class EditShiftComponent {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {
+          this.isSubmitting.set(false);
           this.notification.show({
             type: 'success',
             title: 'COMMON.MESSAGES.UPDATED_SUCCESSFULLY',
@@ -115,13 +116,15 @@ export class EditShiftComponent {
           });
           this.router.navigate(['/attendance/view']);
         },
-        error: () => {
+        error: (error) => {
           this.isSubmitting.set(false);
+
+          const errorPresentation = this.resolveSaveError(error);
           this.notification.show({
             type: 'error',
             title: 'COMMON.MESSAGES.OPERATION_FAILED',
-            message: 'COMMON.MESSAGES.PLEASE_TRY_AGAIN',
-            isModal: false,
+            message: errorPresentation.message,
+            isModal: errorPresentation.isModal,
             actionLabel: 'COMMON.CONFIRM',
           });
         },
@@ -278,6 +281,66 @@ export class EditShiftComponent {
       isFlexibleShift ? [Validators.min(0)] : [Validators.required, Validators.min(0)]
     );
     this.shiftForm.controls.gracePeriod.updateValueAndValidity({ emitEvent: false });
+
+    this.shiftForm.controls.workDays.setValidators(
+      isFlexibleShift ? [this.flexibleWorkDaysValidator()] : null
+    );
+    this.shiftForm.controls.workDays.updateValueAndValidity({ emitEvent: false });
     this.shiftForm.updateValueAndValidity({ emitEvent: false });
+  }
+
+  private flexibleWorkDaysValidator(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      if (!this.isFlexibleShift()) {
+        return null;
+      }
+
+      const days = control.value as DayConfig[] | null | undefined;
+
+      if (!Array.isArray(days) || !days.length) {
+        return { flexibleWorkDaysRequired: true };
+      }
+
+      const selectedDays = days.filter(day => day?.isWorkDay);
+
+      if (!selectedDays.length) {
+        return null;
+      }
+
+      const hasMissingRequiredTime = selectedDays.some(day =>
+        this.isMissingRequiredValue(day?.onDutyTimeOverride) ||
+        this.isMissingRequiredValue(day?.offDutyTimeOverride) ||
+        this.isMissingRequiredValue(day?.signInStartTimeOverride) ||
+        this.isMissingRequiredValue(day?.signInEndTimeOverride) ||
+        this.isMissingRequiredValue(day?.signOutStartTimeOverride) ||
+        this.isMissingRequiredValue(day?.signOutEndTimeOverride) ||
+        this.isMissingRequiredValue(day?.lateToleranceMinutes)
+      );
+
+      return hasMissingRequiredTime ? { flexibleWorkDaysRequired: true } : null;
+    };
+  }
+
+  private isMissingRequiredValue(value: string | number | null | undefined) {
+    return value === null || value === undefined || value === '';
+  }
+
+  private resolveSaveError(error: unknown) {
+    const backendError = error as { message?: string; code?: string };
+
+    if (
+      backendError?.code === 'Attendance:FlexibleShiftRequiresCompleteDayTimes' ||
+      backendError?.message === 'ERRORS.FLEXIBLE_SHIFT_REQUIRES_COMPLETE_DAY_TIMES'
+    ) {
+      return {
+        message: 'ERRORS.FLEXIBLE_SHIFT_REQUIRES_COMPLETE_DAY_TIMES',
+        isModal: false,
+      };
+    }
+
+    return {
+      message: 'COMMON.MESSAGES.PLEASE_TRY_AGAIN',
+      isModal: false,
+    };
   }
 }

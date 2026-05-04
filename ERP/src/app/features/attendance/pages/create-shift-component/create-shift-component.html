@@ -24,12 +24,13 @@
               ]" />
           </div>
 
-          <section class="col-span-full">
-            <h3 class="text-base font-medium mb-4 text-black ">{{ t('SHIFT.SELECT_WORK_DAYS') }} *</h3>
-            <app-work-days-grid-component
+            <section class="col-span-full">
+              <h3 class="text-base font-medium mb-4 text-black ">{{ t('SHIFT.SELECT_WORK_DAYS') }} *</h3>
+              <app-work-days-grid-component
               [control]="shiftForm.controls.workDays"
-              [allowLateToleranceOverrides]="isFlexibleShift()" />
-          </section>
+              [allowLateToleranceOverrides]="isFlexibleShift()"
+              [showErrors]="submitted()" />
+            </section>
 
           @if (!isFlexibleShift()) {
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 col-span-full mt-6">

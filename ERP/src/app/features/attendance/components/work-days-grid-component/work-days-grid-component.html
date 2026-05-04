@@ -39,7 +39,17 @@
                      [value]="day.onDutyTimeOverride ?? ''"
                      [disabled]="disabled()"
                      (input)="updateTimeOverride(i, 'onDutyTimeOverride', $any($event.target).value)"
+                     [class.!border-error]="showErrors() && day.isWorkDay && isMissingRequiredValue(day.onDutyTimeOverride)"
+                     [class.!border-2]="showErrors() && day.isWorkDay && isMissingRequiredValue(day.onDutyTimeOverride)"
                      class="h-10 w-full rounded-md border border-black/10 px-3 text-sm text-black outline-none focus:border-primary/60 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:opacity-100">
+              @if (showErrors() && day.isWorkDay && isMissingRequiredValue(day.onDutyTimeOverride)) {
+                <div class="flex items-center gap-1 text-error animate-fade-in">
+                  <ng-icon name="lucideOctagonX" size="16" strokeWidth="3"></ng-icon>
+                  <span class="text-xs font-medium text-start">
+                    {{ t(requiredErrorKey()) }}
+                  </span>
+                </div>
+              }
             </label>
 
             <label class="flex flex-col gap-2 text-sm font-medium text-black">
@@ -48,7 +58,24 @@
                      [value]="day.offDutyTimeOverride ?? ''"
                      [disabled]="disabled()"
                      (input)="updateTimeOverride(i, 'offDutyTimeOverride', $any($event.target).value)"
+                     [class.!border-error]="showErrors() && day.isWorkDay && isMissingRequiredValue(day.offDutyTimeOverride)"
+                     [class.!border-2]="showErrors() && day.isWorkDay && (isMissingRequiredValue(day.offDutyTimeOverride) || isTimeRangeInvalid(day, day.onDutyTimeOverride, day.offDutyTimeOverride))"
                      class="h-10 w-full rounded-md border border-black/10 px-3 text-sm text-black outline-none focus:border-primary/60 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:opacity-100">
+              @if (showErrors() && day.isWorkDay && isMissingRequiredValue(day.offDutyTimeOverride)) {
+                <div class="flex items-center gap-1 text-error animate-fade-in">
+                  <ng-icon name="lucideOctagonX" size="16" strokeWidth="3"></ng-icon>
+                  <span class="text-xs font-medium text-start">
+                    {{ t(requiredErrorKey()) }}
+                  </span>
+                </div>
+              } @else if (showErrors() && isTimeRangeInvalid(day, day.onDutyTimeOverride, day.offDutyTimeOverride)) {
+                <div class="flex items-center gap-1 text-error animate-fade-in">
+                  <ng-icon name="lucideOctagonX" size="16" strokeWidth="3"></ng-icon>
+                  <span class="text-xs font-medium text-start">
+                    {{ t(timeRangeErrorKey()) }}
+                  </span>
+                </div>
+              }
             </label>
 
             <label class="flex flex-col gap-2 text-sm font-medium text-black">
@@ -57,7 +84,17 @@
                      [value]="day.signInStartTimeOverride ?? ''"
                      [disabled]="disabled()"
                      (input)="updateTimeOverride(i, 'signInStartTimeOverride', $any($event.target).value)"
+                     [class.!border-error]="showErrors() && day.isWorkDay && isMissingRequiredValue(day.signInStartTimeOverride)"
+                     [class.!border-2]="showErrors() && day.isWorkDay && isMissingRequiredValue(day.signInStartTimeOverride)"
                      class="h-10 w-full rounded-md border border-black/10 px-3 text-sm text-black outline-none focus:border-primary/60 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:opacity-100">
+              @if (showErrors() && day.isWorkDay && isMissingRequiredValue(day.signInStartTimeOverride)) {
+                <div class="flex items-center gap-1 text-error animate-fade-in">
+                  <ng-icon name="lucideOctagonX" size="16" strokeWidth="3"></ng-icon>
+                  <span class="text-xs font-medium text-start">
+                    {{ t(requiredErrorKey()) }}
+                  </span>
+                </div>
+              }
             </label>
 
             <label class="flex flex-col gap-2 text-sm font-medium text-black">
@@ -66,7 +103,17 @@
                      [value]="day.signOutStartTimeOverride ?? ''"
                      [disabled]="disabled()"
                      (input)="updateTimeOverride(i, 'signOutStartTimeOverride', $any($event.target).value)"
+                     [class.!border-error]="showErrors() && day.isWorkDay && isMissingRequiredValue(day.signOutStartTimeOverride)"
+                     [class.!border-2]="showErrors() && day.isWorkDay && isMissingRequiredValue(day.signOutStartTimeOverride)"
                      class="h-10 w-full rounded-md border border-black/10 px-3 text-sm text-black outline-none focus:border-primary/60 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:opacity-100">
+              @if (showErrors() && day.isWorkDay && isMissingRequiredValue(day.signOutStartTimeOverride)) {
+                <div class="flex items-center gap-1 text-error animate-fade-in">
+                  <ng-icon name="lucideOctagonX" size="16" strokeWidth="3"></ng-icon>
+                  <span class="text-xs font-medium text-start">
+                    {{ t(requiredErrorKey()) }}
+                  </span>
+                </div>
+              }
             </label>
 
             <label class="flex flex-col gap-2 text-sm font-medium text-black">
@@ -75,7 +122,24 @@
                      [value]="day.signInEndTimeOverride ?? ''"
                      [disabled]="disabled()"
                      (input)="updateTimeOverride(i, 'signInEndTimeOverride', $any($event.target).value)"
+                     [class.!border-error]="showErrors() && day.isWorkDay && isMissingRequiredValue(day.signInEndTimeOverride)"
+                     [class.!border-2]="showErrors() && day.isWorkDay && (isMissingRequiredValue(day.signInEndTimeOverride) || isTimeRangeInvalid(day, day.signInStartTimeOverride, day.signInEndTimeOverride))"
                      class="h-10 w-full rounded-md border border-black/10 px-3 text-sm text-black outline-none focus:border-primary/60 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:opacity-100">
+              @if (showErrors() && day.isWorkDay && isMissingRequiredValue(day.signInEndTimeOverride)) {
+                <div class="flex items-center gap-1 text-error animate-fade-in">
+                  <ng-icon name="lucideOctagonX" size="16" strokeWidth="3"></ng-icon>
+                  <span class="text-xs font-medium text-start">
+                    {{ t(requiredErrorKey()) }}
+                  </span>
+                </div>
+              } @else if (showErrors() && isTimeRangeInvalid(day, day.signInStartTimeOverride, day.signInEndTimeOverride)) {
+                <div class="flex items-center gap-1 text-error animate-fade-in">
+                  <ng-icon name="lucideOctagonX" size="16" strokeWidth="3"></ng-icon>
+                  <span class="text-xs font-medium text-start">
+                    {{ t(timeRangeErrorKey()) }}
+                  </span>
+                </div>
+              }
             </label>
 
             <label class="flex flex-col gap-2 text-sm font-medium text-black">
@@ -84,7 +148,24 @@
                      [value]="day.signOutEndTimeOverride ?? ''"
                      [disabled]="disabled()"
                      (input)="updateTimeOverride(i, 'signOutEndTimeOverride', $any($event.target).value)"
+                     [class.!border-error]="showErrors() && day.isWorkDay && isMissingRequiredValue(day.signOutEndTimeOverride)"
+                     [class.!border-2]="showErrors() && day.isWorkDay && (isMissingRequiredValue(day.signOutEndTimeOverride) || isTimeRangeInvalid(day, day.signOutStartTimeOverride, day.signOutEndTimeOverride))"
                      class="h-10 w-full rounded-md border border-black/10 px-3 text-sm text-black outline-none focus:border-primary/60 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:opacity-100">
+              @if (showErrors() && day.isWorkDay && isMissingRequiredValue(day.signOutEndTimeOverride)) {
+                <div class="flex items-center gap-1 text-error animate-fade-in">
+                  <ng-icon name="lucideOctagonX" size="16" strokeWidth="3"></ng-icon>
+                  <span class="text-xs font-medium text-start">
+                    {{ t(requiredErrorKey()) }}
+                  </span>
+                </div>
+              } @else if (showErrors() && isTimeRangeInvalid(day, day.signOutStartTimeOverride, day.signOutEndTimeOverride)) {
+                <div class="flex items-center gap-1 text-error animate-fade-in">
+                  <ng-icon name="lucideOctagonX" size="16" strokeWidth="3"></ng-icon>
+                  <span class="text-xs font-medium text-start">
+                    {{ t(timeRangeErrorKey()) }}
+                  </span>
+                </div>
+              }
             </label>
 
             <label class="flex flex-col gap-2 text-sm font-medium text-black">
@@ -94,8 +175,18 @@
                      [value]="day.lateToleranceMinutes ?? ''"
                      [disabled]="disabled()"
                      (input)="updateLateTolerance(i, $any($event.target).value)"
+                     [class.!border-error]="showErrors() && day.isWorkDay && isMissingRequiredValue(day.lateToleranceMinutes)"
+                     [class.!border-2]="showErrors() && day.isWorkDay && isMissingRequiredValue(day.lateToleranceMinutes)"
                      class="h-10 w-full rounded-md border border-black/10 px-3 text-sm text-black outline-none focus:border-primary/60 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:opacity-100"
                      [placeholder]="t('COMMON.DEFAULT')">
+              @if (showErrors() && day.isWorkDay && isMissingRequiredValue(day.lateToleranceMinutes)) {
+                <div class="flex items-center gap-1 text-error animate-fade-in">
+                  <ng-icon name="lucideOctagonX" size="16" strokeWidth="3"></ng-icon>
+                  <span class="text-xs font-medium text-start">
+                    {{ t(requiredErrorKey()) }}
+                  </span>
+                </div>
+              }
             </label>
           </div>
         </section>

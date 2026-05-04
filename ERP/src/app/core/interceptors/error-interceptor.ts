@@ -28,7 +28,7 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
         }
       }
       else if (error.status === 403) {
-        userFriendlyMessage = 'PERMISSION_DENIED.';
+        userFriendlyMessage = 'AUTH.ERRORS.PERMISSION_DENIED';
       }
 
       console.error(`Status: ${error.status}, Message: ${userFriendlyMessage}`);
