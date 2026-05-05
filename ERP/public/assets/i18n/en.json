@@ -138,6 +138,7 @@
     "VIEW_ATTENDANCE_DAY_DETAILS": "Attendance Day Details",
     "ADD_ATTENDANCE_PERMISSION": "Add Attendance Permission",
     "VIEW_PERMISSIONS": "Attendance Permissions",
+    "PERMISSIONS_AND_LEAVE_APPLICATIONS": "Permissions & Leave Applications",
     "CORE_HR": "Employees"
   },
   "BUTTON": {
@@ -146,6 +147,8 @@
     "ADD_DESIGNATION": "Add Designation",
     "ADD_EMPLOYEE": "Add Employee",
     "ADD_SHIFT": "Add Shift",
+    "ADD_LEAVE_APPLICATION": "Add Leave Application",
+    "ADD_ATTENDANCE_PERMISSION": "Add Attendance Permission",
     "SUBMIT": "Submit",
     "RESET": "Reset",
     "SEARCH": "Search",
@@ -894,5 +897,7 @@
     "STATUS_REJECTED": "Rejected"
   }
 }
+
+
 
 

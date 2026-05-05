@@ -1,6 +1,6 @@
 <main class="flex justify-center" *transloco="let t">
   <div class="w-full max-w-standard bg-white rounded-[20px] shadow-soft border border-black/5">
-    <app-form-container-component [title]="t('MENU.ADD_ATTENDANCE_PERMISSION')" (submit)="onSave()">
+    <app-form-container-component [title]="t('MENU.CREATE_ATTENDANCE_PERMISSION')" (submit)="onSave()">
       <ng-container formFields>
         <app-attendance-employee-lookup-component
           [(selectedEmployee)]="selectedEmployee"
@@ -9,40 +9,23 @@
 
         <app-app-select-component [label]="t('LABEL.TYPE') + ' *'" [control]="getControl('type')"
           [showErrors]="submitted()" [placeholder]="'PLACEHOLDER.SELECT_ABSENCE_TYPE'">
-          <option value="leave">{{ t('Enum:AttendancePermissionType.Leave') }}</option>
-          <option value="halfLeave">{{ t('Enum:AttendancePermissionType.HalfLeave') }}</option>
           <option value="lateArrival">{{ t('Enum:AttendancePermissionType.LateArrival') }}</option>
           <option value="earlyLeave">{{ t('Enum:AttendancePermissionType.EarlyLeave') }}</option>
         </app-app-select-component>
 
-        @if (isLeave()) {
-        <app-app-select-component [label]="t('LABEL.LEAVE_TYPE') + ' *'" [control]="getControl('leaveTypeId')"
-          [showErrors]="submitted()" [placeholder]="'PLACEHOLDER.SELECT_LEAVE_TYPE'">
-          @for (leaveType of leaveTypesResource.value() ?? []; track leaveType.id) {
-          <option [value]="leaveType.id">{{ leaveType.name }}</option>
-          }
-        </app-app-select-component>
-        } @else {
+        <app-app-date-input-component [label]="t('COMMON.DATE') + ' *'" [control]="getControl('date')"
+          [showErrors]="submitted()" />
+
         <app-app-input-component [label]="t('EMPLOYEES.VACATIONS.DURATION_MINUTES') + ' *'"
           [placeholder]="t('EMPLOYEES.VACATIONS.DURATION_MINUTES')" [control]="getControl('durationMinutes')"
           [showErrors]="submitted()" type="number" />
-        }
 
-        <app-app-date-input-component [label]="t('LABEL.FROM_DATE') + ' *'" [control]="getControl('fromDate')"
-          [showErrors]="submitted()" />
-
-        <app-app-date-input-component [label]="t('LABEL.TO_DATE') + ' *'" [control]="getControl('toDate')"
-          [showErrors]="submitted()" />
-
-        <app-app-date-input-component [label]="t('LABEL.APPLAY_DATE') + ' *'" [control]="getControl('applayDate')"
-          [showErrors]="submitted()" />
-
-        <app-app-textarea-component [label]="t('LABEL.NOTES')" [control]="getControl('notes')"
+        <app-app-textarea-component [label]="t('LABEL.NOTES')" [control]="getControl('note')"
           [placeholder]="t('PLACEHOLDER.ENTER_NOTES')" [showErrors]="submitted()" />
       </ng-container>
 
       <ng-container formActions>
-        <app-form-cancel-button-component (click)="onCancel()" />
+        <app-form-cancel-button-component (clicked)="onCancel()" />
         <app-form-save-button-component [isLoading]="isSaving()" [label]="'COMMON.SAVE'" type="submit" />
       </ng-container>
     </app-form-container-component>

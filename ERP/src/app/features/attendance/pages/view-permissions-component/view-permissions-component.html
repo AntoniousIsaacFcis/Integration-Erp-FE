@@ -1,73 +1,72 @@
 <app-app-base-table-component [(searchTerm)]="searchTerm" [totalItems]="totalItems()" [(currentPage)]="currentPage"
-  [extraFilters]="permFilters" [extraActions]="permActions" *transloco="let t">
+  [extraFilters]="permissionFilters" [extraActions]="permissionActions" [searchPlaceholder]="'ATTENDANCE.SEARCH_PLACEHOLDER'"
+  *transloco="let t">
 
-  <ng-template #permFilters>
+  <ng-template #permissionFilters>
     <div class="flex items-center gap-3">
       <app-date-filter-component [(selectedDate)]="fromDate" labelKey="LABEL.FROM_DATE" />
       <app-date-filter-component [(selectedDate)]="toDate" labelKey="LABEL.TO_DATE" />
-
       <app-status-badge-component label="PERMISSIONS.TYPE_LABEL" [(selectedStatus)]="typeFilter"
-        [options]="typeOptions" />
-
+        [options]="permissionTypeOptions" />
       <app-status-badge-component label="PERMISSIONS.STATUS_LABEL" [(selectedStatus)]="statusFilter"
         [options]="statusOptions" />
     </div>
   </ng-template>
 
-  <ng-template #permActions>
-    <app-action-btn-component [label]="'PERMISSIONS.ADD_NEW'" (clicked)="handleAddPermission()"
-      iconName="lucidePlusCircle" />
+  <ng-template #permissionActions>
+    <div class="flex items-center gap-3">
+      <app-action-btn-component [label]="'BUTTON.ADD_LEAVE_APPLICATION'" (clicked)="handleAddLeaveApplication()"
+        iconName="lucidePlusCircle" />
+      <app-action-btn-component [label]="'BUTTON.ADD_ATTENDANCE_PERMISSION'" (clicked)="handleAddAttendancePermission()"
+        iconName="lucidePlusCircle" />
+    </div>
   </ng-template>
 
   <div class="w-full overflow-x-auto">
     @if (permissionsResource.isLoading()) {
-    <div class="flex justify-center py-20 text-gray-400">{{ t('COMMON.LOADING') }}</div>
-    } @else if (permissionsResource.error()) {
-    <div class="rounded-xl border border-red-100 bg-red-50 p-6 text-center text-red-600">
+    <div class="flex justify-center py-20 text-gray-400">
+      {{ t('COMMON.MESSAGES.LOADING_DATA') }}
+    </div>
+    }
+
+    @if (permissionsResource.error()) {
+    <div class="bg-red-50 text-red-600 p-6 rounded-xl text-center border border-red-100">
       <p>{{ t('COMMON.MESSAGES.OPERATION_FAILED') }}</p>
-      <button type="button" (click)="permissionsResource.reload()"
-        class="mt-3 rounded-lg bg-red-600 px-4 py-2 text-white">
+      <button (click)="permissionsResource.reload()" class="mt-3 px-4 py-2 bg-red-600 text-white rounded-lg">
         {{ t('COMMON.MESSAGES.PLEASE_TRY_AGAIN') }}
       </button>
     </div>
     }
 
-    @if (permissionsResource.value()) {
-    <table class="w-full text-right font-arabic border border-[#F4F4F4]/50 rounded-xl overflow-hidden">
-      <thead class="text-sm bg-[#F4F4F4] sticky top-0">
+    @if (permissionsResource.value() && !permissions().length) {
+    <app-empty-table-placeholder-component />
+    }
+
+    @if (permissionsResource.value() && permissions().length) {
+    <table class="min-w-[920px] w-full text-right font-arabic border border-[#F4F4F4]/50 rounded-xl overflow-hidden">
+      <thead class="text-sm bg-[#F4F4F4] sticky top-0 z-10">
         <tr>
-          <th class="py-4 ps-16">{{ t('PERMISSIONS.TABLE_EMPLOYEE_NAME') }}</th>
-          <th class="py-4 px-4 ">{{ t('PERMISSIONS.TABLE_PERMISSION_ID') }}</th>
-          <th class="py-4 px-4 ">{{ t('PERMISSIONS.TABLE_DATE') }}</th>
-          <th class="py-4 px-4 ">{{ t('PERMISSIONS.TABLE_HOLIDAY_TYPE') }}</th>
+          <th class="py-4 ps-10 text-start">{{ t('PERMISSIONS.TABLE_EMPLOYEE_NAME') }}</th>
+          <th class="py-4 px-4 text-center">{{ t('PERMISSIONS.TABLE_PERMISSION_ID') }}</th>
+          <th class="py-4 px-4 text-center">{{ t('PERMISSIONS.TABLE_DATE') }}</th>
+          <th class="py-4 px-4 text-center">{{ t('PERMISSIONS.TABLE_HOLIDAY_TYPE') }}</th>
+          <th class="py-4 px-4 text-center">{{ t('EMPLOYEES.VACATIONS.DURATION_MINUTES') }}</th>
           <th class="py-4 px-4 text-center">{{ t('COMMON.STATUS') }}</th>
         </tr>
       </thead>
       <tbody>
         @for (perm of permissions(); track perm.id; let i = $index) {
         <tr class="bg-white border-b border-gray-200 hover:bg-gray-50/50 transition-all">
-          <td class="py-4 ps-16 text-sm text-black">{{ perm.employeeName }}</td>
-          <td class="py-4 px-4 text-sm">
-            #{{ formatPermissionNumber(i) }}
-          </td>
-          <td class="py-4 px-4  text-sm">
-            {{ perm.dateRange }}
-          </td>
-          <td class="py-4 px-4 text-sm">
-            {{ t(perm.typeLabelKey) }}
-            @if (perm.leaveTypeName) {
-              <span>({{ perm.leaveTypeName }})</span>
-            }
-          </td>
+          <td class="py-4 ps-10 text-start text-sm text-black">{{ perm.employeeName }}</td>
+          <td class="py-4 px-4 text-center text-sm">#{{ formatRecordNumber(i, currentPage(), pageSize()) }}</td>
+          <td class="py-4 px-4 text-center text-sm">{{ perm.dateRange }}</td>
+          <td class="py-4 px-4 text-center text-sm">{{ t(perm.typeLabelKey) }}</td>
+          <td class="py-4 px-4 text-center text-sm">{{ perm.durationMinutes }}</td>
           <td class="py-4 px-4">
             <div class="flex justify-center">
               <app-table-status-badge-component [status]="perm.statusTone" [label]="t(perm.statusLabelKey)" />
             </div>
           </td>
-        </tr>
-        } @empty {
-        <tr>
-          <td colspan="5" class="py-20 text-center text-gray-400">{{ t('COMMON.NO_DATA') }}</td>
         </tr>
         }
       </tbody>

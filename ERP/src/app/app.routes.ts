@@ -183,11 +183,11 @@ export const routes: Routes = [
       },
       {
         path: 'shifts/add-permission',
-        redirectTo: 'attendance/add-permission',
+        redirectTo: 'attendance/view-permissions/create-attendance-permission',
       },
       {
         path: 'shifts/view-permissions',
-        redirectTo: 'attendance/view-permissions',
+        redirectTo: 'attendance/view-permissions/create-attendance-permission',
       },
       {
         path: 'shifts',
@@ -220,3 +220,5 @@ export const routes: Routes = [
     ]
   }
 ];
+
+

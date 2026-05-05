@@ -137,11 +137,12 @@
       "EDIT_SPECIAL_SHIFT": "تعديل وردية مخصصة",
       "EDIT_ATTENDANCE_DAY": "تعديل يوم حضور",
       "CREATE_ATTENDANCE_DAY": "إضافة يوم حضور",
-      "VIEW_ATTENDANCE_DAYS": "جميع أيام الحضور",
+      "VIEW_ATTENDANCE_DAYS": " أيام الحضور",
       "VIEW_ATTENDANCE_LOG_DETAILS": "معلومات سجل الحضور",
     "VIEW_ATTENDANCE_DAY_DETAILS": "تفاصيل يوم الحضور",
     "ADD_ATTENDANCE_PERMISSION": "إضافة إذن حضور",
-    "VIEW_PERMISSIONS": "أذونات الحضور",
+    "VIEW_PERMISSIONS": "ألاذونات و طلبات الاجازة",
+    "PERMISSIONS_AND_LEAVE_APPLICATIONS": "الأذونات وطلبات الإجازة",
     "CORE_HR":"الموظفين"
   },
   "BUTTON": {
@@ -150,6 +151,8 @@
     "ADD_DESIGNATION": "إضافة مسمى وظيفي",
     "ADD_EMPLOYEE": "إضافة موظف",
     "ADD_SHIFT": "إضافة وردية",
+    "ADD_LEAVE_APPLICATION": "إضافة طلب إجازة",
+    "ADD_ATTENDANCE_PERMISSION": "إضافة إذن حضور",
     "SUBMIT": "إرسال",
     "RESET": "إعادة تعيين",
     "SEARCH": "بحث",
@@ -948,5 +951,10 @@
     "PERMISSIONS_REQUIRED": "يرجى اختيار صلاحية واحدة على الأقل"
   }
 }
+
+
+
+
+
 
 

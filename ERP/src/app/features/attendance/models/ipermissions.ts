@@ -1,6 +1,6 @@
 import { IDocument } from "@shared/models/idocument";
 
-export type PermissionType = 'leave' | 'halfLeave' | 'lateArrival' | 'earlyLeave' | 1 | 2 | 3 | 4;
+export type PermissionType = 'lateArrival' | 'earlyLeave' | 1 | 2;
 
 export interface ICreatePermissionRequest {
   employeeId: string;
@@ -14,20 +14,16 @@ export interface ICreatePermissionRequest {
   attachedFiles?: [IDocument]
 }
 
+export type AttendancePermissionType = 1 | 2;
+
 export interface ICreateAttendancePermissionPayload {
   employeeId: string;
-  fromDate: string;
-  toDate: string;
-  applicationDate?: string | null;
-  type: number;
-  leaveTypeId?: string | null;
-  leaveCount?: number | null;
-  durationMinutes?: number | null;
+  date: string;
+  durationMinutes: number;
   note?: string | null;
+  type: AttendancePermissionType;
+  applicationDate?: string | null;
   status?: number;
-  leaveApplicationId?: string | null;
-  attendanceFlagId?: string | null;
-  attendanceSheetId?: string | null;
 }
 
 export interface IPermission {
@@ -44,19 +40,12 @@ export interface IAttendancePermissionApiDto {
   employeeId: string;
   employeeName?: string | null;
   employeeCode?: string | null;
-  fromDate: string;
-  toDate: string;
-  applicationDate: string;
-  type: number;
-  leaveTypeId?: string | null;
-  leaveTypeName?: string | null;
-  leaveCount: number;
-  durationMinutes?: number | null;
+  date: string;
+  durationMinutes: number;
+  type: AttendancePermissionType;
   note?: string | null;
+  applicationDate?: string | null;
   status: number;
-  leaveApplicationId?: string | null;
-  attendanceFlagId?: string | null;
-  attendanceSheetId?: string | null;
 }
 
 export interface IAttendancePermissionListItem {
@@ -65,9 +54,9 @@ export interface IAttendancePermissionListItem {
   employeeName: string;
   employeeCode: string | null;
   dateRange: string;
-  type: number;
+  durationMinutes: number;
+  type: AttendancePermissionType;
   typeLabelKey: string;
-  leaveTypeName: string | null;
   status: number;
   statusLabelKey: string;
   statusTone: string;
@@ -81,3 +70,4 @@ export interface IAttendancePermissionListResponse {
   page?: number;
   limit?: number;
 }
+

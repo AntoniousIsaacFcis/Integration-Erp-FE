@@ -611,6 +611,10 @@ export class AttendanceService {
     return this.http.post<IAttendancePermissionApiDto>(`${this.API_URL}/attendance/attendance-permission`, payload);
   }
 
+  createLeaveApplication(payload: ILeaveApplicationUpdatePayload): Observable<ILeaveApplicationApiDto> {
+    return this.http.post<ILeaveApplicationApiDto>(`${this.API_URL}/core-hR/leave-application`, payload);
+  }
+
   updateLeaveApplication(id: string, payload: ILeaveApplicationUpdatePayload): Observable<ILeaveApplicationApiDto> {
     return this.http.put<ILeaveApplicationApiDto>(`${this.API_URL}/core-hR/leave-application/${id}`, payload);
   }
@@ -941,10 +945,10 @@ export class AttendanceService {
       employeeId: item.employeeId,
       employeeName: item.employeeName?.trim() || item.employeeCode?.trim() || item.employeeId,
       employeeCode: item.employeeCode?.trim() || null,
-      dateRange: `${this.formatDisplayDate(item.fromDate)} - ${this.formatDisplayDate(item.toDate)}`,
+      dateRange: this.formatDisplayDate(item.date),
+      durationMinutes: item.durationMinutes ?? 0,
       type: item.type,
       typeLabelKey: this.getAttendancePermissionTypeLabelKey(item.type),
-      leaveTypeName: item.leaveTypeName?.trim() || null,
       status: item.status,
       statusLabelKey: this.getAttendancePermissionStatusLabelKey(item.status),
       statusTone: this.getAttendancePermissionStatusTone(item.status),
@@ -1106,24 +1110,20 @@ export class AttendanceService {
 
   private getLeaveApplicationTypeLabelKey(type: number) {
     const labels: Record<number, string> = {
-      1: 'Enum:AttendancePermissionType.Leave',
-      2: 'Enum:AttendancePermissionType.HalfLeave',
-      3: 'Enum:AttendancePermissionType.LateArrival',
-      4: 'Enum:AttendancePermissionType.EarlyLeave',
+      1: 'Enum:AttendancePermissionType.LateArrival',
+      2: 'Enum:AttendancePermissionType.EarlyLeave',
     };
 
-    return labels[type] ?? 'Enum:AttendancePermissionType.Leave';
+    return labels[type] ?? 'Enum:AttendancePermissionType.LateArrival';
   }
 
   private getAttendancePermissionTypeLabelKey(type: number) {
     const labels: Record<number, string> = {
-      1: 'Enum:AttendancePermissionType.Leave',
-      2: 'Enum:AttendancePermissionType.HalfLeave',
-      3: 'Enum:AttendancePermissionType.LateArrival',
-      4: 'Enum:AttendancePermissionType.EarlyLeave',
+      1: 'Enum:AttendancePermissionType.LateArrival',
+      2: 'Enum:AttendancePermissionType.EarlyLeave',
     };
 
-    return labels[type] ?? 'Enum:AttendancePermissionType.Leave';
+    return labels[type] ?? 'Enum:AttendancePermissionType.LateArrival';
   }
 
   private getAttendancePermissionStatusLabelKey(status: number) {
@@ -1236,5 +1236,7 @@ export class AttendanceService {
     return this.toDateParam(date);
   }
 }
+
+
 
 

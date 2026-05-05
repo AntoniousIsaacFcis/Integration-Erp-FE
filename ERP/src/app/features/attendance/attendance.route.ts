@@ -123,9 +123,14 @@ export const ATTENDANCE_ROUTES: Routes = [
                 loadComponent: () => import('./pages/view-permissions-component/view-permissions-component').then(x => x.ViewPermissionsComponent),
               },
               {
-                path: 'add',
-                loadComponent: () => import('./pages/add-permission-component/add-permission-component').then(x => x.AddPermissionComponent),
-                data: { breadcrumb: 'MENU.ADD_ATTENDANCE_PERMISSION' }
+                path: 'create-leave-application',
+                loadComponent: () => import('./pages/create-leave-application-component/create-leave-application-component').then(x => x.CreateLeaveApplicationComponent),
+                data: { breadcrumb: 'MENU.CREATE_LEAVE_APPLICATION' }
+              },
+              {
+                path: 'create-attendance-permission',
+                loadComponent: () => import('./pages/create-attendance-permission-component/create-attendance-permission-component').then(x => x.CreateAttendancePermissionComponent),
+                data: { breadcrumb: 'MENU.CREATE_ATTENDANCE_PERMISSION' }
               },
             ],
           },
@@ -191,11 +196,17 @@ export const ATTENDANCE_ROUTES: Routes = [
             redirectTo: 'view-attendance-days/details/:id',
           },
           {
+            path: 'permissions-and-leave-applications',
+            redirectTo: 'view-permissions',
+          },
+          {
             path: 'add-permission',
-            redirectTo: 'view-permissions/add',
+            redirectTo: 'view-permissions/create-attendance-permission',
           }
         ]
       }
     ]
   }
 ];
+
+
