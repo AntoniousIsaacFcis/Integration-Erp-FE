@@ -49,7 +49,22 @@ gridData = signal<DayConfig[]>([
 
     this.gridData.update(data => {
       const newData = [...data];
-      newData[index] = { ...newData[index], [field]: !newData[index][field] };
+      const nextValue = !newData[index][field];
+      newData[index] = { ...newData[index], [field]: nextValue };
+
+      if (field === 'isWorkDay' && nextValue) {
+        newData[index] = {
+          ...newData[index],
+          calculateOnHoliday: false,
+        };
+      }
+
+      if (field === 'calculateOnHoliday' && nextValue) {
+        newData[index] = {
+          ...newData[index],
+          isWorkDay: false,
+        };
+      }
 
       this.control().setValue(newData);
       return newData;
