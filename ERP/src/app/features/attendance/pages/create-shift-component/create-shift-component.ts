@@ -3,7 +3,7 @@ import { FormContainerComponent } from "@shared/components/organisms/form-contai
 import { AppInputComponent } from "@shared/components/atoms/app-input-component/app-input-component";
 import { FormSaveButtonComponent } from "@shared/components/molecules/form-save-button-component/form-save-button-component";
 import { FormCancelButtonComponent } from "@shared/components/molecules/form-cancel-button-component/form-cancel-button-component";
-import { AbstractControl, FormBuilder, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AttendanceService } from '@features/attendance/services/attendance-service';
 import { NotificationService } from '@core/services/notification-service';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
@@ -15,6 +15,7 @@ import { AppRadioComponent } from '@shared/components/atoms/app-radio-component/
 import { WorkDaysGridComponent } from "@features/attendance/components/work-days-grid-component/work-days-grid-component";
 import { TimeInputComponent } from "@shared/components/atoms/time-input-component/time-input-component";
 import { timeRangeValidator } from '@shared/validators/time-range.validator';
+import { flexibleShiftWorkDaysValidator, getFlexibleShiftWorkDaysErrorKey } from '@shared/validators/flexible-shift-work-days.validator';
 import { DayConfig, IShiftPayload } from '@features/attendance/models/iattendance';
 
 @Component({
@@ -237,63 +238,16 @@ export class CreateShiftComponent {
     this.shiftForm.controls.gracePeriod.updateValueAndValidity({ emitEvent: false });
 
     this.shiftForm.controls.workDays.setValidators(
-      isFlexibleShift ? [this.flexibleWorkDaysValidator()] : null
+      isFlexibleShift ? [flexibleShiftWorkDaysValidator(() => this.isFlexibleShift())] : null
     );
     this.shiftForm.controls.workDays.updateValueAndValidity({ emitEvent: false });
     this.shiftForm.updateValueAndValidity({ emitEvent: false });
   }
 
-  private flexibleWorkDaysValidator(): ValidatorFn {
-    return (control: AbstractControl): ValidationErrors | null => {
-      if (!this.isFlexibleShift()) {
-        return null;
-      }
-
-      const days = control.value as DayConfig[] | null | undefined;
-
-      if (!Array.isArray(days) || !days.length) {
-        return { flexibleWorkDaysRequired: true };
-      }
-
-      const selectedDays = days.filter(day => day?.isWorkDay);
-
-      if (!selectedDays.length) {
-        return { flexibleWorkDaysRequired: true };
-      }
-
-      const hasMissingRequiredTime = selectedDays.some(day =>
-        this.isMissingRequiredValue(day?.onDutyTimeOverride) ||
-        this.isMissingRequiredValue(day?.offDutyTimeOverride) ||
-        this.isMissingRequiredValue(day?.signInStartTimeOverride) ||
-        this.isMissingRequiredValue(day?.signInEndTimeOverride) ||
-        this.isMissingRequiredValue(day?.signOutStartTimeOverride) ||
-        this.isMissingRequiredValue(day?.signOutEndTimeOverride) ||
-        this.isMissingRequiredValue(day?.lateToleranceMinutes)
-      );
-
-      return hasMissingRequiredTime ? { flexibleWorkDaysIncomplete: true } : null;
-    };
-  }
-
   private getFlexibleWorkDaysErrorKey() {
-    if (!this.isFlexibleShift()) {
-      return null;
-    }
-
-    const workDaysErrors = this.shiftForm.controls.workDays.errors;
-    if (workDaysErrors?.['flexibleWorkDaysRequired']) {
-      return 'ERRORS.FLEXIBLE_SHIFT_REQUIRES_AT_LEAST_ONE_DAY';
-    }
-
-    if (workDaysErrors?.['flexibleWorkDaysIncomplete']) {
-      return 'ERRORS.FLEXIBLE_SHIFT_REQUIRES_COMPLETE_DAY_TIMES';
-    }
-
-    return null;
-  }
-
-  private isMissingRequiredValue(value: string | number | null | undefined) {
-    return value === null || value === undefined || value === '';
+    return this.isFlexibleShift()
+      ? getFlexibleShiftWorkDaysErrorKey(this.shiftForm.controls.workDays.errors)
+      : null;
   }
 
   private resolveSaveError(error: unknown) {
