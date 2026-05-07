@@ -2,7 +2,7 @@ import { inject, Injector } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { CanActivateFn, Router } from '@angular/router';
 import { AuthService } from '@core/auth/services/auth-service';
-import { canAccessWithAnyRole } from '@core/auth/utils/access-control';
+import { canAccess } from '@core/auth/utils/access-control';
 import { catchError, filter, map, of, take } from 'rxjs';
 
 export const permissionGuard = (requiredPolicy: string): CanActivateFn => {
@@ -38,7 +38,7 @@ export const permissionAndRoleGuard = (requiredPolicy: string, allowedRoles: str
     return toObservable(authService.configResource.isLoading, { injector }).pipe(
       filter(loading => !loading),
       take(1),
-      map(() => canAccessWithAnyRole(authService, { allPolicies: [requiredPolicy] }, allowedRoles) ? true : router.createUrlTree(['/403'])),
+      map(() => canAccess(authService, { roles: allowedRoles, allPolicies: [requiredPolicy] }) ? true : router.createUrlTree(['/403'])),
       catchError(() => of(router.createUrlTree(['/403'])))
     );
   };

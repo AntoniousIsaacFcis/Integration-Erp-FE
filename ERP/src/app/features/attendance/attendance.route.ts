@@ -1,11 +1,6 @@
 import { Routes } from "@angular/router";
 import { permissionAndRoleGuard } from '@core/auth/guards/permission-guard';
-
-const SHIFT_CREATE_POLICY = 'Attendance.Shifts.Create';
-const SHIFT_UPDATE_POLICY = 'Attendance.Shifts.Update';
-const SHIFT_ASSIGNMENT_CREATE_POLICY = 'Attendance.ShiftAssignments.Create';
-const SHIFT_ASSIGNMENT_UPDATE_POLICY = 'Attendance.ShiftAssignments.Update';
-const SHIFT_MANAGER_ROLES = ['admin', 'hr'];
+import { SHIFT_MANAGER_ROLES, SHIFT_PERMISSIONS } from '@features/attendance/utils/shift-auth';
 
 // features/attendance/attendance.routes.ts
 export const ATTENDANCE_ROUTES: Routes = [
@@ -58,13 +53,13 @@ export const ATTENDANCE_ROUTES: Routes = [
                 path: 'create',
                 loadComponent: () => import('./pages/create-shift-component/create-shift-component').then(x => x.CreateShiftComponent),
                 data: { breadcrumb: 'MENU.CREATE_SHIFT' },
-                canActivate: [permissionAndRoleGuard(SHIFT_CREATE_POLICY, SHIFT_MANAGER_ROLES)]
+                canActivate: [permissionAndRoleGuard(SHIFT_PERMISSIONS.create, SHIFT_MANAGER_ROLES)]
               },
               {
                 path: 'edit/:id',
                 loadComponent: () => import('./pages/edit-shift-component/edit-shift-component').then(x => x.EditShiftComponent),
                 data: { breadcrumb: 'SHIFT.EDIT_SHIFT' },
-                canActivate: [permissionAndRoleGuard(SHIFT_UPDATE_POLICY, SHIFT_MANAGER_ROLES)]
+                canActivate: [permissionAndRoleGuard(SHIFT_PERMISSIONS.update, SHIFT_MANAGER_ROLES)]
               },
               {
                 path: 'details/:id',
@@ -85,13 +80,13 @@ export const ATTENDANCE_ROUTES: Routes = [
                 path: 'create',
                 loadComponent: () => import('./pages/create-special-shift-component/create-special-shift-component').then(x => x.CreateSpecialShiftComponent),
                 data: { breadcrumb: 'MENU.CREATE_SPECIAL_SHIFT' },
-                canActivate: [permissionAndRoleGuard(SHIFT_ASSIGNMENT_CREATE_POLICY, SHIFT_MANAGER_ROLES)]
+                canActivate: [permissionAndRoleGuard(SHIFT_PERMISSIONS.assignmentCreate, SHIFT_MANAGER_ROLES)]
               },
               {
                 path: 'edit/:id',
                 loadComponent: () => import('./pages/edit-special-shift-component/edit-special-shift-component').then(x => x.EditSpecialShiftComponent),
                 data: { breadcrumb: 'MENU.EDIT_SPECIAL_SHIFT' },
-                canActivate: [permissionAndRoleGuard(SHIFT_ASSIGNMENT_UPDATE_POLICY, SHIFT_MANAGER_ROLES)]
+                canActivate: [permissionAndRoleGuard(SHIFT_PERMISSIONS.assignmentUpdate, SHIFT_MANAGER_ROLES)]
               },
               {
                 path: 'details/:id',

@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { AuthService } from '@core/auth/services/auth-service';
 import { NotificationService } from '@core/services/notification-service';
 import { AttendanceService } from '@features/attendance/services/attendance-service';
+import { canManageShift, SHIFT_PERMISSIONS } from '@features/attendance/utils/shift-auth';
 import { TranslocoModule } from '@jsverse/transloco';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { AppBaseTableComponent } from "@shared/components/organisms/app-base-table-component/app-base-table-component";
@@ -15,12 +16,6 @@ import { lucideCirclePlus, lucideEye, lucidePencil, lucideTrash2 } from '@ng-ico
 import { EmptyTablePlaceholderComponent } from '@shared/components/molecules/empty-table-placeholder-component/empty-table-placeholder-component';
 import { StatusBadgeComponent } from '@shared/components/molecules/status-badge-component/status-badge-component';
 import { TableStatusBadgeComponent } from '@shared/components/atoms/table-status-badge-component/table-status-badge-component';
-import { canAccessWithAnyRole } from '@core/auth/utils/access-control';
-
-const SHIFT_ASSIGNMENT_CREATE_POLICY = 'Attendance.ShiftAssignments.Create';
-const SHIFT_ASSIGNMENT_UPDATE_POLICY = 'Attendance.ShiftAssignments.Update';
-const SHIFT_ASSIGNMENT_DELETE_POLICY = 'Attendance.ShiftAssignments.Delete';
-const SHIFT_MANAGER_ROLES = ['admin', 'hr'];
 
 @Component({
   selector: 'app-view-specific-shift-component',
@@ -73,9 +68,9 @@ pageSize = signal(10);
     stream: ({ params }) => this.attendanceService.getSpecialShifts(params)
   });
   totalItems = computed(() => this.shiftsResource.value()?.total ?? 0);
-  canCreateShiftAssignment = computed(() => canAccessWithAnyRole(this.authService, { allPolicies: [SHIFT_ASSIGNMENT_CREATE_POLICY] }, SHIFT_MANAGER_ROLES));
-  canEditShiftAssignment = computed(() => canAccessWithAnyRole(this.authService, { allPolicies: [SHIFT_ASSIGNMENT_UPDATE_POLICY] }, SHIFT_MANAGER_ROLES));
-  canDeleteShiftAssignment = computed(() => canAccessWithAnyRole(this.authService, { allPolicies: [SHIFT_ASSIGNMENT_DELETE_POLICY] }, SHIFT_MANAGER_ROLES));
+  canCreateShiftAssignment = computed(() => canManageShift(this.authService, SHIFT_PERMISSIONS.assignmentCreate));
+  canEditShiftAssignment = computed(() => canManageShift(this.authService, SHIFT_PERMISSIONS.assignmentUpdate));
+  canDeleteShiftAssignment = computed(() => canManageShift(this.authService, SHIFT_PERMISSIONS.assignmentDelete));
 
   specialShifts = computed(() => {
     const data = this.shiftsResource.value()?.data ?? [];
