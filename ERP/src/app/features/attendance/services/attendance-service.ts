@@ -647,8 +647,6 @@ export class AttendanceService {
     limit?: number;
     search?: string;
     status?: string;
-    fromDate?: string;
-    toDate?: string;
   }): Observable<ISpecialShiftListResponse> {
     const limit = params.limit || 10;
     const normalizedSearch = params.search?.trim();
@@ -663,8 +661,6 @@ export class AttendanceService {
           searchTerm: normalizedSearch,
           q: normalizedSearch,
         }),
-        ...(params.fromDate && { startDate: params.fromDate }),
-        ...(params.toDate && { endDate: params.toDate }),
         ...(params.status && {
           status: params.status,
           isActive: String(params.status === 'active'),
@@ -680,7 +676,6 @@ export class AttendanceService {
           nameEn: item.name,
           assignedShiftName: item.assignedShiftName,
           startDate: item.startDate,
-          endDate: item.endDate,
           isActive: item.isActive !== false,
           criteriaType: Number(item.criteriaType),
           priority: Number(item.priority),

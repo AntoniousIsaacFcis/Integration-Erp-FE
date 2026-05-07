@@ -22,13 +22,6 @@
 
             <app-app-date-input-component [label]="t('SHIFT.START_DATE')" [control]="mainForm.controls.startDate" />
 
-            <app-app-date-input-component [label]="t('SHIFT.END_DATE')" [control]="mainForm.controls.endDate" />
-
-            <app-app-select-component [label]="t('SHIFT.SHIFT_TYPE')" [control]="mainForm.controls.priority">
-              <option [value]="100">{{ t('SHIFT.PRIMARY') }}</option>
-              <option [value]="0">{{ t('SHIFT.SECONDARY') }}</option>
-            </app-app-select-component>
-
             <app-app-radio-component [label]="t('COMMON.STATUS')"
               [control]="mainForm.controls.status" [options]="[
                 { label: 'COMMON.ACTIVE', value: 'active' },
@@ -59,6 +52,11 @@
             </div>
 
             @if (isRuleSelection()) {
+              <div class="col-span-full rounded-xl border border-dashed border-primary/25 bg-primary/5 px-4 py-3 text-sm text-black/70">
+                <p>{{ t('SHIFT.RULE_BASED_HELPER') }}</p>
+                <p class="mt-1">{{ t('SHIFT.EXCLUDED_EMPLOYEES_HELPER') }}</p>
+              </div>
+
               <app-app-select-component [label]="t('LABEL.DEPARTMENT_NAME')" [control]="mainForm.controls.departmentId">
                 <option value="">{{ t('SHIFT.ALL_DEPARTMENTS') }}</option>
                 @for (department of departmentOptions(); track department.id) {
@@ -100,6 +98,10 @@
             }
 
             @if (isManualSelection()) {
+              <div class="col-span-full rounded-xl border border-dashed border-primary/25 bg-primary/5 px-4 py-3 text-sm text-black/70">
+                <p>{{ t('SHIFT.MANUAL_ASSIGNMENT_HELPER') }}</p>
+              </div>
+
               <div class="col-span-full flex flex-col gap-3">
                 <label class="text-base font-medium text-black">{{ t('SHIFT.SELECTED_EMPLOYEES') }}</label>
 

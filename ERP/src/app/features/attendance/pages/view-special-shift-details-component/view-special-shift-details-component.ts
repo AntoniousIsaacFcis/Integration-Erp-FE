@@ -59,10 +59,8 @@ export class ViewSpecialShiftDetailsComponent {
   mainForm = this.fb.nonNullable.group({
     name: [{ value: '', disabled: true }],
     startDate: [{ value: '', disabled: true }],
-    endDate: [{ value: '', disabled: true }],
     assignedShiftId: [{ value: '', disabled: true }],
     status: [{ value: 'active' as 'active' | 'inactive', disabled: true }],
-    priority: [{ value: 100, disabled: true }],
     assignmentMethod: [{ value: 'rules' as AssignmentMethod, disabled: true }],
     departmentId: [{ value: '', disabled: true }],
     designationId: [{ value: '', disabled: true }],
@@ -140,10 +138,8 @@ export class ViewSpecialShiftDetailsComponent {
     this.mainForm.patchValue({
       name: assignment.name ?? '',
       startDate: this.toDateInputValue(assignment.startDate),
-      endDate: this.toDateInputValue(assignment.endDate),
       assignedShiftId: assignment.assignedShiftId ?? '',
       status: assignment.isActive === false ? 'inactive' : 'active',
-      priority: Number(assignment.priority ?? 100),
       assignmentMethod: criteriaType === 2 ? 'manual' : 'rules',
       departmentId: assignment.departmentId ?? '',
       designationId: assignment.designationId ?? '',

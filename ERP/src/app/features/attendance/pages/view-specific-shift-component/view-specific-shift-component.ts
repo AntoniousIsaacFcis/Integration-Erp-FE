@@ -11,7 +11,6 @@ import { NgIcon, provideIcons } from '@ng-icons/core';
 import { AppBaseTableComponent } from "@shared/components/organisms/app-base-table-component/app-base-table-component";
 import { ActionBtnComponent } from "@shared/components/molecules/action-btn-component/action-btn-component";
 import { ISpecialShiftListItem } from '@features/attendance/models/iattendance';
-import { DateFilterComponent } from "@shared/components/molecules/date-filter-component/date-filter-component";
 import { lucideCirclePlus, lucideEye, lucidePencil, lucideTrash2 } from '@ng-icons/lucide';
 import { EmptyTablePlaceholderComponent } from '@shared/components/molecules/empty-table-placeholder-component/empty-table-placeholder-component';
 import { StatusBadgeComponent } from '@shared/components/molecules/status-badge-component/status-badge-component';
@@ -19,7 +18,7 @@ import { TableStatusBadgeComponent } from '@shared/components/atoms/table-status
 
 @Component({
   selector: 'app-view-specific-shift-component',
-  imports: [TranslocoModule, NgIcon, DatePipe, AppBaseTableComponent, ActionBtnComponent, DateFilterComponent, EmptyTablePlaceholderComponent, StatusBadgeComponent, TableStatusBadgeComponent],
+  imports: [TranslocoModule, NgIcon, DatePipe, AppBaseTableComponent, ActionBtnComponent, EmptyTablePlaceholderComponent, StatusBadgeComponent, TableStatusBadgeComponent],
   templateUrl: './view-specific-shift-component.html',
   styleUrl: './view-specific-shift-component.css',
   providers:[provideIcons({lucidePencil,lucideTrash2,lucideCirclePlus,lucideEye})],
@@ -33,10 +32,8 @@ export class ViewSpecificShiftComponent {
 
   currentPage = signal(1);
   searchTerm = signal('');
-pageSize = signal(10);
+  pageSize = signal(10);
 
-  fromDate = signal<string>('');
-  toDate = signal<string>('');
   selectedStatus = signal<'active' | 'inactive' | ''>('');
 
   statusOptions = [
@@ -49,8 +46,6 @@ pageSize = signal(10);
     () => {
       this.searchTerm();
       this.selectedStatus();
-      this.fromDate();
-      this.toDate();
       this.currentPage.set(1);
     },
     { allowSignalWrites: true },
@@ -62,8 +57,6 @@ pageSize = signal(10);
       limit: this.pageSize(),
       search: this.searchTerm(),
       status: this.selectedStatus(),
-      fromDate: this.fromDate(),
-      toDate: this.toDate()
     }),
     stream: ({ params }) => this.attendanceService.getSpecialShifts(params)
   });
@@ -85,7 +78,6 @@ pageSize = signal(10);
         ...shift,
         displayName: `${shift.name || shift.nameAr || shift.nameEn || '-'} #${index + 1}`,
         relatedShift: shift.assignedShiftName || '-',
-        shiftTypeKey: Number(shift.priority ?? 100) >= 100 ? 'SHIFT.PRIMARY' : 'SHIFT.SECONDARY',
         assignmentMethodKey: shift.criteriaType === 2 ? 'SHIFT.MANUAL' : 'SHIFT.RULES',
         status: shift.isActive === false ? 'inactive' : 'active',
       }));

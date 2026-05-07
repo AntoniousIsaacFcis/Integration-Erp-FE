@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, signal } from '@angular/core';
 import { FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NotificationService } from '@core/services/notification-service';
@@ -18,9 +18,9 @@ import { AppSelectComponent } from '@shared/components/atoms/app-select-componen
 import { FormCancelButtonComponent } from '@shared/components/molecules/form-cancel-button-component/form-cancel-button-component';
 import { FormSaveButtonComponent } from '@shared/components/molecules/form-save-button-component/form-save-button-component';
 import { FormContainerComponent } from '@shared/components/organisms/form-container-component/form-container-component';
-import { dateRangeValidator } from '@shared/validators/date-range.validator';
 import { rxResource, toSignal } from '@angular/core/rxjs-interop';
 import { catchError, map, of, startWith } from 'rxjs';
+import { resolveShiftAssignmentSaveError } from '../../utils/shift-assignment-error.util';
 
 type AssignmentMethod = 'rules' | 'manual';
 
@@ -57,20 +57,17 @@ export class CreateSpecialShiftComponent {
   submitted = signal(false);
   isSaving = signal(false);
   employeeSelectionError = signal(false);
+  ruleSelectionError = signal(false);
 
   mainForm = this.fb.nonNullable.group({
     name: ['', [Validators.required]],
     startDate: ['', [Validators.required]],
-    endDate: ['', [Validators.required]],
     assignedShiftId: ['', [Validators.required]],
     status: ['active' as 'active' | 'inactive', [Validators.required]],
-    priority: [100, [Validators.required]],
     assignmentMethod: ['rules' as AssignmentMethod, [Validators.required]],
     departmentId: [''],
     designationId: [''],
     currentShiftId: [''],
-  }, {
-    validators: [dateRangeValidator('startDate', 'endDate')],
   });
 
   employeeSearchControl = new FormControl('', { nonNullable: true });
@@ -91,6 +88,23 @@ export class CreateSpecialShiftComponent {
 
   selectedEmployeeIds = signal<string[]>([]);
   excludedEmployeeIds = signal<string[]>([]);
+
+  private readonly syncAssignmentState = effect(() => {
+    if (this.isRuleSelection()) {
+      this.selectedEmployeeIds.set([]);
+      this.employeeSelectionError.set(false);
+      this.ruleSelectionError.set(false);
+      return;
+    }
+
+    this.excludedEmployeeIds.set([]);
+    this.ruleSelectionError.set(false);
+    this.mainForm.patchValue({
+      departmentId: '',
+      designationId: '',
+      currentShiftId: '',
+    }, { emitEvent: false });
+  });
 
   shiftOptionsResource = rxResource({
     stream: () => this.attendanceService.getShiftOptions().pipe(catchError(() => of([]))),
@@ -126,9 +140,10 @@ export class CreateSpecialShiftComponent {
     }
 
     this.submitted.set(true);
+    this.ruleSelectionError.set(this.isRuleSelection() && !this.hasRuleCriteria());
     this.employeeSelectionError.set(this.isManualSelection() && this.selectedEmployeeIds().length === 0);
 
-    if (this.mainForm.invalid || this.employeeSelectionError()) {
+    if (this.mainForm.invalid || this.employeeSelectionError() || this.ruleSelectionError()) {
       this.mainForm.markAllAsTouched();
       return;
     }
@@ -144,13 +159,15 @@ export class CreateSpecialShiftComponent {
           });
           this.router.navigate(['attendance/special']);
         },
-        error: () => {
+        error: (error: unknown) => {
           this.isSaving.set(false);
+          const resolvedError = resolveShiftAssignmentSaveError(error);
+
           this.notification.show({
             type: 'error',
             title: 'COMMON.MESSAGES.OPERATION_FAILED',
-            message: 'COMMON.MESSAGES.PLEASE_TRY_AGAIN',
-            isModal: false,
+            message: resolvedError.message,
+            isModal: resolvedError.isModal,
             actionLabel: 'COMMON.CONFIRM',
           });
         },
@@ -192,10 +209,9 @@ export class CreateSpecialShiftComponent {
       name: value.name.trim(),
       assignedShiftId: value.assignedShiftId,
       startDate: this.toDateTime(value.startDate),
-      endDate: this.toDateTime(value.endDate),
       isActive: value.status === 'active',
       criteriaType,
-      priority: Number(value.priority),
+      priority: 0,
       departmentId: criteriaType === 1 ? this.toNullableId(value.departmentId) : null,
       designationId: criteriaType === 1 ? this.toNullableId(value.designationId) : null,
       currentShiftId: criteriaType === 1 ? this.toNullableId(value.currentShiftId) : null,
@@ -230,6 +246,11 @@ export class CreateSpecialShiftComponent {
     const staffMap = new Map(this.staffOptions().map(staff => [staff.id, staff]));
 
     return ids.map(id => staffMap.get(id) ?? { id, displayName: id, staffCode: '' });
+  }
+
+  private hasRuleCriteria() {
+    const value = this.mainForm.getRawValue();
+    return Boolean(value.departmentId || value.designationId || value.currentShiftId);
   }
 
   private getStaffDisplayName(staff: IStaffApiItem) {

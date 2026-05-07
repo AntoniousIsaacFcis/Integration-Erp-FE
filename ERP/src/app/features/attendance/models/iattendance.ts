@@ -242,8 +242,6 @@ export interface IAttendanceRelatedShift {
   name: string;
   onDutyTime: string;
   offDutyTime: string;
-  assignmentStartDate?: string | null;
-  assignmentEndDate?: string | null;
 }
 
 export interface IPermission {
@@ -373,7 +371,6 @@ export interface IShiftApiListResponse {
 export interface ICustomShiftForm {
   shiftName: string;
   startDate: string;
-  endDate: string;
   assignedShiftId: string;
   status: 'active' | 'inactive';
   assignmentMethod: 'rules' | 'manual';
@@ -386,7 +383,6 @@ export interface IShiftAssignmentPayload {
   name: string;
   assignedShiftId: string;
   startDate: string;
-  endDate: string;
   isActive: boolean;
   criteriaType: 1 | 2;
   priority: number;
@@ -403,7 +399,6 @@ export interface IShiftAssignment {
   assignedShiftId: string;
   assignedShiftName?: string | null;
   startDate: string;
-  endDate: string;
   isActive: boolean;
   criteriaType: 1 | 2 | number;
   priority: number;
@@ -442,7 +437,6 @@ export interface ISpecialShiftListItem {
   nameEn: string;
   assignedShiftName?: string | null;
   startDate: string;
-  endDate: string;
   criteriaType?: number;
   priority?: number;
   isActive?: boolean;

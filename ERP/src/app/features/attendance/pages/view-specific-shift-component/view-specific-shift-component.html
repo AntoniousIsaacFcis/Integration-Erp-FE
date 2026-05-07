@@ -6,8 +6,6 @@
     <div class="flex items-center gap-3">
       <app-status-badge-component label="FILTERS.STATUS" [(selectedStatus)]="selectedStatus"
         [options]="statusOptions" />
-      <app-date-filter-component [(selectedDate)]="fromDate" labelKey="SHIFT.START_DATE" />
-      <app-date-filter-component [(selectedDate)]="toDate" labelKey="SHIFT.END_DATE" />
     </div>
   </ng-template>
 
@@ -45,8 +43,6 @@
             <th class="py-4 ps-10 text-start">{{ t('SHIFT.TABLE.NAME') }}</th>
             <th class="py-4 px-4 text-center">{{ t('SHIFT.RELATED_SHIFT') }}</th>
             <th class="py-4 px-4 text-center">{{ t('SHIFT.START_DATE') }}</th>
-            <th class="py-4 px-4 text-center">{{ t('SHIFT.END_DATE') }}</th>
-            <th class="py-4 px-4 text-center">{{ t('SHIFT.SHIFT_TYPE') }}</th>
             <th class="py-4 px-4 text-center">{{ t('SHIFT.TABLE.STATUS') }}</th>
             <th class="py-4 px-4 text-center">{{ t('SHIFT.ASSIGNMENT_METHOD') }}</th>
             <th class="py-4 pe-6 text"></th>
@@ -58,8 +54,6 @@
               <td class="py-4 ps-10 text-start font-medium text-sm text-black">{{ shift.displayName }}</td>
               <td class="py-4 px-4 text-center text-sm">{{ shift.relatedShift }}</td>
               <td class="py-4 px-4 text-center text-sm">{{ shift.startDate | date:'dd/MM/yyyy' }}</td>
-              <td class="py-4 px-4 text-center text-sm">{{ shift.endDate | date:'dd/MM/yyyy' }}</td>
-              <td class="py-4 px-4 text-center text-sm">{{ t(shift.shiftTypeKey) }}</td>
               <td class="py-4 px-4">
                 <div class="flex justify-center">
                   <app-table-status-badge-component [status]="shift.status" />

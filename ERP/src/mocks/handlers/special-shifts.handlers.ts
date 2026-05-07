@@ -12,8 +12,6 @@ export const specialShiftHandlers = [
     const page = Number(url.searchParams.get('page') || 1);
     const limit = Number(url.searchParams.get('limit') || 10);
     const search = url.searchParams.get('search')?.toLowerCase() || '';
-    const fromDate = url.searchParams.get('fromDate') || '';
-    const toDate = url.searchParams.get('toDate') || '';
 
     // Filter logic
     let filtered = localSpecialShifts.filter(shift => {
@@ -21,22 +19,7 @@ export const specialShiftHandlers = [
         shift.nameAr.toLowerCase().includes(search) ||
         shift.nameEn.toLowerCase().includes(search);
 
-      let matchesDateRange = true;
-      if (fromDate || toDate) {
-        const shiftStart = new Date(shift.startDate);
-        const shiftEnd = new Date(shift.endDate);
-
-        if (fromDate) {
-          const from = new Date(fromDate);
-          matchesDateRange = matchesDateRange && shiftStart >= from;
-        }
-        if (toDate) {
-          const to = new Date(toDate);
-          matchesDateRange = matchesDateRange && shiftEnd <= to;
-        }
-      }
-
-      return matchesSearch && matchesDateRange;
+      return matchesSearch;
     });
 
     // Pagination
