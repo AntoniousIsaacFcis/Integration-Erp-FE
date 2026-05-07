@@ -97,6 +97,19 @@ export class EditShiftComponent {
     this.submitted.set(true);
     this.shiftForm.updateValueAndValidity();
 
+    const flexibleWorkDaysErrorKey = this.getFlexibleWorkDaysErrorKey();
+    if (flexibleWorkDaysErrorKey) {
+      this.shiftForm.markAllAsTouched();
+      this.notification.show({
+        type: 'error',
+        title: 'COMMON.MESSAGES.OPERATION_FAILED',
+        message: flexibleWorkDaysErrorKey,
+        isModal: true,
+        actionLabel: 'COMMON.CONFIRM',
+      });
+      return;
+    }
+
     if (this.shiftForm.invalid) {
       this.shiftForm.markAllAsTouched();
       return;
@@ -304,7 +317,7 @@ export class EditShiftComponent {
       const selectedDays = days.filter(day => day?.isWorkDay);
 
       if (!selectedDays.length) {
-        return null;
+        return { flexibleWorkDaysRequired: true };
       }
 
       const hasMissingRequiredTime = selectedDays.some(day =>
@@ -317,8 +330,25 @@ export class EditShiftComponent {
         this.isMissingRequiredValue(day?.lateToleranceMinutes)
       );
 
-      return hasMissingRequiredTime ? { flexibleWorkDaysRequired: true } : null;
+      return hasMissingRequiredTime ? { flexibleWorkDaysIncomplete: true } : null;
     };
+  }
+
+  private getFlexibleWorkDaysErrorKey() {
+    if (!this.isFlexibleShift()) {
+      return null;
+    }
+
+    const workDaysErrors = this.shiftForm.controls.workDays.errors;
+    if (workDaysErrors?.['flexibleWorkDaysRequired']) {
+      return 'ERRORS.FLEXIBLE_SHIFT_REQUIRES_AT_LEAST_ONE_DAY';
+    }
+
+    if (workDaysErrors?.['flexibleWorkDaysIncomplete']) {
+      return 'ERRORS.FLEXIBLE_SHIFT_REQUIRES_COMPLETE_DAY_TIMES';
+    }
+
+    return null;
   }
 
   private isMissingRequiredValue(value: string | number | null | undefined) {
@@ -330,11 +360,43 @@ export class EditShiftComponent {
 
     if (
       backendError?.code === 'Attendance:FlexibleShiftRequiresCompleteDayTimes' ||
+      backendError?.code === 'Attendance:InvalidShiftAttendanceDetails' ||
+      backendError?.code === 'Attendance:OnDutyTimeMustBeLessThanOffDutyTime' ||
+      backendError?.code === 'Attendance:SignInStartTimeMustBeLessThanSignInEndTime' ||
+      backendError?.code === 'Attendance:SignOutStartTimeMustBeLessThanSignOutEndTime' ||
+      backendError?.code === 'Attendance:SignInStartTimeMustBeLessThanOrEqualOnDutyTime' ||
+      backendError?.code === 'Attendance:SignInEndTimeMustBeGreaterThanOrEqualOnDutyTime' ||
+      backendError?.code === 'Attendance:SignOutStartTimeMustBeLessThanOrEqualOffDutyTime' ||
+      backendError?.code === 'Attendance:SignOutStartTimeMustBeGreaterThanOrEqualOnDutyTime' ||
+      backendError?.code === 'Attendance:OffDutyTimeMustBeLessThanOrEqualSignOutEndTime' ||
+      backendError?.code === 'Attendance:OnDutyOverrideMustBeLessThanOffDutyOverride' ||
+      backendError?.code === 'Attendance:LateToleranceMinutesMustBeNonNegative' ||
       backendError?.message === 'ERRORS.FLEXIBLE_SHIFT_REQUIRES_COMPLETE_DAY_TIMES'
     ) {
+      const codeToErrorKey: Record<string, string> = {
+        'Attendance:OnDutyTimeMustBeLessThanOffDutyTime': 'ERRORS.ON_DUTY_TIME_MUST_BE_LESS_THAN_OFF_DUTY_TIME',
+        'Attendance:SignInStartTimeMustBeLessThanSignInEndTime': 'ERRORS.SIGN_IN_START_TIME_MUST_BE_LESS_THAN_SIGN_IN_END_TIME',
+        'Attendance:SignOutStartTimeMustBeLessThanSignOutEndTime': 'ERRORS.SIGN_OUT_START_TIME_MUST_BE_LESS_THAN_SIGN_OUT_END_TIME',
+        'Attendance:SignInStartTimeMustBeLessThanOrEqualOnDutyTime': 'ERRORS.SIGN_IN_START_TIME_MUST_BE_LESS_THAN_OR_EQUAL_ON_DUTY_TIME',
+        'Attendance:SignInEndTimeMustBeGreaterThanOrEqualOnDutyTime': 'ERRORS.SIGN_IN_END_TIME_MUST_BE_GREATER_THAN_OR_EQUAL_ON_DUTY_TIME',
+        'Attendance:SignOutStartTimeMustBeLessThanOrEqualOffDutyTime': 'ERRORS.SIGN_OUT_START_TIME_MUST_BE_LESS_THAN_OR_EQUAL_OFF_DUTY_TIME',
+        'Attendance:SignOutStartTimeMustBeGreaterThanOrEqualOnDutyTime': 'ERRORS.SIGN_OUT_START_TIME_MUST_BE_GREATER_THAN_OR_EQUAL_ON_DUTY_TIME',
+        'Attendance:OffDutyTimeMustBeLessThanOrEqualSignOutEndTime': 'ERRORS.OFF_DUTY_TIME_MUST_BE_LESS_THAN_OR_EQUAL_SIGN_OUT_END_TIME',
+        'Attendance:OnDutyOverrideMustBeLessThanOffDutyOverride': 'ERRORS.ON_DUTY_OVERRIDE_MUST_BE_LESS_THAN_OFF_DUTY_OVERRIDE',
+        'Attendance:LateToleranceMinutesMustBeNonNegative': 'ERRORS.LATE_TOLERANCE_MUST_BE_NON_NEGATIVE',
+        'Attendance:InvalidShiftAttendanceDetails': 'ERRORS.INVALID_SHIFT_ATTENDANCE_DETAILS',
+      };
+
+      if (backendError?.code && codeToErrorKey[backendError.code]) {
+        return {
+          message: codeToErrorKey[backendError.code],
+          isModal: true,
+        };
+      }
+
       return {
         message: 'ERRORS.FLEXIBLE_SHIFT_REQUIRES_COMPLETE_DAY_TIMES',
-        isModal: false,
+        isModal: true,
       };
     }
 

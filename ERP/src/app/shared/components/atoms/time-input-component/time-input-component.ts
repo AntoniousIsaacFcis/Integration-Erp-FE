@@ -18,6 +18,7 @@ export class TimeInputComponent {
   showErrors = input<boolean>(false);
   placeHodler = input<string>('09:00');
   readonly = input<boolean>(false);
+  variant = input<'default' | 'native'>('default');
 
   requiredErrorKey = input<string>('AUTH.REQUIRED_FIELD');
 
