@@ -1,4 +1,11 @@
 import { Routes } from "@angular/router";
+import { permissionAndRoleGuard } from '@core/auth/guards/permission-guard';
+
+const SHIFT_CREATE_POLICY = 'Attendance.Shifts.Create';
+const SHIFT_UPDATE_POLICY = 'Attendance.Shifts.Update';
+const SHIFT_ASSIGNMENT_CREATE_POLICY = 'Attendance.ShiftAssignments.Create';
+const SHIFT_ASSIGNMENT_UPDATE_POLICY = 'Attendance.ShiftAssignments.Update';
+const SHIFT_MANAGER_ROLES = ['admin', 'hr'];
 
 // features/attendance/attendance.routes.ts
 export const ATTENDANCE_ROUTES: Routes = [
@@ -50,12 +57,14 @@ export const ATTENDANCE_ROUTES: Routes = [
               {
                 path: 'create',
                 loadComponent: () => import('./pages/create-shift-component/create-shift-component').then(x => x.CreateShiftComponent),
-                data: { breadcrumb: 'MENU.CREATE_SHIFT' }
+                data: { breadcrumb: 'MENU.CREATE_SHIFT' },
+                canActivate: [permissionAndRoleGuard(SHIFT_CREATE_POLICY, SHIFT_MANAGER_ROLES)]
               },
               {
                 path: 'edit/:id',
                 loadComponent: () => import('./pages/edit-shift-component/edit-shift-component').then(x => x.EditShiftComponent),
-                data: { breadcrumb: 'SHIFT.EDIT_SHIFT' }
+                data: { breadcrumb: 'SHIFT.EDIT_SHIFT' },
+                canActivate: [permissionAndRoleGuard(SHIFT_UPDATE_POLICY, SHIFT_MANAGER_ROLES)]
               },
               {
                 path: 'details/:id',
@@ -75,12 +84,14 @@ export const ATTENDANCE_ROUTES: Routes = [
               {
                 path: 'create',
                 loadComponent: () => import('./pages/create-special-shift-component/create-special-shift-component').then(x => x.CreateSpecialShiftComponent),
-                data: { breadcrumb: 'MENU.CREATE_SPECIAL_SHIFT' }
+                data: { breadcrumb: 'MENU.CREATE_SPECIAL_SHIFT' },
+                canActivate: [permissionAndRoleGuard(SHIFT_ASSIGNMENT_CREATE_POLICY, SHIFT_MANAGER_ROLES)]
               },
               {
                 path: 'edit/:id',
                 loadComponent: () => import('./pages/edit-special-shift-component/edit-special-shift-component').then(x => x.EditSpecialShiftComponent),
-                data: { breadcrumb: 'MENU.EDIT_SPECIAL_SHIFT' }
+                data: { breadcrumb: 'MENU.EDIT_SPECIAL_SHIFT' },
+                canActivate: [permissionAndRoleGuard(SHIFT_ASSIGNMENT_UPDATE_POLICY, SHIFT_MANAGER_ROLES)]
               },
               {
                 path: 'details/:id',

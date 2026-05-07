@@ -16,6 +16,15 @@ export function canAccess(authService: AuthService, rule: AccessRuleInput) {
     hasAllPolicies(authService, normalizedRule.allPolicies);
 }
 
+export function canAccessWithAnyRole(authService: AuthService, rule: AccessRuleInput, allowedRoles: string[]) {
+  const normalizedRule = normalizeRule(rule);
+
+  return hasRequiredRole(authService, allowedRoles) &&
+    hasRequiredRole(authService, normalizedRule.roles) &&
+    hasAnyPolicy(authService, normalizedRule.anyPolicies) &&
+    hasAllPolicies(authService, normalizedRule.allPolicies);
+}
+
 function normalizeRule(rule: AccessRuleInput): AccessRule {
   return typeof rule === 'string'
     ? { allPolicies: [rule] }
