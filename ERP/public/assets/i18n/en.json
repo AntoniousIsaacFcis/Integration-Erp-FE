@@ -25,6 +25,10 @@
     "NEXT": "Next",
     "PREVIOUS": "Previous",
     "ACTIONS": "Actions",
+    "EMAIL": "Email",
+    "PASSWORD": "Password",
+    "COPY": "Copy",
+    "COPIED": "Copied",
     "NAME": "Name",
     "DESCRIPTION": "Description",
     "DATE": "Date",
@@ -440,6 +444,8 @@
     "DEDUCTIONS": "Deductions",
     "TOTAL_SALARY": "Total Salary",
     "SUCCESS_ADD_TITLE": "Employee Added Successfully",
+    "SYSTEM_ACCESS_CREATED_TITLE": "Employee Account Created Successfully",
+    "SYSTEM_ACCESS_CREATED_NOTE": "Please share this password securely with the employee. This password will not be shown again.",
     "DOCUMENTS": {
       "TITLE": "Files and Contracts",
       "NO_DOCUMENTS": "No Documents Available"

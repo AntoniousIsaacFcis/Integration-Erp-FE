@@ -1,53 +1,103 @@
-  <ng-container *transloco="let t">
-    @if (notificationService.notifications().length > 0) {
-    <div class="absolute inset-0 bg-black/40 z-[1000] animate-fade-in pointer-events-auto rounded-[20px]">
-    </div>
-    }
+<ng-container *transloco="let t">
+  @if (notificationService.notifications().length > 0) {
+    <div class="absolute inset-0 bg-black/40 z-[1000] animate-fade-in pointer-events-auto rounded-[20px]"></div>
+  }
 
-    <div class="absolute inset-0 z-[1001] flex items-center justify-center pointer-events-none p-4 ">
-      @for (notif of notificationService.notifications(); track notif.id) {
-
+  <div class="absolute inset-0 z-[1001] flex items-center justify-center pointer-events-none p-4">
+    @for (notif of notificationService.notifications(); track notif.id) {
       <div
-        class="gap-6  bg-white rounded-xl shadow-2xl relative pointer-events-auto animate-scale-in border border-gray-100 flex flex-col items-center"
-        [style.z-index]="1002 + $index" [style.width.px]="350" [style.min-height.px]="263">
-
-        <button (click)="notificationService.dismiss(notif.id)"
-          class="absolute top-[14px] left-[18px] flex items-center justify-center hover:scale-110 transition-transform">
+        class="pointer-events-auto animate-scale-in bg-white rounded-xl shadow-2xl border border-gray-100 relative flex flex-col"
+        [style.z-index]="1002 + $index"
+        [style.width.px]="notif.temporaryPassword && notif.email ? 520 : 350"
+      >
+        <button
+          (click)="notificationService.dismiss(notif.id)"
+          class="absolute top-[14px] left-[18px] flex items-center justify-center hover:scale-110 transition-transform"
+        >
           <ng-icon name="lucideX" size="24" color="#FF383C"></ng-icon>
         </button>
 
         <div
-          class="mt-8 size-[60px] rounded-[49px] border flex items-center justify-center bg-[#537C0F] border-[#537C0F] text-white">
+          class="mt-8 mx-auto size-[60px] rounded-[49px] border flex items-center justify-center bg-[#537C0F] border-[#537C0F] text-white"
+        >
           <ng-icon [name]="iconName(notif.type)" size="40"></ng-icon>
         </div>
 
-        <div class="flex-1 flex flex-col items-center justify-center w-full px-6 text-center">
-          <div class="text-md font-bold text-black font-arabic leading-[148%]">
-            {{ t(notif.title) }}
+        @if (notif.temporaryPassword && notif.email) {
+          <div class="px-6 pt-5 pb-4 text-center">
+            <div class="text-md font-bold text-black font-arabic leading-[148%]">
+              {{ t(notif.title) }}
+            </div>
+            @if (notif.message) {
+              <p class="text-[#909091] text-[12px] mt-2 font-arabic leading-[148%]">
+                {{ t(notif.message) }}
+              </p>
+            }
+
+            <div class="mt-5 space-y-3 text-left rtl:text-right">
+              <div class="rounded-lg border border-dashed border-[#D6D9DF] bg-[#F9FAFB] px-4 py-3">
+                <div class="text-[11px] font-semibold uppercase tracking-wide text-[#6B7280]">
+                  {{ t('COMMON.EMAIL') }}
+                </div>
+                <div class="mt-1 text-sm font-medium text-black break-all">
+                  {{ notif.email }}
+                </div>
+              </div>
+
+              <div class="rounded-lg border border-dashed border-[#D6D9DF] bg-[#F9FAFB] px-4 py-3">
+                <div class="text-[11px] font-semibold uppercase tracking-wide text-[#6B7280]">
+                  {{ t('COMMON.PASSWORD') }}
+                </div>
+                <div class="mt-2 flex items-center gap-2">
+                  <code class="flex-1 rounded-md bg-white px-3 py-2 text-sm font-semibold text-[#111827] border border-[#E5E7EB] break-all">
+                    {{ notif.temporaryPassword }}
+                  </code>
+                  <button
+                    type="button"
+                    (click)="copyTemporaryPassword(notif)"
+                    class="shrink-0 rounded-md border border-[#537C0F] px-3 py-2 text-xs font-semibold text-[#537C0F] transition-colors hover:bg-[#F3F7EA]"
+                  >
+                    {{ isCopied(notif) ? t('COMMON.COPIED') : t('COMMON.COPY') }}
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
-          @if (notif.message) {
-          <p class="text-[#909091] text-[12px] mt-2 font-arabic leading-[148%]">{{ t(notif.message) }}</p>
-          }
-        </div>
+        } @else {
+          <div class="flex-1 flex flex-col items-center justify-center w-full px-6 text-center py-5">
+            <div class="text-md font-bold text-black font-arabic leading-[148%]">
+              {{ t(notif.title) }}
+            </div>
+            @if (notif.message) {
+              <p class="text-[#909091] text-[12px] mt-2 font-arabic leading-[148%]">
+                {{ t(notif.message) }}
+              </p>
+            }
+          </div>
+        }
 
         <div class="mt-auto mb-8 w-full px-[33px] flex gap-3">
           @if (notif.cancelLabel) {
-          <button (click)="handleCancel(notif)"
-            class="w-full h-[30px] bg-white text-[#537C0F] border border-[#537C0F] rounded-[8px] flex items-center justify-center">
-            <span class="text-[12px] font-medium font-arabic">
-              {{ t(notif.cancelLabel) }}
-            </span>
-          </button>
+            <button
+              (click)="handleCancel(notif)"
+              class="w-full h-[30px] bg-white text-[#537C0F] border border-[#537C0F] rounded-[8px] flex items-center justify-center"
+            >
+              <span class="text-[12px] font-medium font-arabic">
+                {{ t(notif.cancelLabel) }}
+              </span>
+            </button>
           }
 
-          <button (click)="handleAction(notif)"
-            class="w-full h-[30px] bg-[#537C0F] text-white rounded-[8px] flex items-center justify-center">
+          <button
+            (click)="handleAction(notif)"
+            class="w-full h-[30px] bg-[#537C0F] text-white rounded-[8px] flex items-center justify-center"
+          >
             <span class="text-[12px] font-medium font-arabic text-white">
               {{ t(notif.actionLabel) || 'موافق' }}
             </span>
           </button>
         </div>
       </div>
-      }
-    </div>
-  </ng-container>
+    }
+  </div>
+</ng-container>

@@ -35,6 +35,7 @@ export interface IStaffApiItem {
   hireDate?: string | null;
   isActive?: boolean;
   customData?: string | null;
+  temporaryPassword?: string | null;
 }
 
 export interface IStaffApiResponse {

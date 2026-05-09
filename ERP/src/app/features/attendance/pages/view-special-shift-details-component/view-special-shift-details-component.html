@@ -78,23 +78,25 @@
                 }
               </app-app-select-component>
 
-              <div class="col-span-full flex flex-col gap-3">
-                <label class="text-base font-medium text-black">{{ t('SHIFT.EXCLUDED_EMPLOYEES') }}</label>
+              @if (canShowEmployeeDetails()) {
+                <div class="col-span-full flex flex-col gap-3">
+                  <label class="text-base font-medium text-black">{{ t('SHIFT.EXCLUDED_EMPLOYEES') }}</label>
 
-                <div class="relative w-full">
-                  <input type="text" [placeholder]="t('PLACEHOLDER.SEARCH_EMPLOYEE')" disabled
-                    class="w-full h-[41px] rounded-xl border border-[#E0E0E0] outline-none text-center text-sm bg-gray-50" />
-                  <ng-icon name="lucideSearch" class="absolute top-1/2 start-4 -translate-y-1/2 text-[18px] text-black/60" />
-                </div>
+                  <div class="relative w-full">
+                    <input type="text" [placeholder]="t('PLACEHOLDER.SEARCH_EMPLOYEE')" disabled
+                      class="w-full h-[41px] rounded-xl border border-[#E0E0E0] outline-none text-center text-sm bg-gray-50" />
+                    <ng-icon name="lucideSearch" class="absolute top-1/2 start-4 -translate-y-1/2 text-[18px] text-black/60" />
+                  </div>
 
-                <div class="flex flex-wrap gap-3 mt-1">
-                  @for (emp of excludedEmployees(); track emp.id) {
-                    <div class="flex items-center gap-2 bg-[#EDEDED] px-2.5 py-1 rounded-md">
-                      <span class="text-sm text-black">{{ emp.displayName }}</span>
-                    </div>
-                  }
+                  <div class="flex flex-wrap gap-3 mt-1">
+                    @for (emp of excludedEmployees(); track emp.id) {
+                      <div class="flex items-center gap-2 bg-[#EDEDED] px-2.5 py-1 rounded-md">
+                        <span class="text-sm text-black">{{ emp.displayName }}</span>
+                      </div>
+                    }
+                  </div>
                 </div>
-              </div>
+              }
             }
 
             @if (isManualSelection()) {
@@ -102,23 +104,25 @@
                 <p>{{ t('SHIFT.MANUAL_ASSIGNMENT_HELPER') }}</p>
               </div>
 
-              <div class="col-span-full flex flex-col gap-3">
-                <label class="text-base font-medium text-black">{{ t('SHIFT.SELECTED_EMPLOYEES') }}</label>
+              @if (canShowEmployeeDetails()) {
+                <div class="col-span-full flex flex-col gap-3">
+                  <label class="text-base font-medium text-black">{{ t('SHIFT.SELECTED_EMPLOYEES') }}</label>
 
-                <div class="relative w-full">
-                  <input type="text" [placeholder]="t('PLACEHOLDER.SEARCH_EMPLOYEE')" disabled
-                    class="w-full h-[41px] rounded-xl border border-[#E0E0E0] outline-none text-center text-sm bg-gray-50" />
-                  <ng-icon name="lucideSearch" class="absolute top-1/2 start-4 -translate-y-1/2 text-[18px] text-black/60" />
-                </div>
+                  <div class="relative w-full">
+                    <input type="text" [placeholder]="t('PLACEHOLDER.SEARCH_EMPLOYEE')" disabled
+                      class="w-full h-[41px] rounded-xl border border-[#E0E0E0] outline-none text-center text-sm bg-gray-50" />
+                    <ng-icon name="lucideSearch" class="absolute top-1/2 start-4 -translate-y-1/2 text-[18px] text-black/60" />
+                  </div>
 
-                <div class="flex flex-wrap gap-3 mt-1">
-                  @for (emp of selectedEmployees(); track emp.id) {
-                    <div class="flex items-center gap-2 bg-[#EDEDED] px-2.5 py-1 rounded-md">
-                      <span class="text-sm text-black">{{ emp.displayName }}</span>
-                    </div>
-                  }
+                  <div class="flex flex-wrap gap-3 mt-1">
+                    @for (emp of selectedEmployees(); track emp.id) {
+                      <div class="flex items-center gap-2 bg-[#EDEDED] px-2.5 py-1 rounded-md">
+                        <span class="text-sm text-black">{{ emp.displayName }}</span>
+                      </div>
+                    }
+                  </div>
                 </div>
-              </div>
+              }
             }
           </section>
         }

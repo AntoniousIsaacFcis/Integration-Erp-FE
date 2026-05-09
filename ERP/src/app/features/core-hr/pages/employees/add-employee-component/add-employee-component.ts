@@ -163,7 +163,6 @@ export class AddEmployeeComponent implements OnInit {
         totalSalary: Number(rawData.totalSalary) || 0,
       };
 
-      console.log('Sending Payload:', finalPayload);
       this.pendingPayload.set(finalPayload);
       this.isSubmitting.set(true);
 
@@ -179,9 +178,25 @@ export class AddEmployeeComponent implements OnInit {
         )
         .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe({
-          next: () => {
+          next: (result) => {
             this.isSubmitting.set(false);
             this.pendingPayload.set(null);
+
+            if (result.temporaryPassword) {
+              this.notificationService.show({
+                type: 'success',
+                isModal: true,
+                title: 'EMPLOYEES.SYSTEM_ACCESS_CREATED_TITLE',
+                message: 'EMPLOYEES.SYSTEM_ACCESS_CREATED_NOTE',
+                email: result.email ?? rawData.email ?? '',
+                temporaryPassword: result.temporaryPassword,
+                actionLabel: 'COMMON.GO_TO_LIST',
+                onAction: () => {
+                  void this.router.navigate(['/core-hr/employees/view']);
+                },
+              });
+              return;
+            }
 
             this.notificationService.show({
               type: 'success',

@@ -2,9 +2,12 @@ import { ChangeDetectionStrategy, Component, DestroyRef, computed, inject, signa
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { AuthService } from '@core/auth/services/auth-service';
+import { canAccess } from '@core/auth/utils/access-control';
 import { BreadcrumbService } from '@core/services/breadcrumb-service';
 import { IShiftAssignment } from '@features/attendance/models/iattendance';
 import { AttendanceService } from '@features/attendance/services/attendance-service';
+import { SHIFT_MANAGER_ROLES } from '@features/attendance/utils/shift-auth';
 import { IStaffApiItem } from '@features/core-hr/models/istaff';
 import { StaffService } from '@features/core-hr/services/staff-service';
 import { DepartmentsService } from '@features/organization/services/departments-service';
@@ -45,6 +48,7 @@ export class ViewSpecialShiftDetailsComponent {
   private readonly fb = inject(FormBuilder);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
+  private readonly authService = inject(AuthService);
   private readonly attendanceService = inject(AttendanceService);
   private readonly departmentsService = inject(DepartmentsService);
   private readonly designationsService = inject(DesignationsService);
@@ -75,6 +79,11 @@ export class ViewSpecialShiftDetailsComponent {
 
   isRuleSelection = computed(() => this.assignmentMethodValue() === 'rules');
   isManualSelection = computed(() => this.assignmentMethodValue() === 'manual');
+  canShowEmployeeDetails = computed(() =>
+    canAccess(this.authService, {
+      roles: SHIFT_MANAGER_ROLES,
+    }),
+  );
 
   selectedEmployeeIds = signal<string[]>([]);
   excludedEmployeeIds = signal<string[]>([]);
@@ -84,12 +93,14 @@ export class ViewSpecialShiftDetailsComponent {
   });
 
   staffResource = rxResource({
-    stream: () => this.staffService.getStaff({ skipCount: 0, maxResultCount: 1000, filter: '' }).pipe(
-      map(response =>
-        response.items.filter((staff): staff is IStaffApiItem & { id: string } => Boolean(staff.id)),
-      ),
-      catchError(() => of([])),
-    ),
+    stream: () => this.canShowEmployeeDetails()
+      ? this.staffService.getStaff({ skipCount: 0, maxResultCount: 1000, filter: '' }).pipe(
+        map(response =>
+          response.items.filter((staff): staff is IStaffApiItem & { id: string } => Boolean(staff.id)),
+        ),
+        catchError(() => of([])),
+      )
+      : of([]),
   });
 
   departmentOptions = this.departmentsService.lookupList;

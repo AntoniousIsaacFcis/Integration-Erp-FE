@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '@env/environment.development';
 import { concatMap, map, Observable } from 'rxjs';
-import { IEmployeeForm, IEmployeeResponse } from '../models/iemployee';
+import { IEmployeeForm, IEmployeeResponse, IEmployeeSaveResult } from '../models/iemployee';
 import { ICreateStaffPayload, IStaffApiItem, IStaffApiResponse } from '../models/istaff';
 import { EmployeeDocumentService } from './employee-document-service';
 
@@ -14,7 +14,7 @@ export class EmployeeService {
   private readonly employeeDocumentService = inject(EmployeeDocumentService);
   private readonly API_URL = `${environment.baseUrl}/api/core-hR/staff`;
 
-  createEmployee(employeeData: IEmployeeForm): Observable<IEmployeeForm> {
+  createEmployee(employeeData: IEmployeeForm): Observable<IEmployeeSaveResult> {
     const payload = this.toCreateStaffPayload(employeeData);
 
     return this.http.post<IStaffApiItem>(this.API_URL, payload).pipe(
@@ -30,6 +30,7 @@ export class EmployeeService {
           .pipe(
             map((documents) => ({
               ...this.mapStaffToEmployee(staff),
+              temporaryPassword: staff.temporaryPassword ?? null,
               documents,
               documentTypeId: employeeData.documentTypeId,
               documentTypeName: employeeData.documentTypeName,
@@ -40,7 +41,7 @@ export class EmployeeService {
     );
   }
 
-  updateEmployee(id: string, employeeData: IEmployeeForm): Observable<IEmployeeForm> {
+  updateEmployee(id: string, employeeData: IEmployeeForm): Observable<IEmployeeSaveResult> {
     const payload = this.toCreateStaffPayload(employeeData);
 
     return this.http.put<IStaffApiItem>(`${this.API_URL}/${id}`, payload).pipe(
@@ -56,6 +57,7 @@ export class EmployeeService {
           .pipe(
             map((documents) => ({
               ...this.mapStaffToEmployee(staff),
+              temporaryPassword: staff.temporaryPassword ?? null,
               documents,
               documentTypeId: employeeData.documentTypeId,
               documentTypeName: employeeData.documentTypeName,

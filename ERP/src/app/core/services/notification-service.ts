@@ -36,7 +36,7 @@ export class NotificationService {
     this.notifications.set([]);
   }
 
-  private getSignature(notification: Pick<INotification, 'type' | 'title' | 'message' | 'isModal' | 'actionLabel' | 'cancelLabel'>) {
+  private getSignature(notification: Pick<INotification, 'type' | 'title' | 'message' | 'isModal' | 'actionLabel' | 'cancelLabel' | 'email' | 'temporaryPassword'>) {
     return [
       notification.type,
       notification.title,
@@ -44,6 +44,8 @@ export class NotificationService {
       notification.isModal ? '1' : '0',
       notification.actionLabel,
       notification.cancelLabel ?? '',
+      notification.email ?? '',
+      notification.temporaryPassword ?? '',
     ].join('|');
   }
 }

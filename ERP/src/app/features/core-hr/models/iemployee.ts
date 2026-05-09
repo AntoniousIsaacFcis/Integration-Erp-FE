@@ -24,6 +24,10 @@ export interface IEmployeeForm extends IPersonalInfo, IJobDetails, ISalary {
   customData?: string | null;
 }
 
+export interface IEmployeeSaveResult extends IEmployeeForm {
+  temporaryPassword?: string | null;
+}
+
 export interface IEmployeeResponse {
   data: IEmployeeForm[];
   total: number;

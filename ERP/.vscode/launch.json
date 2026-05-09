@@ -1,0 +1,13 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Angular: Open localhost in Chrome",
+      "type": "pwa-chrome",
+      "request": "launch",
+      "url": "https://localhost:4200",
+      "webRoot": "${workspaceFolder}",
+      "userDataDir": "${workspaceFolder}/.vscode/chrome-profile"
+    }
+  ]
+}
