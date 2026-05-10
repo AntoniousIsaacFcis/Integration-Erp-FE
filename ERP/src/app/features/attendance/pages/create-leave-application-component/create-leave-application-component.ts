@@ -46,9 +46,14 @@ export class CreateLeaveApplicationComponent {
   submitted = signal(false);
   isSaving = signal(false);
   selectedEmployee = signal<IAttendanceEmployeeLookupItem | null>(null);
+  readonly leaveTypeOptions = [
+    { value: '1', label: 'EMPLOYEES.VACATIONS.TYPE_FULL_DAY' },
+    { value: '2', label: 'EMPLOYEES.VACATIONS.TYPE_HALF_DAY' },
+  ];
 
   readonly leaveForm = this.fb.nonNullable.group({
     employeeId: ['', [Validators.required]],
+    type: ['1', [Validators.required]],
     leaveTypeId: ['', [Validators.required]],
     fromDate: ['', [Validators.required]],
     toDate: ['', [Validators.required]],
@@ -70,6 +75,12 @@ export class CreateLeaveApplicationComponent {
     this.leaveForm.controls.toDate.valueChanges.pipe(startWith(this.leaveForm.controls.toDate.value)),
   );
 
+  private readonly typeValue = toSignal(
+    this.leaveForm.controls.type.valueChanges.pipe(startWith(this.leaveForm.controls.type.value)),
+  );
+
+  readonly isHalfLeave = signal(false);
+
   constructor() {
     effect(() => {
       const employee = this.selectedEmployee();
@@ -77,10 +88,28 @@ export class CreateLeaveApplicationComponent {
     });
 
     effect(() => {
-      const calculatedDays = this.calculateDays(this.fromDateValue(), this.toDateValue());
-      if (calculatedDays > 0 && !this.leaveForm.controls.days.dirty) {
+      const isHalfLeave = this.typeValue() === '2';
+      this.isHalfLeave.set(isHalfLeave);
+
+      if (isHalfLeave) {
+        this.leaveForm.controls.toDate.clearValidators();
+        const singleDate = this.fromDateValue() ?? '';
+        if (this.leaveForm.controls.toDate.value !== singleDate) {
+          this.leaveForm.controls.toDate.setValue(singleDate, { emitEvent: false });
+        }
+      } else {
+        this.leaveForm.controls.toDate.setValidators([Validators.required]);
+      }
+
+      this.leaveForm.controls.toDate.updateValueAndValidity({ emitEvent: false });
+    });
+
+    effect(() => {
+      const calculatedDays = this.calculateDays(this.fromDateValue(), this.toDateValue(), this.typeValue());
+      if (calculatedDays > 0) {
         this.leaveForm.controls.days.setValue(calculatedDays, { emitEvent: false });
       }
+      this.leaveForm.controls.days.disable({ emitEvent: false });
     });
   }
 
@@ -141,26 +170,27 @@ export class CreateLeaveApplicationComponent {
 
   private toPayload(): ILeaveApplicationUpdatePayload {
     const value = this.leaveForm.getRawValue();
-    const days = Number(value.days || this.calculateDays(value.fromDate, value.toDate) || 1);
+    const isHalfLeave = value.type === '2';
 
     return {
       staffId: value.employeeId,
       leaveTypeId: value.leaveTypeId || null,
-      days,
-      dateFrom: `${value.fromDate}T00:00:00`,
-      dateTo: `${value.toDate}T00:00:00`,
-      applicationDate: `${this.today}T00:00:00`,
-      type: days < 1 ? 2 : 1,
+      date: isHalfLeave ? value.fromDate : null,
+      dateFrom: isHalfLeave ? null : value.fromDate,
+      dateTo: isHalfLeave ? null : value.toDate,
+      applicationDate: this.today,
+      type: Number(value.type),
       description: value.description?.trim() || null,
       attachments: null,
-      durationMinutes: null,
-      lateTime: null,
-      earlyTime: null,
       status: 1,
     };
   }
 
-  private calculateDays(fromDate?: string, toDate?: string) {
+  private calculateDays(fromDate?: string, toDate?: string, type?: string) {
+    if (type === '2') {
+      return 0.5;
+    }
+
     if (!fromDate || !toDate) {
       return 1;
     }

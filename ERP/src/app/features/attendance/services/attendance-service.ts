@@ -610,8 +610,8 @@ export class AttendanceService {
         }),
         ...(requestType && { Type: requestType }),
         ...(requestStatus && { Status: requestStatus }),
-        ...(params.fromDate && { FromDate: params.fromDate }),
-        ...(params.toDate && { ToDate: params.toDate }),
+        ...(params.fromDate && { DateFrom: params.fromDate }),
+        ...(params.toDate && { DateTo: params.toDate }),
       },
     }).pipe(
       map(response => ({
@@ -828,20 +828,19 @@ export class AttendanceService {
   }
 
   private toVacation(item: ILeaveApplicationApiDto) {
-    const isDurationBasedType = item.type === 3 || item.type === 4;
-    const isSameDayRequest = item.type === 2 || isDurationBasedType;
+    const isHalfLeave = item.type === 2;
     const leaveTypeName = this.toLeaveTypeDisplayName(item.leaveTypeName);
+    const startDate = item.date ?? item.dateFrom ?? '';
+    const endDate = isHalfLeave ? null : this.toReturnDate(item.dateTo ?? item.dateFrom ?? startDate);
 
     return {
       id: item.id,
       empId: item.staffId,
-      typeLabel: isDurationBasedType
-        ? this.toLeaveTypeLabelKey(item.type)
-        : leaveTypeName || this.toLeaveTypeLabelKey(item.type),
-      typeLabelIsTranslationKey: isDurationBasedType || !leaveTypeName,
+      typeLabel: leaveTypeName || this.toLeaveTypeLabelKey(item.type),
+      typeLabelIsTranslationKey: !leaveTypeName,
       applicationDate: item.applicationDate ?? item.creationDate ?? item.creationTime ?? '',
-      startDate: item.dateFrom,
-      endDate: isSameDayRequest ? null : this.toReturnDate(item.dateTo),
+      startDate,
+      endDate,
       status: this.toVacationStatus(item.status),
       reason: item.description?.trim() || '-',
     };
@@ -851,8 +850,6 @@ export class AttendanceService {
     const labels: Record<number, string> = {
       1: 'EMPLOYEES.VACATIONS.TYPE_FULL_DAY',
       2: 'EMPLOYEES.VACATIONS.TYPE_HALF_DAY',
-      3: 'EMPLOYEES.VACATIONS.TYPE_LATE_ARRIVAL',
-      4: 'EMPLOYEES.VACATIONS.TYPE_EARLY_LEAVE',
     };
 
     return labels[type] ?? 'EMPLOYEES.VACATIONS.TYPE_FULL_DAY';
@@ -936,16 +933,23 @@ export class AttendanceService {
     item: ILeaveApplicationApiDto,
     staffLookup: Map<string, string>,
   ): ILeaveApplicationListItem {
+    const startDate = item.date ?? item.dateFrom ?? '';
+    const endDate = item.type === 2
+      ? startDate
+      : item.dateTo ?? item.dateFrom ?? startDate;
+
     return {
       id: item.id,
       employeeId: item.staffId,
       employeeName: staffLookup.get(item.staffId) ?? item.staffId,
-      dateFrom: item.dateFrom,
-      dateTo: item.dateTo,
+      dateFrom: startDate,
+      dateTo: endDate,
       type: item.type,
       leaveTypeName: item.leaveTypeName ?? null,
       typeLabelKey: this.getLeaveApplicationTypeLabelKey(item.type),
-      dateRange: `${this.formatDisplayDate(item.dateFrom)} - ${this.formatDisplayDate(item.dateTo)}`,
+      dateRange: item.type === 2
+        ? this.formatDisplayDate(startDate)
+        : `${this.formatDisplayDate(startDate)} - ${this.formatDisplayDate(endDate)}`,
       status: item.status,
     };
   }
@@ -1121,11 +1125,11 @@ export class AttendanceService {
 
   private getLeaveApplicationTypeLabelKey(type: number) {
     const labels: Record<number, string> = {
-      1: 'Enum:AttendancePermissionType.LateArrival',
-      2: 'Enum:AttendancePermissionType.EarlyLeave',
+      1: 'Enum:LeaveApplicationType.Leave',
+      2: 'Enum:LeaveApplicationType.HalfLeave',
     };
 
-    return labels[type] ?? 'Enum:AttendancePermissionType.LateArrival';
+    return labels[type] ?? 'Enum:LeaveApplicationType.Leave';
   }
 
   private getAttendancePermissionTypeLabelKey(type: number) {

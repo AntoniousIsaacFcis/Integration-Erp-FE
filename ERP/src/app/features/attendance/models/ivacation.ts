@@ -34,9 +34,10 @@ export interface ILeaveApplicationApiDto {
   staffId: string;
   leaveTypeId?: string | null;
   leaveTypeName?: string | null;
-  days: number;
-  dateFrom: string;
-  dateTo: string;
+  daysCount: number;
+  date?: string | null;
+  dateFrom?: string | null;
+  dateTo?: string | null;
   applicationDate?: string | null;
   creationTime?: string | null;
   creationDate?: string | null;
@@ -44,9 +45,6 @@ export interface ILeaveApplicationApiDto {
   shiftName?: string | null;
   shiftStartTime?: string | null;
   shiftEndTime?: string | null;
-  durationMinutes?: number | null;
-  lateTime?: string | null;
-  earlyTime?: string | null;
   description?: string | null;
   attachments?: string | null;
   status: number;
@@ -55,14 +53,11 @@ export interface ILeaveApplicationApiDto {
 export interface ILeaveApplicationUpdatePayload {
   staffId: string;
   leaveTypeId: string | null;
-  days: number;
-  dateFrom: string;
-  dateTo: string;
+  date: string | null;
+  dateFrom: string | null;
+  dateTo: string | null;
   applicationDate: string | null;
   type: number;
-  durationMinutes: number | null;
-  lateTime: string | null;
-  earlyTime: string | null;
   description: string | null;
   attachments: string | null;
   status: number;

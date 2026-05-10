@@ -133,12 +133,12 @@ export class CreateAttendancePermissionComponent {
 
     return {
       employeeId: value.employeeId,
-      date: `${value.date}T00:00:00`,
+      date: value.date,
       durationMinutes: Number(value.durationMinutes || 0),
       note: value.note?.trim() || null,
       type: this.toTypeNumber(type),
-      applicationDate: `${value.date}T00:00:00`,
-      status: 2,
+      applicationDate: value.date,
+      status: 1,
     };
   }
 

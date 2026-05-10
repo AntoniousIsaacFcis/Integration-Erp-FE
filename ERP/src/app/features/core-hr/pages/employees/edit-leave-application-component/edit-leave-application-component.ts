@@ -9,25 +9,23 @@ import { AppDateInputComponent } from '@shared/components/atoms/app-date-input-c
 import { AppInputComponent } from '@shared/components/atoms/app-input-component/app-input-component';
 import { AppSelectComponent } from '@shared/components/atoms/app-select-component/app-select-component';
 import { AppTextareaComponent } from '@shared/components/atoms/app-textarea-component/app-textarea-component';
-import { TimeInputComponent } from '@shared/components/atoms/time-input-component/time-input-component';
 import { FormCancelButtonComponent } from '@shared/components/molecules/form-cancel-button-component/form-cancel-button-component';
 import { FormSaveButtonComponent } from '@shared/components/molecules/form-save-button-component/form-save-button-component';
 import { FormContainerComponent } from '@shared/components/organisms/form-container-component/form-container-component';
 import { AppValidators } from '@shared/validators/word-limit.validator';
 import { forkJoin, Observable, of, startWith, switchMap } from 'rxjs';
 
-type LeaveApplicationType = 1 | 2 | 3 | 4;
+type LeaveApplicationType = 1 | 2;
 type LeaveApplicationStatus = 1 | 2 | 3 | 4;
 
 const LeaveApplicationTypes = {
   Leave: 1,
   HalfLeave: 2,
-  LateArrival: 3,
-  EarlyLeave: 4,
 } as const;
 
 function leaveApplicationDateValidator(): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
+    const type = Number(control.get('type')?.value) as LeaveApplicationType;
     const dateFromControl = control.get('dateFrom');
     const dateToControl = control.get('dateTo');
     const dateFrom = toLocalDate(dateFromControl?.value);
@@ -42,7 +40,7 @@ function leaveApplicationDateValidator(): ValidatorFn {
       setControlError(dateFromControl, 'pastDate');
     }
 
-    if (dateFrom && dateTo && dateTo < dateFrom) {
+    if (type === LeaveApplicationTypes.Leave && dateFrom && dateTo && dateTo < dateFrom) {
       setControlError(dateToControl, 'dateRangeInvalid');
     }
 
@@ -91,7 +89,6 @@ function removeControlError(control: AbstractControl | null | undefined, errorKe
     AppDateInputComponent,
     AppSelectComponent,
     AppTextareaComponent,
-    TimeInputComponent,
     FormCancelButtonComponent,
     FormSaveButtonComponent,
   ],
@@ -112,21 +109,6 @@ export class EditLeaveApplicationComponent {
   readonly isLoading = signal(true);
   readonly isSubmitting = signal(false);
   readonly isFormSubmitted = signal(false);
-  readonly normalAttendanceTime = signal<string | null>(null);
-  readonly durationMinutesLabelKey = computed(() => {
-    if (this.isLateArrivalApplication()) {
-      return 'EMPLOYEES.VACATIONS.LATE_ARRIVAL_MINUTES';
-    }
-
-    if (this.isEarlyLeaveApplication()) {
-      return 'EMPLOYEES.VACATIONS.EARLY_LEAVE_MINUTES';
-    }
-
-    return 'EMPLOYEES.VACATIONS.DURATION_MINUTES';
-  });
-  private readonly shiftContextDate = signal('');
-  private attendanceTimeRequestId = 0;
-  private isApplyingLoadedApplication = false;
   readonly statusWorkflowPolicies = [
     'CoreHR.LeaveApplications.Approve',
     'CoreHR.LeaveApplications.Reject',
@@ -144,11 +126,6 @@ export class EditLeaveApplicationComponent {
     dateFrom: ['', [Validators.required]],
     dateTo: ['', [Validators.required]],
     days: ['1', [Validators.required, Validators.min(0.5)]],
-    durationMinutes: [''],
-    shiftStartTime: [{ value: '', disabled: true }],
-    shiftEndTime: [{ value: '', disabled: true }],
-    lateTime: [''],
-    earlyTime: [''],
     status: ['1', [Validators.required]],
     description: ['', [AppValidators.charLimit(this.descriptionCharacterLimit)]],
   }, { validators: [leaveApplicationDateValidator()] });
@@ -159,24 +136,15 @@ export class EditLeaveApplicationComponent {
   );
 
   private readonly applicationTypeValue = toSignal(
-    this.leaveApplicationForm.controls.type.valueChanges,
+    this.leaveApplicationForm.controls.type.valueChanges.pipe(startWith(this.leaveApplicationForm.controls.type.value)),
     { initialValue: this.leaveApplicationForm.controls.type.value },
   );
 
   readonly selectedApplicationType = computed(
     () => Number(this.applicationTypeValue()) as LeaveApplicationType,
   );
-  readonly isLateArrivalApplication = computed(
-    () => this.selectedApplicationType() === LeaveApplicationTypes.LateArrival,
-  );
   readonly isHalfDayApplication = computed(
     () => this.selectedApplicationType() === LeaveApplicationTypes.HalfLeave,
-  );
-  readonly isEarlyLeaveApplication = computed(
-    () => this.selectedApplicationType() === LeaveApplicationTypes.EarlyLeave,
-  );
-  readonly isDurationBasedApplication = computed(
-    () => this.isDurationBasedType(this.selectedApplicationType()),
   );
   readonly characterCount = computed(() => this.descriptionValue().length);
   readonly isOverLimit = computed(() => this.characterCount() > this.descriptionCharacterLimit);
@@ -218,45 +186,24 @@ export class EditLeaveApplicationComponent {
     this.leaveApplicationForm.controls.type.valueChanges
       .pipe(startWith(this.leaveApplicationForm.controls.type.value), takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
-        if (this.isApplyingLoadedApplication) {
-          return;
-        }
-
         this.configureTypeFields();
-        this.loadNormalAttendanceTime();
+        this.updateCalculatedDays();
       });
 
     this.leaveApplicationForm.controls.dateFrom.valueChanges
       .pipe(startWith(this.leaveApplicationForm.controls.dateFrom.value), takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
-        if (this.isApplyingLoadedApplication) {
-          return;
-        }
-
-        this.syncSingleDayDateTo();
+        this.syncHalfLeaveDateRange();
         this.leaveApplicationForm.updateValueAndValidity({ emitEvent: false });
         this.updateCalculatedDays();
-        this.loadNormalAttendanceTime();
       });
 
     this.leaveApplicationForm.controls.dateTo.valueChanges
       .pipe(startWith(this.leaveApplicationForm.controls.dateTo.value), takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
-        if (this.isApplyingLoadedApplication) {
-          return;
-        }
-
         this.leaveApplicationForm.updateValueAndValidity({ emitEvent: false });
         this.updateCalculatedDays();
       });
-
-    this.leaveApplicationForm.controls.lateTime.valueChanges
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => this.updateDurationMinutes());
-
-    this.leaveApplicationForm.controls.earlyTime.valueChanges
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => this.updateDurationMinutes());
 
     forkJoin({
       leaveTypes: this.attendanceService.getLeaveTypes(),
@@ -272,29 +219,22 @@ export class EditLeaveApplicationComponent {
             })),
           );
 
+          const isHalfLeave = Number(leaveApplication.type || LeaveApplicationTypes.Leave) === LeaveApplicationTypes.HalfLeave;
+          const primaryDate = this.toDateInputValue(leaveApplication.date ?? leaveApplication.dateFrom);
+
           this.originalStatus.set(String(leaveApplication.status || 1));
           this.attachments = leaveApplication.attachments ?? null;
-          const dateFrom = this.toDateInputValue(leaveApplication.dateFrom);
-          this.shiftContextDate.set(dateFrom);
-          this.isApplyingLoadedApplication = true;
           this.leaveApplicationForm.patchValue({
             leaveTypeId: leaveApplication.leaveTypeId ?? '',
             type: String(leaveApplication.type || LeaveApplicationTypes.Leave),
-            dateFrom,
-            dateTo: this.toDateInputValue(leaveApplication.dateTo),
-            days: String(leaveApplication.days || 1),
-            durationMinutes: leaveApplication.durationMinutes?.toString() ?? '',
-            shiftStartTime: this.toTimeInputValue(leaveApplication.shiftStartTime),
-            shiftEndTime: this.toTimeInputValue(leaveApplication.shiftEndTime),
-            lateTime: this.toTimeInputValue(leaveApplication.lateTime),
-            earlyTime: this.toTimeInputValue(leaveApplication.earlyTime),
+            dateFrom: primaryDate,
+            dateTo: isHalfLeave ? primaryDate : this.toDateInputValue(leaveApplication.dateTo),
+            days: String(leaveApplication.daysCount || 1),
             status: this.originalStatus(),
             description: leaveApplication.description ?? '',
           });
-          this.isApplyingLoadedApplication = false;
           this.configureTypeFields();
           this.updateCalculatedDays();
-          this.loadNormalAttendanceTime();
           this.isLoading.set(false);
         },
         error: (error) => {
@@ -313,7 +253,6 @@ export class EditLeaveApplicationComponent {
     this.isFormSubmitted.set(true);
     this.normalizeStringFields();
     this.configureTypeFields();
-    this.updateDurationMinutes();
     this.leaveApplicationForm.updateValueAndValidity();
 
     if (this.leaveApplicationForm.invalid) {
@@ -323,30 +262,17 @@ export class EditLeaveApplicationComponent {
 
     const formValue = this.leaveApplicationForm.getRawValue();
     const applicationType = Number(formValue.type) as LeaveApplicationType;
-    const isDurationBased = this.isDurationBasedType(applicationType);
-
-    if (isDurationBased && Number(formValue.durationMinutes) <= 0) {
-      const timeControl = applicationType === LeaveApplicationTypes.LateArrival
-        ? this.leaveApplicationForm.controls.lateTime
-        : this.leaveApplicationForm.controls.earlyTime;
-      setControlError(timeControl, 'timeRangeInvalid');
-      timeControl.markAsTouched();
-      return;
-    }
 
     this.isSubmitting.set(true);
 
     this.attendanceService.updateLeaveApplication(this.leaveId, {
       staffId: this.empId,
-      leaveTypeId: isDurationBased ? null : formValue.leaveTypeId || null,
-      days: isDurationBased ? 0 : Number(formValue.days),
-      dateFrom: formValue.dateFrom,
-      dateTo: applicationType === LeaveApplicationTypes.HalfLeave || isDurationBased ? formValue.dateFrom : formValue.dateTo,
+      leaveTypeId: formValue.leaveTypeId || null,
+      date: applicationType === LeaveApplicationTypes.HalfLeave ? formValue.dateFrom : null,
+      dateFrom: applicationType === LeaveApplicationTypes.Leave ? formValue.dateFrom : null,
+      dateTo: applicationType === LeaveApplicationTypes.Leave ? formValue.dateTo : null,
       applicationDate: null,
       type: applicationType,
-      durationMinutes: isDurationBased ? Number(formValue.durationMinutes) : null,
-      lateTime: applicationType === LeaveApplicationTypes.LateArrival ? formValue.lateTime || null : null,
-      earlyTime: applicationType === LeaveApplicationTypes.EarlyLeave ? formValue.earlyTime || null : null,
       description: formValue.description || null,
       attachments: this.attachments,
       status: Number(this.originalStatus()),
@@ -372,210 +298,37 @@ export class EditLeaveApplicationComponent {
   }
 
   private configureTypeFields() {
-    const type = Number(this.leaveApplicationForm.controls.type.value) as LeaveApplicationType;
-    const isDurationBased = this.isDurationBasedType(type);
-    const isSingleDayWithoutReturnDate = type === LeaveApplicationTypes.HalfLeave || isDurationBased;
     const controls = this.leaveApplicationForm.controls;
 
-    if (isDurationBased) {
-      controls.leaveTypeId.clearValidators();
-      controls.days.clearValidators();
-      controls.durationMinutes.setValidators([Validators.required, Validators.min(1)]);
-      controls.durationMinutes.disable({ emitEvent: false });
-    } else {
-      controls.leaveTypeId.setValidators([Validators.required]);
-      controls.days.setValidators([Validators.required, Validators.min(0.5)]);
-      controls.durationMinutes.clearValidators();
-      controls.durationMinutes.enable({ emitEvent: false });
-    }
-
-    if (isSingleDayWithoutReturnDate) {
+    if (this.isHalfDayApplication()) {
       controls.dateTo.clearValidators();
-      this.syncSingleDayDateTo();
+      this.syncHalfLeaveDateRange();
     } else {
       controls.dateTo.setValidators([Validators.required]);
     }
 
-    if (type === LeaveApplicationTypes.LateArrival) {
-      controls.lateTime.setValidators([Validators.required]);
-    } else {
-      controls.lateTime.clearValidators();
-    }
-
-    if (type === LeaveApplicationTypes.EarlyLeave) {
-      controls.earlyTime.setValidators([Validators.required]);
-    } else {
-      controls.earlyTime.clearValidators();
-    }
-
-    controls.leaveTypeId.updateValueAndValidity({ emitEvent: false });
-    controls.days.updateValueAndValidity({ emitEvent: false });
     controls.dateTo.updateValueAndValidity({ emitEvent: false });
-    controls.durationMinutes.updateValueAndValidity({ emitEvent: false });
-    controls.lateTime.updateValueAndValidity({ emitEvent: false });
-    controls.earlyTime.updateValueAndValidity({ emitEvent: false });
-    this.updateDurationMinutes();
     this.updateCalculatedDays();
   }
 
   private normalizeStringFields() {
     const descriptionControl = this.leaveApplicationForm.controls.description;
-    const durationMinutesControl = this.leaveApplicationForm.controls.durationMinutes;
     const trimmedDescription = descriptionControl.value.trim();
-    const trimmedDurationMinutes = durationMinutesControl.value.trim();
 
     if (descriptionControl.value !== trimmedDescription) {
       descriptionControl.setValue(trimmedDescription);
     }
-
-    if (durationMinutesControl.value !== trimmedDurationMinutes) {
-      durationMinutesControl.setValue(trimmedDurationMinutes);
-    }
   }
 
-  private syncSingleDayDateTo() {
+  private syncHalfLeaveDateRange() {
     const controls = this.leaveApplicationForm.controls;
-    const type = Number(controls.type.value) as LeaveApplicationType;
 
-    if (type !== LeaveApplicationTypes.HalfLeave && !this.isDurationBasedType(type)) {
+    if (!this.isHalfDayApplication()) {
       return;
     }
 
-    const dateFrom = controls.dateFrom.value;
-
-    if (dateFrom && controls.dateTo.value !== dateFrom) {
-      controls.dateTo.setValue(dateFrom, { emitEvent: false });
-    }
-  }
-
-  private loadNormalAttendanceTime() {
-    const requestId = ++this.attendanceTimeRequestId;
-    const type = Number(this.leaveApplicationForm.controls.type.value) as LeaveApplicationType;
-    const dateFrom = this.leaveApplicationForm.controls.dateFrom.value;
-
-    if (!this.isDurationBasedType(type) || !dateFrom) {
-      this.normalAttendanceTime.set(null);
-      return;
-    }
-
-    const shiftTime = type === LeaveApplicationTypes.LateArrival
-      ? this.leaveApplicationForm.controls.shiftStartTime.value
-      : this.leaveApplicationForm.controls.shiftEndTime.value;
-
-    if (shiftTime && this.shiftContextDate() === dateFrom) {
-      this.normalAttendanceTime.set(shiftTime);
-      this.defaultDurationTimeFromShift();
-      this.updateDurationMinutes();
-      return;
-    }
-
-    this.attendanceService.getAttendanceDayForDate(this.empId, dateFrom)
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: attendanceDay => {
-          if (!this.isCurrentAttendanceTimeRequest(requestId, type, dateFrom)) {
-            return;
-          }
-
-          const shiftStartTime = this.toTimeInputValue(attendanceDay?.onDutyTime);
-          const shiftEndTime = this.toTimeInputValue(attendanceDay?.offDutyTime);
-          const normalTime = type === LeaveApplicationTypes.LateArrival ? shiftStartTime : shiftEndTime;
-          const hasAttendanceShiftTimes = Boolean(shiftStartTime || shiftEndTime);
-
-          if (hasAttendanceShiftTimes) {
-            this.leaveApplicationForm.controls.shiftStartTime.setValue(shiftStartTime, { emitEvent: false });
-            this.leaveApplicationForm.controls.shiftEndTime.setValue(shiftEndTime, { emitEvent: false });
-            this.shiftContextDate.set(dateFrom);
-            this.normalAttendanceTime.set(normalTime || null);
-          } else {
-            const currentShiftTime = type === LeaveApplicationTypes.LateArrival
-              ? this.leaveApplicationForm.controls.shiftStartTime.value
-              : this.leaveApplicationForm.controls.shiftEndTime.value;
-
-            this.normalAttendanceTime.set(currentShiftTime || null);
-          }
-
-          this.defaultDurationTimeFromShift();
-          this.updateDurationMinutes();
-        },
-        error: () => {
-          if (!this.isCurrentAttendanceTimeRequest(requestId, type, dateFrom)) {
-            return;
-          }
-
-          this.normalAttendanceTime.set(null);
-          this.leaveApplicationForm.controls.shiftStartTime.setValue('', { emitEvent: false });
-          this.leaveApplicationForm.controls.shiftEndTime.setValue('', { emitEvent: false });
-          this.shiftContextDate.set('');
-          this.updateDurationMinutes();
-        },
-      });
-  }
-
-  private defaultDurationTimeFromShift() {
-    const controls = this.leaveApplicationForm.controls;
-    const type = Number(controls.type.value) as LeaveApplicationType;
-    const normalTime = type === LeaveApplicationTypes.LateArrival
-      ? controls.shiftStartTime.value
-      : controls.shiftEndTime.value;
-
-    if (!normalTime) {
-      return;
-    }
-
-    if (type === LeaveApplicationTypes.LateArrival && !controls.lateTime.value) {
-      controls.lateTime.setValue(normalTime, { emitEvent: false });
-    }
-
-    if (type === LeaveApplicationTypes.EarlyLeave && !controls.earlyTime.value) {
-      controls.earlyTime.setValue(normalTime, { emitEvent: false });
-    }
-  }
-
-  private updateDurationMinutes() {
-    const controls = this.leaveApplicationForm.controls;
-    const type = Number(controls.type.value) as LeaveApplicationType;
-    const timeControl = type === LeaveApplicationTypes.LateArrival
-      ? controls.lateTime
-      : controls.earlyTime;
-
-    removeControlError(timeControl, 'timeRangeInvalid');
-
-    if (!this.isDurationBasedType(type)) {
-      if (controls.durationMinutes.value) {
-        controls.durationMinutes.setValue('', { emitEvent: false });
-      }
-      return;
-    }
-
-    const normalTime = type === LeaveApplicationTypes.LateArrival
-      ? controls.shiftStartTime.value
-      : controls.shiftEndTime.value;
-    const normalMinutes = this.toMinutes(normalTime);
-    const selectedMinutes = this.toMinutes(
-      type === LeaveApplicationTypes.LateArrival
-        ? controls.lateTime.value
-        : controls.earlyTime.value,
-    );
-
-    if (normalMinutes === null || selectedMinutes === null) {
-      if (controls.durationMinutes.value) {
-        controls.durationMinutes.setValue('', { emitEvent: false });
-      }
-      return;
-    }
-
-    const duration = type === LeaveApplicationTypes.LateArrival
-      ? selectedMinutes - normalMinutes
-      : normalMinutes - selectedMinutes;
-    const nextValue = String(Math.max(0, duration));
-
-    if (controls.durationMinutes.value !== nextValue) {
-      controls.durationMinutes.setValue(nextValue, { emitEvent: false });
-    }
-
-    if (duration <= 0) {
-      setControlError(timeControl, 'timeRangeInvalid');
+    if (controls.dateFrom.value && controls.dateTo.value !== controls.dateFrom.value) {
+      controls.dateTo.setValue(controls.dateFrom.value, { emitEvent: false });
     }
   }
 
@@ -620,18 +373,9 @@ export class EditLeaveApplicationComponent {
 
   private updateCalculatedDays() {
     const controls = this.leaveApplicationForm.controls;
-
-    if (this.isDurationBasedType(Number(controls.type.value) as LeaveApplicationType)) {
-      controls.days.disable({ emitEvent: false });
-      if (controls.days.value !== '0') {
-        controls.days.setValue('0', { emitEvent: false });
-      }
-      return;
-    }
+    const calculatedDays = this.calculateDays(controls.dateFrom.value, controls.dateTo.value);
 
     controls.days.disable({ emitEvent: false });
-
-    const calculatedDays = this.calculateDays(controls.dateFrom.value, controls.dateTo.value);
 
     if (calculatedDays === null) {
       return;
@@ -645,9 +389,7 @@ export class EditLeaveApplicationComponent {
   }
 
   private calculateDays(dateFrom: string, dateTo: string) {
-    const type = Number(this.leaveApplicationForm.controls.type.value) as LeaveApplicationType;
-
-    if (type === LeaveApplicationTypes.HalfLeave) {
+    if (this.isHalfDayApplication()) {
       return 0.5;
     }
 
@@ -669,95 +411,13 @@ export class EditLeaveApplicationComponent {
       .trim();
   }
 
-  private isDurationBasedType(type: LeaveApplicationType) {
-    return type === LeaveApplicationTypes.LateArrival || type === LeaveApplicationTypes.EarlyLeave;
-  }
-
   private navigateBack() {
     this.router.navigate(['/core-hr/employees/details', this.empId], {
       queryParams: { tab: 'vacations' },
     });
   }
 
-  private toDateInputValue(value: string) {
+  private toDateInputValue(value?: string | null) {
     return value?.slice(0, 10) ?? '';
   }
-
-  private toTimeInputValue(value?: string | null) {
-    if (!value) {
-      return '';
-    }
-
-    const normalizedValue = value.trim();
-    const timeOnlyMatch = normalizedValue.match(/^(\d{1,2}):(\d{2})/);
-    const dateTimeMatch = normalizedValue.match(/[T\s](\d{1,2}):(\d{2})/);
-    const match = timeOnlyMatch ?? dateTimeMatch;
-
-    if (!match) {
-      return '';
-    }
-
-    const hours = Number(match[1]);
-    const minutes = Number(match[2]);
-
-    if (!this.isValidClockTime(hours, minutes)) {
-      return '';
-    }
-
-    return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
-  }
-
-  private isCurrentAttendanceTimeRequest(requestId: number, type: LeaveApplicationType, dateFrom: string) {
-    return requestId === this.attendanceTimeRequestId
-      && Number(this.leaveApplicationForm.controls.type.value) === type
-      && this.leaveApplicationForm.controls.dateFrom.value === dateFrom;
-  }
-
-  private toMinutes(value?: string | null) {
-    if (!value) {
-      return null;
-    }
-
-    const normalizedValue = value
-      .trim()
-      .replace('صباحاً', 'AM')
-      .replace('صباحا', 'AM')
-      .replace('مساءً', 'PM')
-      .replace('مساء', 'PM');
-    const meridiemMatch = normalizedValue.match(/\b(AM|PM)\b/i);
-    const timeMatch = normalizedValue.match(/(\d{1,2}):(\d{2})/);
-
-    if (!timeMatch) {
-      return null;
-    }
-
-    let hours = Number(timeMatch[1]);
-    const minutes = Number(timeMatch[2]);
-
-    if (meridiemMatch) {
-      const meridiem = meridiemMatch[1].toUpperCase();
-
-      if (meridiem === 'PM' && hours < 12) {
-        hours += 12;
-      }
-
-      if (meridiem === 'AM' && hours === 12) {
-        hours = 0;
-      }
-    }
-
-    if (!this.isValidClockTime(hours, minutes)) {
-      return null;
-    }
-
-    return hours * 60 + minutes;
-  }
-
-  private isValidClockTime(hours: number, minutes: number) {
-    return Number.isInteger(hours)
-      && Number.isInteger(minutes)
-      && hours >= 0
-      && hours <= 23
-      && minutes >= 0
-      && minutes <= 59;
-  }}
+}

@@ -13,11 +13,8 @@
         [placeholder]="'EMPLOYEES.VACATIONS.SELECT_APPLICATION_TYPE'">
         <option value="1">{{ t('EMPLOYEES.VACATIONS.TYPE_FULL_DAY') }}</option>
         <option value="2">{{ t('EMPLOYEES.VACATIONS.TYPE_HALF_DAY') }}</option>
-        <option value="3">{{ t('EMPLOYEES.VACATIONS.TYPE_LATE_ARRIVAL') }}</option>
-        <option value="4">{{ t('EMPLOYEES.VACATIONS.TYPE_EARLY_LEAVE') }}</option>
       </app-app-select-component>
 
-      @if (!isDurationBasedApplication()) {
       <app-app-select-component [label]="'EMPLOYEES.VACATIONS.VACATION_TYPE'" [requiredErrorKey]="'AUTH.REQUIRED_FIELD'"
         [control]="leaveApplicationForm.controls.leaveTypeId" [showErrors]="isFormSubmitted()"
         [placeholder]="'EMPLOYEES.VACATIONS.SELECT_VACATION_TYPE'">
@@ -25,46 +22,20 @@
         <option [value]="leaveType.id">{{ leaveType.displayName }}</option>
         }
       </app-app-select-component>
-      }
 
-      <app-app-date-input-component [label]="'EMPLOYEES.VACATIONS.VACATION_START_Date'"
+      <app-app-date-input-component
+        [label]="isHalfDayApplication() ? 'COMMON.DATE' : 'EMPLOYEES.VACATIONS.VACATION_START_Date'"
         [control]="leaveApplicationForm.controls.dateFrom" [showErrors]="isFormSubmitted()"
         [pastDateErrorKey]="'ERRORS.DATE_CANNOT_BE_IN_PAST'" />
 
-      @if (!isHalfDayApplication() && !isDurationBasedApplication()) {
+      @if (!isHalfDayApplication()) {
       <app-app-date-input-component [label]="'EMPLOYEES.VACATIONS.VACATION_END_DATE'"
         [control]="leaveApplicationForm.controls.dateTo" [showErrors]="isFormSubmitted()"
         [dateRangeErrorKey]="'ERRORS.END_DATE_MUST_BE_ON_OR_AFTER_START_DATE'" />
       }
 
-      @if (!isDurationBasedApplication()) {
       <app-app-input-component [label]="'EMPLOYEES.VACATIONS.DAYS'" [placeholder]="'EMPLOYEES.VACATIONS.DAYS'"
         [control]="leaveApplicationForm.controls.days" [showErrors]="isFormSubmitted()" type="number" />
-      } @else {
-      @if (isLateArrivalApplication()) {
-      <app-app-input-component [label]="'SHIFT.WORK_START'" [placeholder]="'SHIFT.WORK_START'"
-        [control]="leaveApplicationForm.controls.shiftStartTime" type="time" />
-      }
-
-      @if (isEarlyLeaveApplication()) {
-      <app-app-input-component [label]="'SHIFT.WORK_END'" [placeholder]="'SHIFT.WORK_END'"
-        [control]="leaveApplicationForm.controls.shiftEndTime" type="time" />
-      }
-
-      <app-app-input-component [label]="durationMinutesLabelKey()"
-        [placeholder]="durationMinutesLabelKey()" [control]="leaveApplicationForm.controls.durationMinutes"
-        [showErrors]="isFormSubmitted()" type="number" />
-      }
-
-      @if (isLateArrivalApplication()) {
-      <app-time-input-component [label]="'EMPLOYEES.VACATIONS.LATE_TIME'"
-        [control]="leaveApplicationForm.controls.lateTime" [showErrors]="isFormSubmitted()" />
-      }
-
-      @if (isEarlyLeaveApplication()) {
-      <app-time-input-component [label]="'EMPLOYEES.VACATIONS.EARLY_TIME'"
-        [control]="leaveApplicationForm.controls.earlyTime" [showErrors]="isFormSubmitted()" />
-      }
 
       @if (canManageStatus()) {
       <app-app-select-component [label]="'EMPLOYEES.VACATIONS.VACATIN_STATUS'"

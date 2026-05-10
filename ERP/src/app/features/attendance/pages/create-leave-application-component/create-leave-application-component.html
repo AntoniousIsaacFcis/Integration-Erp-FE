@@ -7,6 +7,14 @@
           [label]="'ATTENDANCE.EMPLOYEE_NAME'"
           [placeholder]="'ATTENDANCE.EMPLOYEE_SEARCH_PLACEHOLDER'" />
 
+        <app-app-select-component [label]="t('EMPLOYEES.VACATIONS.APPLICATION_TYPE') + ' *'"
+          [control]="getControl('type')" [showErrors]="submitted()"
+          [placeholder]="'EMPLOYEES.VACATIONS.SELECT_APPLICATION_TYPE'">
+          @for (option of leaveTypeOptions; track option.value) {
+          <option [value]="option.value">{{ t(option.label) }}</option>
+          }
+        </app-app-select-component>
+
         <app-app-select-component [label]="t('EMPLOYEES.VACATIONS.VACATION_TYPE') + ' *'"
           [control]="getControl('leaveTypeId')" [showErrors]="submitted()"
           [placeholder]="'EMPLOYEES.VACATIONS.SELECT_VACATION_TYPE'">
@@ -15,13 +23,15 @@
           }
         </app-app-select-component>
 
-        <app-app-date-input-component [label]="t('EMPLOYEES.VACATIONS.VACATION_START_Date') + ' *'"
+        <app-app-date-input-component [label]="t(isHalfLeave() ? 'COMMON.DATE' : 'EMPLOYEES.VACATIONS.VACATION_START_Date') + ' *'"
           [control]="getControl('fromDate')" [showErrors]="submitted()"
           [pastDateErrorKey]="'ERRORS.DATE_CANNOT_BE_IN_PAST'" />
 
+        @if (!isHalfLeave()) {
         <app-app-date-input-component [label]="t('EMPLOYEES.VACATIONS.VACATION_END_DATE') + ' *'"
           [control]="getControl('toDate')" [showErrors]="submitted()"
           [dateRangeErrorKey]="'ERRORS.END_DATE_MUST_BE_ON_OR_AFTER_START_DATE'" />
+        }
 
         <app-app-input-component [label]="t('EMPLOYEES.VACATIONS.DAYS') + ' *'"
           [placeholder]="t('EMPLOYEES.VACATIONS.DAYS')" [control]="getControl('days')"
