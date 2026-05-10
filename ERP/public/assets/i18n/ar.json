@@ -150,7 +150,9 @@
     "ADD_ATTENDANCE_PERMISSION": "إضافة إذن حضور",
     "VIEW_PERMISSIONS": "ألاذونات و طلبات الاجازة",
     "PERMISSIONS_AND_LEAVE_APPLICATIONS": "الأذونات وطلبات الإجازة",
-    "CORE_HR":"الموظفين"
+    "CORE_HR":"الموظفين",
+    "CREATE_LEAVE_APPLICATION":"إنشاء طلب إجازة",
+    "CREATE_ATTENDANCE_PERMISSION":"إنشاء إذن حضور"
   },
   "BUTTON": {
     "ADD_LEVEL": "إضافة مستوى",

@@ -12,6 +12,8 @@ import { EmptyTablePlaceholderComponent } from '@shared/components/molecules/emp
 import { StatusBadgeComponent } from '@shared/components/molecules/status-badge-component/status-badge-component';
 import { TableStatusBadgeComponent } from '@shared/components/atoms/table-status-badge-component/table-status-badge-component';
 import { AppBaseTableComponent } from '@shared/components/organisms/app-base-table-component/app-base-table-component';
+import { PageTitleComponent } from '@shared/components/atoms/page-title-component/page-title-component';
+import { SearchbarComponent } from '@shared/components/molecules/searchbar-component/searchbar-component';
 
 @Component({
   selector: 'app-view-permissions-component',
@@ -24,6 +26,8 @@ import { AppBaseTableComponent } from '@shared/components/organisms/app-base-tab
     EmptyTablePlaceholderComponent,
     StatusBadgeComponent,
     TableStatusBadgeComponent,
+    PageTitleComponent,
+    SearchbarComponent,
   ],
   templateUrl: './view-permissions-component.html',
   styleUrl: './view-permissions-component.css',
@@ -40,7 +44,6 @@ export class ViewPermissionsComponent {
   statusFilter = signal('');
   typeFilter = signal('');
   fromDate = signal('');
-  toDate = signal('');
 
   private readonly resetPageOnFiltersChange = effect(
     () => {
@@ -48,7 +51,6 @@ export class ViewPermissionsComponent {
       this.statusFilter();
       this.typeFilter();
       this.fromDate();
-      this.toDate();
       this.currentPage.set(1);
     },
     { allowSignalWrites: true },
@@ -62,7 +64,6 @@ export class ViewPermissionsComponent {
       status: this.statusFilter() || undefined,
       type: this.typeFilter() || undefined,
       fromDate: this.fromDate() || undefined,
-      toDate: this.toDate() || undefined,
     }),
     stream: ({ params }) => this.attendanceService.getUnifiedRequests(params),
   });
