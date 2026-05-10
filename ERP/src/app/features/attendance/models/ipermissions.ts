@@ -71,3 +71,46 @@ export interface IAttendancePermissionListResponse {
   limit?: number;
 }
 
+export type UnifiedRequestType = 1 | 2 | 3 | 4;
+
+export interface IUnifiedRequestApiDto {
+  id: string;
+  requestType: UnifiedRequestType;
+  employeeId: string;
+  employeeName?: string | null;
+  employeeCode?: string | null;
+  status: number;
+  creationTime: string;
+  effectiveDate?: string | null;
+  dateFrom?: string | null;
+  dateTo?: string | null;
+  daysCount?: number | null;
+  durationMinutes?: number | null;
+  referenceNumber?: string | null;
+}
+
+export interface IUnifiedRequestListItem {
+  id: string;
+  employeeId: string;
+  employeeName: string;
+  employeeCode: string | null;
+  requestType: UnifiedRequestType;
+  dateRange: string;
+  daysCount: number | null;
+  durationMinutes: number | null;
+  typeLabelKey: string;
+  status: number;
+  statusLabelKey: string;
+  statusTone: string;
+  referenceNumber: string | null;
+}
+
+export interface IUnifiedRequestListResponse {
+  data?: IUnifiedRequestListItem[];
+  total?: number;
+  items?: IUnifiedRequestApiDto[];
+  totalCount?: number;
+  page?: number;
+  limit?: number;
+}
+

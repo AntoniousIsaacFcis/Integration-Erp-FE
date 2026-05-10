@@ -911,12 +911,16 @@
   "PERMISSIONS": {
     "ADD_NEW": "Add New Permission",
     "TYPE_LABEL": "Leave Type",
+    "REQUEST_TYPE_LABEL": "Request Type",
     "STATUS_LABEL": "Classification",
     "ALL_TYPES": "All",
+    "ALL_REQUEST_TYPES": "All Requests",
     "TABLE_EMPLOYEE_NAME": "Employee Name",
     "TABLE_DATE": "Date",
     "TABLE_PERMISSION_ID": "Permission ID",
+    "TABLE_REQUEST_ID": "Request ID",
     "TABLE_HOLIDAY_TYPE": "Type",
+    "TABLE_REQUEST_TYPE": "Request Type",
     "STATUS_PENDING": "Pending",
     "STATUS_APPROVED": "Approved",
     "STATUS_REJECTED": "Rejected"

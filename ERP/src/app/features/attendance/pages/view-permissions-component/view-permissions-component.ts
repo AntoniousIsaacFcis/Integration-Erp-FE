@@ -5,7 +5,7 @@ import { TranslocoModule } from '@jsverse/transloco';
 import { provideIcons } from '@ng-icons/core';
 import { lucidePlusCircle } from '@ng-icons/lucide';
 import { AttendanceService } from '@features/attendance/services/attendance-service';
-import { IAttendancePermissionListItem } from '@features/attendance/models/ipermissions';
+import { IUnifiedRequestListItem } from '@features/attendance/models/ipermissions';
 import { ActionBtnComponent } from '@shared/components/molecules/action-btn-component/action-btn-component';
 import { DateFilterComponent } from '@shared/components/molecules/date-filter-component/date-filter-component';
 import { EmptyTablePlaceholderComponent } from '@shared/components/molecules/empty-table-placeholder-component/empty-table-placeholder-component';
@@ -54,7 +54,7 @@ export class ViewPermissionsComponent {
     { allowSignalWrites: true },
   );
 
-  permissionsResource = rxResource({
+  requestsResource = rxResource({
     params: () => ({
       page: this.currentPage(),
       limit: this.pageSize(),
@@ -64,16 +64,18 @@ export class ViewPermissionsComponent {
       fromDate: this.fromDate() || undefined,
       toDate: this.toDate() || undefined,
     }),
-    stream: ({ params }) => this.attendanceService.getAttendancePermissions(params),
+    stream: ({ params }) => this.attendanceService.getUnifiedRequests(params),
   });
 
-  permissions = computed<IAttendancePermissionListItem[]>(() => this.permissionsResource.value()?.data ?? []);
-  totalItems = computed(() => this.permissionsResource.value()?.total ?? 0);
+  requests = computed<IUnifiedRequestListItem[]>(() => this.requestsResource.value()?.data ?? []);
+  totalItems = computed(() => this.requestsResource.value()?.total ?? 0);
 
   permissionTypeOptions = [
-    { value: '', label: 'PERMISSIONS.ALL_TYPES' },
-    { value: '1', label: 'Enum:AttendancePermissionType.LateArrival' },
-    { value: '2', label: 'Enum:AttendancePermissionType.EarlyLeave' },
+    { value: '', label: 'PERMISSIONS.ALL_REQUEST_TYPES' },
+    { value: '1', label: 'Enum:LeaveApplicationType.Leave' },
+    { value: '2', label: 'Enum:LeaveApplicationType.HalfLeave' },
+    { value: '3', label: 'Enum:AttendancePermissionType.LateArrival' },
+    { value: '4', label: 'Enum:AttendancePermissionType.EarlyLeave' },
   ];
 
   statusOptions = [
@@ -81,6 +83,7 @@ export class ViewPermissionsComponent {
     { value: '1', label: 'PERMISSIONS.STATUS_PENDING' },
     { value: '2', label: 'PERMISSIONS.STATUS_APPROVED' },
     { value: '3', label: 'PERMISSIONS.STATUS_REJECTED' },
+    { value: '4', label: 'EMPLOYEES.VACATIONS.CANCELLED' },
   ];
 
   handleAddLeaveApplication() {

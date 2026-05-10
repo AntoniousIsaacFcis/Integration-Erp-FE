@@ -2,7 +2,15 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { environment } from '@env/environment.development';
 import { IEmployeeLeaveOverviewApiResponse, ILeaveApplicationApiDto, ILeaveApplicationListApiResponse, ILeaveApplicationListItem, ILeaveApplicationListViewResponse, ILeaveApplicationUpdatePayload, ILeaveTypeApiDto, ILeaveTypeListResponse, IVacationResponse, VacationStatus } from '@features/attendance/models/ivacation';
-import { IAttendancePermissionApiDto, IAttendancePermissionListItem, IAttendancePermissionListResponse, ICreateAttendancePermissionPayload } from '@features/attendance/models/ipermissions';
+import {
+  IAttendancePermissionApiDto,
+  IAttendancePermissionListItem,
+  IAttendancePermissionListResponse,
+  ICreateAttendancePermissionPayload,
+  IUnifiedRequestApiDto,
+  IUnifiedRequestListItem,
+  IUnifiedRequestListResponse,
+} from '@features/attendance/models/ipermissions';
 import { IStaffApiItem } from '@features/core-hr/models/istaff';
 import { StaffService } from '@features/core-hr/services/staff-service';
 import { ISelectOption } from '@shared/components/atoms/select-btn-component/select-btn-component';
@@ -623,6 +631,46 @@ export class AttendanceService {
     );
   }
 
+  getUnifiedRequests(params: {
+    page: number;
+    limit: number;
+    search?: string;
+    status?: string;
+    type?: string;
+    fromDate?: string;
+    toDate?: string;
+  }): Observable<{ data: IUnifiedRequestListItem[]; total: number; page: number; limit: number }> {
+    const normalizedSearch = params.search?.trim();
+    const requestType = params.type?.trim();
+    const requestStatus = params.status?.trim();
+
+    return this.http.get<IUnifiedRequestListResponse>(`${this.API_URL}/attendance/unified-request/unified-requests`, {
+      params: {
+        SkipCount: String((params.page - 1) * params.limit),
+        MaxResultCount: String(params.limit),
+        Sorting: 'CreationTime DESC',
+        ...(normalizedSearch && {
+          SearchText: normalizedSearch,
+          SearchTerm: normalizedSearch,
+          Search: normalizedSearch,
+          Q: normalizedSearch,
+          Filter: normalizedSearch,
+        }),
+        ...(requestType && { RequestType: requestType }),
+        ...(requestStatus && { Status: requestStatus }),
+        ...(params.fromDate && { DateFrom: params.fromDate }),
+        ...(params.toDate && { DateTo: params.toDate }),
+      },
+    }).pipe(
+      map(response => ({
+        data: ((response.items ?? response.data ?? []) as IUnifiedRequestApiDto[]).map(item => this.toUnifiedRequestListItem(item)),
+        total: response.totalCount ?? response.total ?? 0,
+        page: params.page,
+        limit: params.limit,
+      })),
+    );
+  }
+
   createAttendancePermission(payload: ICreateAttendancePermissionPayload): Observable<IAttendancePermissionApiDto> {
     return this.http.post<IAttendancePermissionApiDto>(`${this.API_URL}/attendance/attendance-permission`, payload);
   }
@@ -970,6 +1018,30 @@ export class AttendanceService {
     };
   }
 
+  private toUnifiedRequestListItem(item: IUnifiedRequestApiDto): IUnifiedRequestListItem {
+    const startDate = item.dateFrom ?? item.effectiveDate ?? '';
+    const endDate = item.dateTo ?? item.effectiveDate ?? startDate;
+    const isSingleDate = item.requestType !== 1;
+
+    return {
+      id: item.id,
+      employeeId: item.employeeId,
+      employeeName: item.employeeName?.trim() || item.employeeCode?.trim() || item.employeeId,
+      employeeCode: item.employeeCode?.trim() || null,
+      requestType: item.requestType,
+      dateRange: isSingleDate
+        ? this.formatDisplayDate(startDate)
+        : `${this.formatDisplayDate(startDate)} - ${this.formatDisplayDate(endDate)}`,
+      daysCount: typeof item.daysCount === 'number' ? item.daysCount : null,
+      durationMinutes: typeof item.durationMinutes === 'number' ? item.durationMinutes : null,
+      typeLabelKey: this.getUnifiedRequestTypeLabelKey(item.requestType),
+      status: item.status,
+      statusLabelKey: this.getUnifiedRequestStatusLabelKey(item.status),
+      statusTone: this.getUnifiedRequestStatusTone(item.status),
+      referenceNumber: item.referenceNumber?.trim() || null,
+    };
+  }
+
   private toAttendanceLogDetails(item: IAttendanceLogApiDto): IAttendanceLogDetails {
     return {
       id: item.id,
@@ -1141,6 +1213,17 @@ export class AttendanceService {
     return labels[type] ?? 'Enum:AttendancePermissionType.LateArrival';
   }
 
+  private getUnifiedRequestTypeLabelKey(type: number) {
+    const labels: Record<number, string> = {
+      1: 'Enum:LeaveApplicationType.Leave',
+      2: 'Enum:LeaveApplicationType.HalfLeave',
+      3: 'Enum:AttendancePermissionType.LateArrival',
+      4: 'Enum:AttendancePermissionType.EarlyLeave',
+    };
+
+    return labels[type] ?? 'Enum:LeaveApplicationType.Leave';
+  }
+
   private getAttendancePermissionStatusLabelKey(status: number) {
     const labels: Record<number, string> = {
       1: 'PERMISSIONS.STATUS_PENDING',
@@ -1156,6 +1239,28 @@ export class AttendanceService {
       1: 'pending',
       2: 'valid',
       3: 'invalid',
+    };
+
+    return tones[status] ?? 'pending';
+  }
+
+  private getUnifiedRequestStatusLabelKey(status: number) {
+    const labels: Record<number, string> = {
+      1: 'PERMISSIONS.STATUS_PENDING',
+      2: 'PERMISSIONS.STATUS_APPROVED',
+      3: 'PERMISSIONS.STATUS_REJECTED',
+      4: 'EMPLOYEES.VACATIONS.CANCELLED',
+    };
+
+    return labels[status] ?? 'PERMISSIONS.STATUS_PENDING';
+  }
+
+  private getUnifiedRequestStatusTone(status: number) {
+    const tones: Record<number, string> = {
+      1: 'pending',
+      2: 'valid',
+      3: 'invalid',
+      4: 'inactive',
     };
 
     return tones[status] ?? 'pending';

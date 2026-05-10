@@ -948,12 +948,16 @@
   "PERMISSIONS": {
     "ADD_NEW": "إضافة إذن جديد",
     "TYPE_LABEL": "نوع الاجازة",
+    "REQUEST_TYPE_LABEL": "نوع الطلب",
     "STATUS_LABEL": "تصنيف",
     "ALL_TYPES": "الكل",
+    "ALL_REQUEST_TYPES": "كل الطلبات",
     "TABLE_EMPLOYEE_NAME": "اسم الموظف",
     "TABLE_DATE": "التاريخ",
     "TABLE_PERMISSION_ID": "رقم إذن الحضور",
+    "TABLE_REQUEST_ID": "رقم الطلب",
     "TABLE_HOLIDAY_TYPE": "النوع",
+    "TABLE_REQUEST_TYPE": "نوع الطلب",
     "STATUS_PENDING": "قيد الانتظار",
     "STATUS_APPROVED": "معتمد",
     "STATUS_REJECTED": "مرفوض"
