@@ -17,6 +17,12 @@ export const SETTINGS_ROUTES: Routes = [
           import('./leave-types.routes').then(m => m.LEAVE_TYPES_ROUTES),
       },
       {
+        path: 'holiday-lists',
+        data: { breadcrumb: 'SETTINGS.HOLIDAY_LISTS' },
+        loadChildren: () =>
+          import('./holiday-lists.routes').then(m => m.HOLIDAY_LISTS_ROUTES),
+      },
+      {
         path: 'employment-status',
         data: { breadcrumb: 'SETTINGS.EMPLOYMENT_STATUS' },
         loadChildren: () =>

@@ -52,7 +52,14 @@ export const MENU_ITEMS: INavItem[] = [
     icon: 'lucideSettings',
     children: [
       { id: '7-1', label: 'SETTINGS.LEAVE_TYPES', path: '/settings/leave-types', icon: 'lucideList' },
-      { id: '7-2', label: 'SETTINGS.EMPLOYMENT_STATUS', path: '/settings/employment-status', icon: 'lucideBadgeCheck' }
+      {
+        id: '7-2',
+        label: 'SETTINGS.HOLIDAY_LISTS',
+        path: '/settings/holiday-lists',
+        icon: 'lucideCalendarDays',
+        requiredPolicy: 'Attendance.HolidayLists',
+      },
+      { id: '7-3', label: 'SETTINGS.EMPLOYMENT_STATUS', path: '/settings/employment-status', icon: 'lucideBadgeCheck' }
     ]
   }
 ];

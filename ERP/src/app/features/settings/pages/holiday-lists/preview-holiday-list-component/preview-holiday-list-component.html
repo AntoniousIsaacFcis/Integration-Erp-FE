@@ -1,0 +1,78 @@
+<main class="flex justify-center" *transloco="let t">
+  <div class="w-full max-w-standard bg-white rounded-[20px] shadow-soft border border-black/5">
+    <app-form-container-component [title]="t('SETTINGS.PREVIEW_HOLIDAY_LIST')">
+      <ng-container formFields>
+        @if (isLoading()) {
+          <div class="col-span-2 flex justify-center py-10 text-gray-400">
+            {{ t('COMMON.MESSAGES.LOADING_DATA') }}
+          </div>
+        } @else {
+          <div class="col-span-1">
+            <app-app-input-component
+              [label]="t('SETTINGS.HOLIDAY_LIST_NAME')"
+              [placeholder]="t('SETTINGS.HOLIDAY_LIST_NAME')"
+              [control]="holidayListForm.controls.name"
+              [readonly]="true"
+            />
+          </div>
+
+          <div class="col-span-1">
+            <app-app-input-component
+              [label]="t('SETTINGS.TOTAL_DAYS')"
+              [placeholder]="t('SETTINGS.TOTAL_DAYS')"
+              [control]="holidayListForm.controls.totalDays"
+              [readonly]="true"
+            />
+          </div>
+
+          <div class="col-span-1 flex flex-col gap-3">
+            <label class="text-base font-medium leading-none text-start text-black">
+              {{ t('SETTINGS.CALCULATE_ATTENDANCE_ON_OFF_DAYS') }}
+            </label>
+            <app-table-status-badge-component
+              [status]="holidayList()?.calculateAttendanceOnOffDays ? 'active' : 'inactive'"
+              [label]="t(holidayList()?.calculateAttendanceOnOffDays ? 'COMMON.YES' : 'COMMON.NO')"
+            />
+          </div>
+
+          <div class="col-span-2 rounded-xl border border-black/5 bg-[#F9FAFB] p-4">
+            <div class="flex items-center justify-between gap-4">
+              <div class="flex flex-col gap-1">
+                <h3 class="text-base font-semibold text-black">{{ t('SETTINGS.HOLIDAY_DAYS') }}</h3>
+              </div>
+            </div>
+
+            @if (!days().length) {
+              <div class="mt-4 rounded-lg border border-dashed border-gray-200 bg-white px-4 py-6 text-center text-sm text-gray-400">
+                {{ t('SETTINGS.NO_HOLIDAY_DAYS') }}
+              </div>
+            } @else {
+              <div class="mt-4 overflow-x-auto">
+                <table class="w-full font-arabic text-black border border-[#F4F4F4]/50 rounded-xl overflow-hidden">
+                  <thead class="text-sm sticky top-0 bg-[#F4F4F4] z-10">
+                    <tr>
+                      <th class="py-4 ps-24 text-start">{{ t('SETTINGS.DAY_DATE') }}</th>
+                      <th class="py-4 px-6 text-start">{{ t('SETTINGS.DAY_TITLE') }}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @for (day of days(); track day.id) {
+                      <tr class="bg-white border-b border-gray-100">
+                        <td class="py-4 ps-24 text-start text-sm">{{ day.date }}</td>
+                        <td class="py-4 px-6 text-start text-sm">{{ day.title }}</td>
+                      </tr>
+                    }
+                  </tbody>
+                </table>
+              </div>
+            }
+          </div>
+        }
+      </ng-container>
+
+      <ng-container formActions>
+        <app-form-save-button-component [label]="'COMMON.BACK'" (clicked)="goBack()" />
+      </ng-container>
+    </app-form-container-component>
+  </div>
+</main>

@@ -1,0 +1,95 @@
+<app-app-base-table-component
+  [(searchTerm)]="searchTerm"
+  [totalItems]="totalItems()"
+  [(currentPage)]="currentPage"
+  [extraActions]="holidayListActions"
+  [searchPlaceholder]="'SETTINGS.HOLIDAY_LIST_SEARCH_PLACEHOLDER'"
+  *transloco="let t"
+>
+  <ng-template #holidayListActions>
+    <app-action-btn-component
+      *appCanAccess="'Attendance.HolidayLists.Create'"
+      [label]="t('SETTINGS.ADD_HOLIDAY_LIST')"
+      (clicked)="goToCreate()"
+      iconName="lucidePlusCircle"
+    />
+  </ng-template>
+
+  <div class="w-full overflow-x-auto">
+    @if (holidayListsResource.isLoading()) {
+      <div class="flex justify-center py-20 text-gray-400">
+        {{ t('COMMON.MESSAGES.LOADING_DATA') }}
+      </div>
+    }
+
+    @if (holidayListsResource.error()) {
+      <div class="bg-red-50 text-red-600 p-6 rounded-xl text-center border border-red-100">
+        <p>{{ t('COMMON.MESSAGES.OPERATION_FAILED') }}</p>
+        <button (click)="holidayListsResource.reload()" class="mt-3 px-4 py-2 bg-red-600 text-white rounded-lg">
+          {{ t('COMMON.MESSAGES.PLEASE_TRY_AGAIN') }}
+        </button>
+      </div>
+    }
+
+    @if (holidayListsResource.value() && !holidayLists().length) {
+      <app-empty-table-placeholder-component />
+    }
+
+    @if (holidayListsResource.value() && holidayLists().length) {
+      <table class="w-full font-arabic text-black border border-[#F4F4F4]/50 rounded-xl overflow-hidden">
+        <thead class="text-sm sticky top-0 bg-[#F4F4F4] z-10">
+          <tr>
+            <th class="py-4 ps-24 text-start">{{ t('SETTINGS.HOLIDAY_LIST_NAME') }}</th>
+            <th class="py-4 px-6 text-center">{{ t('SETTINGS.TOTAL_DAYS') }}</th>
+            <th class="py-4 px-6 text-center">{{ t('SETTINGS.CALCULATE_ATTENDANCE_ON_OFF_DAYS') }}</th>
+            <th class="py-4 px-20 text-center"></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (holidayList of holidayLists(); track holidayList.id) {
+            <tr class="bg-white hover:bg-gray-50/50 transition-all border-b border-gray-100 cursor-pointer" (click)="handleView(holidayList.id)">
+              <td class="py-4 ps-24 text-start font-medium text-sm">
+                {{ holidayList.name }}
+              </td>
+              <td class="py-4 px-6 text-center text-sm">
+                {{ holidayList.totalDays }}
+              </td>
+              <td class="py-4 px-6 text-center">
+                <div class="flex justify-center">
+                  <app-table-status-badge-component
+                    [status]="holidayList.calculateAttendanceOnOffDays ? 'active' : 'inactive'"
+                    [label]="t(holidayList.calculateAttendanceOnOffDays ? 'COMMON.YES' : 'COMMON.NO')"
+                  />
+                </div>
+              </td>
+              <td class="py-4 px-20">
+                <div class="flex gap-5 justify-end">
+                  <button
+                    *appCanAccess="'Attendance.HolidayLists.Update'"
+                    (click)="$event.stopPropagation(); handleEdit(holidayList.id)"
+                    class="flex size-[30px] items-center justify-center rounded-full bg-[#0000001A] transition-colors hover:bg-[#00000033]"
+                  >
+                    <ng-icon name="lucidePencil" size="16px" color="black" />
+                  </button>
+                  <button
+                    *appCanAccess="'Attendance.HolidayLists.Delete'"
+                    (click)="$event.stopPropagation(); handleDelete(holidayList.id)"
+                    class="flex size-[30px] items-center justify-center rounded-full bg-[#0000001A] transition-colors hover:bg-[#00000033]"
+                  >
+                    <ng-icon name="lucideTrash2" size="16px" color="#F40552" />
+                  </button>
+                  <button
+                    (click)="$event.stopPropagation(); handleView(holidayList.id)"
+                    class="flex size-[32px] items-center justify-center rounded-full bg-[#61BDDC33] hover:bg-gray-100 transition-colors"
+                  >
+                    <ng-icon name="lucideEye" size="16px" color="#61BDDC" />
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+  </div>
+</app-app-base-table-component>
