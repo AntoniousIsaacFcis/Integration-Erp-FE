@@ -1,0 +1,123 @@
+<app-app-base-table-component
+  [(searchTerm)]="searchTerm"
+  [totalItems]="totalItems()"
+  [(currentPage)]="currentPage"
+  [extraFilters]="employmentStatusFilters"
+  [extraActions]="employmentStatusActions"
+  [searchPlaceholder]="'EMPLOYMENT_STATUS.SEARCH_PLACEHOLDER'"
+  *transloco="let t"
+>
+  <ng-template #employmentStatusFilters>
+    <app-status-badge-component
+      label="FILTERS.STATUS"
+      [options]="statusOptions"
+      [(selectedStatus)]="selectedStatus"
+    />
+  </ng-template>
+
+  <ng-template #employmentStatusActions>
+    <app-action-btn-component
+      [label]="t('BUTTON.ADD_EMPLOYMENT_STATUS')"
+      (clicked)="goToCreate()"
+    />
+  </ng-template>
+
+  <div class="w-full">
+    @if (statusesResource.isLoading()) {
+      <div class="flex justify-center py-20 text-gray-400">
+        {{ t('COMMON.MESSAGES.LOADING_DATA') }}
+      </div>
+    }
+
+    @if (statusesResource.error()) {
+      <div class="bg-red-50 text-red-600 p-6 rounded-xl text-center border border-red-100">
+        <p>فشل الاتصال بالنظام</p>
+        <button
+          (click)="statusesResource.reload()"
+          class="mt-3 px-4 py-2 bg-red-600 text-white rounded-lg"
+        >
+          إعادة المحاولة
+        </button>
+      </div>
+    }
+
+    @if (statusesResource.value() && !statusesList().length) {
+      <app-empty-table-placeholder-component />
+    }
+
+    @if (statusesResource.value() && statusesList().length) {
+      <table
+        class="w-full table-fixed font-arabic text-black border border-[#F4F4F4]/50 rounded-xl overflow-hidden"
+      >
+        <thead class="text-sm sticky top-0 bg-[#F4F4F4] z-10">
+          <tr>
+            <th class="w-[25%] py-4 px-6 text-center">
+              {{ t('EMPLOYMENT_STATUS.NAME') }}
+            </th>
+
+            <th class="w-[35%] py-4 px-6 text-center">
+              {{ t('EMPLOYMENT_STATUS.DESCRIPTION') }}
+            </th>
+
+            <th class="w-[20%] py-4 px-6 text-center">
+              {{ t('EMPLOYMENT_STATUS.STATUS') }}
+            </th>
+
+            <th class="w-[20%] py-4 px-6 text-center"></th>
+          </tr>
+        </thead>
+
+        <tbody>
+          @for (status of statusesList(); track status.id) {
+            <tr
+              class="bg-white hover:bg-gray-50/50 transition-all border-b border-gray-100 cursor-pointer"
+              (click)="handleView(status.id)"
+            >
+              <td class="py-4 px-6 text-center font-normal text-sm">
+                {{ status.name }}
+              </td>
+
+              <td class="py-4 px-6 text-sm text-center">
+                <div class="truncate">
+                  {{ status.description || t('COMMON.NO_DATA') }}
+                </div>
+              </td>
+
+              <td class="py-4 px-6 text-center">
+                <div class="flex justify-center">
+                  <app-table-status-badge-component [status]="status.status" />
+                </div>
+              </td>
+
+              <td class="py-4 px-6">
+                <div class="flex gap-5 justify-center">
+                  <button
+                    (click)="$event.stopPropagation(); handleEdit(status.id)"
+                    class="flex size-[30px] items-center justify-center rounded-full bg-[#0000001A] transition-colors hover:bg-[#00000033]"
+                  >
+                    <ng-icon name="lucidePencil" size="16px" color="black" />
+                  </button>
+
+                  <button
+                    *appCanAccess="'Organization.EmploymentStatuses.Delete'"
+                    (click)="$event.stopPropagation(); handleDelete(status.id)"
+                    class="flex size-[30px] items-center justify-center rounded-full bg-[#0000001A] transition-colors hover:bg-[#00000033]"
+                  >
+                    <ng-icon name="lucideTrash2" size="16px" color="#F40552" />
+                  </button>
+
+                  <button
+                    (click)="$event.stopPropagation(); handleView(status.id)"
+                    class="flex size-[32px] items-center justify-center rounded-full bg-[#61BDDC33] hover:bg-gray-100 transition-colors"
+                  >
+                    <ng-icon name="lucideEye" size="16px" color="#61BDDC" />
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+  </div>
+</app-app-base-table-component>

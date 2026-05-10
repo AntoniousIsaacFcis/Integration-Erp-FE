@@ -100,6 +100,7 @@
     "LEVELS": "Levels",
     "JOB_LEVELS": "Job Levels",
     "EMPLOYMENT_TYPES": "Employment Types",
+    "EMPLOYMENT_STATUSES": "Employment Status",
     "SHIFT_MANAGEMENT": "Shift Management",
     "SETTINGS": "Settings",
     "ALL_EMPLOYEES": "All Employees",
@@ -128,6 +129,8 @@
     "EMPLOYEE_DETAILS": "Employee Details",
     "VIEW_TYPES": "View Employment Types",
     "CREATE_TYPE": "Add Employment Type",
+    "VIEW_STATUSES": "View Employment Status",
+    "CREATE_STATUS": "Add Employment Status",
     "ACEESS_DENIED": "Access Denied",
     "NOT_FOUND": "Page Not Found",
     "CREATE_SPECIAL_SHIFT": "Add Specific Shift",
@@ -149,6 +152,7 @@
     "ADD_LEVEL": "Add Level",
     "ADD_DEPARTMENT": "Add Department",
     "ADD_DESIGNATION": "Add Designation",
+    "ADD_EMPLOYMENT_STATUS": "Add Employment Status",
     "ADD_EMPLOYEE": "Add Employee",
     "ADD_SHIFT": "Add Shift",
     "ADD_LEAVE_APPLICATION": "Add Leave Application",
@@ -378,11 +382,13 @@
     "DESIGNATION_SEARCH_PLACEHOLDER": "Search by designation or department...",
     "JOB_LEVEL_SEARCH_PLACEHOLDER": "Search by job level...",
     "EMPLOYMENT_TYPE_SEARCH_PLACEHOLDER": "Search by employment type...",
+    "EMPLOYMENT_STATUS_SEARCH_PLACEHOLDER": "Search by employment status...",
     "MANAGE_DESIGNATIONS": "Manage Designations",
     "MANAGE_LEVEL": "Manage Levels",
     "MANAGE_DEPARTMENTS": "Manage Departments",
     "MANAGE_JOB_LEVELS": "Manage Job Levels",
-    "MANAGE_EMPLOYMENT_TYPES": "Manage Employment Types"
+    "MANAGE_EMPLOYMENT_TYPES": "Manage Employment Types",
+    "MANAGE_EMPLOYMENT_STATUSES": "Employment Status"
   },
   "EMPLOYEES": {
     "TITLE": "Employee Management",
@@ -762,10 +768,12 @@
     "LEVEL_NAME_MAX_LENGTH": "Level name must not exceed 100 characters",
       "DEPARTMENT_NAME_MIN_LENGTH": "Department name must be at least 3 characters",
       "DEPARTMENT_NAME_MAX_LENGTH": "Department name must not exceed 100 characters",
-      "DESIGNATION_NAME_MIN_LENGTH": "Designation name must be at least 3 characters",
-      "DESIGNATION_NAME_MAX_LENGTH": "Designation name must not exceed 100 characters",
+    "DESIGNATION_NAME_MIN_LENGTH": "Designation name must be at least 3 characters",
+    "DESIGNATION_NAME_MAX_LENGTH": "Designation name must not exceed 100 characters",
       "EMPLOYMENT_TYPE_NAME_MIN_LENGTH": "Employment type name must be at least 3 characters",
     "EMPLOYMENT_TYPE_NAME_MAX_LENGTH": "Employment type name must not exceed 100 characters",
+    "EMPLOYMENT_STATUS_NAME_MIN_LENGTH": "Employment status name must be at least 3 characters",
+    "EMPLOYMENT_STATUS_NAME_MAX_LENGTH": "Employment status name must not exceed 100 characters",
     "MAX_CHARACTERS": "Maximum character limit exceeded"
   },
   "errors": {
@@ -798,6 +806,19 @@
     "TYPE_NAME": "Employment Type",
     "EMPLOYEES": "Employees",
     "DESCRIPTION_PLACEHOLDER": "Description should not exceed 1000 characters"
+  },
+  "EMPLOYMENT_STATUS": {
+    "TITLE": "Employment Status",
+    "TABLE_TITLE": "Employment Status Table",
+    "NAME": "Employment Status Name",
+    "DESCRIPTION": "Description",
+    "STATUS": "Status",
+    "SEARCH_PLACEHOLDER": "Search by employment status...",
+    "DESCRIPTION_PLACEHOLDER": "Description should not exceed 1000 characters",
+    "ADD": "Add Employment Status",
+    "EDIT": "Edit Employment Status",
+    "PREVIEW": "Preview Employment Status",
+    "DELETE": "Delete Employment Status"
   },
   "FILTERS": {
     "FILTER_BY": "Filter By",

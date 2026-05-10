@@ -31,6 +31,12 @@ export const ORGANIZATION_ROUTES: Routes = [
         loadChildren: () =>
           import('./employment-types.routes').then(m => m.EMPLOYMENT_TYPES_ROUTES),
       },
+      {
+        path: 'employment-statuses',
+        data: { breadcrumb: 'ORGANIZATION.MANAGE_EMPLOYMENT_STATUSES' },
+        loadChildren: () =>
+          import('./employment-statuses.routes').then(m => m.EMPLOYMENT_STATUSES_ROUTES),
+      },
     ],
   },
 ];

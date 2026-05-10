@@ -144,6 +144,56 @@ export const routes: Routes = [
         redirectTo: 'organization/employment-types',
       },
       {
+        path: 'employment-statuses',
+        pathMatch: 'full',
+        redirectTo: 'organization/employment-statuses',
+      },
+      {
+        path: 'employment-statuses/view',
+        redirectTo: 'organization/employment-statuses/view',
+      },
+      {
+        path: 'employment-statuses/create',
+        redirectTo: 'organization/employment-statuses/create',
+      },
+      {
+        path: 'employment-statuses/edit/:id',
+        redirectTo: 'organization/employment-statuses/edit/:id',
+      },
+      {
+        path: 'employment-statuses/preview/:id',
+        redirectTo: 'organization/employment-statuses/preview/:id',
+      },
+      {
+        path: 'employment-statuses',
+        redirectTo: 'organization/employment-statuses',
+      },
+      {
+        path: 'employment-status',
+        pathMatch: 'full',
+        redirectTo: 'organization/employment-statuses',
+      },
+      {
+        path: 'employment-status/view',
+        redirectTo: 'organization/employment-statuses/view',
+      },
+      {
+        path: 'employment-status/create',
+        redirectTo: 'organization/employment-statuses/create',
+      },
+      {
+        path: 'employment-status/edit/:id',
+        redirectTo: 'organization/employment-statuses/edit/:id',
+      },
+      {
+        path: 'employment-status/preview/:id',
+        redirectTo: 'organization/employment-statuses/preview/:id',
+      },
+      {
+        path: 'employment-status',
+        redirectTo: 'organization/employment-statuses',
+      },
+      {
         path: 'attendance',
         // canMatch: [() => inject(AuthService).hasPermission('MyProject.employment-types')],
         loadChildren: () => import('./features/attendance/attendance.route').then(m => m.ATTENDANCE_ROUTES),

@@ -104,6 +104,7 @@
     "LEVELS": "المستويات",
     "JOB_LEVELS": "المستويات الوظيفية",
     "EMPLOYMENT_TYPES": "أنواع الدوام",
+    "EMPLOYMENT_STATUSES": "حالة التوظيف",
     "SHIFT_MANAGEMENT": "إدارة الورديات",
     "SETTINGS": "الإعدادات",
     "ALL_EMPLOYEES": "جميع الموظفين",
@@ -132,6 +133,8 @@
     "EMPLOYEE_DETAILS": "تفاصيل الموظف",
     "VIEW_TYPES": "انواع الدوام",
     "CREATE_TYPE": "اضافة دوام وظيفي",
+    "VIEW_STATUSES": "عرض حالة التوظيف",
+    "CREATE_STATUS": "إضافة حالة توظيف",
     "ACEESS_DENIED": "لا تمتلك صلاحية",
     "NOT_FOUND": "الصفحة غير موجودة",
     "CREATE_SPECIAL_SHIFT": "إضافة وردية متخصصة",
@@ -153,6 +156,7 @@
     "ADD_LEVEL": "إضافة مستوى",
     "ADD_DEPARTMENT": "إضافة قسم",
     "ADD_DESIGNATION": "إضافة مسمى وظيفي",
+    "ADD_EMPLOYMENT_STATUS": "إضافة حالة توظيف",
     "ADD_EMPLOYEE": "إضافة موظف",
     "ADD_SHIFT": "إضافة وردية",
     "ADD_LEAVE_APPLICATION": "إضافة طلب إجازة",
@@ -400,11 +404,13 @@
     "DESIGNATION_SEARCH_PLACEHOLDER": "ابحث بالمسمى الوظيفي أو القسم...",
     "JOB_LEVEL_SEARCH_PLACEHOLDER": "ابحث بالمستوى الوظيفي...",
     "EMPLOYMENT_TYPE_SEARCH_PLACEHOLDER": "ابحث بنوع التوظيف...",
+    "EMPLOYMENT_STATUS_SEARCH_PLACEHOLDER": "ابحث بحالة التوظيف...",
     "MANAGE_DESIGNATIONS": "إدارة المسميات الوظيفية",
     "MANAGE_LEVEL": "إدارة المستويات",
     "MANAGE_DEPARTMENTS": "إدارة الأقسام",
     "MANAGE_JOB_LEVELS": "إدارة المستويات الوظيفية",
-    "MANAGE_EMPLOYMENT_TYPES": "إدارة أنواع الوظائف"
+    "MANAGE_EMPLOYMENT_TYPES": "إدارة أنواع الوظائف",
+    "MANAGE_EMPLOYMENT_STATUSES": "حالة التوظيف"
   },
   "EMPLOYEES": {
     "TITLE": "إدارة الموظفين",
@@ -799,10 +805,12 @@
     "LEVEL_NAME_MAX_LENGTH": "اسم المستوى يجب ألا يتجاوز 100 حرف",
       "DEPARTMENT_NAME_MIN_LENGTH": "اسم القسم يجب ألا يقل عن 3 أحرف",
       "DEPARTMENT_NAME_MAX_LENGTH": "اسم القسم يجب ألا يتجاوز 100 حرف",
-      "DESIGNATION_NAME_MIN_LENGTH": "اسم المسمى يجب ألا يقل عن 3 أحرف",
-      "DESIGNATION_NAME_MAX_LENGTH": "اسم المسمى يجب ألا يتجاوز 100 حرف",
+    "DESIGNATION_NAME_MIN_LENGTH": "اسم المسمى يجب ألا يقل عن 3 أحرف",
+    "DESIGNATION_NAME_MAX_LENGTH": "اسم المسمى يجب ألا يتجاوز 100 حرف",
       "EMPLOYMENT_TYPE_NAME_MIN_LENGTH": "اسم نوع التوظيف يجب ألا يقل عن 3 أحرف",
     "EMPLOYMENT_TYPE_NAME_MAX_LENGTH": "اسم نوع التوظيف يجب ألا يتجاوز 100 حرف",
+    "EMPLOYMENT_STATUS_NAME_MIN_LENGTH": "اسم حالة التوظيف يجب ألا يقل عن 3 أحرف",
+    "EMPLOYMENT_STATUS_NAME_MAX_LENGTH": "اسم حالة التوظيف يجب ألا يتجاوز 100 حرف",
     "MAX_CHARACTERS": "تم تجاوز الحد الأقصى لعدد الأحرف"
   },
   "errors": {
@@ -836,6 +844,19 @@
     "TYPE_NAME": "نوع الدوام",
     "EMPLOYEES": "موظف",
     "DESCRIPTION_PLACEHOLDER": "الوصف لا يتعدى 1000 حرف"
+  },
+  "EMPLOYMENT_STATUS": {
+    "TITLE": "حالة التوظيف",
+    "TABLE_TITLE": "جدول حالة التوظيف",
+    "NAME": "حالة التوظيف",
+    "DESCRIPTION": "الوصف",
+    "STATUS": "الحالة",
+    "SEARCH_PLACEHOLDER": "ابحث بحالة التوظيف...",
+    "DESCRIPTION_PLACEHOLDER": "الوصف لا يتعدى 1000 حرف",
+    "ADD": "إضافة حالة توظيف",
+    "EDIT": "تعديل حالة توظيف",
+    "PREVIEW": "عرض حالة التوظيف",
+    "DELETE": "حذف حالة التوظيف"
   },
   "role": {
     "add_new_role": "إضافة دور جديد",

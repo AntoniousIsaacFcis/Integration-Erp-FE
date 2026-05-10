@@ -1,0 +1,51 @@
+<div
+  class="w-full max-w-standard bg-white rounded-[20px] shadow-soft border border-black/5 p-spacing-xl flex flex-col gap-spacing-lg mx-auto"
+>
+  <app-form-container-component *transloco="let t" [title]="t('EMPLOYMENT_STATUS.ADD')" (submit)="onSubmit()">
+    <ng-container formFields [formGroup]="employmentStatusForm">
+      <div class="col-span-2">
+        <app-app-input-component
+          [label]="t('EMPLOYMENT_STATUS.NAME') + ' *'"
+          [placeholder]="t('EMPLOYMENT_STATUS.NAME')"
+          [control]="employmentStatusForm.controls.name"
+          [showErrors]="isFormSubmitted()"
+          [minLengthErrorKey]="'ERRORS.EMPLOYMENT_STATUS_NAME_MIN_LENGTH'"
+          [maxLengthErrorKey]="'ERRORS.EMPLOYMENT_STATUS_NAME_MAX_LENGTH'"
+        />
+      </div>
+
+      <app-app-radio-component
+        [label]="t('EMPLOYMENT_STATUS.STATUS')"
+        [required]="true"
+        [control]="employmentStatusForm.controls.isActive"
+        [options]="[
+          { label: 'COMMON.ACTIVE', value: true },
+          { label: 'COMMON.INACTIVE', value: false }
+        ]"
+      />
+
+      <div class="col-span-2">
+        <app-app-textarea-component
+          [label]="t('EMPLOYMENT_STATUS.DESCRIPTION')"
+          [placeholder]="t('EMPLOYMENT_STATUS.DESCRIPTION_PLACEHOLDER')"
+          [control]="employmentStatusForm.controls.description"
+          [showErrors]="isFormSubmitted()"
+        />
+
+        <div class="p-2">
+          <span
+            class="text-xs font-medium transition-colors duration-200"
+            [class]="isFormSubmitted() && isOverLimit() ? 'text-red-500' : 'text-gray-400'"
+          >
+            {{ characterCount() }} / {{ descriptionCharacterLimit }} {{ t('COMMON.CHARACTERS') }}
+          </span>
+        </div>
+      </div>
+    </ng-container>
+
+    <ng-container formActions>
+      <app-form-cancel-button-component (clicked)="onCancel()" />
+      <app-form-save-button-component [isLoading]="isSubmitting()" type="submit" />
+    </ng-container>
+  </app-form-container-component>
+</div>
