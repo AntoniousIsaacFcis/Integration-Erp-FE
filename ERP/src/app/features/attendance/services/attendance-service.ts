@@ -432,6 +432,22 @@ export class AttendanceService {
     return this.http.post<IAttendanceLogSignResult>(`${this.API_URL}/attendance/attendance-log/sign`, payload);
   }
 
+  checkInMyAttendance(attendanceLogSessionId?: string): Observable<IAttendanceLogApiDto> {
+    return this.http.post<IAttendanceLogApiDto>(`${this.API_URL}/attendance/attendance-log/check-in-my-attendance`, null, {
+      params: {
+        ...(attendanceLogSessionId?.trim() && { AttendanceLogSessionId: attendanceLogSessionId.trim() }),
+      },
+    });
+  }
+
+  checkOutMyAttendance(attendanceLogSessionId?: string): Observable<IAttendanceLogApiDto> {
+    return this.http.post<IAttendanceLogApiDto>(`${this.API_URL}/attendance/attendance-log/check-out-my-attendance`, null, {
+      params: {
+        ...(attendanceLogSessionId?.trim() && { AttendanceLogSessionId: attendanceLogSessionId.trim() }),
+      },
+    });
+  }
+
   deleteAttendanceLog(id: string): Observable<void> {
     return this.http.delete<void>(`${this.API_URL}/attendance/attendance-log/${id}`).pipe(
       tap(() => this.requestAttendanceDayRefresh()),
@@ -1032,7 +1048,7 @@ export class AttendanceService {
   private getAttendanceLogStatusLabelKey(status: number) {
     const labels: Record<number, string> = {
       1: 'ATTENDANCE.LOG_STATUS.PENDING',
-      2: 'ATTENDANCE.LOG_STATUS.VALID',
+      2: 'ATTENDANCE.LOG_STATUS.FINALIZED',
       3: 'ATTENDANCE.LOG_STATUS.INVALID',
       4: 'ATTENDANCE.LOG_STATUS.CHECK_IN',
       5: 'ATTENDANCE.LOG_STATUS.CHECK_OUT',

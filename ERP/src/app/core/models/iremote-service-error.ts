@@ -2,7 +2,7 @@ export interface IRemoteServiceError {
   code?: string;
   message: string;
   details?: string;
-  data?: Record<string, string>;
+  data?: Record<string, unknown>;
   validationErrors?: Array<{
     message: string;
     members: string[];

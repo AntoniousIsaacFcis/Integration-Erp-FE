@@ -635,11 +635,16 @@
     "SIGN_ATTENDANCE": "تسجيل حضوري",
     "SIGN_ATTENDANCE_HINT": "اختر الموظف وسجل سجل الحضور الخام داخل هذه الجلسة.",
     "SIGN_ATTENDANCE_SUCCESS": "تم تسجيل الحضور بنجاح.",
+    "CHECK_IN_SUCCESS": "تم تسجيل الحضور بنجاح.",
+    "CHECK_OUT_SUCCESS": "تم تسجيل الانصراف بنجاح.",
     "EMPLOYEE_SEARCH_PLACEHOLDER": "ابحث بالاسم، الكود، البريد الإلكتروني، القسم، الفرع، الدولة... إلخ",
     "NO_SESSION_LOGS": "لا توجد سجلات حضور مسجلة داخل هذه الجلسة بعد.",
     "SESSION_LOGS_COUNT": "السجلات",
     "SIGNS_COUNT": "عدد التسجيلات",
     "LOG_SESSION_SEARCH_PLACEHOLDER": "ابحث برقم الجلسة أو المصدر...",
+    "OPEN_SESSION_ALREADY_EXISTS": "توجد بالفعل جلسة حضور مفتوحة. استخدم الجلسة المفتوحة الحالية بدلاً من إنشاء جلسة جديدة.",
+    "VIEW_OPEN_SESSION": "عرض الجلسة المفتوحة",
+    "SHOW_OPEN_SESSIONS": "عرض الجلسات المفتوحة",
     "LOG_SESSION_STATUS": {
       "OPEN": "مفتوحة",
       "CLOSED": "مغلقة"
@@ -670,7 +675,7 @@
     "VIEW_REPORT": "عرض التقرير",
     "LOG_STATUS": {
       "PENDING": "معلق",
-      "VALID": "صالح",
+      "FINALIZED": "نهائي",
       "INVALID": "غير صالح",
       "CHECK_IN": "تسجيل دخول",
       "CHECK_OUT": "تسجيل خروج",

@@ -27,7 +27,7 @@
         </div>
 
         <div class="flex items-center gap-3">
-          @if (canCloseSession()) {
+          @if (canSignAttendance()) {
             <app-action-btn-component
               [label]="'ATTENDANCE.SIGN_ATTENDANCE'"
               iconName="lucideCheckCircle"
@@ -74,15 +74,17 @@
             <app-app-input-component [label]="t('LABEL.NOTES')" [control]="getControl('notes')" />
           </div>
 
-          <div class="mt-6 flex justify-end">
-            <button
-              type="button"
-              (click)="saveNotes()"
-              [disabled]="isSavingNotes()"
-              class="inline-flex h-11 items-center justify-center rounded-xl bg-[#537C0F] px-5 text-sm font-medium text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60">
-              {{ t('COMMON.SAVE') }}
-            </button>
-          </div>
+          @if (canUpdateSession()) {
+            <div class="mt-6 flex justify-end">
+              <button
+                type="button"
+                (click)="saveNotes()"
+                [disabled]="isSavingNotes()"
+                class="inline-flex h-11 items-center justify-center rounded-xl bg-[#537C0F] px-5 text-sm font-medium text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60">
+                {{ t('COMMON.SAVE') }}
+              </button>
+            </div>
+          }
         } @else {
           @if (logsResource.isLoading()) {
             <div class="py-10 text-center text-gray-400">{{ t('COMMON.LOADING') }}</div>

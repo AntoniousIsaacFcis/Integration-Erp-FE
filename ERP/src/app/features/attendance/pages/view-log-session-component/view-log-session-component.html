@@ -18,13 +18,15 @@
   </ng-template>
 
   <ng-template #sessionActions>
-    <div class="flex items-center gap-3">
-      <app-action-btn-component
-        [label]="'ATTENDANCE.SIGN_EMPLOYEES_SESSION'"
-        (clicked)="handleDailyRegistration()"
-        iconName="lucideCheckCircle"
-        [isLoading]="isCreatingSession()" />
-    </div>
+    @if (canCreateSession()) {
+      <div class="flex items-center gap-3">
+        <app-action-btn-component
+          [label]="'ATTENDANCE.SIGN_EMPLOYEES_SESSION'"
+          (clicked)="handleDailyRegistration()"
+          iconName="lucideCheckCircle"
+          [isLoading]="isCreatingSession()" />
+      </div>
+    }
   </ng-template>
 
   <div class="w-full overflow-x-auto">
@@ -89,12 +91,14 @@
                     class="flex size-[32px] items-center justify-center rounded-full bg-[#61BDDC33] hover:bg-gray-100 transition-colors">
                     <ng-icon name="lucideEye" size="16" color="#61BDDC" />
                   </button>
-                  <button
-                    type="button"
-                    (click)="$event.stopPropagation(); handleDelete(session.id)"
-                    class="flex size-[32px] items-center justify-center rounded-full bg-[#0000001A] hover:bg-red-50 transition-colors">
-                    <ng-icon name="lucideTrash2" size="16" color="#F40552" />
-                  </button>
+                  @if (canDeleteSession()) {
+                    <button
+                      type="button"
+                      (click)="$event.stopPropagation(); handleDelete(session.id)"
+                      class="flex size-[32px] items-center justify-center rounded-full bg-[#0000001A] hover:bg-red-50 transition-colors">
+                      <ng-icon name="lucideTrash2" size="16" color="#F40552" />
+                    </button>
+                  }
                 </div>
               </td>
             </tr>

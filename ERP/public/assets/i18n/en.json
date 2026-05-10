@@ -607,11 +607,16 @@
     "SIGN_ATTENDANCE": "Sign Attendance",
     "SIGN_ATTENDANCE_HINT": "Select an employee and register the raw attendance log inside this session.",
     "SIGN_ATTENDANCE_SUCCESS": "Attendance has been signed successfully.",
+    "CHECK_IN_SUCCESS": "Check-in completed successfully.",
+    "CHECK_OUT_SUCCESS": "Check-out completed successfully.",
     "EMPLOYEE_SEARCH_PLACEHOLDER": "Search by name, code, email, department, branch, country, etc.",
     "NO_SESSION_LOGS": "No attendance logs have been created in this session yet.",
     "SESSION_LOGS_COUNT": "Logs",
     "SIGNS_COUNT": "Sign Count",
     "LOG_SESSION_SEARCH_PLACEHOLDER": "Search by session ID or source...",
+    "OPEN_SESSION_ALREADY_EXISTS": "There is already an open attendance session. Use the existing open session instead of creating another one.",
+    "VIEW_OPEN_SESSION": "View Open Session",
+    "SHOW_OPEN_SESSIONS": "Show Open Sessions",
     "LOG_SESSION_STATUS": {
       "OPEN": "Open",
       "CLOSED": "Closed"
@@ -644,7 +649,7 @@
     "VIEW_REPORT": "View Report",
     "LOG_STATUS": {
       "PENDING": "Pending",
-      "VALID": "Valid",
+      "FINALIZED": "Finalized",
       "INVALID": "Invalid",
       "CHECK_IN": "Check In",
       "CHECK_OUT": "Check Out",

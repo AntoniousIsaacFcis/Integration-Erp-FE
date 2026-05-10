@@ -20,6 +20,9 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
       if (remoteError?.code === 'Attendance:AttendanceDayAlreadyExists') {
         userFriendlyMessage = 'ATTENDANCE.ATTENDANCE_DAY_ALREADY_EXISTS';
       }
+      else if (isAttendanceBusinessException(remoteError?.code)) {
+        userFriendlyMessage = remoteError?.message || 'COMMON.MESSAGES.PLEASE_TRY_AGAIN';
+      }
       else if (error.status === 400 || error.status === 401) {
         if (error.error?.error_description) {
           userFriendlyMessage = error.error.error_description;
@@ -49,3 +52,7 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
     })
   );
 };
+
+function isAttendanceBusinessException(code?: string) {
+  return typeof code === 'string' && code.startsWith('Attendance:');
+}

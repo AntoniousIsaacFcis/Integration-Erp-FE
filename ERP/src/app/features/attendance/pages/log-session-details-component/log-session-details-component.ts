@@ -3,10 +3,12 @@ import { ChangeDetectionStrategy, Component, computed, effect, inject, signal } 
 import { rxResource } from '@angular/core/rxjs-interop';
 import { FormBuilder, FormControl, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { AuthService } from '@core/auth/services/auth-service';
 import { BreadcrumbService } from '@core/services/breadcrumb-service';
 import { NotificationService } from '@core/services/notification-service';
 import { AttendanceService } from '@features/attendance/services/attendance-service';
 import { IAttendanceLogListItem, IAttendanceLogSessionApiDto } from '@features/attendance/models/iattendance';
+import { ATTENDANCE_LOG_SESSION_PERMISSIONS, canManageAttendanceLogSession } from '@features/attendance/utils/attendance-log-session-auth';
 import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { AppDateInputComponent } from '@shared/components/atoms/app-date-input-component/app-date-input-component';
 import { AppInputComponent } from '@shared/components/atoms/app-input-component/app-input-component';
@@ -39,6 +41,7 @@ export class LogSessionDetailsComponent {
   private readonly router = inject(Router);
   private readonly fb = inject(FormBuilder);
   private readonly attendanceService = inject(AttendanceService);
+  private readonly authService = inject(AuthService);
   private readonly breadcrumbService = inject(BreadcrumbService);
   private readonly notificationService = inject(NotificationService);
   private readonly translocoService = inject(TranslocoService);
@@ -50,7 +53,14 @@ export class LogSessionDetailsComponent {
   isSavingNotes = signal(false);
   sessionDateRaw = signal('');
   sessionDateDisplay = signal('');
-  canCloseSession = computed(() => (this.sessionResource.value()?.status ?? 0) === 1);
+  canUpdateSession = computed(() =>
+    canManageAttendanceLogSession(this.authService, ATTENDANCE_LOG_SESSION_PERMISSIONS.update));
+  canSignAttendance = computed(() =>
+    (this.sessionResource.value()?.status ?? 0) === 1 &&
+    canManageAttendanceLogSession(this.authService, ATTENDANCE_LOG_SESSION_PERMISSIONS.takeEmployeeAttendance));
+  canCloseSession = computed(() =>
+    (this.sessionResource.value()?.status ?? 0) === 1 &&
+    canManageAttendanceLogSession(this.authService, ATTENDANCE_LOG_SESSION_PERMISSIONS.close));
 
   sessionForm = this.fb.nonNullable.group({
     code: [{ value: '', disabled: true }],
@@ -99,6 +109,12 @@ export class LogSessionDetailsComponent {
       this.sessionDateDisplay.set(this.formatDate(session.sessionDate));
 
       this.breadcrumbService.setCurrentBreadcrumbLabel(this.formatSessionCode(session.code), this.route);
+
+      if (this.canUpdateSession()) {
+        this.sessionForm.controls.notes.enable({ emitEvent: false });
+      } else {
+        this.sessionForm.controls.notes.disable({ emitEvent: false });
+      }
     });
   }
 
@@ -107,6 +123,10 @@ export class LogSessionDetailsComponent {
   }
 
   openSignModal() {
+    if (!this.canSignAttendance()) {
+      return;
+    }
+
     this.showSignModal.set(true);
   }
 
@@ -158,7 +178,7 @@ export class LogSessionDetailsComponent {
   }
 
   saveNotes() {
-    if (this.isSavingNotes()) {
+    if (this.isSavingNotes() || !this.canUpdateSession()) {
       return;
     }
 
