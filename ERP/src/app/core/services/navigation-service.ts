@@ -59,7 +59,14 @@ export const MENU_ITEMS: INavItem[] = [
         icon: 'lucideCalendarDays',
         requiredPolicy: 'Attendance.HolidayLists',
       },
-      { id: '7-3', label: 'SETTINGS.EMPLOYMENT_STATUS', path: '/settings/employment-status', icon: 'lucideBadgeCheck' }
+      {
+        id: '7-3',
+        label: 'SETTINGS.ATTENDANCE_MACHINES',
+        path: '/settings/attendance-machines',
+        icon: 'lucideList',
+        requiredPolicy: 'Attendance.AttendanceMachines',
+      },
+      { id: '7-4', label: 'SETTINGS.EMPLOYMENT_STATUS', path: '/settings/employment-status', icon: 'lucideBadgeCheck' }
     ]
   }
 ];

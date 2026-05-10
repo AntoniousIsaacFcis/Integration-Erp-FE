@@ -23,6 +23,12 @@ export const SETTINGS_ROUTES: Routes = [
           import('./holiday-lists.routes').then(m => m.HOLIDAY_LISTS_ROUTES),
       },
       {
+        path: 'attendance-machines',
+        data: { breadcrumb: 'SETTINGS.ATTENDANCE_MACHINES' },
+        loadChildren: () =>
+          import('./attendance-machines.routes').then(m => m.ATTENDANCE_MACHINES_ROUTES),
+      },
+      {
         path: 'employment-status',
         data: { breadcrumb: 'SETTINGS.EMPLOYMENT_STATUS' },
         loadChildren: () =>

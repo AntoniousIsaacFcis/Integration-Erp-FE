@@ -1,0 +1,111 @@
+<app-app-base-table-component
+  [(searchTerm)]="searchTerm"
+  [totalItems]="totalItems()"
+  [(currentPage)]="currentPage"
+  [extraActions]="attendanceMachineActions"
+  [searchPlaceholder]="'SETTINGS.ATTENDANCE_MACHINE_SEARCH_PLACEHOLDER'"
+  *transloco="let t"
+>
+  <ng-template #attendanceMachineActions>
+    <app-action-btn-component
+      *appCanAccess="'Attendance.AttendanceMachines.Create'"
+      [label]="t('SETTINGS.ADD_ATTENDANCE_MACHINE')"
+      (clicked)="goToCreate()"
+      iconName="lucidePlusCircle"
+    />
+  </ng-template>
+
+  <div class="w-full overflow-x-auto">
+    @if (attendanceMachinesResource.isLoading()) {
+      <div class="flex justify-center py-20 text-gray-400">
+        {{ t('COMMON.MESSAGES.LOADING_DATA') }}
+      </div>
+    }
+
+    @if (attendanceMachinesResource.error()) {
+      <div class="bg-red-50 text-red-600 p-6 rounded-xl text-center border border-red-100">
+        <p>{{ t('COMMON.MESSAGES.OPERATION_FAILED') }}</p>
+        <button (click)="attendanceMachinesResource.reload()" class="mt-3 px-4 py-2 bg-red-600 text-white rounded-lg">
+          {{ t('COMMON.MESSAGES.PLEASE_TRY_AGAIN') }}
+        </button>
+      </div>
+    }
+
+    @if (attendanceMachinesResource.value() && !attendanceMachines().length) {
+      <app-empty-table-placeholder-component />
+    }
+
+    @if (attendanceMachinesResource.value() && attendanceMachines().length) {
+      <table class="w-full font-arabic text-black border border-[#F4F4F4]/50 rounded-xl overflow-hidden">
+        <thead class="text-sm sticky top-0 bg-[#F4F4F4] z-10">
+          <tr>
+            <th class="py-4 ps-24 text-start">{{ t('SETTINGS.ATTENDANCE_MACHINE_NAME') }}</th>
+            <th class="py-4 px-6 text-start">{{ t('SETTINGS.ATTENDANCE_MACHINE_IDENTIFIER') }}</th>
+            <th class="py-4 px-6 text-start">{{ t('SETTINGS.MACHINE_TYPE') }}</th>
+            <th class="py-4 px-6 text-start">{{ t('SETTINGS.CONNECTION') }}</th>
+            <th class="py-4 px-6 text-center">{{ t('COMMON.STATUS') }}</th>
+            <th class="py-4 px-20 text-center"></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (attendanceMachine of attendanceMachines(); track attendanceMachine.id) {
+            <tr
+              class="bg-white hover:bg-gray-50/50 transition-all border-b border-gray-100 cursor-pointer"
+              (click)="handleView(attendanceMachine.id)"
+            >
+              <td class="py-4 ps-24 text-start">
+                <div class="flex flex-col">
+                  <span class="text-sm font-medium">{{ attendanceMachine.name }}</span>
+                  <span class="text-xs text-gray-400 truncate max-w-[280px]">
+                    {{ attendanceMachine.description || t('COMMON.NO_DATA') }}
+                  </span>
+                </div>
+              </td>
+              <td class="py-4 px-6 text-start text-sm">
+                {{ attendanceMachine.serialNumber || attendanceMachine.code || t('COMMON.NO_DATA') }}
+              </td>
+              <td class="py-4 px-6 text-start text-sm">
+                {{ attendanceMachine.machineType }}
+              </td>
+              <td class="py-4 px-6 text-start text-sm">
+                {{ formatConnection(attendanceMachine) || t('COMMON.NO_DATA') }}
+              </td>
+              <td class="py-4 px-6 text-center">
+                <div class="flex justify-center">
+                  <app-table-status-badge-component
+                    [status]="attendanceMachine.isActive ? 'active' : 'inactive'"
+                    [label]="t(attendanceMachine.isActive ? 'COMMON.ACTIVE' : 'COMMON.INACTIVE')"
+                  />
+                </div>
+              </td>
+              <td class="py-4 px-20">
+                <div class="flex gap-5 justify-end">
+                  <button
+                    *appCanAccess="'Attendance.AttendanceMachines.Update'"
+                    (click)="$event.stopPropagation(); handleEdit(attendanceMachine.id)"
+                    class="flex size-[30px] items-center justify-center rounded-full bg-[#0000001A] transition-colors hover:bg-[#00000033]"
+                  >
+                    <ng-icon name="lucidePencil" size="16px" color="black" />
+                  </button>
+                  <button
+                    *appCanAccess="'Attendance.AttendanceMachines.Delete'"
+                    (click)="$event.stopPropagation(); handleDelete(attendanceMachine.id)"
+                    class="flex size-[30px] items-center justify-center rounded-full bg-[#0000001A] transition-colors hover:bg-[#00000033]"
+                  >
+                    <ng-icon name="lucideTrash2" size="16px" color="#F40552" />
+                  </button>
+                  <button
+                    (click)="$event.stopPropagation(); handleView(attendanceMachine.id)"
+                    class="flex size-[32px] items-center justify-center rounded-full bg-[#61BDDC33] hover:bg-gray-100 transition-colors"
+                  >
+                    <ng-icon name="lucideEye" size="16px" color="#61BDDC" />
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+  </div>
+</app-app-base-table-component>

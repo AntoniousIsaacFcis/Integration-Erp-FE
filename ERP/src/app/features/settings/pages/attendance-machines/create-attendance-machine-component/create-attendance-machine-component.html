@@ -1,0 +1,112 @@
+<main class="flex justify-center" *transloco="let t">
+  <div class="w-full max-w-standard bg-white rounded-[20px] shadow-soft border border-black/5">
+    <app-form-container-component [title]="t('SETTINGS.ADD_ATTENDANCE_MACHINE')" (submit)="onSubmit()">
+      <ng-container formFields [formGroup]="attendanceMachineForm">
+        <div class="col-span-1">
+          <app-app-input-component
+            [label]="t('SETTINGS.ATTENDANCE_MACHINE_NAME') + ' *'"
+            [placeholder]="t('SETTINGS.ATTENDANCE_MACHINE_NAME')"
+            [control]="attendanceMachineForm.controls.name"
+            [showErrors]="submitted()"
+            [requiredErrorKey]="'SETTINGS.ATTENDANCE_MACHINE_NAME_REQUIRED'"
+          />
+        </div>
+
+        <div class="col-span-1">
+          <app-app-input-component
+            [label]="t('SETTINGS.MACHINE_TYPE') + ' *'"
+            [placeholder]="t('SETTINGS.MACHINE_TYPE')"
+            [control]="attendanceMachineForm.controls.machineType"
+            [showErrors]="submitted()"
+            [requiredErrorKey]="'SETTINGS.ATTENDANCE_MACHINE_TYPE_REQUIRED'"
+          />
+        </div>
+
+        <div class="col-span-1">
+          <app-app-input-component
+            [label]="t('SETTINGS.ATTENDANCE_MACHINE_CODE')"
+            [placeholder]="t('SETTINGS.ATTENDANCE_MACHINE_CODE')"
+            [control]="attendanceMachineForm.controls.code"
+            [showErrors]="submitted()"
+          />
+        </div>
+
+        <div class="col-span-1">
+          <app-app-input-component
+            [label]="t('SETTINGS.ATTENDANCE_MACHINE_SERIAL_NUMBER')"
+            [placeholder]="t('SETTINGS.ATTENDANCE_MACHINE_SERIAL_NUMBER')"
+            [control]="attendanceMachineForm.controls.serialNumber"
+            [showErrors]="submitted()"
+          />
+        </div>
+
+        @if (identifierErrorKey(); as errorKey) {
+          <div class="col-span-2">
+            <app-submit-error-message-component [message]="t(errorKey)" />
+          </div>
+        }
+
+        <div class="col-span-1">
+          <app-app-input-component
+            [label]="t('SETTINGS.HOST_NAME')"
+            [placeholder]="t('SETTINGS.HOST_NAME')"
+            [control]="attendanceMachineForm.controls.hostName"
+            [showErrors]="submitted()"
+          />
+        </div>
+
+        <div class="col-span-1">
+          <app-app-input-component
+            [label]="t('SETTINGS.PORT')"
+            [placeholder]="'4370'"
+            [control]="attendanceMachineForm.controls.port"
+            [showErrors]="submitted()"
+            [patternErrorKey]="'ERRORS.INVALID_PORT'"
+          />
+        </div>
+
+        <div class="col-span-1">
+          <app-app-input-component
+            [label]="t('SETTINGS.IMPORT_FILE_PATH')"
+            [placeholder]="t('SETTINGS.IMPORT_FILE_PATH')"
+            [control]="attendanceMachineForm.controls.importFilePath"
+            [showErrors]="submitted()"
+          />
+        </div>
+
+        <div class="col-span-1">
+          <app-app-input-component
+            [label]="t('SETTINGS.WEBHOOK_URL')"
+            [placeholder]="t('SETTINGS.WEBHOOK_URL')"
+            [control]="attendanceMachineForm.controls.webhookUrl"
+            [showErrors]="submitted()"
+          />
+        </div>
+
+        <app-app-radio-component
+          [label]="'COMMON.STATUS'"
+          [required]="true"
+          [control]="attendanceMachineForm.controls.isActive"
+          [options]="[
+            { label: 'COMMON.ACTIVE', value: true },
+            { label: 'COMMON.INACTIVE', value: false }
+          ]"
+        />
+
+        <div class="col-span-2">
+          <app-app-textarea-component
+            [label]="t('SETTINGS.DESCRIPTION')"
+            [placeholder]="t('SETTINGS.DESCRIPTION_PLACEHOLDER')"
+            [control]="attendanceMachineForm.controls.description"
+            [showErrors]="submitted()"
+          />
+        </div>
+      </ng-container>
+
+      <ng-container formActions>
+        <app-form-cancel-button-component (clicked)="onCancel()" />
+        <app-form-save-button-component [isLoading]="isSubmitting()" [label]="'COMMON.SAVE'" type="submit" />
+      </ng-container>
+    </app-form-container-component>
+  </div>
+</main>

@@ -1,0 +1,135 @@
+<main class="flex justify-center" *transloco="let t">
+  <div class="w-full max-w-standard bg-white rounded-[20px] shadow-soft border border-black/5">
+    <app-form-container-component [title]="t('SETTINGS.PREVIEW_ATTENDANCE_MACHINE')">
+      <ng-container formFields [formGroup]="attendanceMachineForm">
+        @if (isLoading()) {
+          <div class="col-span-2 flex justify-center py-10 text-gray-400">
+            {{ t('COMMON.MESSAGES.LOADING_DATA') }}
+          </div>
+        } @else {
+          <div class="col-span-1">
+            <app-app-input-component
+              [label]="t('SETTINGS.ATTENDANCE_MACHINE_NAME')"
+              [placeholder]="t('SETTINGS.ATTENDANCE_MACHINE_NAME')"
+              [control]="attendanceMachineForm.controls.name"
+              [readonly]="true"
+            />
+          </div>
+
+          <div class="col-span-1">
+            <app-app-input-component
+              [label]="t('SETTINGS.MACHINE_TYPE')"
+              [placeholder]="t('SETTINGS.MACHINE_TYPE')"
+              [control]="attendanceMachineForm.controls.machineType"
+              [readonly]="true"
+            />
+          </div>
+
+          <div class="col-span-1">
+            <app-app-input-component
+              [label]="t('SETTINGS.ATTENDANCE_MACHINE_CODE')"
+              [placeholder]="t('SETTINGS.ATTENDANCE_MACHINE_CODE')"
+              [control]="attendanceMachineForm.controls.code"
+              [readonly]="true"
+            />
+          </div>
+
+          <div class="col-span-1">
+            <app-app-input-component
+              [label]="t('SETTINGS.ATTENDANCE_MACHINE_SERIAL_NUMBER')"
+              [placeholder]="t('SETTINGS.ATTENDANCE_MACHINE_SERIAL_NUMBER')"
+              [control]="attendanceMachineForm.controls.serialNumber"
+              [readonly]="true"
+            />
+          </div>
+
+          <div class="col-span-1">
+            <app-app-input-component
+              [label]="t('SETTINGS.HOST_NAME')"
+              [placeholder]="t('SETTINGS.HOST_NAME')"
+              [control]="attendanceMachineForm.controls.hostName"
+              [readonly]="true"
+            />
+          </div>
+
+          <div class="col-span-1">
+            <app-app-input-component
+              [label]="t('SETTINGS.PORT')"
+              [placeholder]="t('SETTINGS.PORT')"
+              [control]="attendanceMachineForm.controls.port"
+              [readonly]="true"
+            />
+          </div>
+
+          <div class="col-span-1">
+            <app-app-input-component
+              [label]="t('SETTINGS.IMPORT_FILE_PATH')"
+              [placeholder]="t('SETTINGS.IMPORT_FILE_PATH')"
+              [control]="attendanceMachineForm.controls.importFilePath"
+              [readonly]="true"
+            />
+          </div>
+
+          <div class="col-span-1">
+            <app-app-input-component
+              [label]="t('SETTINGS.WEBHOOK_URL')"
+              [placeholder]="t('SETTINGS.WEBHOOK_URL')"
+              [control]="attendanceMachineForm.controls.webhookUrl"
+              [readonly]="true"
+            />
+          </div>
+
+          <div class="col-span-1 flex flex-col gap-3">
+            <label class="text-base font-medium leading-none text-start text-black">
+              {{ t('COMMON.STATUS') }}
+            </label>
+            <app-table-status-badge-component
+              [status]="attendanceMachine()?.isActive ? 'active' : 'inactive'"
+              [label]="t(attendanceMachine()?.isActive ? 'COMMON.ACTIVE' : 'COMMON.INACTIVE')"
+            />
+          </div>
+
+          <div class="col-span-1">
+            <app-app-input-component
+              [label]="t('SETTINGS.LAST_PULL_TIME')"
+              [placeholder]="t('SETTINGS.LAST_PULL_TIME')"
+              [control]="attendanceMachineForm.controls.lastPullTime"
+              [readonly]="true"
+            />
+          </div>
+
+          <div class="col-span-1">
+            <app-app-input-component
+              [label]="t('SETTINGS.TOTAL_PULLED_SIGNS')"
+              [placeholder]="t('SETTINGS.TOTAL_PULLED_SIGNS')"
+              [control]="attendanceMachineForm.controls.totalPulledSigns"
+              [readonly]="true"
+            />
+          </div>
+
+          <div class="col-span-2">
+            <app-app-textarea-component
+              [label]="t('SETTINGS.LAST_PULL_ERROR')"
+              [placeholder]="t('SETTINGS.LAST_PULL_ERROR')"
+              [control]="attendanceMachineForm.controls.lastPullError"
+              [readonly]="true"
+            />
+          </div>
+
+          <div class="col-span-2">
+            <app-app-textarea-component
+              [label]="t('SETTINGS.DESCRIPTION')"
+              [placeholder]="t('SETTINGS.DESCRIPTION_PLACEHOLDER')"
+              [control]="attendanceMachineForm.controls.description"
+              [readonly]="true"
+            />
+          </div>
+        }
+      </ng-container>
+
+      <ng-container formActions>
+        <app-form-save-button-component [label]="'COMMON.BACK'" (clicked)="goBack()" />
+      </ng-container>
+    </app-form-container-component>
+  </div>
+</main>
