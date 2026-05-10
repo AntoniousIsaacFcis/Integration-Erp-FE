@@ -9,7 +9,7 @@
             [showErrors]="submitted()" [placeholder]="t('PLACEHOLDER.EnTER_SHIFTNAME')" />
 
           <app-app-select-component [label]="t('SHIFT.ASSIGNED_TO') + ' *'" [control]="getControl('assignedShiftId')"
-            [showErrors]="submitted()" [placeholder]="t('PLACEHOLDER.NIGHTSHIFT')">
+            [showErrors]="submitted()" [placeholder]="t('PLACEHOLDER.SELECT_SHIFT')">
             @for (shift of shiftOptions(); track shift.id) {
               <option [value]="shift.id">{{ shift.displayName }}</option>
             }
@@ -54,24 +54,21 @@
             </div>
 
             <app-app-select-component [label]="t('LABEL.DEPARTMENT_NAME')" [control]="getControl('departmentId')"
-              [showErrors]="submitted()">
-              <option value="">{{ t('SHIFT.ALL_DEPARTMENTS') }}</option>
+              [showErrors]="submitted()" [placeholder]="t('PLACEHOLDER.SELECT_DEPARTMENT')">
               @for (department of departmentOptions(); track department.id) {
                 <option [value]="department.id">{{ department.displayName }}</option>
               }
             </app-app-select-component>
 
             <app-app-select-component [label]="t('LABEL.DESIGNATION_NAME')" [control]="getControl('designationId')"
-              [showErrors]="submitted()">
-              <option value="">{{ t('SHIFT.ALL_DESIGNATIONS') }}</option>
+              [showErrors]="submitted()" [placeholder]="t('PLACEHOLDER.SELECT_JOB_TITLE')">
               @for (designation of designationOptions(); track designation.id) {
                 <option [value]="designation.id">{{ designation.displayName }}</option>
               }
             </app-app-select-component>
 
             <app-app-select-component [label]="t('SHIFT.CURRENT_SHIFT')" [control]="getControl('currentShiftId')"
-              [showErrors]="submitted()">
-              <option value="">{{ t('SHIFT.ALL_SHIFTS') }}</option>
+              [showErrors]="submitted()" [placeholder]="t('PLACEHOLDER.SELECT_SHIFT')">
               @for (shift of shiftOptions(); track shift.id) {
                 <option [value]="shift.id">{{ shift.displayName }}</option>
               }
