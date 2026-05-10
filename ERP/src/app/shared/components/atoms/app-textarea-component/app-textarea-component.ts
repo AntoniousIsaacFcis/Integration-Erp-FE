@@ -17,6 +17,7 @@ export class AppTextareaComponent {
   placeholder = input<string>('');
   control = input.required<FormControl>();
   showErrors = input<boolean>(false);
+  readonly = input<boolean>(false);
 
   requiredErrorKey = input<string>('AUTH.REQUIRED_FIELD');
   maxWordsErrorKey = input<string>('ERRORS.MAX_WORDS');

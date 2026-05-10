@@ -1,0 +1,117 @@
+<app-app-base-table-component
+  [(searchTerm)]="searchTerm"
+  [totalItems]="totalItems()"
+  [(currentPage)]="currentPage"
+  [extraActions]="leaveTypeActions"
+  [searchPlaceholder]="'SETTINGS.LEAVE_TYPES_SEARCH_PLACEHOLDER'"
+  *transloco="let t"
+>
+  <ng-template #leaveTypeActions>
+    <app-action-btn-component [label]="t('SETTINGS.ADD_LEAVE_TYPE')" (clicked)="goToCreate()" iconName="lucidePlusCircle" />
+  </ng-template>
+
+  <div class="w-full overflow-x-auto">
+    @if (leaveTypesResource.isLoading()) {
+      <div class="flex justify-center py-20 text-gray-400">
+        {{ t('COMMON.MESSAGES.LOADING_DATA') }}
+      </div>
+    }
+
+    @if (leaveTypesResource.error()) {
+      <div class="bg-red-50 text-red-600 p-6 rounded-xl text-center border border-red-100">
+        <p>{{ t('COMMON.MESSAGES.OPERATION_FAILED') }}</p>
+        <button (click)="leaveTypesResource.reload()" class="mt-3 px-4 py-2 bg-red-600 text-white rounded-lg">
+          {{ t('COMMON.MESSAGES.PLEASE_TRY_AGAIN') }}
+        </button>
+      </div>
+    }
+
+    @if (leaveTypesResource.value() && !leaveTypes().length) {
+      <app-empty-table-placeholder-component />
+    }
+
+    @if (leaveTypesResource.value() && leaveTypes().length) {
+      <table class="w-full font-arabic text-black border border-[#F4F4F4]/50 rounded-xl overflow-hidden">
+        <thead class="text-sm sticky top-0 bg-[#F4F4F4] z-10">
+          <tr>
+            <th class="py-4 ps-24 text-start">{{ t('SETTINGS.LEAVE_TYPE_CODE') }}</th>
+            <th class="py-4 px-6 text-start">{{ t('SETTINGS.LEAVE_TYPE_NAME') }}</th>
+            <th class="py-4 px-6 text-center">{{ t('SETTINGS.LEAVE_TYPE_COLOR') }}</th>
+            <th class="py-4 px-6 text-center">{{ t('SETTINGS.PAID') }}</th>
+            <th class="py-4 px-6 text-center">{{ t('SETTINGS.REQUIRES_PERMISSION') }}</th>
+            <th class="py-4 px-6 text-center">{{ t('SETTINGS.MAX_DAYS_PER_YEAR') }}</th>
+            <th class="py-4 px-20 text-center"></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (leaveType of leaveTypes(); track leaveType.id; let i = $index) {
+            <tr class="bg-white hover:bg-gray-50/50 transition-all border-b border-gray-100 cursor-pointer" (click)="handleView(leaveType.id)">
+              <td class="py-4 ps-24 text-start font-normal text-sm">
+                {{ leaveType.code || t('COMMON.NO_DATA') }}
+              </td>
+              <td class="py-4 px-6 text-start">
+                <div class="flex items-center gap-3">
+                  <span class="size-3 rounded-full border border-black/10 shrink-0" [style.backgroundColor]="leaveType.color || '#4e5381'"></span>
+                  <div class="flex flex-col">
+                    <span class="text-sm font-medium">{{ leaveType.name }}</span>
+                    <span class="text-xs text-gray-400 truncate max-w-[280px]">
+                      {{ leaveType.description || t('COMMON.NO_DATA') }}
+                    </span>
+                  </div>
+                </div>
+              </td>
+              <td class="py-4 px-6 text-center">
+                <span class="inline-flex items-center gap-2 px-3 py-2 rounded-full border border-black/10">
+                  <span class="size-3 rounded-full" [style.backgroundColor]="leaveType.color || '#4e5381'"></span>
+                  <span class="text-sm">{{ leaveType.color || t('COMMON.NO_DATA') }}</span>
+                </span>
+              </td>
+              <td class="py-4 px-6 text-center">
+                <div class="flex justify-center">
+                  <app-table-status-badge-component
+                    [status]="leaveType.paid ? 'active' : 'inactive'"
+                    [label]="t(leaveType.paid ? 'COMMON.YES' : 'COMMON.NO')"
+                  />
+                </div>
+              </td>
+              <td class="py-4 px-6 text-center">
+                <div class="flex justify-center">
+                  <app-table-status-badge-component
+                    [status]="leaveType.requiresPermission ? 'active' : 'inactive'"
+                    [label]="t(leaveType.requiresPermission ? 'COMMON.YES' : 'COMMON.NO')"
+                  />
+                </div>
+              </td>
+              <td class="py-4 px-6 text-center text-sm">
+                {{ leaveType.maxDaysPerYear ?? '-' }}
+              </td>
+              <td class="py-4 px-20">
+                <div class="flex gap-5 justify-end">
+                  <button
+                    (click)="$event.stopPropagation(); handleEdit(leaveType.id)"
+                    class="flex size-[30px] items-center justify-center rounded-full bg-[#0000001A] transition-colors hover:bg-[#00000033]"
+                  >
+                    <ng-icon name="lucidePencil" size="16px" color="black" />
+                  </button>
+                  <button
+                    *appCanAccess="'CoreHR.LeaveTypes.Delete'"
+                    (click)="$event.stopPropagation(); handleDelete(leaveType.id)"
+                    class="flex size-[30px] items-center justify-center rounded-full bg-[#0000001A] transition-colors hover:bg-[#00000033]"
+                  >
+                    <ng-icon name="lucideTrash2" size="16px" color="#F40552" />
+                  </button>
+                  <button
+                    (click)="$event.stopPropagation(); handleView(leaveType.id)"
+                    class="flex size-[32px] items-center justify-center rounded-full bg-[#61BDDC33] hover:bg-gray-100 transition-colors"
+                  >
+                    <ng-icon name="lucideEye" size="16px" color="#61BDDC" />
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+  </div>
+</app-app-base-table-component>

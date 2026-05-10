@@ -1,0 +1,127 @@
+<main class="flex justify-center" *transloco="let t">
+  <div class="w-full max-w-standard bg-white rounded-[20px] shadow-soft border border-black/5">
+    <app-form-container-component [title]="t('SETTINGS.ADD_LEAVE_TYPE')" (submit)="onSubmit()">
+      <ng-container formFields [formGroup]="leaveTypeForm">
+        <div class="col-span-1">
+          <app-app-input-component
+            [label]="t('SETTINGS.LEAVE_TYPE_CODE')"
+            [placeholder]="t('SETTINGS.LEAVE_TYPE_CODE')"
+            [control]="leaveTypeForm.controls.code"
+            [showErrors]="submitted()"
+            [maxLengthErrorKey]="'ERRORS.MAX_LENGTH'"
+          />
+        </div>
+
+        <div class="col-span-1">
+          <app-app-input-component
+            [label]="t('SETTINGS.LEAVE_TYPE_NAME') + ' *'"
+            [placeholder]="t('SETTINGS.LEAVE_TYPE_NAME')"
+            [control]="leaveTypeForm.controls.name"
+            [showErrors]="submitted()"
+            [maxLengthErrorKey]="'ERRORS.MAX_LENGTH'"
+          />
+        </div>
+
+        <div class="col-span-1">
+          <app-app-input-component
+            [label]="t('SETTINGS.LEAVE_TYPE_COLOR')"
+            [placeholder]="'#4e5381'"
+            [control]="leaveTypeForm.controls.color"
+            [showErrors]="submitted()"
+            [maxLengthErrorKey]="'ERRORS.MAX_LENGTH'"
+          />
+        </div>
+
+        <div class="col-span-1">
+          <app-app-input-component
+            [label]="t('SETTINGS.MAX_DAYS_PER_YEAR')"
+            [placeholder]="t('SETTINGS.MAX_DAYS_PER_YEAR')"
+            [control]="leaveTypeForm.controls.maxDaysPerYear"
+            [showErrors]="submitted()"
+          />
+        </div>
+
+        <div class="col-span-1">
+          <app-app-input-component
+            [label]="t('SETTINGS.MAX_CONTINUOUS_DAYS_APPLICABLE')"
+            [placeholder]="t('SETTINGS.MAX_CONTINUOUS_DAYS_APPLICABLE')"
+            [control]="leaveTypeForm.controls.maxContinuousDaysApplicable"
+            [showErrors]="submitted()"
+          />
+        </div>
+
+        <div class="col-span-1">
+          <app-app-input-component
+            [label]="t('SETTINGS.APPLICABLE_AFTER_DAYS')"
+            [placeholder]="t('SETTINGS.APPLICABLE_AFTER_DAYS')"
+            [control]="leaveTypeForm.controls.applicableAfterDays"
+            [showErrors]="submitted()"
+          />
+        </div>
+
+        <app-app-radio-component
+          [label]="'SETTINGS.REQUIRES_PERMISSION'"
+          [required]="true"
+          [control]="leaveTypeForm.controls.requiresPermission"
+          [options]="[
+            { label: 'COMMON.YES', value: true },
+            { label: 'COMMON.NO', value: false }
+          ]"
+        />
+
+        <app-app-radio-component
+          [label]="'SETTINGS.OVERRIDE_WEEKEND_OFF_DAYS'"
+          [required]="true"
+          [control]="leaveTypeForm.controls.overrideWeekendOffDays"
+          [options]="[
+            { label: 'COMMON.YES', value: true },
+            { label: 'COMMON.NO', value: false }
+          ]"
+        />
+
+        <app-app-radio-component
+          [label]="'SETTINGS.ALLOW_OUTSIDE_LEAVE_POLICY'"
+          [required]="true"
+          [control]="leaveTypeForm.controls.allowOutsideLeavePolicy"
+          [options]="[
+            { label: 'COMMON.YES', value: true },
+            { label: 'COMMON.NO', value: false }
+          ]"
+        />
+
+        <app-app-radio-component
+          [label]="'SETTINGS.PAID'"
+          [required]="true"
+          [control]="leaveTypeForm.controls.paid"
+          [options]="[
+            { label: 'COMMON.YES', value: true },
+            { label: 'COMMON.NO', value: false }
+          ]"
+        />
+
+        <div class="col-span-2">
+          <app-app-textarea-component
+            [label]="t('SETTINGS.DESCRIPTION')"
+            [placeholder]="t('SETTINGS.DESCRIPTION_PLACEHOLDER')"
+            [control]="leaveTypeForm.controls.description"
+            [showErrors]="submitted()"
+          />
+
+          <div class="p-2">
+            <span
+              class="text-xs font-medium transition-colors duration-200"
+              [class]="submitted() && isOverLimit() ? 'text-red-500' : 'text-gray-400'"
+            >
+              {{ characterCount() }} / {{ descriptionCharacterLimit }} {{ t('COMMON.CHARACTERS') }}
+            </span>
+          </div>
+        </div>
+      </ng-container>
+
+      <ng-container formActions>
+        <app-form-cancel-button-component (clicked)="onCancel()" />
+        <app-form-save-button-component [isLoading]="isSubmitting()" [label]="'COMMON.SAVE'" type="submit" />
+      </ng-container>
+    </app-form-container-component>
+  </div>
+</main>

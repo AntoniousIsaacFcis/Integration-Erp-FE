@@ -1,0 +1,118 @@
+<main class="flex justify-center" *transloco="let t">
+  <div class="w-full max-w-standard bg-white rounded-[20px] shadow-soft border border-black/5">
+    <app-form-container-component [title]="t('SETTINGS.PREVIEW_LEAVE_TYPE')">
+      <ng-container formFields [formGroup]="leaveTypeForm">
+        @if (isLoading()) {
+          <div class="col-span-2 flex justify-center py-10 text-gray-400">
+            {{ t('COMMON.MESSAGES.LOADING_DATA') }}
+          </div>
+        } @else {
+          <div class="col-span-1">
+            <app-app-input-component
+              [label]="t('SETTINGS.LEAVE_TYPE_CODE')"
+              [placeholder]="t('SETTINGS.LEAVE_TYPE_CODE')"
+              [control]="leaveTypeForm.controls.code"
+              [readonly]="true"
+            />
+          </div>
+
+          <div class="col-span-1">
+            <app-app-input-component
+              [label]="t('SETTINGS.LEAVE_TYPE_NAME')"
+              [placeholder]="t('SETTINGS.LEAVE_TYPE_NAME')"
+              [control]="leaveTypeForm.controls.name"
+              [readonly]="true"
+            />
+          </div>
+
+          <div class="col-span-1">
+            <app-app-input-component
+              [label]="t('SETTINGS.LEAVE_TYPE_COLOR')"
+              [placeholder]="t('SETTINGS.LEAVE_TYPE_COLOR')"
+              [control]="leaveTypeForm.controls.color"
+              [readonly]="true"
+            />
+          </div>
+
+          <div class="col-span-1">
+            <app-app-input-component
+              [label]="t('SETTINGS.MAX_DAYS_PER_YEAR')"
+              [placeholder]="t('SETTINGS.MAX_DAYS_PER_YEAR')"
+              [control]="leaveTypeForm.controls.maxDaysPerYear"
+              [readonly]="true"
+            />
+          </div>
+
+          <div class="col-span-1">
+            <app-app-input-component
+              [label]="t('SETTINGS.MAX_CONTINUOUS_DAYS_APPLICABLE')"
+              [placeholder]="t('SETTINGS.MAX_CONTINUOUS_DAYS_APPLICABLE')"
+              [control]="leaveTypeForm.controls.maxContinuousDaysApplicable"
+              [readonly]="true"
+            />
+          </div>
+
+          <div class="col-span-1">
+            <app-app-input-component
+              [label]="t('SETTINGS.APPLICABLE_AFTER_DAYS')"
+              [placeholder]="t('SETTINGS.APPLICABLE_AFTER_DAYS')"
+              [control]="leaveTypeForm.controls.applicableAfterDays"
+              [readonly]="true"
+            />
+          </div>
+
+          <div class="col-span-1 flex flex-col gap-3">
+            <label class="text-base font-medium leading-none text-start text-black">{{ t('SETTINGS.REQUIRES_PERMISSION') }}</label>
+            <app-table-status-badge-component
+              [status]="leaveTypeForm.controls.requiresPermission.value ? 'active' : 'inactive'"
+              [label]="t(leaveTypeForm.controls.requiresPermission.value ? 'COMMON.YES' : 'COMMON.NO')"
+            />
+          </div>
+
+          <div class="col-span-1 flex flex-col gap-3">
+            <label class="text-base font-medium leading-none text-start text-black">{{ t('SETTINGS.OVERRIDE_WEEKEND_OFF_DAYS') }}</label>
+            <app-table-status-badge-component
+              [status]="leaveTypeForm.controls.overrideWeekendOffDays.value ? 'active' : 'inactive'"
+              [label]="t(leaveTypeForm.controls.overrideWeekendOffDays.value ? 'COMMON.YES' : 'COMMON.NO')"
+            />
+          </div>
+
+          <div class="col-span-1 flex flex-col gap-3">
+            <label class="text-base font-medium leading-none text-start text-black">{{ t('SETTINGS.ALLOW_OUTSIDE_LEAVE_POLICY') }}</label>
+            <app-table-status-badge-component
+              [status]="leaveTypeForm.controls.allowOutsideLeavePolicy.value ? 'active' : 'inactive'"
+              [label]="t(leaveTypeForm.controls.allowOutsideLeavePolicy.value ? 'COMMON.YES' : 'COMMON.NO')"
+            />
+          </div>
+
+          <div class="col-span-1 flex flex-col gap-3">
+            <label class="text-base font-medium leading-none text-start text-black">{{ t('SETTINGS.PAID') }}</label>
+            <app-table-status-badge-component
+              [status]="leaveTypeForm.controls.paid.value ? 'active' : 'inactive'"
+              [label]="t(leaveTypeForm.controls.paid.value ? 'COMMON.YES' : 'COMMON.NO')"
+            />
+          </div>
+
+          <div class="col-span-2">
+            <app-app-textarea-component
+              [label]="t('SETTINGS.DESCRIPTION')"
+              [placeholder]="t('SETTINGS.DESCRIPTION_PLACEHOLDER')"
+              [control]="leaveTypeForm.controls.description"
+              [readonly]="true"
+            />
+
+            <div class="p-2">
+              <span class="text-xs font-medium text-gray-400">
+                {{ characterCount() }} / {{ descriptionCharacterLimit }} {{ t('COMMON.CHARACTERS') }}
+              </span>
+            </div>
+          </div>
+        }
+      </ng-container>
+
+      <ng-container formActions>
+        <app-form-save-button-component [label]="'COMMON.BACK'" (clicked)="goBack()" />
+      </ng-container>
+    </app-form-container-component>
+  </div>
+</main>

@@ -28,8 +28,7 @@ export const MENU_ITEMS: INavItem[] = [
       { id: '3-1', label: 'ORGANIZATION.MANAGE_DESIGNATIONS', path: '/organization/designations', icon: 'lucideBriefcase' },
       { id: '3-2', label: 'ORGANIZATION.MANAGE_DEPARTMENTS', path: '/organization/departments', icon: 'lucideFolder' },
       { id: '3-3', label: 'ORGANIZATION.MANAGE_JOB_LEVELS', path: '/organization/levels', icon: 'lucideGraduationCap' },
-      { id: '3-4', label: 'ORGANIZATION.MANAGE_EMPLOYMENT_TYPES', path: '/organization/employment-types', icon: 'lucideList' },
-      { id: '3-5', label: 'ORGANIZATION.MANAGE_EMPLOYMENT_STATUSES', path: '/organization/employment-statuses', icon: 'lucideBadgeCheck' }
+      { id: '3-4', label: 'ORGANIZATION.MANAGE_EMPLOYMENT_TYPES', path: '/organization/employment-types', icon: 'lucideList' }
     ]
   },
   {
@@ -52,10 +51,8 @@ export const MENU_ITEMS: INavItem[] = [
     path: '/settings',
     icon: 'lucideSettings',
     children: [
-      { id: '7-1', label: 'MENU.GENERAL_SETTINGS', path: '/settings/general', icon: 'lucideGlobe' },
-      { id: '7-2', label: 'MENU.USER_MANAGEMENT', path: '/settings/users', icon: 'lucideUsers' },
-      { id: '7-3', label: 'MENU.SYSTEM_CONFIGURATION', path: '/settings/config', icon: 'lucideSliders' },
-      { id: '7-4', label: 'MENU.AUDIT_LOG', path: '/settings/audit', icon: 'lucideHistory' }
+      { id: '7-1', label: 'SETTINGS.LEAVE_TYPES', path: '/settings/leave-types', icon: 'lucideList' },
+      { id: '7-2', label: 'SETTINGS.EMPLOYMENT_STATUS', path: '/settings/employment-status', icon: 'lucideBadgeCheck' }
     ]
   }
 ];

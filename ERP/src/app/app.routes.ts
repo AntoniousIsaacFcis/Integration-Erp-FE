@@ -56,6 +56,10 @@ export const routes: Routes = [
         loadChildren: () => import('./features/organization/organization.route').then(m => m.ORGANIZATION_ROUTES),
       },
       {
+        path: 'settings',
+        loadChildren: () => import('./features/settings/settings.route').then(m => m.SETTINGS_ROUTES),
+      },
+      {
         path: 'departments',
         pathMatch: 'full',
         redirectTo: 'organization/departments',
