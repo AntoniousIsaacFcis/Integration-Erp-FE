@@ -147,7 +147,7 @@
 
             @for (request of requests(); track request.id; let i = $index) {
 
-              <tr class="bg-white border-b border-gray-200 hover:bg-gray-50/50 transition-all">
+              <tr class="bg-white border-b border-gray-200 hover:bg-gray-50/50 transition-all cursor-pointer" (click)="handleRowClick(request)">
 
                 <td class="py-4 ps-10 text-start text-sm text-black">
                   {{ request.employeeName }}
@@ -207,6 +207,30 @@
                       @if (canDeleteLeaveApplication()) {
                         <button
                           (click)="$event.stopPropagation(); handleDeleteLeaveApplication(request.id)"
+                          class="flex size-[32px] items-center justify-center rounded-full bg-[#0000001A] hover:bg-[#00000033] transition-colors">
+                          <ng-icon name="lucideTrash2" size="16px" color="#F40552" />
+                        </button>
+                      }
+                    </div>
+                  } @else if (isAttendancePermissionRequest(request)) {
+                    <div class="flex gap-3 justify-end">
+                      <button
+                        (click)="$event.stopPropagation(); handleViewAttendancePermission(request.id)"
+                        class="flex size-[32px] items-center justify-center rounded-full bg-[#61BDDC33] hover:bg-gray-100 transition-colors">
+                        <ng-icon name="lucideEye" size="16px" color="#61BDDC" />
+                      </button>
+
+                      @if (canEditAttendancePermission()) {
+                        <button
+                          (click)="$event.stopPropagation(); handleEditAttendancePermission(request.id)"
+                          class="flex size-[32px] items-center justify-center rounded-full bg-[#0000001A] hover:bg-[#00000033] transition-colors">
+                          <ng-icon name="lucidePencil" size="16px" color="black" />
+                        </button>
+                      }
+
+                      @if (canDeleteAttendancePermission()) {
+                        <button
+                          (click)="$event.stopPropagation(); handleDeleteAttendancePermission(request.id)"
                           class="flex size-[32px] items-center justify-center rounded-full bg-[#0000001A] hover:bg-[#00000033] transition-colors">
                           <ng-icon name="lucideTrash2" size="16px" color="#F40552" />
                         </button>

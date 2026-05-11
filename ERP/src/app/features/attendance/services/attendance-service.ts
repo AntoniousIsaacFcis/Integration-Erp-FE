@@ -631,6 +631,10 @@ export class AttendanceService {
     );
   }
 
+  getAttendancePermissionById(id: string): Observable<IAttendancePermissionApiDto> {
+    return this.http.get<IAttendancePermissionApiDto>(`${this.API_URL}/attendance/attendance-permission/${id}`);
+  }
+
   getUnifiedRequests(params: {
     page: number;
     limit: number;
@@ -673,6 +677,14 @@ export class AttendanceService {
 
   createAttendancePermission(payload: ICreateAttendancePermissionPayload): Observable<IAttendancePermissionApiDto> {
     return this.http.post<IAttendancePermissionApiDto>(`${this.API_URL}/attendance/attendance-permission`, payload);
+  }
+
+  updateAttendancePermission(id: string, payload: ICreateAttendancePermissionPayload): Observable<IAttendancePermissionApiDto> {
+    return this.http.put<IAttendancePermissionApiDto>(`${this.API_URL}/attendance/attendance-permission/${id}`, payload);
+  }
+
+  deleteAttendancePermission(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.API_URL}/attendance/attendance-permission/${id}`);
   }
 
   createLeaveApplication(payload: ILeaveApplicationUpdatePayload): Observable<ILeaveApplicationApiDto> {
@@ -1040,7 +1052,7 @@ export class AttendanceService {
       durationMinutes: typeof item.durationMinutes === 'number' ? item.durationMinutes : null,
       typeLabelKey: this.getUnifiedRequestTypeLabelKey(item.requestType),
       status: item.status,
-      statusLabelKey: this.getUnifiedRequestStatusLabelKey(item.status),
+      statusLabelKey: this.getUnifiedRequestStatusLabelKey(item.requestType, item.status),
       statusTone: this.getUnifiedRequestStatusTone(item.status),
       referenceNumber: item.referenceNumber?.trim() || null,
     };
@@ -1230,12 +1242,12 @@ export class AttendanceService {
 
   private getAttendancePermissionStatusLabelKey(status: number) {
     const labels: Record<number, string> = {
-      1: 'Enum:LeaveApplicationStatus.Pending',
-      2: 'Enum:LeaveApplicationStatus.Approved',
-      3: 'Enum:LeaveApplicationStatus.Rejected',
+      1: 'Enum:AttendancePermissionStatus.Pending',
+      2: 'Enum:AttendancePermissionStatus.Approved',
+      3: 'Enum:AttendancePermissionStatus.Rejected',
     };
 
-    return labels[status] ?? 'Enum:LeaveApplicationStatus.Pending';
+    return labels[status] ?? 'Enum:AttendancePermissionStatus.Pending';
   }
 
   private getAttendancePermissionStatusTone(status: number) {
@@ -1248,15 +1260,23 @@ export class AttendanceService {
     return tones[status] ?? 'pending';
   }
 
-  private getUnifiedRequestStatusLabelKey(status: number) {
-    const labels: Record<number, string> = {
+  private getUnifiedRequestStatusLabelKey(requestType: number, status: number) {
+    const leaveLabels: Record<number, string> = {
       1: 'Enum:LeaveApplicationStatus.Pending',
       2: 'Enum:LeaveApplicationStatus.Approved',
       3: 'Enum:LeaveApplicationStatus.Rejected',
       4: 'Enum:LeaveApplicationStatus.Cancelled',
     };
+    const permissionLabels: Record<number, string> = {
+      1: 'Enum:AttendancePermissionStatus.Pending',
+      2: 'Enum:AttendancePermissionStatus.Approved',
+      3: 'Enum:AttendancePermissionStatus.Rejected',
+      4: 'Enum:AttendancePermissionStatus.Pending',
+    };
 
-    return labels[status] ?? 'Enum:LeaveApplicationStatus.Pending';
+    return requestType === 3 || requestType === 4
+      ? (permissionLabels[status] ?? 'Enum:AttendancePermissionStatus.Pending')
+      : (leaveLabels[status] ?? 'Enum:LeaveApplicationStatus.Pending');
   }
 
   private getUnifiedRequestStatusTone(status: number) {

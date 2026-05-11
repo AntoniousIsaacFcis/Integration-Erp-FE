@@ -7,6 +7,7 @@ import { TranslocoModule } from '@jsverse/transloco';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { lucideEye, lucidePencil, lucidePlusCircle, lucideTrash2 } from '@ng-icons/lucide';
 import { AttendanceService } from '@features/attendance/services/attendance-service';
+import { ATTENDANCE_PERMISSION_PERMISSIONS } from '@features/attendance/utils/attendance-permission-auth';
 import { IUnifiedRequestListItem } from '@features/attendance/models/ipermissions';
 import { ActionBtnComponent } from '@shared/components/molecules/action-btn-component/action-btn-component';
 import { DateFilterComponent } from '@shared/components/molecules/date-filter-component/date-filter-component';
@@ -104,6 +105,17 @@ export class ViewPermissionsComponent {
     this.router.navigate(['/attendance/view-permissions/leave-application-details', id]);
   }
 
+  handleRowClick(request: IUnifiedRequestListItem) {
+    if (this.isLeaveRequest(request)) {
+      this.handleViewLeaveApplication(request.id);
+      return;
+    }
+
+    if (this.isAttendancePermissionRequest(request)) {
+      this.handleViewAttendancePermission(request.id);
+    }
+  }
+
   handleEditLeaveApplication(id: string) {
     this.router.navigate(['/attendance/view-permissions/edit-leave-application', id]);
   }
@@ -122,6 +134,28 @@ export class ViewPermissionsComponent {
 
   canEditLeaveApplication = computed(() => this.authService.hasPermission('CoreHR.LeaveApplications.Update'));
   canDeleteLeaveApplication = computed(() => this.authService.hasPermission('CoreHR.LeaveApplications.Delete'));
+  canEditAttendancePermission = computed(() => this.authService.hasPermission(ATTENDANCE_PERMISSION_PERMISSIONS.update));
+  canDeleteAttendancePermission = computed(() => this.authService.hasPermission(ATTENDANCE_PERMISSION_PERMISSIONS.delete));
+
+  handleViewAttendancePermission(id: string) {
+    this.router.navigate(['/attendance/view-permissions/attendance-permission-details', id]);
+  }
+
+  handleEditAttendancePermission(id: string) {
+    this.router.navigate(['/attendance/view-permissions/edit-attendance-permission', id]);
+  }
+
+  handleDeleteAttendancePermission(id: string) {
+    this.notificationService.show({
+      type: 'warning',
+      title: 'EMPLOYEES.VACATIONS.DELETE_ATTENDANCE_PERMISSION',
+      message: 'COMMON.MESSAGES.CONFIRM_DELETE',
+      isModal: true,
+      actionLabel: 'COMMON.YES',
+      cancelLabel: 'COMMON.NO',
+      onAction: () => this.deleteAttendancePermission(id),
+    });
+  }
 
   formatRecordNumber(index: number, page: number, pageSize: number): string {
     const sequence = ((page - 1) * pageSize) + index + 1;
@@ -132,8 +166,36 @@ export class ViewPermissionsComponent {
     return request.requestType === 1 || request.requestType === 2;
   }
 
+  isAttendancePermissionRequest(request: IUnifiedRequestListItem) {
+    return request.requestType === 3 || request.requestType === 4;
+  }
+
   private deleteLeaveApplication(id: string) {
     this.attendanceService.deleteLeaveApplication(id).subscribe({
+      next: () => {
+        this.notificationService.show({
+          type: 'success',
+          title: 'COMMON.MESSAGES.DELETED_SUCCESSFULLY',
+          message: 'COMMON.MESSAGES.SUCCESS_MESSAGE',
+          isModal: false,
+          actionLabel: 'COMMON.CONFIRM',
+        });
+        this.requestsResource.reload();
+      },
+      error: () => {
+        this.notificationService.show({
+          type: 'error',
+          title: 'COMMON.MESSAGES.OPERATION_FAILED',
+          message: 'COMMON.MESSAGES.PLEASE_TRY_AGAIN',
+          isModal: false,
+          actionLabel: 'COMMON.CONFIRM',
+        });
+      },
+    });
+  }
+
+  private deleteAttendancePermission(id: string) {
+    this.attendanceService.deleteAttendancePermission(id).subscribe({
       next: () => {
         this.notificationService.show({
           type: 'success',

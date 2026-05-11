@@ -508,6 +508,9 @@
       "VACATIN_STATUS": "حالة الاجازة",
       "VACATION_REASON": "سبب الاجازة",
       "EDIT_LEAVE_APPLICATION": "تعديل طلب الإجازة",
+      "EDIT_ATTENDANCE_PERMISSION": "تعديل إذن الحضور",
+      "ATTENDANCE_PERMISSION_DETAILS": "تفاصيل إذن الحضور",
+      "DELETE_ATTENDANCE_PERMISSION": "حذف إذن الحضور",
       "SELECT_VACATION_TYPE": "اختر نوع الإجازة",
       "APPLICATION_TYPE": "نوع الطلب",
       "SELECT_APPLICATION_TYPE": "اختر نوع الطلب",
@@ -1062,6 +1065,9 @@
   "Enum:LeaveApplicationStatus.Approved": "معتمد",
   "Enum:LeaveApplicationStatus.Rejected": "مرفوض",
   "Enum:LeaveApplicationStatus.Cancelled": "ملغاة",
+  "Enum:AttendancePermissionStatus.Pending": "قيد الانتظار",
+  "Enum:AttendancePermissionStatus.Approved": "معتمد",
+  "Enum:AttendancePermissionStatus.Rejected": "مرفوض",
   "Enum:AttendanceStatus.Present": "حاضر",
   "Enum:AttendanceStatus.Absent": "غائب",
   "Enum:AttendanceStatus.OnLeave": "إجازة",
@@ -1083,7 +1089,6 @@
     "PERMISSIONS_REQUIRED": "يرجى اختيار صلاحية واحدة على الأقل"
   }
 }
-
 
 
 

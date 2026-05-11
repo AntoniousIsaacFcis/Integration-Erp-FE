@@ -1,6 +1,6 @@
 <main class="flex justify-center" *transloco="let t">
   <div class="w-full max-w-standard bg-white rounded-[20px] shadow-soft border border-black/5">
-    <app-form-container-component [title]="t('EMPLOYEES.VACATIONS.LEAVE_APPLICATION_DETAILS')">
+    <app-form-container-component [title]="t('EMPLOYEES.VACATIONS.ATTENDANCE_PERMISSION_DETAILS')">
       <ng-container formFields>
         @if (isLoading()) {
           <div class="col-span-full flex justify-center py-10 text-gray-400">
@@ -13,53 +13,28 @@
             [placeholder]="'ATTENDANCE.EMPLOYEE_NAME'" />
 
           <app-app-select-component
-            [label]="t('EMPLOYEES.VACATIONS.APPLICATION_TYPE')"
+            [label]="t('LABEL.TYPE')"
             [control]="getControl('type')"
-            [placeholder]="'EMPLOYEES.VACATIONS.SELECT_APPLICATION_TYPE'">
+            [placeholder]="'PLACEHOLDER.SELECT_ABSENCE_TYPE'">
             @for (option of typeOptions; track option.value) {
               <option [value]="option.value">{{ t(option.label) }}</option>
             }
           </app-app-select-component>
 
-          <app-app-select-component
-            [label]="t('EMPLOYEES.VACATIONS.VACATION_TYPE')"
-            [control]="getControl('leaveTypeId')"
-            [placeholder]="'EMPLOYEES.VACATIONS.SELECT_VACATION_TYPE'">
-            @for (leaveType of leaveTypes(); track leaveType.id) {
-              <option [value]="leaveType.id">{{ leaveType.name }}</option>
-            }
-          </app-app-select-component>
-
           <app-app-date-input-component
-            [label]="t(isHalfLeave() ? 'COMMON.DATE' : 'EMPLOYEES.VACATIONS.VACATION_START_Date')"
-            [control]="getControl('fromDate')" />
-
-          @if (!isHalfLeave()) {
-            <app-app-date-input-component
-              [label]="t('EMPLOYEES.VACATIONS.VACATION_END_DATE')"
-              [control]="getControl('toDate')" />
-          }
+            [label]="t('COMMON.DATE')"
+            [control]="getControl('date')" />
 
           <app-app-input-component
-            [label]="t('EMPLOYEES.VACATIONS.DAYS')"
-            [placeholder]="t('EMPLOYEES.VACATIONS.DAYS')"
-            [control]="getControl('days')"
+            [label]="t('EMPLOYEES.VACATIONS.DURATION_MINUTES')"
+            [placeholder]="t('EMPLOYEES.VACATIONS.DURATION_MINUTES')"
+            [control]="getControl('durationMinutes')"
             type="number" />
 
           <app-app-textarea-component
-            [label]="t('COMMON.DESCRIPTION')"
-            [control]="getControl('description')"
+            [label]="t('LABEL.NOTES')"
+            [control]="getControl('note')"
             [placeholder]="'PLACEHOLDER.ENTER_NOTES'" />
-
-          <app-app-textarea-component
-            [label]="t('DOCUMENTS.ATTACHMENTS')"
-            [control]="getControl('attachments')"
-            [placeholder]="'DOCUMENTS.ATTACHMENTS'" />
-
-          <app-app-input-component
-            [label]="t('COMMON.CREATED_AT')"
-            [control]="getControl('applicationDate')"
-            [placeholder]="'COMMON.CREATED_AT'" />
 
           <app-app-select-component
             [label]="t('COMMON.STATUS')"
@@ -69,6 +44,16 @@
               <option [value]="option.value">{{ t(option.label) }}</option>
             }
           </app-app-select-component>
+
+          <app-app-input-component
+            [label]="t('COMMON.CREATED_AT')"
+            [control]="getControl('applicationDate')"
+            [placeholder]="'COMMON.CREATED_AT'" />
+
+          <app-app-input-component
+            [label]="t('DOCUMENTS.ATTACHMENTS')"
+            [control]="getControl('attachments')"
+            [placeholder]="'DOCUMENTS.ATTACHMENTS'" />
         }
       </ng-container>
 

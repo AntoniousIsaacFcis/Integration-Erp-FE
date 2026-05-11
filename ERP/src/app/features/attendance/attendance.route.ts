@@ -1,5 +1,6 @@
 import { Routes } from "@angular/router";
 import { permissionAndRoleGuard } from '@core/auth/guards/permission-guard';
+import { ATTENDANCE_PERMISSION_PERMISSIONS, ATTENDANCE_PERMISSION_ROLES } from '@features/attendance/utils/attendance-permission-auth';
 import { SHIFT_MANAGER_ROLES, SHIFT_PERMISSIONS } from '@features/attendance/utils/shift-auth';
 
 // features/attendance/attendance.routes.ts
@@ -147,6 +148,17 @@ export const ATTENDANCE_ROUTES: Routes = [
                 path: 'create-attendance-permission',
                 loadComponent: () => import('./pages/create-attendance-permission-component/create-attendance-permission-component').then(x => x.CreateAttendancePermissionComponent),
                 data: { breadcrumb: 'MENU.CREATE_ATTENDANCE_PERMISSION' }
+              },
+              {
+                path: 'edit-attendance-permission/:id',
+                loadComponent: () => import('./pages/edit-attendance-permission-component/edit-attendance-permission-component').then(x => x.EditAttendancePermissionComponent),
+                data: { breadcrumb: 'EMPLOYEES.VACATIONS.EDIT_ATTENDANCE_PERMISSION' },
+                canActivate: [permissionAndRoleGuard(ATTENDANCE_PERMISSION_PERMISSIONS.update, ATTENDANCE_PERMISSION_ROLES)]
+              },
+              {
+                path: 'attendance-permission-details/:id',
+                loadComponent: () => import('./pages/attendance-permission-details-component/attendance-permission-details-component').then(x => x.AttendancePermissionDetailsComponent),
+                data: { breadcrumb: 'EMPLOYEES.VACATIONS.ATTENDANCE_PERMISSION_DETAILS' }
               },
             ],
           },

@@ -46,6 +46,9 @@ export interface IAttendancePermissionApiDto {
   note?: string | null;
   applicationDate?: string | null;
   status: number;
+  creationTime?: string | null;
+  creatorId?: string | null;
+  lastModificationTime?: string | null;
 }
 
 export interface IAttendancePermissionListItem {

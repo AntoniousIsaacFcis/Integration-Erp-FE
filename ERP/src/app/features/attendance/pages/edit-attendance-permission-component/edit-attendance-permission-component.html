@@ -1,0 +1,61 @@
+<main class="flex justify-center" *transloco="let t">
+  <div class="w-full max-w-standard bg-white rounded-[20px] shadow-soft border border-black/5">
+    <app-form-container-component [title]="t('EMPLOYEES.VACATIONS.EDIT_ATTENDANCE_PERMISSION')" (submit)="onSave()">
+      <ng-container formFields>
+        @if (isLoading()) {
+          <div class="col-span-full flex justify-center py-10 text-gray-400">
+            {{ t('COMMON.MESSAGES.LOADING_DATA') }}
+          </div>
+        } @else {
+          <app-app-input-component
+            [label]="t('ATTENDANCE.EMPLOYEE_NAME')"
+            [control]="getControl('employeeName')"
+            [placeholder]="'ATTENDANCE.EMPLOYEE_NAME'" />
+
+          <app-app-select-component
+            [label]="t('LABEL.TYPE') + ' *'"
+            [control]="getControl('type')"
+            [showErrors]="submitted()"
+            [placeholder]="'PLACEHOLDER.SELECT_ABSENCE_TYPE'">
+            @for (option of typeOptions; track option.value) {
+              <option [value]="option.value">{{ t(option.label) }}</option>
+            }
+          </app-app-select-component>
+
+          <app-app-date-input-component
+            [label]="t('COMMON.DATE') + ' *'"
+            [control]="getControl('date')"
+            [showErrors]="submitted()" />
+
+          <app-app-input-component
+            [label]="t('EMPLOYEES.VACATIONS.DURATION_MINUTES') + ' *'"
+            [placeholder]="t('EMPLOYEES.VACATIONS.DURATION_MINUTES')"
+            [control]="getControl('durationMinutes')"
+            [showErrors]="submitted()"
+            type="number" />
+
+          <app-app-textarea-component
+            [label]="t('LABEL.NOTES')"
+            [control]="getControl('note')"
+            [placeholder]="'PLACEHOLDER.ENTER_NOTES'"
+            [showErrors]="submitted()" />
+
+          <app-app-select-component
+            [label]="t('COMMON.STATUS') + ' *'"
+            [control]="getControl('status')"
+            [showErrors]="submitted()"
+            [placeholder]="'COMMON.STATUS'">
+            @for (option of statusOptions; track option.value) {
+              <option [value]="option.value">{{ t(option.label) }}</option>
+            }
+          </app-app-select-component>
+        }
+      </ng-container>
+
+      <ng-container formActions>
+        <app-form-cancel-button-component (clicked)="onCancel()" />
+        <app-form-save-button-component [isLoading]="isSaving()" [label]="'COMMON.UPDATE'" type="submit" />
+      </ng-container>
+    </app-form-container-component>
+  </div>
+</main>
