@@ -832,6 +832,7 @@
     "VALIDATION_ERROR": "خطأ في التحقق",
     "NETWORK_ERROR": "خطأ في الشبكة",
     "TIMEOUT_ERROR": "انتهت مهلة الانتظار",
+    "SERVER_UNREACHABLE_OR_CORS": "الخادم غير متاح أو تم حظر الطلب بسبب CORS",
     "UNKNOWN_ERROR": "خطأ غير معروف",
     "INVALID_PHONE_FORMAT": "رقم الهاتف غير صحيح. يجب أن يتكون من 11 إلى 15 رقماً (يمكن استخدام +)",
     "INVALID_NATIONAL_ID_FORMAT": "بطاقة الهوية لابد ان تحتوي علي 12-14 رقم",
@@ -856,6 +857,8 @@
     "OFF_DUTY_TIME_MUST_BE_LESS_THAN_OR_EQUAL_SIGN_OUT_END_TIME": "وقت نهاية العمل يجب أن يكون عند أو قبل نهاية تسجيل الانصراف",
     "ON_DUTY_OVERRIDE_MUST_BE_LESS_THAN_OFF_DUTY_OVERRIDE": "وقت بداية العمل في اليوم المحدد يجب أن يكون قبل وقت النهاية",
     "LATE_TOLERANCE_MUST_BE_NON_NEGATIVE": "دقائق السماح بالتأخير يجب أن تكون صفرًا أو أكثر",
+    "STAFF_SYSTEM_ACCESS_USER_ALREADY_EXISTS": "يوجد مستخدم نظام بنفس البريد الإلكتروني",
+    "LEAVE_START_DATE_IN_PAST": "تاريخ بداية الإجازة لا يمكن أن يكون في الماضي",
     "ACCESS_DENIED_TITLE": "ليس لديك صلاحية الوصول",
     "ACCESS_DENIED_SUB": "يبدو أنك لا تملك الصلاحيات اللازمة لعرض هذه الصفحة حالياً. إذا كنت تعتقد أن هذا خطأ، يمكنك التواصل مع مسؤول النظام.",
     "CONTACT_US": "تواصل معنا",
@@ -1067,7 +1070,6 @@
     "PERMISSIONS_REQUIRED": "يرجى اختيار صلاحية واحدة على الأقل"
   }
 }
-
 
 
 

@@ -13,6 +13,7 @@ import { DocumentTypesService } from '@features/organization/services/document-t
 import { EmploymentStatusesService } from '@features/organization/services/employment-statuses-service';
 import { IRemoteServiceError } from '@core/models/iremote-service-error';
 import { EmployeeDocumentService } from '@features/core-hr/services/employee-document-service';
+import { isBusinessExceptionCode } from '@core/utilities/business-error.util';
 import { IDocument } from '@shared/models/idocument';
 import { concatMap, forkJoin, map, Observable, of, tap } from 'rxjs';
 
@@ -220,12 +221,13 @@ export class AddEmployeeComponent implements OnInit {
             }
 
             const backendError = this.extractBackendError(error);
+            const isBusinessError = isBusinessExceptionCode(backendError.code);
 
             this.notificationService.show({
               type: 'error',
               isModal: false,
-              title: 'ERRORS.SAVE_FAILED',
-              message: backendError.message,
+              title: isBusinessError ? backendError.message : 'ERRORS.SAVE_FAILED',
+              message: isBusinessError ? undefined : backendError.message,
               actionLabel: 'COMMON.OK'
             });
 

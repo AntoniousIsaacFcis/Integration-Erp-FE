@@ -8,17 +8,18 @@ import { MainLayoutComponent } from '@shared/layouts/main/main-layout-component/
 import { filter, map, take } from 'rxjs';
 
 export const routes: Routes = [
-  { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
+  { path: '', pathMatch: 'full', redirectTo: 'auth/login' },
   {
     path: 'auth',
     component: LoginLayoutComponent,
-    // canActivate: [guestGuard], // Prevents logged-in users from seeing login page
+    canActivate: [guestGuard],
     loadChildren: () => import('./features/auth/auth.route').then(m => m.AUTH_ROUTES)
   },
   {
     path: '',
     component: MainLayoutComponent,
-    // canActivateChild: [authGuard], // Protects all internal pages
+    canActivate: [authGuard],
+    canActivateChild: [authGuard],
     data: { breadcrumb: 'MENU.DASHBOARD' },
     children: [
       {
