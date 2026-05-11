@@ -7,7 +7,7 @@ export function dateRangeValidator(startControlName: string, endControlName: str
 
     if (!start?.value || !end?.value) return null;
 
-    const isInvalid = new Date(start.value) >= new Date(end.value);
+    const isInvalid = new Date(start.value) > new Date(end.value);
 
     if (isInvalid) {
       // حط الخطأ مباشرة على الـ Control عشان الـ Component يشوفه [cite: 2026-01-25]
