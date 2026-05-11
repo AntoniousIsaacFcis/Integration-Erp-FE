@@ -134,6 +134,16 @@ export const ATTENDANCE_ROUTES: Routes = [
                 data: { breadcrumb: 'MENU.CREATE_LEAVE_APPLICATION' }
               },
               {
+                path: 'edit-leave-application/:id',
+                loadComponent: () => import('./pages/edit-leave-application-component/edit-leave-application-component').then(x => x.EditLeaveApplicationComponent),
+                data: { breadcrumb: 'EMPLOYEES.VACATIONS.EDIT_LEAVE_APPLICATION' }
+              },
+              {
+                path: 'leave-application-details/:id',
+                loadComponent: () => import('./pages/leave-application-details-component/leave-application-details-component').then(x => x.LeaveApplicationDetailsComponent),
+                data: { breadcrumb: 'EMPLOYEES.VACATIONS.LEAVE_APPLICATION_DETAILS' }
+              },
+              {
                 path: 'create-attendance-permission',
                 loadComponent: () => import('./pages/create-attendance-permission-component/create-attendance-permission-component').then(x => x.CreateAttendancePermissionComponent),
                 data: { breadcrumb: 'MENU.CREATE_ATTENDANCE_PERMISSION' }
@@ -156,6 +166,14 @@ export const ATTENDANCE_ROUTES: Routes = [
           {
             path: 'details/:id',
             redirectTo: 'view/details/:id',
+          },
+          {
+            path: 'edit-leave-application/:id',
+            redirectTo: 'view-permissions/edit-leave-application/:id',
+          },
+          {
+            path: 'leave-application-details/:id',
+            redirectTo: 'view-permissions/leave-application-details/:id',
           },
           {
             path: 'log-session-details/:id',

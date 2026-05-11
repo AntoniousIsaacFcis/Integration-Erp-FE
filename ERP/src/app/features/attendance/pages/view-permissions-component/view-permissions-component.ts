@@ -1,9 +1,11 @@
 import { ChangeDetectionStrategy, Component, computed, effect, inject, signal } from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
+import { AuthService } from '@core/auth/services/auth-service';
+import { NotificationService } from '@core/services/notification-service';
 import { TranslocoModule } from '@jsverse/transloco';
-import { provideIcons } from '@ng-icons/core';
-import { lucidePlusCircle } from '@ng-icons/lucide';
+import { NgIcon, provideIcons } from '@ng-icons/core';
+import { lucideEye, lucidePencil, lucidePlusCircle, lucideTrash2 } from '@ng-icons/lucide';
 import { AttendanceService } from '@features/attendance/services/attendance-service';
 import { IUnifiedRequestListItem } from '@features/attendance/models/ipermissions';
 import { ActionBtnComponent } from '@shared/components/molecules/action-btn-component/action-btn-component';
@@ -20,6 +22,7 @@ import { SearchbarComponent } from '@shared/components/molecules/searchbar-compo
   standalone: true,
   imports: [
     TranslocoModule,
+    NgIcon,
     AppBaseTableComponent,
     ActionBtnComponent,
     DateFilterComponent,
@@ -31,12 +34,14 @@ import { SearchbarComponent } from '@shared/components/molecules/searchbar-compo
   ],
   templateUrl: './view-permissions-component.html',
   styleUrl: './view-permissions-component.css',
-  providers: [provideIcons({ lucidePlusCircle })],
+  providers: [provideIcons({ lucidePlusCircle, lucideEye, lucidePencil, lucideTrash2 })],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ViewPermissionsComponent {
   private readonly attendanceService = inject(AttendanceService);
   private readonly router = inject(Router);
+  private readonly notificationService = inject(NotificationService);
+  private readonly authService = inject(AuthService);
 
   currentPage = signal(1);
   pageSize = signal(10);
@@ -81,10 +86,10 @@ export class ViewPermissionsComponent {
 
   statusOptions = [
     { value: '', label: 'COMMON.ALL_STATUS' },
-    { value: '1', label: 'PERMISSIONS.STATUS_PENDING' },
-    { value: '2', label: 'PERMISSIONS.STATUS_APPROVED' },
-    { value: '3', label: 'PERMISSIONS.STATUS_REJECTED' },
-    { value: '4', label: 'EMPLOYEES.VACATIONS.CANCELLED' },
+    { value: '1', label: 'Enum:LeaveApplicationStatus.Pending' },
+    { value: '2', label: 'Enum:LeaveApplicationStatus.Approved' },
+    { value: '3', label: 'Enum:LeaveApplicationStatus.Rejected' },
+    { value: '4', label: 'Enum:LeaveApplicationStatus.Cancelled' },
   ];
 
   handleAddLeaveApplication() {
@@ -95,8 +100,59 @@ export class ViewPermissionsComponent {
     this.router.navigate(['/attendance/view-permissions/create-attendance-permission']);
   }
 
+  handleViewLeaveApplication(id: string) {
+    this.router.navigate(['/attendance/view-permissions/leave-application-details', id]);
+  }
+
+  handleEditLeaveApplication(id: string) {
+    this.router.navigate(['/attendance/view-permissions/edit-leave-application', id]);
+  }
+
+  handleDeleteLeaveApplication(id: string) {
+    this.notificationService.show({
+      type: 'warning',
+      title: 'EMPLOYEES.VACATIONS.DELETE_LEAVE_APPLICATION',
+      message: 'COMMON.MESSAGES.CONFIRM_DELETE',
+      isModal: true,
+      actionLabel: 'COMMON.YES',
+      cancelLabel: 'COMMON.NO',
+      onAction: () => this.deleteLeaveApplication(id),
+    });
+  }
+
+  canEditLeaveApplication = computed(() => this.authService.hasPermission('CoreHR.LeaveApplications.Update'));
+  canDeleteLeaveApplication = computed(() => this.authService.hasPermission('CoreHR.LeaveApplications.Delete'));
+
   formatRecordNumber(index: number, page: number, pageSize: number): string {
     const sequence = ((page - 1) * pageSize) + index + 1;
     return sequence.toString().padStart(5, '0');
+  }
+
+  isLeaveRequest(request: IUnifiedRequestListItem) {
+    return request.requestType === 1 || request.requestType === 2;
+  }
+
+  private deleteLeaveApplication(id: string) {
+    this.attendanceService.deleteLeaveApplication(id).subscribe({
+      next: () => {
+        this.notificationService.show({
+          type: 'success',
+          title: 'COMMON.MESSAGES.DELETED_SUCCESSFULLY',
+          message: 'COMMON.MESSAGES.SUCCESS_MESSAGE',
+          isModal: false,
+          actionLabel: 'COMMON.CONFIRM',
+        });
+        this.requestsResource.reload();
+      },
+      error: () => {
+        this.notificationService.show({
+          type: 'error',
+          title: 'COMMON.MESSAGES.OPERATION_FAILED',
+          message: 'COMMON.MESSAGES.PLEASE_TRY_AGAIN',
+          isModal: false,
+          actionLabel: 'COMMON.CONFIRM',
+        });
+      },
+    });
   }
 }

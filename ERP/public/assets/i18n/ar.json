@@ -521,6 +521,8 @@
       "LATE_TIME": "وقت الحضور المتأخر",
       "EARLY_TIME": "وقت الانصراف المبكر",
       "DAYS": "عدد الأيام",
+      "LEAVE_APPLICATION_DETAILS": "تفاصيل طلب الإجازة",
+      "DELETE_LEAVE_APPLICATION": "حذف طلب الإجازة",
       "SELECT_STATUS": "اختر الحالة"
     },
     "TABLE": {
@@ -1052,6 +1054,17 @@
     "STATUS_APPROVED": "معتمد",
     "STATUS_REJECTED": "مرفوض"
   },
+  "Enum:LeaveApplicationType.Leave": "إجازة",
+  "Enum:LeaveApplicationType.HalfLeave": "نصف يوم",
+  "Enum:AttendancePermissionType.LateArrival": "تأخير",
+  "Enum:AttendancePermissionType.EarlyLeave": "انصراف مبكر",
+  "Enum:LeaveApplicationStatus.Pending": "قيد الانتظار",
+  "Enum:LeaveApplicationStatus.Approved": "معتمد",
+  "Enum:LeaveApplicationStatus.Rejected": "مرفوض",
+  "Enum:LeaveApplicationStatus.Cancelled": "ملغاة",
+  "Enum:AttendanceStatus.Present": "حاضر",
+  "Enum:AttendanceStatus.Absent": "غائب",
+  "Enum:AttendanceStatus.OnLeave": "إجازة",
   "ROLES": {
     "ADD_ROLE": "إضافة دور وظيفي",
     "ROLE_NAME": "اسم الدور",
@@ -1070,7 +1083,6 @@
     "PERMISSIONS_REQUIRED": "يرجى اختيار صلاحية واحدة على الأقل"
   }
 }
-
 
 
 

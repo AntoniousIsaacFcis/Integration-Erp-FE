@@ -138,6 +138,8 @@
                 {{ t('COMMON.STATUS') }}
               </th>
 
+              <th class="py-4 pe-6 text"></th>
+
             </tr>
           </thead>
 
@@ -160,7 +162,12 @@
                 </td>
 
                 <td class="py-4 px-4 text-center text-sm">
-                  {{ t(request.typeLabelKey) }}
+                  <div class="flex justify-center">
+                    <app-table-status-badge-component
+                      [status]="'pending'"
+                      [label]="t(request.typeLabelKey)"
+                    />
+                  </div>
                 </td>
 
                 <td class="py-4 px-4 text-center text-sm">
@@ -178,6 +185,34 @@
                       [label]="t(request.statusLabelKey)"
                     />
                   </div>
+                </td>
+
+                <td class="py-4 pe-6">
+                  @if (isLeaveRequest(request)) {
+                    <div class="flex gap-3 justify-end">
+                      <button
+                        (click)="$event.stopPropagation(); handleViewLeaveApplication(request.id)"
+                        class="flex size-[32px] items-center justify-center rounded-full bg-[#61BDDC33] hover:bg-gray-100 transition-colors">
+                        <ng-icon name="lucideEye" size="16px" color="#61BDDC" />
+                      </button>
+
+                      @if (canEditLeaveApplication()) {
+                        <button
+                          (click)="$event.stopPropagation(); handleEditLeaveApplication(request.id)"
+                          class="flex size-[32px] items-center justify-center rounded-full bg-[#0000001A] hover:bg-[#00000033] transition-colors">
+                          <ng-icon name="lucidePencil" size="16px" color="black" />
+                        </button>
+                      }
+
+                      @if (canDeleteLeaveApplication()) {
+                        <button
+                          (click)="$event.stopPropagation(); handleDeleteLeaveApplication(request.id)"
+                          class="flex size-[32px] items-center justify-center rounded-full bg-[#0000001A] hover:bg-[#00000033] transition-colors">
+                          <ng-icon name="lucideTrash2" size="16px" color="#F40552" />
+                        </button>
+                      }
+                    </div>
+                  }
                 </td>
 
               </tr>

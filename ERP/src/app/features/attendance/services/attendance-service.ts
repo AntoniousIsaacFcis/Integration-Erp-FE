@@ -683,6 +683,10 @@ export class AttendanceService {
     return this.http.put<ILeaveApplicationApiDto>(`${this.API_URL}/core-hR/leave-application/${id}`, payload);
   }
 
+  deleteLeaveApplication(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.API_URL}/core-hR/leave-application/${id}`);
+  }
+
   approveLeaveApplication(id: string): Observable<ILeaveApplicationApiDto> {
     return this.http.post<ILeaveApplicationApiDto>(`${this.API_URL}/core-hR/leave-application/${id}/approve`, {});
   }
@@ -1226,12 +1230,12 @@ export class AttendanceService {
 
   private getAttendancePermissionStatusLabelKey(status: number) {
     const labels: Record<number, string> = {
-      1: 'PERMISSIONS.STATUS_PENDING',
-      2: 'PERMISSIONS.STATUS_APPROVED',
-      3: 'PERMISSIONS.STATUS_REJECTED',
+      1: 'Enum:LeaveApplicationStatus.Pending',
+      2: 'Enum:LeaveApplicationStatus.Approved',
+      3: 'Enum:LeaveApplicationStatus.Rejected',
     };
 
-    return labels[status] ?? 'PERMISSIONS.STATUS_PENDING';
+    return labels[status] ?? 'Enum:LeaveApplicationStatus.Pending';
   }
 
   private getAttendancePermissionStatusTone(status: number) {
@@ -1246,13 +1250,13 @@ export class AttendanceService {
 
   private getUnifiedRequestStatusLabelKey(status: number) {
     const labels: Record<number, string> = {
-      1: 'PERMISSIONS.STATUS_PENDING',
-      2: 'PERMISSIONS.STATUS_APPROVED',
-      3: 'PERMISSIONS.STATUS_REJECTED',
-      4: 'EMPLOYEES.VACATIONS.CANCELLED',
+      1: 'Enum:LeaveApplicationStatus.Pending',
+      2: 'Enum:LeaveApplicationStatus.Approved',
+      3: 'Enum:LeaveApplicationStatus.Rejected',
+      4: 'Enum:LeaveApplicationStatus.Cancelled',
     };
 
-    return labels[status] ?? 'PERMISSIONS.STATUS_PENDING';
+    return labels[status] ?? 'Enum:LeaveApplicationStatus.Pending';
   }
 
   private getUnifiedRequestStatusTone(status: number) {

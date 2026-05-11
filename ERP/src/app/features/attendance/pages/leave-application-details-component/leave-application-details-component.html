@@ -1,0 +1,80 @@
+<main class="flex justify-center" *transloco="let t">
+  <div class="w-full max-w-standard bg-white rounded-[20px] shadow-soft border border-black/5">
+    <app-form-container-component [title]="t('EMPLOYEES.VACATIONS.LEAVE_APPLICATION_DETAILS')">
+      <ng-container formFields>
+        @if (isLoading()) {
+          <div class="col-span-full flex justify-center py-10 text-gray-400">
+            {{ t('COMMON.MESSAGES.LOADING_DATA') }}
+          </div>
+        } @else {
+          <app-app-input-component
+            [label]="t('ATTENDANCE.EMPLOYEE_NAME')"
+            [control]="getControl('employeeName')"
+            [placeholder]="'ATTENDANCE.EMPLOYEE_NAME'" />
+
+          <app-app-select-component
+            [label]="t('EMPLOYEES.VACATIONS.APPLICATION_TYPE')"
+            [control]="getControl('type')"
+            [placeholder]="'EMPLOYEES.VACATIONS.SELECT_APPLICATION_TYPE'">
+            @for (option of typeOptions; track option.value) {
+              <option [value]="option.value">{{ t(option.label) }}</option>
+            }
+          </app-app-select-component>
+
+          <app-app-select-component
+            [label]="t('EMPLOYEES.VACATIONS.VACATION_TYPE')"
+            [control]="getControl('leaveTypeId')"
+            [placeholder]="'EMPLOYEES.VACATIONS.SELECT_VACATION_TYPE'">
+            @for (leaveType of leaveTypes(); track leaveType.id) {
+              <option [value]="leaveType.id">{{ leaveType.name }}</option>
+            }
+          </app-app-select-component>
+
+          <app-app-date-input-component
+            [label]="t(isHalfLeave() ? 'COMMON.DATE' : 'EMPLOYEES.VACATIONS.VACATION_START_Date')"
+            [control]="getControl('fromDate')" />
+
+          @if (!isHalfLeave()) {
+            <app-app-date-input-component
+              [label]="t('EMPLOYEES.VACATIONS.VACATION_END_DATE')"
+              [control]="getControl('toDate')" />
+          }
+
+          <app-app-input-component
+            [label]="t('EMPLOYEES.VACATIONS.DAYS')"
+            [placeholder]="t('EMPLOYEES.VACATIONS.DAYS')"
+            [control]="getControl('days')"
+            type="number" />
+
+          <app-app-textarea-component
+            [label]="t('COMMON.DESCRIPTION')"
+            [control]="getControl('description')"
+            [placeholder]="'PLACEHOLDER.ENTER_NOTES'" />
+
+          <app-app-textarea-component
+            [label]="t('COMMON.ATTACHMENTS')"
+            [control]="getControl('attachments')"
+            [placeholder]="'COMMON.ATTACHMENTS'" />
+
+          <app-app-input-component
+            [label]="t('COMMON.CREATED_AT')"
+            [control]="getControl('applicationDate')"
+            [placeholder]="'COMMON.CREATED_AT'" />
+
+          <app-app-select-component
+            [label]="t('COMMON.STATUS')"
+            [control]="getControl('status')"
+            [placeholder]="'COMMON.STATUS'">
+            @for (option of statusOptions; track option.value) {
+              <option [value]="option.value">{{ t(option.label) }}</option>
+            }
+          </app-app-select-component>
+        }
+      </ng-container>
+
+      <ng-container formActions>
+        <app-form-save-button-component [label]="'COMMON.BACK'" (clicked)="onBack()" />
+      </ng-container>
+    </app-form-container-component>
+  </div>
+</main>

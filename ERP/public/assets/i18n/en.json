@@ -496,6 +496,8 @@
       "LATE_TIME": "Late arrival time",
       "EARLY_TIME": "Early leave time",
       "DAYS": "Days",
+      "LEAVE_APPLICATION_DETAILS": "Leave Application Details",
+      "DELETE_LEAVE_APPLICATION": "Delete Leave Application",
       "SELECT_STATUS": "Select status"
     },
     "TABLE": {
@@ -1012,7 +1014,18 @@
     "STATUS_PENDING": "Pending",
     "STATUS_APPROVED": "Approved",
     "STATUS_REJECTED": "Rejected"
-  }
+  },
+  "Enum:LeaveApplicationType.Leave": "Leave",
+  "Enum:LeaveApplicationType.HalfLeave": "Half Leave",
+  "Enum:AttendancePermissionType.LateArrival": "Late Arrival",
+  "Enum:AttendancePermissionType.EarlyLeave": "Early Leave",
+  "Enum:LeaveApplicationStatus.Pending": "Pending",
+  "Enum:LeaveApplicationStatus.Approved": "Approved",
+  "Enum:LeaveApplicationStatus.Rejected": "Rejected",
+  "Enum:LeaveApplicationStatus.Cancelled": "Cancelled",
+  "Enum:AttendanceStatus.Present": "Present",
+  "Enum:AttendanceStatus.Absent": "Absent",
+  "Enum:AttendanceStatus.OnLeave": "On Leave"
 }
 
 
