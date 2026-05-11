@@ -27,12 +27,17 @@ export class AttendanceDayCardComponent {
   leaveCount = input<number | null>(null);
   shiftId = input<string | null>(null);
   dayOffReason = input<number | null>(null);
-  status = input<'present' | 'absent' | 'onLeave' | 'holiday' | 'dayOff' | 'empty' | undefined>('empty');
+  status = input<'present' | 'absent' | 'onLeave' | 'holiday' | 'dayOff' | 'lateArrival' | 'earlyLeave' | 'halfLeave' | 'onPermission' | 'checkInOnly' | 'checkOutOnly' | 'empty' | undefined>('empty');
 
   protected cardClasses() {
     const state = this.edgeStateKey();
     const status = this.status();
-    const hasAttendance = status === 'present' || status === 'absent';
+    const hasAttendance = status === 'present'
+      || status === 'absent'
+      || status === 'lateArrival'
+      || status === 'earlyLeave'
+      || status === 'checkInOnly'
+      || status === 'checkOutOnly';
     const borderColor = state ? 'border-[#EEF2E7]' : (hasAttendance ? 'border-[#8CC63F]' : 'border-[#EEF2E7]');
     const bgColor = status === 'absent' ? 'bg-[#FFF8F8]' : state ? 'bg-[#FBFBFB]' : 'bg-white';
 
@@ -104,7 +109,7 @@ export class AttendanceDayCardComponent {
       return 'half-leave';
     }
 
-    if (!this.shiftId() && this.status() !== 'present' && this.status() !== 'onLeave') {
+    if (!this.shiftId() && this.status() !== 'present' && this.status() !== 'onLeave' && this.status() !== 'halfLeave') {
       return 'no-shift';
     }
 

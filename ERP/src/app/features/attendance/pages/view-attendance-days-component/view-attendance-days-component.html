@@ -16,8 +16,10 @@
     <div class="flex items-center gap-3">
       <app-action-btn-component [label]="'ATTENDANCE.IMPORT'" (clicked)="handleImport()" iconName="lucideCloudUpload" />
 
+      @if (canCreateAttendanceDay()) {
       <app-action-btn-component [label]="'ATTENDANCE.DAILY_REGISTRATION'" (clicked)="handleDailyRegistration()"
         iconName="lucideCheckCircle" />
+      }
     </div>
   </ng-template>
 
@@ -79,18 +81,28 @@
           </td>
           <td class="py-4 pe-12">
             <div class="flex gap-3 justify-end">
+              @if (canRecalculateAttendanceDay()) {
+              <button (click)="$event.stopPropagation(); handleRecalculate(log.id)"
+                class="flex size-[32px] items-center justify-center rounded-full bg-[#61BDDC33] hover:bg-blue-50 transition-colors">
+                <ng-icon name="lucideRefreshCcw" size="16" color="#0B84B5" />
+              </button>
+              }
+              @if (canEditAttendanceDay()) {
               <button (click)="$event.stopPropagation(); handleEdit(log.id)"
                 class="flex size-[32px] items-center justify-center rounded-full bg-[#0000001A] hover:bg-red-50 transition-colors">
                 <ng-icon name="lucidePencil" size="16" />
               </button>
+              }
               <button (click)="$event.stopPropagation(); handleViewDetails(log.id)"
                 class="flex size-[32px] items-center justify-center rounded-full bg-[#61BDDC33] hover:bg-gray-100 transition-colors">
                 <ng-icon name="lucideEye" size="16" color="#61BDDC" />
               </button>
+              @if (canDeleteAttendanceDay()) {
               <button (click)="$event.stopPropagation(); handleDelete(log.id)"
                 class="flex size-[32px] items-center justify-center rounded-full bg-[#0000001A] hover:bg-red-50 transition-colors">
                 <ng-icon name="lucideTrash2" size="16" color="#F40552" />
               </button>
+              }
             </div>
           </td>
         </tr>

@@ -1,5 +1,6 @@
 import { Routes } from "@angular/router";
 import { permissionAndRoleGuard, permissionGuard } from '@core/auth/guards/permission-guard';
+import { ATTENDANCE_DAY_MANAGER_ROLES, ATTENDANCE_DAY_PERMISSIONS } from '@features/attendance/utils/attendance-day-auth';
 import { ATTENDANCE_PERMISSION_PERMISSIONS } from '@features/attendance/utils/attendance-permission-auth';
 import { SHIFT_MANAGER_ROLES, SHIFT_PERMISSIONS } from '@features/attendance/utils/shift-auth';
 
@@ -107,12 +108,14 @@ export const ATTENDANCE_ROUTES: Routes = [
               {
                 path: 'create',
                 loadComponent: () => import('./pages/create-attendance-day-component/create-attendance-day-component').then(x => x.CreateAttendanceDayComponent),
-                data: { breadcrumb: 'MENU.CREATE_ATTENDANCE_DAY' }
+                data: { breadcrumb: 'MENU.CREATE_ATTENDANCE_DAY' },
+                canActivate: [permissionAndRoleGuard(ATTENDANCE_DAY_PERMISSIONS.create, ATTENDANCE_DAY_MANAGER_ROLES)]
               },
               {
                 path: 'edit/:id',
                 loadComponent: () => import('./pages/edit-attendance-day-component/edit-attendance-day-component').then(x => x.EditAttendanceDayComponent),
-                data: { breadcrumb: 'MENU.EDIT_ATTENDANCE_DAY' }
+                data: { breadcrumb: 'MENU.EDIT_ATTENDANCE_DAY' },
+                canActivate: [permissionAndRoleGuard(ATTENDANCE_DAY_PERMISSIONS.update, ATTENDANCE_DAY_MANAGER_ROLES)]
               },
               {
                 path: 'details/:id',

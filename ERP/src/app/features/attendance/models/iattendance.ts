@@ -1,3 +1,17 @@
+export type AttendanceDayStatusKey =
+  | 'present'
+  | 'absent'
+  | 'onLeave'
+  | 'holiday'
+  | 'dayOff'
+  | 'lateArrival'
+  | 'earlyLeave'
+  | 'halfLeave'
+  | 'onPermission'
+  | 'checkInOnly'
+  | 'checkOutOnly'
+  | 'empty';
+
 export interface IAttendance {
 }
 
@@ -9,7 +23,7 @@ export interface IAttendanceDay {
   checkIn: string | null;
   checkOut: string | null;
   statusText: string;
-  status?: 'present' | 'absent' | 'onLeave' | 'empty';
+  status?: AttendanceDayStatusKey;
   workedMinutes?: number;
   delayMinutes?: number;
   earlyLeaveMinutes?: number;
@@ -261,7 +275,7 @@ export interface IAttendanceLog {
   date: string;
   checkIn: string;
   checkOut: string;
-  status: 'present' | 'absent' | 'onLeave';
+  status: Exclude<AttendanceDayStatusKey, 'empty'>;
   workedMinutes?: number;
   delayMinutes?: number | null;
   earlyLeaveMinutes?: number | null;

@@ -1024,6 +1024,8 @@
     "STATUS_APPROVED": "Approved",
     "STATUS_REJECTED": "Rejected"
   },
+  "ATTENDANCE.RECALCULATE_ATTENDANCE_DAY": "Recalculate Attendance Day",
+  "ATTENDANCE.RECALCULATE_ATTENDANCE_DAY_CONFIRMATION": "Do you want to recalculate this attendance day using the current shift and attendance logs?",
   "Enum:LeaveApplicationType.Leave": "Leave",
   "Enum:LeaveApplicationType.HalfLeave": "Half Leave",
   "Enum:AttendancePermissionType.LateArrival": "Late Arrival",
@@ -1037,7 +1039,15 @@
   "Enum:AttendancePermissionStatus.Rejected": "Rejected",
   "Enum:AttendanceStatus.Present": "Present",
   "Enum:AttendanceStatus.Absent": "Absent",
-  "Enum:AttendanceStatus.OnLeave": "On Leave"
+  "Enum:AttendanceStatus.OnLeave": "On Leave",
+  "Enum:AttendanceStatus.Holiday": "Holiday",
+  "Enum:AttendanceStatus.DayOff": "Day Off",
+  "Enum:AttendanceStatus.LateArrival": "Late Arrival",
+  "Enum:AttendanceStatus.EarlyLeave": "Early Leave",
+  "Enum:AttendanceStatus.HalfLeave": "Half Leave",
+  "Enum:AttendanceStatus.OnPermission": "On Permission",
+  "Enum:AttendanceStatus.CheckInOnly": "Check-In Only",
+  "Enum:AttendanceStatus.CheckOutOnly": "Check-Out Only"
 }
 
 

@@ -1063,6 +1063,8 @@
     "STATUS_APPROVED": "معتمد",
     "STATUS_REJECTED": "مرفوض"
   },
+  "ATTENDANCE.RECALCULATE_ATTENDANCE_DAY": "إعادة احتساب يوم الحضور",
+  "ATTENDANCE.RECALCULATE_ATTENDANCE_DAY_CONFIRMATION": "هل تريد إعادة احتساب يوم الحضور هذا باستخدام الوردية الحالية وسجلات الحضور؟",
   "Enum:LeaveApplicationType.Leave": "إجازة",
   "Enum:LeaveApplicationType.HalfLeave": "نصف يوم",
   "Enum:AttendancePermissionType.LateArrival": "تأخير",
@@ -1077,6 +1079,14 @@
   "Enum:AttendanceStatus.Present": "حاضر",
   "Enum:AttendanceStatus.Absent": "غائب",
   "Enum:AttendanceStatus.OnLeave": "إجازة",
+  "Enum:AttendanceStatus.Holiday": "عطلة",
+  "Enum:AttendanceStatus.DayOff": "يوم عطلة",
+  "Enum:AttendanceStatus.LateArrival": "تأخير",
+  "Enum:AttendanceStatus.EarlyLeave": "انصراف مبكر",
+  "Enum:AttendanceStatus.HalfLeave": "نصف يوم",
+  "Enum:AttendanceStatus.OnPermission": "إذن حضور",
+  "Enum:AttendanceStatus.CheckInOnly": "تسجيل حضور فقط",
+  "Enum:AttendanceStatus.CheckOutOnly": "تسجيل انصراف فقط",
   "ROLES": {
     "ADD_ROLE": "إضافة دور وظيفي",
     "ROLE_NAME": "اسم الدور",
@@ -1095,6 +1105,4 @@
     "PERMISSIONS_REQUIRED": "يرجى اختيار صلاحية واحدة على الأقل"
   }
 }
-
-
 

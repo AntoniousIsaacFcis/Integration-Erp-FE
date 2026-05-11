@@ -480,6 +480,12 @@ export class AttendanceService {
     return this.http.post<IAttendanceDayApiDto>(`${this.API_URL}/attendance/attendance-day`, payload);
   }
 
+  recalculateAttendanceDay(id: string): Observable<IAttendanceDayApiDto> {
+    return this.http.post<IAttendanceDayApiDto>(`${this.API_URL}/attendance/attendance-day/${id}/recalculate`, {}).pipe(
+      tap(() => this.requestAttendanceDayRefresh()),
+    );
+  }
+
   deleteAttendanceDay(id: string): Observable<void> {
     return this.http.delete<void>(`${this.API_URL}/attendance/attendance-day/${id}`);
   }
@@ -869,17 +875,21 @@ export class AttendanceService {
   }
 
   private toAttendanceStatusTextKey(status: number) {
-    // Keep the label purely descriptive: no calculation, only backend-field mapping.
-    if (status === 3) {
-      return 'STATUS.ON_LEAVE';
-    }
-
     const labels: Record<number, string> = {
-      1: 'STATUS.WORK',
-      2: 'STATUS.ABSENT',
+      1: 'Enum:AttendanceStatus.Present',
+      2: 'Enum:AttendanceStatus.Absent',
+      3: 'Enum:AttendanceStatus.OnLeave',
+      4: 'Enum:AttendanceStatus.Holiday',
+      5: 'Enum:AttendanceStatus.DayOff',
+      6: 'Enum:AttendanceStatus.LateArrival',
+      7: 'Enum:AttendanceStatus.EarlyLeave',
+      8: 'Enum:AttendanceStatus.HalfLeave',
+      9: 'Enum:AttendanceStatus.OnPermission',
+      10: 'Enum:AttendanceStatus.CheckInOnly',
+      11: 'Enum:AttendanceStatus.CheckOutOnly',
     };
 
-    return labels[status] ?? 'STATUS.ABSENT';
+    return labels[status] ?? 'Enum:AttendanceStatus.Absent';
   }
 
   private getAttendanceDaysResponse(params: {
@@ -1101,7 +1111,7 @@ export class AttendanceService {
       employeeId: item.employeeId,
       employeeName: staffLookup.get(item.employeeId) ?? item.employeeId,
       date: this.toDateKey(item.date),
-      status: this.toAttendanceStatusKey(item.status),
+      status: this.toEditableAttendanceStatus(item.status),
       shiftId: item.shiftId ?? null,
       shiftName: null,
       shiftStart: this.toClockTime(item.onDutyTime) ?? '',
@@ -1147,6 +1157,37 @@ export class AttendanceService {
       case 2:
         return 'absent';
       case 3:
+        return 'onLeave';
+      case 4:
+        return 'holiday';
+      case 5:
+        return 'dayOff';
+      case 6:
+        return 'lateArrival';
+      case 7:
+        return 'earlyLeave';
+      case 8:
+        return 'halfLeave';
+      case 9:
+        return 'onPermission';
+      case 10:
+        return 'checkInOnly';
+      case 11:
+        return 'checkOutOnly';
+      default:
+        return 'absent';
+    }
+  }
+
+  private toEditableAttendanceStatus(status: number): IEditAttendanceDay['status'] {
+    switch (status) {
+      case 1:
+      case 6:
+      case 7:
+      case 9:
+        return 'present';
+      case 3:
+      case 8:
         return 'onLeave';
       default:
         return 'absent';
@@ -1325,6 +1366,22 @@ export class AttendanceService {
         return 2;
       case 'onLeave':
         return 3;
+      case 'holiday':
+        return 4;
+      case 'dayOff':
+        return 5;
+      case 'lateArrival':
+        return 6;
+      case 'earlyLeave':
+        return 7;
+      case 'halfLeave':
+        return 8;
+      case 'onPermission':
+        return 9;
+      case 'checkInOnly':
+        return 10;
+      case 'checkOutOnly':
+        return 11;
       default:
         return undefined;
     }
