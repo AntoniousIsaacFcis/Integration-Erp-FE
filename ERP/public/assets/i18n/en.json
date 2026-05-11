@@ -475,7 +475,7 @@
       "STATS_SICK": "Sick Leave Balance",
       "STATS_REMAINING": "Remaining Balance",
       "APPROVED": "Approved",
-      "PENDING": "Pending",
+      "PENDING": "Admin Check-In",
       "REJECTED": "Rejected",
       "CANCELLED": "Cancelled",
       "VACATION_TYPE": "Vacation Type",
@@ -665,8 +665,8 @@
     "MARK_ATTENDANCE": "Mark Attendance",
     "VIEW_REPORT": "View Report",
     "LOG_STATUS": {
-      "PENDING": "Pending",
-      "FINALIZED": "Finalized",
+      "PENDING": "Admin Check-In",
+      "FINALIZED": "Auto Check-Out",
       "INVALID": "Invalid",
       "CHECK_IN": "Check In",
       "CHECK_OUT": "Check Out",
@@ -1049,6 +1049,7 @@
   "Enum:AttendanceStatus.CheckInOnly": "Check-In Only",
   "Enum:AttendanceStatus.CheckOutOnly": "Check-Out Only"
 }
+
 
 
 

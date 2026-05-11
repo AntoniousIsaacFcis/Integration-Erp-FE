@@ -693,8 +693,8 @@
     "ATTENDANCE_SUMMARY": "ملخص الحضور",
     "VIEW_REPORT": "عرض التقرير",
     "LOG_STATUS": {
-      "PENDING": "معلق",
-      "FINALIZED": "نهائي",
+      "PENDING": "دخول بواسطة الادمن",
+      "FINALIZED": "خروج تلقائي",
       "INVALID": "غير صالح",
       "CHECK_IN": "تسجيل دخول",
       "CHECK_OUT": "تسجيل خروج",
