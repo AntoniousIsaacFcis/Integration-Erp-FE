@@ -5,9 +5,16 @@ import { AuthService } from '@core/auth/services/auth-service';
 import { NotificationService } from '@core/services/notification-service';
 import { TranslocoModule } from '@jsverse/transloco';
 import { NgIcon, provideIcons } from '@ng-icons/core';
-import { lucideEye, lucidePencil, lucidePlusCircle, lucideTrash2 } from '@ng-icons/lucide';
+import { lucideCheck, lucideEye, lucidePencil, lucidePlusCircle, lucideTrash2, lucideX } from '@ng-icons/lucide';
 import { AttendanceService } from '@features/attendance/services/attendance-service';
-import { ATTENDANCE_PERMISSION_PERMISSIONS } from '@features/attendance/utils/attendance-permission-auth';
+import {
+  ATTENDANCE_PERMISSION_PERMISSIONS,
+  LEAVE_APPLICATION_PERMISSIONS,
+  canApproveWorkflowRequest,
+  canDeleteWorkflowRequest,
+  canEditWorkflowRequest,
+  canRejectWorkflowRequest,
+} from '@features/attendance/utils/attendance-permission-auth';
 import { IUnifiedRequestListItem } from '@features/attendance/models/ipermissions';
 import { ActionBtnComponent } from '@shared/components/molecules/action-btn-component/action-btn-component';
 import { DateFilterComponent } from '@shared/components/molecules/date-filter-component/date-filter-component';
@@ -35,7 +42,7 @@ import { SearchbarComponent } from '@shared/components/molecules/searchbar-compo
   ],
   templateUrl: './view-permissions-component.html',
   styleUrl: './view-permissions-component.css',
-  providers: [provideIcons({ lucidePlusCircle, lucideEye, lucidePencil, lucideTrash2 })],
+  providers: [provideIcons({ lucidePlusCircle, lucideEye, lucidePencil, lucideTrash2, lucideCheck, lucideX })],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ViewPermissionsComponent {
@@ -132,10 +139,37 @@ export class ViewPermissionsComponent {
     });
   }
 
-  canEditLeaveApplication = computed(() => this.authService.hasPermission('CoreHR.LeaveApplications.Update'));
-  canDeleteLeaveApplication = computed(() => this.authService.hasPermission('CoreHR.LeaveApplications.Delete'));
-  canEditAttendancePermission = computed(() => this.authService.hasPermission(ATTENDANCE_PERMISSION_PERMISSIONS.update));
-  canDeleteAttendancePermission = computed(() => this.authService.hasPermission(ATTENDANCE_PERMISSION_PERMISSIONS.delete));
+  canEditLeaveApplication(request: IUnifiedRequestListItem) {
+    return canEditWorkflowRequest(this.authService, LEAVE_APPLICATION_PERMISSIONS.update, request.status);
+  }
+
+  canDeleteLeaveApplication(request: IUnifiedRequestListItem) {
+    return canDeleteWorkflowRequest(this.authService, LEAVE_APPLICATION_PERMISSIONS.delete, request.status);
+  }
+
+  canApproveLeaveApplication(request: IUnifiedRequestListItem) {
+    return canApproveWorkflowRequest(this.authService, LEAVE_APPLICATION_PERMISSIONS.approve, request.status);
+  }
+
+  canRejectLeaveApplication(request: IUnifiedRequestListItem) {
+    return canRejectWorkflowRequest(this.authService, LEAVE_APPLICATION_PERMISSIONS.reject, request.status);
+  }
+
+  canEditAttendancePermission(request: IUnifiedRequestListItem) {
+    return canEditWorkflowRequest(this.authService, ATTENDANCE_PERMISSION_PERMISSIONS.update, request.status);
+  }
+
+  canDeleteAttendancePermission(request: IUnifiedRequestListItem) {
+    return canDeleteWorkflowRequest(this.authService, ATTENDANCE_PERMISSION_PERMISSIONS.delete, request.status);
+  }
+
+  canApproveAttendancePermission(request: IUnifiedRequestListItem) {
+    return canApproveWorkflowRequest(this.authService, ATTENDANCE_PERMISSION_PERMISSIONS.approve, request.status);
+  }
+
+  canRejectAttendancePermission(request: IUnifiedRequestListItem) {
+    return canRejectWorkflowRequest(this.authService, ATTENDANCE_PERMISSION_PERMISSIONS.reject, request.status);
+  }
 
   handleViewAttendancePermission(id: string) {
     this.router.navigate(['/attendance/view-permissions/attendance-permission-details', id]);
@@ -154,6 +188,54 @@ export class ViewPermissionsComponent {
       actionLabel: 'COMMON.YES',
       cancelLabel: 'COMMON.NO',
       onAction: () => this.deleteAttendancePermission(id),
+    });
+  }
+
+  handleApproveLeaveApplication(id: string) {
+    this.notificationService.show({
+      type: 'warning',
+      title: 'EMPLOYEES.VACATIONS.APPROVE_LEAVE_APPLICATION',
+      message: 'COMMON.MESSAGES.CONFIRM_APPROVE',
+      isModal: true,
+      actionLabel: 'COMMON.YES',
+      cancelLabel: 'COMMON.NO',
+      onAction: () => this.approveLeaveApplication(id),
+    });
+  }
+
+  handleRejectLeaveApplication(id: string) {
+    this.notificationService.show({
+      type: 'warning',
+      title: 'EMPLOYEES.VACATIONS.REJECT_LEAVE_APPLICATION',
+      message: 'COMMON.MESSAGES.CONFIRM_REJECT',
+      isModal: true,
+      actionLabel: 'COMMON.YES',
+      cancelLabel: 'COMMON.NO',
+      onAction: () => this.rejectLeaveApplication(id),
+    });
+  }
+
+  handleApproveAttendancePermission(id: string) {
+    this.notificationService.show({
+      type: 'warning',
+      title: 'EMPLOYEES.VACATIONS.APPROVE_ATTENDANCE_PERMISSION',
+      message: 'COMMON.MESSAGES.CONFIRM_APPROVE',
+      isModal: true,
+      actionLabel: 'COMMON.YES',
+      cancelLabel: 'COMMON.NO',
+      onAction: () => this.approveAttendancePermission(id),
+    });
+  }
+
+  handleRejectAttendancePermission(id: string) {
+    this.notificationService.show({
+      type: 'warning',
+      title: 'EMPLOYEES.VACATIONS.REJECT_ATTENDANCE_PERMISSION',
+      message: 'COMMON.MESSAGES.CONFIRM_REJECT',
+      isModal: true,
+      actionLabel: 'COMMON.YES',
+      cancelLabel: 'COMMON.NO',
+      onAction: () => this.rejectAttendancePermission(id),
     });
   }
 
@@ -194,12 +276,108 @@ export class ViewPermissionsComponent {
     });
   }
 
+  private approveLeaveApplication(id: string) {
+    this.attendanceService.approveLeaveApplication(id).subscribe({
+      next: () => {
+        this.notificationService.show({
+          type: 'success',
+          title: 'COMMON.MESSAGES.UPDATED_SUCCESSFULLY',
+          message: 'COMMON.MESSAGES.SUCCESS_MESSAGE',
+          isModal: false,
+          actionLabel: 'COMMON.CONFIRM',
+        });
+        this.requestsResource.reload();
+      },
+      error: () => {
+        this.notificationService.show({
+          type: 'error',
+          title: 'COMMON.MESSAGES.OPERATION_FAILED',
+          message: 'COMMON.MESSAGES.PLEASE_TRY_AGAIN',
+          isModal: false,
+          actionLabel: 'COMMON.CONFIRM',
+        });
+      },
+    });
+  }
+
+  private rejectLeaveApplication(id: string) {
+    this.attendanceService.rejectLeaveApplication(id).subscribe({
+      next: () => {
+        this.notificationService.show({
+          type: 'success',
+          title: 'COMMON.MESSAGES.UPDATED_SUCCESSFULLY',
+          message: 'COMMON.MESSAGES.SUCCESS_MESSAGE',
+          isModal: false,
+          actionLabel: 'COMMON.CONFIRM',
+        });
+        this.requestsResource.reload();
+      },
+      error: () => {
+        this.notificationService.show({
+          type: 'error',
+          title: 'COMMON.MESSAGES.OPERATION_FAILED',
+          message: 'COMMON.MESSAGES.PLEASE_TRY_AGAIN',
+          isModal: false,
+          actionLabel: 'COMMON.CONFIRM',
+        });
+      },
+    });
+  }
+
   private deleteAttendancePermission(id: string) {
     this.attendanceService.deleteAttendancePermission(id).subscribe({
       next: () => {
         this.notificationService.show({
           type: 'success',
           title: 'COMMON.MESSAGES.DELETED_SUCCESSFULLY',
+          message: 'COMMON.MESSAGES.SUCCESS_MESSAGE',
+          isModal: false,
+          actionLabel: 'COMMON.CONFIRM',
+        });
+        this.requestsResource.reload();
+      },
+      error: () => {
+        this.notificationService.show({
+          type: 'error',
+          title: 'COMMON.MESSAGES.OPERATION_FAILED',
+          message: 'COMMON.MESSAGES.PLEASE_TRY_AGAIN',
+          isModal: false,
+          actionLabel: 'COMMON.CONFIRM',
+        });
+      },
+    });
+  }
+
+  private approveAttendancePermission(id: string) {
+    this.attendanceService.approveAttendancePermission(id).subscribe({
+      next: () => {
+        this.notificationService.show({
+          type: 'success',
+          title: 'COMMON.MESSAGES.UPDATED_SUCCESSFULLY',
+          message: 'COMMON.MESSAGES.SUCCESS_MESSAGE',
+          isModal: false,
+          actionLabel: 'COMMON.CONFIRM',
+        });
+        this.requestsResource.reload();
+      },
+      error: () => {
+        this.notificationService.show({
+          type: 'error',
+          title: 'COMMON.MESSAGES.OPERATION_FAILED',
+          message: 'COMMON.MESSAGES.PLEASE_TRY_AGAIN',
+          isModal: false,
+          actionLabel: 'COMMON.CONFIRM',
+        });
+      },
+    });
+  }
+
+  private rejectAttendancePermission(id: string) {
+    this.attendanceService.rejectAttendancePermission(id).subscribe({
+      next: () => {
+        this.notificationService.show({
+          type: 'success',
+          title: 'COMMON.MESSAGES.UPDATED_SUCCESSFULLY',
           message: 'COMMON.MESSAGES.SUCCESS_MESSAGE',
           isModal: false,
           actionLabel: 'COMMON.CONFIRM',

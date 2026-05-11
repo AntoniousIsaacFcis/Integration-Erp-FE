@@ -687,6 +687,14 @@ export class AttendanceService {
     return this.http.delete<void>(`${this.API_URL}/attendance/attendance-permission/${id}`);
   }
 
+  approveAttendancePermission(id: string): Observable<IAttendancePermissionApiDto> {
+    return this.http.post<IAttendancePermissionApiDto>(`${this.API_URL}/attendance/attendance-permission/${id}/approve`, {});
+  }
+
+  rejectAttendancePermission(id: string): Observable<IAttendancePermissionApiDto> {
+    return this.http.post<IAttendancePermissionApiDto>(`${this.API_URL}/attendance/attendance-permission/${id}/reject`, {});
+  }
+
   createLeaveApplication(payload: ILeaveApplicationUpdatePayload): Observable<ILeaveApplicationApiDto> {
     return this.http.post<ILeaveApplicationApiDto>(`${this.API_URL}/core-hR/leave-application`, payload);
   }

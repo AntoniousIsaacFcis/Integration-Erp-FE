@@ -1,6 +1,6 @@
 import { Routes } from "@angular/router";
-import { permissionAndRoleGuard } from '@core/auth/guards/permission-guard';
-import { ATTENDANCE_PERMISSION_PERMISSIONS, ATTENDANCE_PERMISSION_ROLES } from '@features/attendance/utils/attendance-permission-auth';
+import { permissionAndRoleGuard, permissionGuard } from '@core/auth/guards/permission-guard';
+import { ATTENDANCE_PERMISSION_PERMISSIONS } from '@features/attendance/utils/attendance-permission-auth';
 import { SHIFT_MANAGER_ROLES, SHIFT_PERMISSIONS } from '@features/attendance/utils/shift-auth';
 
 // features/attendance/attendance.routes.ts
@@ -137,7 +137,8 @@ export const ATTENDANCE_ROUTES: Routes = [
               {
                 path: 'edit-leave-application/:id',
                 loadComponent: () => import('./pages/edit-leave-application-component/edit-leave-application-component').then(x => x.EditLeaveApplicationComponent),
-                data: { breadcrumb: 'EMPLOYEES.VACATIONS.EDIT_LEAVE_APPLICATION' }
+                data: { breadcrumb: 'EMPLOYEES.VACATIONS.EDIT_LEAVE_APPLICATION' },
+                canActivate: [permissionGuard('CoreHR.LeaveApplications.Update')]
               },
               {
                 path: 'leave-application-details/:id',
@@ -153,7 +154,7 @@ export const ATTENDANCE_ROUTES: Routes = [
                 path: 'edit-attendance-permission/:id',
                 loadComponent: () => import('./pages/edit-attendance-permission-component/edit-attendance-permission-component').then(x => x.EditAttendancePermissionComponent),
                 data: { breadcrumb: 'EMPLOYEES.VACATIONS.EDIT_ATTENDANCE_PERMISSION' },
-                canActivate: [permissionAndRoleGuard(ATTENDANCE_PERMISSION_PERMISSIONS.update, ATTENDANCE_PERMISSION_ROLES)]
+                canActivate: [permissionGuard(ATTENDANCE_PERMISSION_PERMISSIONS.update)]
               },
               {
                 path: 'attendance-permission-details/:id',

@@ -76,6 +76,8 @@
       "WARNING": "تحذير",
       "INFO": "معلومات",
       "CONFIRM_DELETE": "هل أنت متأكد من حذف هذا العنصر؟",
+      "CONFIRM_APPROVE": "هل أنت متأكد من اعتماد هذا الطلب؟",
+      "CONFIRM_REJECT": "هل أنت متأكد من رفض هذا الطلب؟",
       "DELETED_SUCCESSFULLY": "تم الحذف بنجاح",
       "CREATED_SUCCESSFULLY": "تم الإنشاء بنجاح",
       "UPDATED_SUCCESSFULLY": "تم التحديث بنجاح",
@@ -511,6 +513,8 @@
       "EDIT_ATTENDANCE_PERMISSION": "تعديل إذن الحضور",
       "ATTENDANCE_PERMISSION_DETAILS": "تفاصيل إذن الحضور",
       "DELETE_ATTENDANCE_PERMISSION": "حذف إذن الحضور",
+      "APPROVE_ATTENDANCE_PERMISSION": "اعتماد إذن الحضور",
+      "REJECT_ATTENDANCE_PERMISSION": "رفض إذن الحضور",
       "SELECT_VACATION_TYPE": "اختر نوع الإجازة",
       "APPLICATION_TYPE": "نوع الطلب",
       "SELECT_APPLICATION_TYPE": "اختر نوع الطلب",
@@ -526,6 +530,8 @@
       "DAYS": "عدد الأيام",
       "LEAVE_APPLICATION_DETAILS": "تفاصيل طلب الإجازة",
       "DELETE_LEAVE_APPLICATION": "حذف طلب الإجازة",
+      "APPROVE_LEAVE_APPLICATION": "اعتماد طلب الإجازة",
+      "REJECT_LEAVE_APPLICATION": "رفض طلب الإجازة",
       "SELECT_STATUS": "اختر الحالة"
     },
     "TABLE": {
@@ -1089,7 +1095,6 @@
     "PERMISSIONS_REQUIRED": "يرجى اختيار صلاحية واحدة على الأقل"
   }
 }
-
 
 
 

@@ -40,15 +40,17 @@
             [placeholder]="'PLACEHOLDER.ENTER_NOTES'"
             [showErrors]="submitted()" />
 
-          <app-app-select-component
-            [label]="t('COMMON.STATUS') + ' *'"
-            [control]="getControl('status')"
-            [showErrors]="submitted()"
-            [placeholder]="'COMMON.STATUS'">
-            @for (option of statusOptions; track option.value) {
-              <option [value]="option.value">{{ t(option.label) }}</option>
-            }
-          </app-app-select-component>
+          @if (canManageStatus()) {
+            <app-app-select-component
+              [label]="t('COMMON.STATUS') + ' *'"
+              [control]="getControl('status')"
+              [showErrors]="submitted()"
+              [placeholder]="'COMMON.STATUS'">
+              @for (option of statusOptions(); track option.value) {
+                <option [value]="option.value">{{ t(option.label) }}</option>
+              }
+            </app-app-select-component>
+          }
         }
       </ng-container>
 

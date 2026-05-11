@@ -196,7 +196,23 @@
                         <ng-icon name="lucideEye" size="16px" color="#61BDDC" />
                       </button>
 
-                      @if (canEditLeaveApplication()) {
+                      @if (canApproveLeaveApplication(request)) {
+                        <button
+                          (click)="$event.stopPropagation(); handleApproveLeaveApplication(request.id)"
+                          class="flex size-[32px] items-center justify-center rounded-full bg-[#00A3891A] hover:bg-[#00A38933] transition-colors">
+                          <ng-icon name="lucideCheck" size="16px" color="#00A389" />
+                        </button>
+                      }
+
+                      @if (canRejectLeaveApplication(request)) {
+                        <button
+                          (click)="$event.stopPropagation(); handleRejectLeaveApplication(request.id)"
+                          class="flex size-[32px] items-center justify-center rounded-full bg-[#F405521A] hover:bg-[#F4055233] transition-colors">
+                          <ng-icon name="lucideX" size="16px" color="#F40552" />
+                        </button>
+                      }
+
+                      @if (canEditLeaveApplication(request)) {
                         <button
                           (click)="$event.stopPropagation(); handleEditLeaveApplication(request.id)"
                           class="flex size-[32px] items-center justify-center rounded-full bg-[#0000001A] hover:bg-[#00000033] transition-colors">
@@ -204,7 +220,7 @@
                         </button>
                       }
 
-                      @if (canDeleteLeaveApplication()) {
+                      @if (canDeleteLeaveApplication(request)) {
                         <button
                           (click)="$event.stopPropagation(); handleDeleteLeaveApplication(request.id)"
                           class="flex size-[32px] items-center justify-center rounded-full bg-[#0000001A] hover:bg-[#00000033] transition-colors">
@@ -220,7 +236,23 @@
                         <ng-icon name="lucideEye" size="16px" color="#61BDDC" />
                       </button>
 
-                      @if (canEditAttendancePermission()) {
+                      @if (canApproveAttendancePermission(request)) {
+                        <button
+                          (click)="$event.stopPropagation(); handleApproveAttendancePermission(request.id)"
+                          class="flex size-[32px] items-center justify-center rounded-full bg-[#00A3891A] hover:bg-[#00A38933] transition-colors">
+                          <ng-icon name="lucideCheck" size="16px" color="#00A389" />
+                        </button>
+                      }
+
+                      @if (canRejectAttendancePermission(request)) {
+                        <button
+                          (click)="$event.stopPropagation(); handleRejectAttendancePermission(request.id)"
+                          class="flex size-[32px] items-center justify-center rounded-full bg-[#F405521A] hover:bg-[#F4055233] transition-colors">
+                          <ng-icon name="lucideX" size="16px" color="#F40552" />
+                        </button>
+                      }
+
+                      @if (canEditAttendancePermission(request)) {
                         <button
                           (click)="$event.stopPropagation(); handleEditAttendancePermission(request.id)"
                           class="flex size-[32px] items-center justify-center rounded-full bg-[#0000001A] hover:bg-[#00000033] transition-colors">
@@ -228,7 +260,7 @@
                         </button>
                       }
 
-                      @if (canDeleteAttendancePermission()) {
+                      @if (canDeleteAttendancePermission(request)) {
                         <button
                           (click)="$event.stopPropagation(); handleDeleteAttendancePermission(request.id)"
                           class="flex size-[32px] items-center justify-center rounded-full bg-[#0000001A] hover:bg-[#00000033] transition-colors">

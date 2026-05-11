@@ -73,7 +73,25 @@
       </ng-container>
 
       <ng-container formActions>
-        <app-form-save-button-component [label]="'COMMON.BACK'" (clicked)="onBack()" />
+        <div class="flex w-full flex-wrap justify-end gap-4">
+          @if (canReject()) {
+            <app-form-cancel-button-component [label]="'BUTTON.REJECT'" (clicked)="onReject()" />
+          }
+
+          @if (canDelete()) {
+            <app-form-cancel-button-component [label]="'COMMON.DELETE'" (clicked)="onDelete()" />
+          }
+
+          @if (canApprove()) {
+            <app-form-save-button-component [label]="'BUTTON.APPROVE'" [isLoading]="isActionLoading()" (clicked)="onApprove()" />
+          }
+
+          @if (canEdit()) {
+            <app-form-save-button-component [label]="'COMMON.EDIT'" [isDisabled]="isActionLoading()" (clicked)="onEdit()" />
+          }
+
+          <app-form-save-button-component [label]="'COMMON.BACK'" [isDisabled]="isActionLoading()" (clicked)="onBack()" />
+        </div>
       </ng-container>
     </app-form-container-component>
   </div>

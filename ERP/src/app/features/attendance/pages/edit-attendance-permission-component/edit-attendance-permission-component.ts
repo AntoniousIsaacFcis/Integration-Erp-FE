@@ -1,7 +1,8 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, computed, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { AuthService } from '@core/auth/services/auth-service';
 import { BreadcrumbService } from '@core/services/breadcrumb-service';
 import { NotificationService } from '@core/services/notification-service';
 import { AttendanceService } from '@features/attendance/services/attendance-service';
@@ -18,6 +19,7 @@ import { FormCancelButtonComponent } from '@shared/components/molecules/form-can
 import { FormSaveButtonComponent } from '@shared/components/molecules/form-save-button-component/form-save-button-component';
 import { FormContainerComponent } from '@shared/components/organisms/form-container-component/form-container-component';
 import { AppValidators } from '@shared/validators/word-limit.validator';
+import { ATTENDANCE_PERMISSION_PERMISSIONS, isRequestManager } from '@features/attendance/utils/attendance-permission-auth';
 
 type AttendancePermissionTypeValue = '1' | '2';
 
@@ -43,6 +45,7 @@ export class EditAttendancePermissionComponent {
   private readonly fb = inject(FormBuilder);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
+  private readonly authService = inject(AuthService);
   private readonly attendanceService = inject(AttendanceService);
   private readonly staffService = inject(StaffService);
   private readonly notification = inject(NotificationService);
@@ -54,6 +57,7 @@ export class EditAttendancePermissionComponent {
   readonly isSaving = signal(false);
   readonly submitted = signal(false);
   readonly applicationDate = signal<string>('');
+  readonly originalStatus = signal('1');
 
   readonly permissionForm = this.fb.nonNullable.group({
     employeeId: [{ value: '', disabled: true }],
@@ -70,11 +74,33 @@ export class EditAttendancePermissionComponent {
     { value: '2', label: 'Enum:AttendancePermissionType.EarlyLeave' },
   ];
 
-  readonly statusOptions = [
-    { value: '1', label: 'Enum:AttendancePermissionStatus.Pending' },
-    { value: '2', label: 'Enum:AttendancePermissionStatus.Approved' },
-    { value: '3', label: 'Enum:AttendancePermissionStatus.Rejected' },
-  ];
+  readonly canManageStatus = computed(() =>
+    isRequestManager(this.authService) &&
+    (
+      this.authService.hasPermission(ATTENDANCE_PERMISSION_PERMISSIONS.approve) ||
+      this.authService.hasPermission(ATTENDANCE_PERMISSION_PERMISSIONS.reject)
+    ));
+
+  readonly statusOptions = computed(() => {
+    const options: Array<{ value: string; label: string }> = [];
+    const currentStatus = this.originalStatus();
+
+    if (currentStatus === '1') {
+      options.push({ value: '1', label: 'Enum:AttendancePermissionStatus.Pending' });
+    }
+
+    if (this.authService.hasPermission(ATTENDANCE_PERMISSION_PERMISSIONS.approve)) {
+      options.push({ value: '2', label: 'Enum:AttendancePermissionStatus.Approved' });
+    }
+
+    if (this.authService.hasPermission(ATTENDANCE_PERMISSION_PERMISSIONS.reject)) {
+      options.push({ value: '3', label: 'Enum:AttendancePermissionStatus.Rejected' });
+    }
+
+    return options.some(option => option.value === currentStatus)
+      ? options
+      : [{ value: currentStatus, label: this.statusLabelKey(currentStatus) }, ...options];
+  });
 
   constructor() {
     if (!this.permissionId) {
@@ -111,7 +137,7 @@ export class EditAttendancePermissionComponent {
       note: value.note?.trim() || null,
       type: Number(value.type) as 1 | 2,
       applicationDate: this.applicationDate() || value.date,
-      status: Number(value.status),
+      status: this.canManageStatus() ? Number(value.status) : Number(this.originalStatus()),
     }).subscribe({
       next: () => {
         this.isSaving.set(false);
@@ -177,6 +203,7 @@ export class EditAttendancePermissionComponent {
       status: String(permission.status ?? 1),
     });
 
+    this.originalStatus.set(String(permission.status ?? 1));
     this.applicationDate.set(this.toDateInputValue(permission.applicationDate ?? permission.creationTime ?? null));
     this.breadcrumbService.setCurrentBreadcrumbLabel(employeeName, this.route);
   }
@@ -207,5 +234,15 @@ export class EditAttendancePermissionComponent {
     return typeof message === 'string' && message.trim().length > 0
       ? message
       : 'COMMON.MESSAGES.PLEASE_TRY_AGAIN';
+  }
+
+  private statusLabelKey(status: string) {
+    const labels: Record<string, string> = {
+      '1': 'Enum:AttendancePermissionStatus.Pending',
+      '2': 'Enum:AttendancePermissionStatus.Approved',
+      '3': 'Enum:AttendancePermissionStatus.Rejected',
+    };
+
+    return labels[status] ?? 'Enum:AttendancePermissionStatus.Pending';
   }
 }
