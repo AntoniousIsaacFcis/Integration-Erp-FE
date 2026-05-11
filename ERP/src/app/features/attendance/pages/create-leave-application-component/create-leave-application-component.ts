@@ -1,11 +1,14 @@
-import { ChangeDetectionStrategy, Component, effect, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, signal } from '@angular/core';
 import { rxResource, toSignal } from '@angular/core/rxjs-interop';
 import { FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { AuthService } from '@core/auth/services/auth-service';
 import { NotificationService } from '@core/services/notification-service';
 import { AttendanceEmployeeLookupComponent, IAttendanceEmployeeLookupItem } from '@features/attendance/components/employee-lookup-component/employee-lookup-component';
 import { ILeaveApplicationUpdatePayload, ILeaveTypeApiDto } from '@features/attendance/models/ivacation';
 import { AttendanceService } from '@features/attendance/services/attendance-service';
+import { isEmployeeScopedUser } from '@features/attendance/utils/attendance-permission-auth';
+import { ICurrentStaffSummaryApiDto } from '@features/core-hr/models/istaff';
 import { TranslocoModule } from '@jsverse/transloco';
 import { catchError, of, startWith } from 'rxjs';
 import { FormContainerComponent } from '@shared/components/organisms/form-container-component/form-container-component';
@@ -39,6 +42,7 @@ import { AppValidators } from '@shared/validators/word-limit.validator';
 export class CreateLeaveApplicationComponent {
   private readonly fb = inject(FormBuilder);
   private readonly router = inject(Router);
+  private readonly authService = inject(AuthService);
   private readonly attendanceService = inject(AttendanceService);
   private readonly notification = inject(NotificationService);
   private readonly today = new Date().toISOString().split('T')[0];
@@ -46,6 +50,8 @@ export class CreateLeaveApplicationComponent {
   submitted = signal(false);
   isSaving = signal(false);
   selectedEmployee = signal<IAttendanceEmployeeLookupItem | null>(null);
+  private readonly didLoadCurrentEmployee = signal(false);
+  readonly isEmployeeScoped = computed(() => isEmployeeScopedUser(this.authService));
   readonly leaveTypeOptions = [
     { value: '1', label: 'EMPLOYEES.VACATIONS.TYPE_FULL_DAY' },
     { value: '2', label: 'EMPLOYEES.VACATIONS.TYPE_HALF_DAY' },
@@ -53,6 +59,7 @@ export class CreateLeaveApplicationComponent {
 
   readonly leaveForm = this.fb.nonNullable.group({
     employeeId: ['', [Validators.required]],
+    employeeName: [{ value: '', disabled: true }],
     type: ['1', [Validators.required]],
     leaveTypeId: ['', [Validators.required]],
     fromDate: ['', [Validators.required]],
@@ -85,6 +92,27 @@ export class CreateLeaveApplicationComponent {
     effect(() => {
       const employee = this.selectedEmployee();
       this.leaveForm.controls.employeeId.setValue(employee?.id ?? '', { emitEvent: false });
+      this.leaveForm.controls.employeeName.setValue(employee?.displayName ?? '', { emitEvent: false });
+    });
+
+    effect(() => {
+      if (!this.isEmployeeScoped() || this.didLoadCurrentEmployee()) {
+        return;
+      }
+
+      this.didLoadCurrentEmployee.set(true);
+      this.attendanceService.getCurrentLeaveApplicationStaff().subscribe({
+        next: employee => this.selectedEmployee.set(this.toEmployeeLookupItem(employee)),
+        error: (error: unknown) => {
+          this.notification.show({
+            type: 'error',
+            title: 'COMMON.MESSAGES.OPERATION_FAILED',
+            message: this.getErrorMessage(error),
+            isModal: false,
+            actionLabel: 'COMMON.CONFIRM',
+          });
+        },
+      });
     });
 
     effect(() => {
@@ -213,6 +241,22 @@ export class CreateLeaveApplicationComponent {
     return typeof message === 'string' && message.trim().length > 0
       ? message
       : 'COMMON.MESSAGES.PLEASE_TRY_AGAIN';
+  }
+
+  private toEmployeeLookupItem(employee: ICurrentStaffSummaryApiDto): IAttendanceEmployeeLookupItem {
+    return {
+      id: employee.id,
+      displayName: employee.displayName,
+      staffCode: employee.staffCode?.trim() ?? '',
+      email: '',
+      departmentId: '',
+      designationId: '',
+      attendanceShiftId: '',
+      nationalityCode: '',
+      nationalId: '',
+      phone: '',
+      mobileNumber: '',
+    };
   }
 }
 

@@ -11,7 +11,7 @@ import {
   IUnifiedRequestListItem,
   IUnifiedRequestListResponse,
 } from '@features/attendance/models/ipermissions';
-import { IStaffApiItem } from '@features/core-hr/models/istaff';
+import { ICurrentStaffSummaryApiDto, IStaffApiItem } from '@features/core-hr/models/istaff';
 import { StaffService } from '@features/core-hr/services/staff-service';
 import { ISelectOption } from '@shared/components/atoms/select-btn-component/select-btn-component';
 import { catchError, forkJoin, map, Observable, of, shareReplay, switchMap, tap, timeout } from 'rxjs';
@@ -541,6 +541,10 @@ export class AttendanceService {
     return this.http.get<ILeaveApplicationApiDto>(`${this.API_URL}/core-hR/leave-application/${id}`);
   }
 
+  getCurrentLeaveApplicationStaff(): Observable<ICurrentStaffSummaryApiDto> {
+    return this.http.get<ICurrentStaffSummaryApiDto>(`${this.API_URL}/core-hR/leave-application/current-staff`);
+  }
+
   getLeaveApplications(params: {
     page: number;
     limit: number;
@@ -633,6 +637,10 @@ export class AttendanceService {
 
   getAttendancePermissionById(id: string): Observable<IAttendancePermissionApiDto> {
     return this.http.get<IAttendancePermissionApiDto>(`${this.API_URL}/attendance/attendance-permission/${id}`);
+  }
+
+  getCurrentAttendancePermissionStaff(): Observable<ICurrentStaffSummaryApiDto> {
+    return this.http.get<ICurrentStaffSummaryApiDto>(`${this.API_URL}/attendance/attendance-permission/current-staff`);
   }
 
   getUnifiedRequests(params: {

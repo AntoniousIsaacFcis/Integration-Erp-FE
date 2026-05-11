@@ -17,6 +17,13 @@ export const ATTENDANCE_PERMISSION_PERMISSIONS = {
   reject: 'Attendance.AttendancePermissions.Reject',
 } as const;
 
+export function isEmployeeScopedUser(authService: AuthService) {
+  const roles = authService.currentUser()?.roles ?? [];
+  const normalizedRoles = roles.map((role: string) => role.toLowerCase());
+
+  return normalizedRoles.includes('employee') && !REQUEST_MANAGER_ROLES.some(role => normalizedRoles.includes(role));
+}
+
 export function isRequestManager(authService: AuthService) {
   const roles = authService.currentUser()?.roles ?? [];
   const normalizedRoles = roles.map((role: string) => role.toLowerCase());

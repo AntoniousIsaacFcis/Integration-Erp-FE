@@ -43,6 +43,12 @@ export interface IStaffApiResponse {
   items: IStaffApiItem[];
 }
 
+export interface ICurrentStaffSummaryApiDto {
+  id: string;
+  displayName: string;
+  staffCode?: string | null;
+}
+
 export interface ICreateStaffPayload {
   staffCode?: string | null;
   firstName: string;

@@ -63,16 +63,8 @@
             <app-form-cancel-button-component [label]="'BUTTON.REJECT'" (clicked)="onReject()" />
           }
 
-          @if (canDelete()) {
-            <app-form-cancel-button-component [label]="'COMMON.DELETE'" (clicked)="onDelete()" />
-          }
-
           @if (canApprove()) {
             <app-form-save-button-component [label]="'BUTTON.APPROVE'" [isLoading]="isActionLoading()" (clicked)="onApprove()" />
-          }
-
-          @if (canEdit()) {
-            <app-form-save-button-component [label]="'COMMON.EDIT'" [isDisabled]="isActionLoading()" (clicked)="onEdit()" />
           }
 
           <app-form-save-button-component [label]="'COMMON.BACK'" [isDisabled]="isActionLoading()" (clicked)="onBack()" />

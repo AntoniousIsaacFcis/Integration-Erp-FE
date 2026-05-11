@@ -2,10 +2,16 @@
   <div class="w-full max-w-standard bg-white rounded-[20px] shadow-soft border border-black/5">
     <app-form-container-component [title]="t('MENU.CREATE_ATTENDANCE_PERMISSION')" (submit)="onSave()">
       <ng-container formFields>
+        @if (isEmployeeScoped()) {
+        <app-app-input-component [label]="t('ATTENDANCE.EMPLOYEE_NAME') + ' *'"
+          [placeholder]="t('ATTENDANCE.EMPLOYEE_NAME')" [control]="getControl('employeeName')"
+          [showErrors]="submitted()" />
+        } @else {
         <app-attendance-employee-lookup-component
           [(selectedEmployee)]="selectedEmployee"
           [label]="'ATTENDANCE.EMPLOYEE_NAME'"
           [placeholder]="'ATTENDANCE.EMPLOYEE_SEARCH_PLACEHOLDER'" />
+        }
 
         <app-app-select-component [label]="t('LABEL.TYPE') + ' *'" [control]="getControl('type')"
           [showErrors]="submitted()" [placeholder]="'PLACEHOLDER.SELECT_ABSENCE_TYPE'">

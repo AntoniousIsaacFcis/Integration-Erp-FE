@@ -1,13 +1,16 @@
-import { ChangeDetectionStrategy, Component, effect, inject, signal } from '@angular/core';
-import { rxResource, toSignal } from '@angular/core/rxjs-interop';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { AuthService } from '@core/auth/services/auth-service';
 import { NotificationService } from '@core/services/notification-service';
 import { AttendanceEmployeeLookupComponent, IAttendanceEmployeeLookupItem } from '@features/attendance/components/employee-lookup-component/employee-lookup-component';
 import { ICreateAttendancePermissionPayload } from '@features/attendance/models/ipermissions';
 import { AttendanceService } from '@features/attendance/services/attendance-service';
+import { isEmployeeScopedUser } from '@features/attendance/utils/attendance-permission-auth';
+import { ICurrentStaffSummaryApiDto } from '@features/core-hr/models/istaff';
 import { TranslocoModule } from '@jsverse/transloco';
-import { catchError, of, startWith } from 'rxjs';
+import { startWith } from 'rxjs';
 import { FormContainerComponent } from '@shared/components/organisms/form-container-component/form-container-component';
 import { AppInputComponent } from '@shared/components/atoms/app-input-component/app-input-component';
 import { AppSelectComponent } from '@shared/components/atoms/app-select-component/app-select-component';
@@ -40,6 +43,7 @@ type PermissionTypeValue = 'lateArrival' | 'earlyLeave';
 export class CreateAttendancePermissionComponent {
   private readonly fb = inject(FormBuilder);
   private readonly router = inject(Router);
+  private readonly authService = inject(AuthService);
   private readonly attendanceService = inject(AttendanceService);
   private readonly notification = inject(NotificationService);
   private readonly today = new Date().toISOString().split('T')[0];
@@ -47,9 +51,12 @@ export class CreateAttendancePermissionComponent {
   submitted = signal(false);
   isSaving = signal(false);
   selectedEmployee = signal<IAttendanceEmployeeLookupItem | null>(null);
+  private readonly didLoadCurrentEmployee = signal(false);
+  readonly isEmployeeScoped = computed(() => isEmployeeScopedUser(this.authService));
 
   mainForm = this.fb.nonNullable.group({
     employeeId: ['', [Validators.required]],
+    employeeName: [{ value: '', disabled: true }],
     type: ['lateArrival' as PermissionTypeValue, [Validators.required]],
     date: [this.today, [Validators.required]],
     durationMinutes: [1, [Validators.required, Validators.min(1)]],
@@ -69,6 +76,27 @@ export class CreateAttendancePermissionComponent {
     effect(() => {
       const employee = this.selectedEmployee();
       this.mainForm.controls.employeeId.setValue(employee?.id ?? '', { emitEvent: false });
+      this.mainForm.controls.employeeName.setValue(employee?.displayName ?? '', { emitEvent: false });
+    });
+
+    effect(() => {
+      if (!this.isEmployeeScoped() || this.didLoadCurrentEmployee()) {
+        return;
+      }
+
+      this.didLoadCurrentEmployee.set(true);
+      this.attendanceService.getCurrentAttendancePermissionStaff().subscribe({
+        next: employee => this.selectedEmployee.set(this.toEmployeeLookupItem(employee)),
+        error: (error: unknown) => {
+          this.notification.show({
+            type: 'error',
+            title: 'COMMON.MESSAGES.OPERATION_FAILED',
+            message: this.getErrorMessage(error),
+            isModal: false,
+            actionLabel: 'COMMON.CONFIRM',
+          });
+        },
+      });
     });
   }
 
@@ -159,5 +187,21 @@ export class CreateAttendancePermissionComponent {
     return typeof message === 'string' && message.trim().length > 0
       ? message
       : 'COMMON.MESSAGES.PLEASE_TRY_AGAIN';
+  }
+
+  private toEmployeeLookupItem(employee: ICurrentStaffSummaryApiDto): IAttendanceEmployeeLookupItem {
+    return {
+      id: employee.id,
+      displayName: employee.displayName,
+      staffCode: employee.staffCode?.trim() ?? '',
+      email: '',
+      departmentId: '',
+      designationId: '',
+      attendanceShiftId: '',
+      nationalityCode: '',
+      nationalId: '',
+      phone: '',
+      mobileNumber: '',
+    };
   }
 }
