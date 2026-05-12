@@ -16,118 +16,101 @@
   } @else if (currentStaffResource.value()) {
     <div class="employee-dashboard__layout">
       <header class="dashboard-card employee-dashboard__header">
-        <div class="employee-dashboard__header-copy">
-          <span class="section-eyebrow">{{ t('DASHBOARD.TITLE') }}</span>
-          <h1 class="employee-dashboard__title">{{ t('DASHBOARD.WELCOME') }} {{ employeeName() }}</h1>
-          <p class="employee-dashboard__subtitle">{{ t('DASHBOARD.EMPLOYEE_GREETING') }}</p>
+        <div class="employee-dashboard__header-top">
+          <h1 class="employee-dashboard__page-title">{{ t('DASHBOARD.TITLE') }}</h1>
+          <span class="dashboard-chip dashboard-chip--success employee-dashboard__status-pill">
+            @if (attendanceDaysResource.isLoading()) {
+              {{ t('COMMON.LOADING') }}
+            } @else if (todayAttendance()?.checkIn && todayAttendance()?.checkOut) {
+              {{ t('DASHBOARD.ATTENDANCE_COMPLETED') }}
+            } @else if (todayAttendance()?.checkIn) {
+              {{ t('ATTENDANCE.CHECK_IN_SUCCESS') }}
+            } @else {
+              {{ t('DASHBOARD.NO_ATTENDANCE_DATA') }}
+            }
+          </span>
         </div>
 
-        <div class="employee-dashboard__meta">
-          @if (employeeCode()) {
-            <span class="dashboard-chip dashboard-chip--muted">
-              {{ t('DASHBOARD.EMPLOYEE_CODE') }}: {{ employeeCode() }}
-            </span>
-          }
+        <div class="employee-dashboard__header-copy">
+          <h2 class="employee-dashboard__title">{{ t('DASHBOARD.WELCOME') }} {{ employeeName() }} 👋</h2>
+          <p class="employee-dashboard__subtitle">{{ t('DASHBOARD.EMPLOYEE_GREETING') }}</p>
+          <div class="employee-dashboard__meta">
+            @if (employeeCode()) {
+              <span class="employee-dashboard__meta-text">{{ t('DASHBOARD.EMPLOYEE_CODE') }}: {{ employeeCode() }}</span>
+            }
 
-          @if (employeeEmail()) {
-            <span class="dashboard-chip dashboard-chip--muted">{{ employeeEmail() }}</span>
-          }
+            @if (employeeEmail()) {
+              <span class="employee-dashboard__meta-text">{{ employeeEmail() }}</span>
+            }
 
-          <span class="dashboard-chip dashboard-chip--success">{{ currentDateLabel }}</span>
+            <span class="employee-dashboard__meta-text">{{ currentDateLabel }}</span>
+          </div>
         </div>
       </header>
 
       <section class="employee-dashboard__summary-grid">
         <article class="dashboard-card summary-card summary-card--leave">
-          <div class="summary-card__heading">
-            <div>
-              <span class="section-eyebrow">{{ t('DASHBOARD.LEAVE_BALANCE') }}</span>
-              <h2 class="section-title">{{ t('DASHBOARD.LEAVE_BALANCE') }}</h2>
+          <div class="summary-card__inner summary-card__inner--leave">
+            <div class="summary-card__copy summary-card__copy--leave">
+              <h2 class="summary-card__title">{{ t('DASHBOARD.LEAVE_BALANCE') }}</h2>
+              <p class="summary-card__subtitle">
+                {{ leaveStats().remainingBalance }} {{ t('COMMON.DAYS_PLURAL') }}
+              </p>
             </div>
 
-            <div class="summary-card__icon summary-card__icon--gold">
-              <ng-icon name="lucideClipboardList" size="18" />
-            </div>
-          </div>
-
-          <div class="leave-balance">
-            <div class="leave-balance__ring">
+            <div class="leave-balance__ring leave-balance__ring--compact">
               <strong>{{ leaveStats().remainingBalance }}</strong>
               <span>{{ t('COMMON.DAYS_PLURAL') }}</span>
             </div>
-
-            <div class="leave-balance__details">
-              <div class="mini-stat">
-                <span class="mini-stat__label">{{ t('LEAVE_TYPE.ANNUAL') }}</span>
-                <strong class="mini-stat__value">{{ leaveStats().annualBalance }}</strong>
-              </div>
-
-              <div class="mini-stat">
-                <span class="mini-stat__label">{{ t('LEAVE_TYPE.SICK') }}</span>
-                <strong class="mini-stat__value">{{ leaveStats().sickBalance }}</strong>
-              </div>
-            </div>
           </div>
 
-          <div class="summary-card__footer">
-            @if (latestVacation()) {
-              <div class="summary-card__note">
-                <span class="summary-card__note-label">{{ t('DASHBOARD.LATEST_LEAVE_TYPE') }}</span>
-                <app-table-status-badge-component
-                  [status]="'pending'"
-                  [label]="latestVacation()!.typeLabelIsTranslationKey ? t(latestVacation()!.typeLabel) : latestVacation()!.typeLabel"
-                />
-              </div>
-            }
-
-            <button
-              type="button"
-              class="dashboard-inline-action"
-              (click)="navigateTo('/attendance/view-permissions/create-leave-application')"
-            >
-              {{ t('BUTTON.ADD_LEAVE_APPLICATION') }}
-            </button>
-          </div>
+          <button
+            type="button"
+            class="dashboard-inline-action dashboard-inline-action--wide"
+            (click)="navigateTo('/attendance/view-permissions/create-leave-application')"
+          >
+            {{ t('BUTTON.ADD_LEAVE_APPLICATION') }}
+          </button>
         </article>
 
         <article [class]="attendanceCardClass()">
-          <div class="summary-card__heading summary-card__heading--accent">
-            <div class="summary-card__icon summary-card__icon--accent">
+          <div class="attendance-card__inner">
+            <div class="summary-card__icon summary-card__icon--accent summary-card__icon--large">
               <ng-icon name="lucideClock3" size="18" />
             </div>
 
-            <div>
-              <span class="section-eyebrow section-eyebrow--accent">{{ t('DASHBOARD.CURRENT_ATTENDANCE') }}</span>
-              @if (attendanceDaysResource.isLoading()) {
-                <span class="summary-card__loading-text">{{ t('COMMON.LOADING') }}</span>
-              } @else {
-                <app-table-status-badge-component
-                  [status]="currentAttendanceStatusTone()"
-                  [label]="t(currentAttendanceStatusLabel())"
-                />
+            <div class="attendance-card__copy">
+              <span class="summary-card__eyebrow summary-card__eyebrow--accent">{{ t('DASHBOARD.CURRENT_ATTENDANCE') }}</span>
+              <h2 class="attendance-card__title">
+                @if (attendanceDaysResource.isLoading()) {
+                  {{ t('COMMON.LOADING') }}
+                } @else if (todayAttendance()?.checkIn && todayAttendance()?.checkOut) {
+                  {{ t('DASHBOARD.ATTENDANCE_COMPLETED') }}
+                } @else if (todayAttendance()?.checkIn) {
+                  {{ t('ATTENDANCE.CHECK_IN_SUCCESS') }}
+                } @else {
+                  {{ t(currentAttendanceStatusLabel()) }}
+                }
+              </h2>
+              <p class="attendance-card__subtitle">
+                @if (attendanceDaysResource.isLoading()) {
+                  {{ t('COMMON.LOADING') }}
+                } @else {
+                  {{ currentAttendanceSummary() || t('DASHBOARD.NO_ATTENDANCE_DATA') }}
+                }
+              </p>
+
+              @if (!attendanceDaysResource.isLoading()) {
+                <div class="attendance-card__status-row">
+                  <app-table-status-badge-component
+                    [status]="currentAttendanceStatusTone()"
+                    [label]="t(currentAttendanceStatusLabel())"
+                  />
+                  <span class="attendance-card__time-note">
+                    {{ formatClock(todayAttendance()?.checkIn) || '--:--' }}
+                  </span>
+                </div>
               }
-            </div>
-          </div>
-
-          <div class="summary-card__body">
-            <p class="attendance-card__summary">
-              @if (attendanceTimeSummaryKey()) {
-                {{ t(attendanceTimeSummaryKey()!) }}
-              } @else {
-                {{ currentAttendanceSummary() }}
-              }
-            </p>
-
-            <div class="attendance-card__times">
-              <div class="attendance-card__time-box">
-                <span>{{ t('ATTENDANCE.CHECK_IN') }}</span>
-                <strong>{{ formatClock(todayAttendance()?.checkIn) || '--:--' }}</strong>
-              </div>
-
-              <div class="attendance-card__time-box">
-                <span>{{ t('ATTENDANCE.CHECK_OUT') }}</span>
-                <strong>{{ formatClock(todayAttendance()?.checkOut) || '--:--' }}</strong>
-              </div>
             </div>
           </div>
 
@@ -149,50 +132,42 @@
         </article>
 
         <article class="dashboard-card summary-card summary-card--shift">
-          <div class="summary-card__heading">
-            <div>
-              <span class="section-eyebrow">{{ t('DASHBOARD.CURRENT_SHIFT') }}</span>
-              <h2 class="section-title">
+          <div class="summary-card__inner summary-card__inner--shift">
+            <div class="summary-card__copy summary-card__copy--shift">
+              <span class="summary-card__eyebrow">{{ t('DASHBOARD.CURRENT_SHIFT') }}</span>
+              <h2 class="summary-card__title">
                 @if (currentShift(); as shift) {
                   {{ shift.summary.name }}
                 } @else {
                   {{ t('DASHBOARD.NO_SHIFT_ASSIGNED') }}
                 }
               </h2>
+
+              @if (currentShift(); as shift) {
+                <p class="summary-card__subtitle summary-card__subtitle--tight">
+                  {{ formatClock(shift.summary.onDutyTime) || '--:--' }} - {{ formatClock(shift.summary.offDutyTime) || '--:--' }}
+                </p>
+
+                <p class="summary-card__meta-line">
+                  <span>{{ t('DASHBOARD.CURRENT_SHIFT') }}</span>
+                  @if (currentShiftWorkDays().length) {
+                    @for (dayKey of currentShiftWorkDays(); track dayKey; let last = $last) {
+                      <span>{{ t(dayKey) }}</span>
+                      @if (!last) {
+                        <i>•</i>
+                      }
+                    }
+                  }
+                </p>
+              } @else {
+                <p class="summary-card__subtitle summary-card__subtitle--tight">{{ t('DASHBOARD.NO_SHIFT_ASSIGNED') }}</p>
+              }
             </div>
 
-            <div class="summary-card__icon summary-card__icon--blue">
+            <div class="summary-card__icon summary-card__icon--blue summary-card__icon--large">
               <ng-icon name="lucideCalendarDays" size="18" />
             </div>
           </div>
-
-          @if (currentShiftResource.isLoading()) {
-            <div class="dashboard-state-card__pulse dashboard-state-card__pulse--row"></div>
-            <div class="dashboard-state-card__pulse dashboard-state-card__pulse--row"></div>
-          } @else if (currentShift(); as shift) {
-            <div class="shift-grid">
-              <div class="mini-stat">
-                <span class="mini-stat__label">{{ t('LABEL.SHIFT_START_TIME') }}</span>
-                <strong class="mini-stat__value">{{ formatClock(shift.summary.onDutyTime) || '--:--' }}</strong>
-              </div>
-
-              <div class="mini-stat">
-                <span class="mini-stat__label">{{ t('LABEL.SHIFT_END_TIME') }}</span>
-                <strong class="mini-stat__value">{{ formatClock(shift.summary.offDutyTime) || '--:--' }}</strong>
-              </div>
-            </div>
-
-            <div class="summary-card__workdays">
-              <span class="summary-card__note-label">{{ t('DASHBOARD.WORK_DAYS') }}</span>
-              <div class="summary-card__workdays-list">
-                @for (dayKey of currentShiftWorkDays(); track dayKey) {
-                  <span class="dashboard-chip dashboard-chip--light">{{ t(dayKey) }}</span>
-                }
-              </div>
-            </div>
-          } @else {
-            <p class="summary-card__empty">{{ t('DASHBOARD.NO_SHIFT_ASSIGNED') }}</p>
-          }
         </article>
       </section>
 
