@@ -1,49 +1,396 @@
-<section class="grid gap-4 lg:grid-cols-2" *transloco="let t">
-  <article class="rounded-3xl border border-[#E6E8F0] bg-white p-5 shadow-sm">
-    <p class="text-xs font-semibold uppercase tracking-[0.2em] text-[#6B7280]">
-      {{ t('DASHBOARD.EMPLOYEE_CARD_TITLE') }}
-    </p>
-    <h2 class="mt-3 text-xl font-semibold text-[#111827]">
-      {{ t('DASHBOARD.EMPLOYEE_CARD_HEADING') }}
-    </h2>
-    <p class="mt-2 text-sm leading-6 text-[#4B5563]">
-      {{ t('DASHBOARD.EMPLOYEE_CARD_DESCRIPTION') }}
-    </p>
-  </article>
+<section class="employee-dashboard" *transloco="let t">
+  @if (currentStaffResource.isLoading()) {
+    <div class="dashboard-card dashboard-state-card">
+      <div class="dashboard-state-card__pulse dashboard-state-card__pulse--title"></div>
+      <div class="dashboard-state-card__pulse dashboard-state-card__pulse--headline"></div>
+      <div class="dashboard-state-card__pulse dashboard-state-card__pulse--meta"></div>
+    </div>
+  } @else if (currentStaffResource.error()) {
+    <div class="dashboard-card dashboard-state-card dashboard-state-card--error">
+      <p class="dashboard-state-card__title">{{ t('COMMON.MESSAGES.OPERATION_FAILED') }}</p>
+      <p class="dashboard-state-card__text">{{ t('COMMON.MESSAGES.PLEASE_TRY_AGAIN') }}</p>
+      <button type="button" class="dashboard-link-button" (click)="currentStaffResource.reload()">
+        {{ t('BUTTON.REFRESH') }}
+      </button>
+    </div>
+  } @else if (currentStaffResource.value()) {
+    <div class="employee-dashboard__layout">
+      <header class="dashboard-card employee-dashboard__header">
+        <div class="employee-dashboard__header-copy">
+          <span class="section-eyebrow">{{ t('DASHBOARD.TITLE') }}</span>
+          <h1 class="employee-dashboard__title">{{ t('DASHBOARD.WELCOME') }} {{ employeeName() }}</h1>
+          <p class="employee-dashboard__subtitle">{{ t('DASHBOARD.EMPLOYEE_GREETING') }}</p>
+        </div>
 
-  <article class="rounded-3xl border border-[#E6E8F0] bg-white p-5 shadow-sm">
-    <p class="text-xs font-semibold uppercase tracking-[0.2em] text-[#6B7280]">
-      {{ t('DASHBOARD.LEAVE_REQUESTS') }}
-    </p>
-    <h2 class="mt-3 text-xl font-semibold text-[#111827]">
-      {{ t('DASHBOARD.EMPLOYEE_WIDGET_PLACEHOLDER') }}
-    </h2>
-    <p class="mt-2 text-sm leading-6 text-[#4B5563]">
-      {{ t('DASHBOARD.EMPLOYEE_WIDGET_DESCRIPTION') }}
-    </p>
-  </article>
+        <div class="employee-dashboard__meta">
+          @if (employeeCode()) {
+            <span class="dashboard-chip dashboard-chip--muted">
+              {{ t('DASHBOARD.EMPLOYEE_CODE') }}: {{ employeeCode() }}
+            </span>
+          }
 
-  <article class="rounded-3xl border border-[#E6E8F0] bg-white p-5 shadow-sm">
-    <p class="text-xs font-semibold uppercase tracking-[0.2em] text-[#6B7280]">
-      {{ t('DASHBOARD.QUICK_STATS') }}
-    </p>
-    <h2 class="mt-3 text-xl font-semibold text-[#111827]">
-      {{ t('DASHBOARD.ATTENDANCE_CARD_TITLE') }}
-    </h2>
-    <p class="mt-2 text-sm leading-6 text-[#4B5563]">
-      {{ t('DASHBOARD.ATTENDANCE_CARD_DESCRIPTION') }}
-    </p>
-  </article>
+          @if (employeeEmail()) {
+            <span class="dashboard-chip dashboard-chip--muted">{{ employeeEmail() }}</span>
+          }
 
-  <article class="rounded-3xl border border-[#E6E8F0] bg-white p-5 shadow-sm">
-    <p class="text-xs font-semibold uppercase tracking-[0.2em] text-[#6B7280]">
-      {{ t('DASHBOARD.PENDING_APPROVALS') }}
-    </p>
-    <h2 class="mt-3 text-xl font-semibold text-[#111827]">
-      {{ t('DASHBOARD.EMPLOYEE_SUMMARY_TITLE') }}
-    </h2>
-    <p class="mt-2 text-sm leading-6 text-[#4B5563]">
-      {{ t('DASHBOARD.EMPLOYEE_SUMMARY_DESCRIPTION') }}
-    </p>
-  </article>
+          <span class="dashboard-chip dashboard-chip--success">{{ currentDateLabel }}</span>
+        </div>
+      </header>
+
+      <section class="employee-dashboard__summary-grid">
+        <article class="dashboard-card summary-card summary-card--leave">
+          <div class="summary-card__heading">
+            <div>
+              <span class="section-eyebrow">{{ t('DASHBOARD.LEAVE_BALANCE') }}</span>
+              <h2 class="section-title">{{ t('DASHBOARD.LEAVE_BALANCE') }}</h2>
+            </div>
+
+            <div class="summary-card__icon summary-card__icon--gold">
+              <ng-icon name="lucideClipboardList" size="18" />
+            </div>
+          </div>
+
+          <div class="leave-balance">
+            <div class="leave-balance__ring">
+              <strong>{{ leaveStats().remainingBalance }}</strong>
+              <span>{{ t('COMMON.DAYS_PLURAL') }}</span>
+            </div>
+
+            <div class="leave-balance__details">
+              <div class="mini-stat">
+                <span class="mini-stat__label">{{ t('LEAVE_TYPE.ANNUAL') }}</span>
+                <strong class="mini-stat__value">{{ leaveStats().annualBalance }}</strong>
+              </div>
+
+              <div class="mini-stat">
+                <span class="mini-stat__label">{{ t('LEAVE_TYPE.SICK') }}</span>
+                <strong class="mini-stat__value">{{ leaveStats().sickBalance }}</strong>
+              </div>
+            </div>
+          </div>
+
+          <div class="summary-card__footer">
+            @if (latestVacation()) {
+              <div class="summary-card__note">
+                <span class="summary-card__note-label">{{ t('DASHBOARD.LATEST_LEAVE_TYPE') }}</span>
+                <app-table-status-badge-component
+                  [status]="'pending'"
+                  [label]="latestVacation()!.typeLabelIsTranslationKey ? t(latestVacation()!.typeLabel) : latestVacation()!.typeLabel"
+                />
+              </div>
+            }
+
+            <button
+              type="button"
+              class="dashboard-inline-action"
+              (click)="navigateTo('/attendance/view-permissions/create-leave-application')"
+            >
+              {{ t('BUTTON.ADD_LEAVE_APPLICATION') }}
+            </button>
+          </div>
+        </article>
+
+        <article [class]="attendanceCardClass()">
+          <div class="summary-card__heading summary-card__heading--accent">
+            <div class="summary-card__icon summary-card__icon--accent">
+              <ng-icon name="lucideClock3" size="18" />
+            </div>
+
+            <div>
+              <span class="section-eyebrow section-eyebrow--accent">{{ t('DASHBOARD.CURRENT_ATTENDANCE') }}</span>
+              @if (attendanceDaysResource.isLoading()) {
+                <span class="summary-card__loading-text">{{ t('COMMON.LOADING') }}</span>
+              } @else {
+                <app-table-status-badge-component
+                  [status]="currentAttendanceStatusTone()"
+                  [label]="t(currentAttendanceStatusLabel())"
+                />
+              }
+            </div>
+          </div>
+
+          <div class="summary-card__body">
+            <p class="attendance-card__summary">
+              @if (attendanceTimeSummaryKey()) {
+                {{ t(attendanceTimeSummaryKey()!) }}
+              } @else {
+                {{ currentAttendanceSummary() }}
+              }
+            </p>
+
+            <div class="attendance-card__times">
+              <div class="attendance-card__time-box">
+                <span>{{ t('ATTENDANCE.CHECK_IN') }}</span>
+                <strong>{{ formatClock(todayAttendance()?.checkIn) || '--:--' }}</strong>
+              </div>
+
+              <div class="attendance-card__time-box">
+                <span>{{ t('ATTENDANCE.CHECK_OUT') }}</span>
+                <strong>{{ formatClock(todayAttendance()?.checkOut) || '--:--' }}</strong>
+              </div>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            class="attendance-card__action"
+            [disabled]="isAttendanceActionLoading()"
+            (click)="handleAttendanceAction()"
+          >
+            <ng-icon [name]="attendanceAction().icon" size="16" />
+            <span>
+              @if (isAttendanceActionLoading()) {
+                {{ t('COMMON.LOADING') }}
+              } @else {
+                {{ t(attendanceAction().labelKey) }}
+              }
+            </span>
+          </button>
+        </article>
+
+        <article class="dashboard-card summary-card summary-card--shift">
+          <div class="summary-card__heading">
+            <div>
+              <span class="section-eyebrow">{{ t('DASHBOARD.CURRENT_SHIFT') }}</span>
+              <h2 class="section-title">
+                @if (currentShift(); as shift) {
+                  {{ shift.summary.name }}
+                } @else {
+                  {{ t('DASHBOARD.NO_SHIFT_ASSIGNED') }}
+                }
+              </h2>
+            </div>
+
+            <div class="summary-card__icon summary-card__icon--blue">
+              <ng-icon name="lucideCalendarDays" size="18" />
+            </div>
+          </div>
+
+          @if (currentShiftResource.isLoading()) {
+            <div class="dashboard-state-card__pulse dashboard-state-card__pulse--row"></div>
+            <div class="dashboard-state-card__pulse dashboard-state-card__pulse--row"></div>
+          } @else if (currentShift(); as shift) {
+            <div class="shift-grid">
+              <div class="mini-stat">
+                <span class="mini-stat__label">{{ t('LABEL.SHIFT_START_TIME') }}</span>
+                <strong class="mini-stat__value">{{ formatClock(shift.summary.onDutyTime) || '--:--' }}</strong>
+              </div>
+
+              <div class="mini-stat">
+                <span class="mini-stat__label">{{ t('LABEL.SHIFT_END_TIME') }}</span>
+                <strong class="mini-stat__value">{{ formatClock(shift.summary.offDutyTime) || '--:--' }}</strong>
+              </div>
+            </div>
+
+            <div class="summary-card__workdays">
+              <span class="summary-card__note-label">{{ t('DASHBOARD.WORK_DAYS') }}</span>
+              <div class="summary-card__workdays-list">
+                @for (dayKey of currentShiftWorkDays(); track dayKey) {
+                  <span class="dashboard-chip dashboard-chip--light">{{ t(dayKey) }}</span>
+                }
+              </div>
+            </div>
+          } @else {
+            <p class="summary-card__empty">{{ t('DASHBOARD.NO_SHIFT_ASSIGNED') }}</p>
+          }
+        </article>
+      </section>
+
+      <section class="dashboard-card quick-actions-card">
+        <div class="quick-actions-card__header">
+          <span class="section-eyebrow">{{ t('DASHBOARD.QUICK_ACTIONS') }}</span>
+          <h2 class="section-title">{{ t('DASHBOARD.QUICK_ACTIONS') }}</h2>
+        </div>
+
+        <div class="quick-actions-card__list">
+          @for (action of quickActions; track action.route) {
+            <button type="button" [class]="quickActionClass(action)" (click)="navigateTo(action.route)">
+              <span class="quick-action__icon">
+                <ng-icon [name]="action.icon" size="16" />
+              </span>
+              <span class="quick-action__label">{{ t(action.labelKey) }}</span>
+            </button>
+          }
+        </div>
+      </section>
+
+      <section class="employee-dashboard__content-grid">
+        <aside class="employee-dashboard__side-column">
+          <article class="dashboard-card calendar-card">
+            <div class="card-header">
+              <div>
+                <span class="section-eyebrow">{{ t('DASHBOARD.MONTHLY_ATTENDANCE') }}</span>
+                <h2 class="section-title">{{ currentMonthLabel }}</h2>
+              </div>
+            </div>
+
+            @if (attendanceDaysResource.isLoading()) {
+              <div class="calendar-card__skeleton">
+                @for (_ of [1,2,3,4,5,6,7,8,9,10,11,12,13,14]; track _) {
+                  <span class="calendar-card__skeleton-box"></span>
+                }
+              </div>
+            } @else if (!attendanceDays().length) {
+              <app-empty-table-placeholder-component [titleKey]="'DASHBOARD.NO_ATTENDANCE_DATA'" />
+            } @else {
+              <div class="calendar-card__weekdays">
+                @for (dayKey of calendarWeekdayKeys; track dayKey) {
+                  <span class="calendar-card__weekday">{{ t(dayKey) }}</span>
+                }
+              </div>
+
+              <div class="calendar-card__grid">
+                @for (cell of monthCalendarCells(); track $index) {
+                  @if (cell.kind === 'day') {
+                    <div [class]="calendarCellClass(cell)">
+                      <span class="calendar-card__number">{{ cell.dayNumber }}</span>
+                      <span [class]="calendarMarkerClass(cell.tone)"></span>
+                    </div>
+                  } @else {
+                    <div class="calendar-card__day calendar-card__day--empty"></div>
+                  }
+                }
+              </div>
+
+              <div class="calendar-card__legend">
+                @for (legendItem of calendarLegend; track legendItem.labelKey) {
+                  <div class="calendar-card__legend-item">
+                    <span [class]="calendarMarkerClass(legendItem.tone)"></span>
+                    <span>{{ t(legendItem.labelKey) }}</span>
+                  </div>
+                }
+              </div>
+            }
+          </article>
+
+          <article class="dashboard-card updates-card">
+            <div class="card-header">
+              <div>
+                <span class="section-eyebrow">{{ t('DASHBOARD.NOTIFICATIONS') }}</span>
+                <h2 class="section-title">{{ t('DASHBOARD.NOTIFICATIONS') }}</h2>
+              </div>
+
+              <div class="summary-card__icon summary-card__icon--slate">
+                <ng-icon name="lucideBell" size="18" />
+              </div>
+            </div>
+
+            @if (updatesResource.isLoading()) {
+              <div class="updates-card__skeleton">
+                @for (_ of [1,2,3]; track _) {
+                  <div class="dashboard-state-card__pulse dashboard-state-card__pulse--row"></div>
+                }
+              </div>
+            } @else if (!updates().length) {
+              <app-empty-table-placeholder-component [titleKey]="'DASHBOARD.NO_UPDATES'" />
+            } @else {
+              <div class="updates-card__list">
+                @for (log of updates(); track log.id) {
+                  <div class="updates-card__item">
+                    <div class="updates-card__item-copy">
+                      <strong>{{ log.sourceDisplay || t(log.sourceLabelKey) }}</strong>
+                      <span>{{ formatDateTime(log.logDateTime) }}</span>
+                      @if (log.invalidReason) {
+                        <small class="updates-card__warning">{{ log.invalidReason }}</small>
+                      }
+                    </div>
+
+                    <app-table-status-badge-component
+                      [status]="log.statusTone"
+                      [label]="t(log.statusLabelKey)"
+                    />
+                  </div>
+                }
+              </div>
+            }
+          </article>
+        </aside>
+
+        <article class="dashboard-card requests-card">
+          <div class="card-header">
+            <div>
+              <span class="section-eyebrow">{{ t('DASHBOARD.RECENT_REQUESTS') }}</span>
+              <h2 class="section-title">{{ t('DASHBOARD.MY_REQUESTS') }}</h2>
+            </div>
+
+            <button type="button" class="dashboard-link-button" (click)="openAllRequests()">
+              {{ t('DASHBOARD.VIEW_ALL_REQUESTS') }}
+            </button>
+          </div>
+
+          @if (requestsResource.isLoading()) {
+            <div class="requests-card__skeleton">
+              @for (_ of [1,2,3,4]; track _) {
+                <div class="dashboard-state-card__pulse dashboard-state-card__pulse--table"></div>
+              }
+            </div>
+          } @else if (!requests().length) {
+            <app-empty-table-placeholder-component [titleKey]="'DASHBOARD.NO_REQUESTS'" />
+          } @else {
+            <div class="requests-card__table-wrap">
+              <table class="requests-card__table">
+                <thead>
+                  <tr>
+                    <th>{{ t('PERMISSIONS.TABLE_REQUEST_TYPE') }}</th>
+                    <th>{{ t('PERMISSIONS.TABLE_DATE') }}</th>
+                    <th>{{ t('COMMON.STATUS') }}</th>
+                    <th>{{ t('COMMON.ACTIONS') }}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (request of requests(); track request.id) {
+                    <tr (click)="openRequest(request)">
+                      <td>
+                        <div class="request-row__type">
+                          <span class="request-row__icon">
+                            <ng-icon name="lucideFileText" size="14" />
+                          </span>
+
+                          <div class="request-row__type-copy">
+                            <strong>{{ t(formatRequestTypeKey(request)) }}</strong>
+                            <span>#{{ requestReference(request) }}</span>
+                          </div>
+                        </div>
+                      </td>
+
+                      <td>
+                        <div class="request-row__date">
+                          <strong>{{ request.dateRange }}</strong>
+                          <span>
+                            {{ formatMetric(request) }}
+                            @if (isDayMetric(request)) {
+                              {{ t('COMMON.DAYS_PLURAL') }}
+                            } @else {
+                              {{ t('ATTENDANCE.DURATION_MINUTES') }}
+                            }
+                          </span>
+                        </div>
+                      </td>
+
+                      <td class="request-row__status-cell">
+                        <app-table-status-badge-component
+                          [status]="request.statusTone"
+                          [label]="t(request.statusLabelKey)"
+                        />
+                      </td>
+
+                      <td class="request-row__action-cell">
+                        <button
+                          type="button"
+                          class="request-row__action"
+                          (click)="$event.stopPropagation(); openRequest(request)"
+                        >
+                          <ng-icon name="lucideFileText" size="14" />
+                        </button>
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          }
+        </article>
+      </section>
+    </div>
+  }
 </section>

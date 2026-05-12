@@ -74,6 +74,7 @@ export class AttendanceService {
     status?: string;
     date?: string;
     sessionId?: string;
+    employeeId?: string;
   }): Observable<IAttendanceLogListViewResponse> {
     const selectedDate = params.date?.trim();
 
@@ -82,6 +83,7 @@ export class AttendanceService {
         SkipCount: String((params.page - 1) * params.limit),
         MaxResultCount: String(params.limit),
         Sorting: 'LogDateTime DESC',
+        ...(params.employeeId?.trim() && { EmployeeId: params.employeeId.trim() }),
         ...(params.search?.trim() && { SearchText: params.search.trim() }),
         ...(params.status?.trim() && { Status: params.status.trim() }),
         ...(params.sessionId?.trim() && { AttendanceLogSessionId: params.sessionId.trim() }),
@@ -657,6 +659,7 @@ export class AttendanceService {
     type?: string;
     fromDate?: string;
     toDate?: string;
+    employeeId?: string;
   }): Observable<{ data: IUnifiedRequestListItem[]; total: number; page: number; limit: number }> {
     const normalizedSearch = params.search?.trim();
     const requestType = params.type?.trim();
@@ -667,6 +670,7 @@ export class AttendanceService {
         SkipCount: String((params.page - 1) * params.limit),
         MaxResultCount: String(params.limit),
         Sorting: 'CreationTime DESC',
+        ...(params.employeeId?.trim() && { EmployeeId: params.employeeId.trim() }),
         ...(normalizedSearch && {
           SearchText: normalizedSearch,
           SearchTerm: normalizedSearch,

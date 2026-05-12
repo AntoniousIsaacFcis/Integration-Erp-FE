@@ -1,14 +1,14 @@
 import { ChangeDetectionStrategy, Component, input, NgModule, output } from '@angular/core';
 import { TranslocoModule } from '@jsverse/transloco';
 import { NgIcon, provideIcons } from '@ng-icons/core';
-import { lucideCheckCircle, lucideCirclePlus, lucideCircleX, lucideCloudUpload, lucidePlus, lucideUserPlus } from '@ng-icons/lucide';
+import { lucideCheckCircle, lucideCirclePlus, lucideCircleX, lucideCloudUpload, lucideClock3, lucideFileText, lucidePlusCircle, lucideRefreshCcw, lucideUserPlus } from '@ng-icons/lucide';
 
 @Component({
   selector: 'app-action-btn-component',
   imports: [NgIcon, TranslocoModule],
   templateUrl: './action-btn-component.html',
   styleUrl: './action-btn-component.css',
-  providers: [provideIcons({ lucideCirclePlus, lucideCircleX, lucideUserPlus, lucideCloudUpload, lucideCheckCircle })],
+  providers: [provideIcons({ lucideCirclePlus, lucideCircleX, lucideUserPlus, lucideCloudUpload, lucideCheckCircle, lucidePlusCircle, lucideRefreshCcw, lucideClock3, lucideFileText })],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ActionBtnComponent {
