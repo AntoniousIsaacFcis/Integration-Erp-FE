@@ -133,6 +133,12 @@
 
         <article class="dashboard-card summary-card summary-card--shift">
           <div class="summary-card__inner summary-card__inner--shift">
+            <div class="summary-card__icon-wrap summary-card__icon-wrap--shift">
+              <div class="summary-card__icon summary-card__icon--blue summary-card__icon--large summary-card__icon--shift">
+                <ng-icon name="lucideCalendarDays" size="18" />
+              </div>
+            </div>
+
             <div class="summary-card__copy summary-card__copy--shift">
               <span class="summary-card__eyebrow">{{ t('DASHBOARD.CURRENT_SHIFT') }}</span>
               <h2 class="summary-card__title">
@@ -163,10 +169,6 @@
                 <p class="summary-card__subtitle summary-card__subtitle--tight">{{ t('DASHBOARD.NO_SHIFT_ASSIGNED') }}</p>
               }
             </div>
-
-            <div class="summary-card__icon summary-card__icon--blue summary-card__icon--large">
-              <ng-icon name="lucideCalendarDays" size="18" />
-            </div>
           </div>
         </article>
       </section>
@@ -193,9 +195,9 @@
         <aside class="employee-dashboard__side-column">
           <article class="dashboard-card calendar-card">
             <div class="card-header">
-              <div>
-                <span class="section-eyebrow">{{ t('DASHBOARD.MONTHLY_ATTENDANCE') }}</span>
-                <h2 class="section-title">{{ currentMonthLabel }}</h2>
+              <div class="calendar-card__header-copy">
+                <span class="calendar-card__month">{{ currentMonthLabel }}</span>
+                <h2 class="calendar-card__title">{{ t('DASHBOARD.MONTHLY_ATTENDANCE') }}</h2>
               </div>
             </div>
 
@@ -227,7 +229,7 @@
                 }
               </div>
 
-              <div class="calendar-card__legend">
+              <div class="calendar-card__legend calendar-card__legend--compact">
                 @for (legendItem of calendarLegend; track legendItem.labelKey) {
                   <div class="calendar-card__legend-item">
                     <span [class]="calendarMarkerClass(legendItem.tone)"></span>
@@ -238,11 +240,46 @@
             }
           </article>
 
+          <article class="dashboard-card holiday-card">
+            <div class="card-header">
+              <div class="updates-card__header-copy">
+                <span class="section-eyebrow">{{ t('DASHBOARD.LATEST_ALERTS') }}</span>
+                <h2 class="updates-card__title">{{ t('DASHBOARD.LATEST_ALERTS') }}</h2>
+              </div>
+
+              <div class="summary-card__icon summary-card__icon--slate">
+                <ng-icon name="lucideBell" size="18" />
+              </div>
+            </div>
+
+            @if (holidayListsResource.isLoading()) {
+              <div class="updates-card__skeleton">
+                <div class="dashboard-state-card__pulse dashboard-state-card__pulse--row"></div>
+              </div>
+            } @else if (!upcomingHoliday()) {
+              <app-empty-table-placeholder-component [titleKey]="'DASHBOARD.NO_ALERTS'" />
+            } @else {
+              @if (upcomingHoliday(); as holiday) {
+                <div class="updates-card__holiday">
+                  <div class="updates-card__holiday-icon">
+                    <ng-icon name="lucideBell" size="14" />
+                  </div>
+
+                  <div class="updates-card__holiday-copy">
+                    <strong>{{ holiday.title }}</strong>
+                    <span>{{ formatDisplayDate(holiday.date) }}</span>
+                    <small>{{ holiday.listName }}</small>
+                  </div>
+                </div>
+              }
+            }
+          </article>
+
           <article class="dashboard-card updates-card">
             <div class="card-header">
-              <div>
-                <span class="section-eyebrow">{{ t('DASHBOARD.NOTIFICATIONS') }}</span>
-                <h2 class="section-title">{{ t('DASHBOARD.NOTIFICATIONS') }}</h2>
+              <div class="updates-card__header-copy">
+                <span class="section-eyebrow">{{ t('DASHBOARD.LATEST_UPDATES') }}</span>
+                <h2 class="updates-card__title">{{ t('DASHBOARD.LATEST_UPDATES') }}</h2>
               </div>
 
               <div class="summary-card__icon summary-card__icon--slate">
@@ -283,12 +320,12 @@
 
         <article class="dashboard-card requests-card">
           <div class="card-header">
-            <div>
+            <div class="requests-card__header-copy">
               <span class="section-eyebrow">{{ t('DASHBOARD.RECENT_REQUESTS') }}</span>
-              <h2 class="section-title">{{ t('DASHBOARD.MY_REQUESTS') }}</h2>
+              <h2 class="requests-card__title">{{ t('DASHBOARD.MY_REQUESTS') }}</h2>
             </div>
 
-            <button type="button" class="dashboard-link-button" (click)="openAllRequests()">
+            <button type="button" class="requests-card__link" (click)="openAllRequests()">
               {{ t('DASHBOARD.VIEW_ALL_REQUESTS') }}
             </button>
           </div>
@@ -309,7 +346,7 @@
                     <th>{{ t('PERMISSIONS.TABLE_REQUEST_TYPE') }}</th>
                     <th>{{ t('PERMISSIONS.TABLE_DATE') }}</th>
                     <th>{{ t('COMMON.STATUS') }}</th>
-                    <th>{{ t('COMMON.ACTIONS') }}</th>
+                    <th class="requests-card__table-action-head">{{ t('COMMON.ACTIONS') }}</th>
                   </tr>
                 </thead>
                 <tbody>

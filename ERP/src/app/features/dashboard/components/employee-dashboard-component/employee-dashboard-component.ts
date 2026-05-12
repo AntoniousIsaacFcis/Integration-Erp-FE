@@ -19,6 +19,7 @@ import { AttendanceService } from '@features/attendance/services/attendance-serv
 import { IAttendanceDay, IAttendanceRelatedShift, IShift } from '@features/attendance/models/iattendance';
 import { IUnifiedRequestListItem } from '@features/attendance/models/ipermissions';
 import { IVacationResponse } from '@features/attendance/models/ivacation';
+import { HolidayListsService } from '@features/settings/services/holiday-lists-service';
 import { catchError, map, of, switchMap } from 'rxjs';
 
 type ShiftCardData = {
@@ -50,6 +51,12 @@ interface CalendarCell {
   tone?: CalendarTone;
 }
 
+interface UpcomingHolidayItem {
+  title: string;
+  date: string;
+  listName: string;
+}
+
 @Component({
   selector: 'app-employee-dashboard-component',
   imports: [
@@ -65,6 +72,7 @@ interface CalendarCell {
 })
 export class EmployeeDashboardComponent {
   private readonly attendanceService = inject(AttendanceService);
+  private readonly holidayListsService = inject(HolidayListsService);
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
   private readonly notificationService = inject(NotificationService);
@@ -213,7 +221,7 @@ export class EmployeeDashboardComponent {
     params: () => {
       const employeeId = this.employeeId();
       return employeeId
-        ? { employeeId, page: 1, limit: 5 }
+        ? { employeeId, page: 1, limit: 3 }
         : undefined;
     },
     stream: ({ params }) => this.attendanceService.getAttendanceLogs(params).pipe(
@@ -222,6 +230,33 @@ export class EmployeeDashboardComponent {
   });
 
   readonly updates = computed(() => this.updatesResource.value()?.data ?? []);
+
+  readonly holidayListsResource = rxResource({
+    stream: () => this.holidayListsService.getManagementData({
+      page: 1,
+      limit: 100,
+      sorting: 'Name asc',
+    }).pipe(
+      catchError(() => of({ data: [], total: 0, page: 1, limit: 100 })),
+    ),
+  });
+
+  readonly upcomingHoliday = computed<UpcomingHolidayItem | null>(() => {
+    const startOfToday = new Date(this.today.getFullYear(), this.today.getMonth(), this.today.getDate());
+    const upcomingDays = (this.holidayListsResource.value()?.data ?? [])
+      .flatMap(list => (list.days ?? []).map(day => ({
+        title: day.title,
+        date: day.date,
+        listName: list.name,
+      })))
+      .filter(day => {
+        const parsedDate = this.toCalendarDate(day.date);
+        return parsedDate && parsedDate.getTime() >= startOfToday.getTime();
+      })
+      .sort((left, right) => left.date.localeCompare(right.date));
+
+    return upcomingDays[0] ?? null;
+  });
 
   readonly attendanceAction = computed(() => {
     const todayAttendance = this.todayAttendance();
@@ -398,6 +433,20 @@ export class EmployeeDashboardComponent {
     return this.formatLongDateTime(new Date(value));
   }
 
+  formatDisplayDate(value: string) {
+    const parsedDate = this.toCalendarDate(value);
+
+    if (!parsedDate) {
+      return value;
+    }
+
+    return new Intl.DateTimeFormat(undefined, {
+      day: '2-digit',
+      month: 'long',
+      year: 'numeric',
+    }).format(parsedDate);
+  }
+
   formatLogSource(value: string) {
     return value?.trim() || '';
   }
@@ -507,6 +556,19 @@ export class EmployeeDashboardComponent {
       default:
         return 'empty';
     }
+  }
+
+  private toCalendarDate(value: string) {
+    const datePart = value.slice(0, 10);
+    const match = datePart.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+
+    if (!match) {
+      const parsed = new Date(value);
+      return Number.isNaN(parsed.getTime()) ? null : parsed;
+    }
+
+    const parsed = new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3]));
+    return Number.isNaN(parsed.getTime()) ? null : parsed;
   }
 
   private formatLongDate(value: Date) {
