@@ -1,554 +1,547 @@
-<section
-  class="employee-dashboard block text-[var(--dashboard-text)]"
-  *transloco="let t"
->
+<section class="employee-dashboard block text-[var(--dashboard-text)]" *transloco="let t">
   @if (currentStaffResource.isLoading()) {
-    <div class="dashboard-card p-5">
-      <div class="dashboard-state-card__pulse dashboard-state-card__pulse--title"></div>
-      <div class="dashboard-state-card__pulse dashboard-state-card__pulse--headline"></div>
-      <div class="dashboard-state-card__pulse dashboard-state-card__pulse--meta"></div>
-    </div>
+  <div class="dashboard-card p-5">
+    <div class="dashboard-state-card__pulse dashboard-state-card__pulse--title"></div>
+    <div class="dashboard-state-card__pulse dashboard-state-card__pulse--headline"></div>
+    <div class="dashboard-state-card__pulse dashboard-state-card__pulse--meta"></div>
+  </div>
   } @else if (currentStaffResource.error()) {
-    <div class="dashboard-card border-[#fecaca] bg-[#fef2f2] p-5">
-      <p class="m-0 text-base font-bold text-[#b91c1c]">
-        @if (canOpenAdminStatistics()) {
-          {{ t('DASHBOARD.PERSONAL_DASHBOARD_UNAVAILABLE') }}
-        } @else {
-          {{ t('COMMON.MESSAGES.OPERATION_FAILED') }}
-        }
-      </p>
+  <div class="dashboard-card border-[#fecaca] bg-[#fef2f2] p-5">
+    <p class="m-0 text-xl font-bold text-[#b91c1c]">
+      @if (canOpenAdminStatistics()) {
+      {{ t('DASHBOARD.PERSONAL_DASHBOARD_UNAVAILABLE') }}
+      } @else {
+      {{ t('COMMON.MESSAGES.OPERATION_FAILED') }}
+      }
+    </p>
 
-      <p class="mb-0 mt-1.5 text-sm text-[#b91c1c]">
-        @if (canOpenAdminStatistics()) {
-          {{ t('DASHBOARD.STAFF_PROFILE_REQUIRED') }}
-        } @else {
-          {{ t('COMMON.MESSAGES.PLEASE_TRY_AGAIN') }}
-        }
-      </p>
+    <p class="mb-0 mt-1.5 text-sm text-[#b91c1c]">
+      @if (canOpenAdminStatistics()) {
+      {{ t('DASHBOARD.STAFF_PROFILE_REQUIRED') }}
+      } @else {
+      {{ t('COMMON.MESSAGES.PLEASE_TRY_AGAIN') }}
+      }
+    </p>
 
-      <div class="mt-3 inline-flex flex-wrap items-center gap-2">
-        @if (canOpenAdminStatistics()) {
-          <button
-            type="button"
-            class="inline-flex min-h-7 items-center justify-center gap-1.5 rounded-full border border-[var(--dashboard-border)] bg-white px-2.5 text-xs font-bold leading-none text-[var(--dashboard-green)] transition-fast hover:border-[#d8e8a7] hover:bg-[var(--dashboard-green-soft)]"
-            (click)="navigateTo('/dashboard/admin')"
-          >
+    <div class="mt-3 inline-flex flex-wrap items-center gap-2">
+      @if (canOpenAdminStatistics()) {
+      <button type="button"
+        class="inline-flex min-h-7 items-center justify-center gap-1.5 rounded-full border border-[var(--dashboard-border)] bg-white px-2.5 text-sm font-bold leading-none text-[var(--dashboard-green)] transition-fast hover:border-[#d8e8a7] hover:bg-[var(--dashboard-green-soft)]"
+        (click)="navigateTo('/dashboard/admin')">
+        <ng-icon name="lucideBarChart3" size="14" />
+        <span>{{ t('DASHBOARD.ADMIN_STATISTICS') }}</span>
+      </button>
+      }
+
+      <button type="button"
+        class="inline-flex min-h-8 items-center justify-center rounded-full border border-[var(--dashboard-border)] bg-transparent px-3.5 text-sm font-bold text-[var(--dashboard-green)] transition-fast hover:bg-[var(--dashboard-green-soft)]"
+        (click)="currentStaffResource.reload()">
+        {{ t('BUTTON.REFRESH') }}
+      </button>
+    </div>
+  </div>
+  } @else if (currentStaffResource.value()) {
+  <div class="flex flex-col gap-5">
+    <header class=" px-4 ">
+      <div class="flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-between ">
+        <div class="flex flex-col gap-1 text-start mb-3">
+
+
+          <h2
+            class="m-0 text-3xl font-bold leading-snug tracking-tight text-[var(--dashboard-text)] mac:text-[1.375rem] mb-2">
+            {{ t('DASHBOARD.WELCOME') }} {{ employeeName() }} 👋
+          </h2>
+
+
+          <div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-start ">
+            <p class="m-0 text-lg leading-relaxed text-[var(--dashboard-muted)]">
+              @if (employeeDepartmentName()) {
+              <span>قسم: {{ employeeDepartmentName() }}</span>
+              }
+
+              @if (departmentManagerName()) {
+              @if (employeeDepartmentName()) {
+              <span> · </span>
+              }
+
+              <span>{{ t('EMPLOYEES.MANAGER') }}: {{ departmentManagerName() }}</span>
+              }
+            </p>
+            @if (employeeCode()) {
+            <span class=" m-0 text-lg leading-relaxed text-[var(--dashboard-muted)]">
+              {{ t('DASHBOARD.EMPLOYEE_CODE') }}: {{ employeeCode() }}
+            </span>
+            }
+
+            @if (employeeEmail()) {
+            <span class=" m-0 text-lg leading-relaxed text-[var(--dashboard-muted)]">
+              {{ employeeEmail() }}
+            </span>
+            }
+
+            <span class="font-bold m-0 text-lg leading-relaxed text-[var(--dashboard-muted)]">
+              {{ currentDateLabel }}
+            </span>
+          </div>
+        </div>
+
+        <div class="flex flex-wrap items-center justify-start gap-2 sm:justify-end">
+          @if (canOpenAdminStatistics()) {
+          <button type="button"
+            class="inline-flex min-h-7 items-center justify-center gap-1.5 rounded-full border border-[var(--dashboard-border)] bg-white px-2.5 text-sm font-bold leading-none text-[var(--dashboard-green)] transition-fast hover:border-[#d8e8a7] hover:bg-[var(--dashboard-green-soft)]"
+            (click)="navigateTo('/dashboard/admin')">
             <ng-icon name="lucideBarChart3" size="14" />
             <span>{{ t('DASHBOARD.ADMIN_STATISTICS') }}</span>
           </button>
-        }
-
-        <button
-          type="button"
-          class="inline-flex min-h-8 items-center justify-center rounded-full border border-[var(--dashboard-border)] bg-transparent px-3.5 text-xs font-bold text-[var(--dashboard-green)] transition-fast hover:bg-[var(--dashboard-green-soft)]"
-          (click)="currentStaffResource.reload()"
-        >
-          {{ t('BUTTON.REFRESH') }}
-        </button>
+          }
+<!-- attendance badge -->
+          <span
+            class="inline-flex min-h-7 items-center justify-center whitespace-nowrap rounded-full bg-[var(--dashboard-green-soft)] px-5 py-2 text-lg font-medium text-[var(--dashboard-green)]">
+            <i class="not-italic font-bold text-[var(--dashboard-green)] pe-3 pt-1">•</i>
+            @if (attendanceDaysResource.isLoading()) {
+            {{ t('COMMON.LOADING') }}
+            } @else if (todayAttendance()?.checkIn && todayAttendance()?.checkOut) {
+            {{ t('DASHBOARD.ATTENDANCE_COMPLETED') }}
+            } @else if (todayAttendance()?.checkIn) {
+            {{ t('ATTENDANCE.CHECK_IN_SUCCESS') }}
+            } @else {
+            {{ t('DASHBOARD.NO_ATTENDANCE_DATA') }}
+            }
+          </span>
+        </div>
       </div>
-    </div>
-  } @else if (currentStaffResource.value()) {
-    <div class="flex flex-col gap-3">
-      <header class=" px-4 py-3">
-        <div class="flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <div class="flex flex-col gap-1 text-start">
+    </header>
 
+    <!-- three cards section -->
+    <section class="grid grid-cols-1 gap-7 lg:grid-cols-[0.92fr_1.1fr_0.96fr]">
 
-            <h2 class="m-0 text-xl font-bold leading-snug tracking-tight text-[var(--dashboard-text)] mac:text-[1.375rem]">
-              {{ t('DASHBOARD.WELCOME') }} {{ employeeName() }} 👋
+      <article class="dashboard-card flex min-h-[154px] flex-col justify-between px-3.5 py-3">
+        <div class="flex min-h-full items-start gap-3 py-3 px-2">
+          <div class="inline-flex pt-0.5">
+            <div
+              class="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[var(--dashboard-green-soft)] ">
+              <ng-icon name="lucideSun" size="38" color="var(--dashboard-green-strong)"/>
+            </div>
+          </div>
+
+          <div class="flex min-w-0 flex-1 flex-col gap-1 text-start">
+            <span class="text-lg font-normal leading-snug text-[var(--dashboard-muted)]">
+              {{ t('DASHBOARD.CURRENT_SHIFT') }}
+            </span>
+
+            <h2 class="m-0 max-w-full text-2xl font-semibold leading-normal text-[var(--dashboard-text)]">
+              @if (currentShift(); as shift) {
+              {{ shift.summary.name }}
+              } @else {
+              {{ t('DASHBOARD.NO_SHIFT_ASSIGNED') }}
+              }
             </h2>
 
-            <p class="m-0 text-xs leading-relaxed text-[var(--dashboard-muted)]">
-              <span>{{ employeeDepartmentName() || t('COMMON.NO_DATA') }}</span>
-              <span> · </span>
-              <span>{{ t('EMPLOYEES.MANAGER') }}: {{ departmentManagerName() || t('COMMON.NO_DATA') }}</span>
+            @if (currentShift(); as shift) {
+            <p class="m-0 max-w-full text-lg font-medium leading-normal text-[var(--dashboard-text)]">
+              {{ formatClock(shift.summary.onDutyTime) || '--:--' }} -
+              {{ formatClock(shift.summary.offDutyTime) || '--:--' }}
             </p>
 
-            <div class="mt-0.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-start">
-              @if (employeeCode()) {
-                <span class="inline-flex min-h-4 items-center text-[0.6875rem] font-medium text-[var(--dashboard-muted)]">
-                  {{ t('DASHBOARD.EMPLOYEE_CODE') }}: {{ employeeCode() }}
-                </span>
+            <p
+              class="m-0 flex flex-wrap items-center gap-1.5 text-base  leading-relaxed text-[var(--dashboard-muted)]">
+              <span>{{ t('DASHBOARD.CURRENT_SHIFT') }}</span>
+              @if (currentShiftWorkDays().length) {
+              @for (dayKey of currentShiftWorkDays(); track dayKey; let last = $last) {
+              <span>{{ t(dayKey) }}</span>
+              @if (!last) {
+              <i class="not-italic text-[#9ca3af]">•</i>
               }
-
-              @if (employeeEmail()) {
-                <span class="inline-flex min-h-4 items-center text-[0.6875rem] font-medium text-[var(--dashboard-muted)]">
-                  {{ employeeEmail() }}
-                </span>
               }
-
-              <span class="inline-flex min-h-4 items-center text-[0.6875rem] font-medium text-[var(--dashboard-muted)]">
-                {{ currentDateLabel }}
-              </span>
-            </div>
-          </div>
-
-          <div class="flex flex-wrap items-center justify-start gap-2 sm:justify-end">
-            @if (canOpenAdminStatistics()) {
-              <button
-                type="button"
-                class="inline-flex min-h-7 items-center justify-center gap-1.5 rounded-full border border-[var(--dashboard-border)] bg-white px-2.5 text-xs font-bold leading-none text-[var(--dashboard-green)] transition-fast hover:border-[#d8e8a7] hover:bg-[var(--dashboard-green-soft)]"
-                (click)="navigateTo('/dashboard/admin')"
-              >
-                <ng-icon name="lucideBarChart3" size="14" />
-                <span>{{ t('DASHBOARD.ADMIN_STATISTICS') }}</span>
-              </button>
+              }
+            </p>
+            } @else {
+            <p class="m-0 text-sm font-medium leading-normal text-[var(--dashboard-text)]">
+              {{ t('DASHBOARD.NO_SHIFT_ASSIGNED') }}
+            </p>
             }
+          </div>
+        </div>
+      </article>
 
-            <span class="inline-flex min-h-7 items-center justify-center whitespace-nowrap rounded-full bg-[var(--dashboard-green-soft)] px-3 text-[0.6875rem] font-bold text-[var(--dashboard-green)]">
+
+       <article
+        [class]="attendanceCardClass() + ' relative flex min-h-[154px] flex-col justify-between overflow-hidden rounded-[18px] border px-3.5 py-3 text-white'">
+        <div class="relative z-[1] flex items-start gap-3 py-3 px-2">
+          <div class="flex min-w-0 flex-1 flex-col gap-1 text-start">
+            <span class="text-lg font-mediumtext-white/80">
+              {{ t('DASHBOARD.CURRENT_ATTENDANCE') }}
+            </span>
+
+            <h2 class="m-0 text-2xl font-semibold leading-snug">
               @if (attendanceDaysResource.isLoading()) {
-                {{ t('COMMON.LOADING') }}
+              {{ t('COMMON.LOADING') }}
               } @else if (todayAttendance()?.checkIn && todayAttendance()?.checkOut) {
-                {{ t('DASHBOARD.ATTENDANCE_COMPLETED') }}
+              {{ t('DASHBOARD.ATTENDANCE_COMPLETED') }}
               } @else if (todayAttendance()?.checkIn) {
-                {{ t('ATTENDANCE.CHECK_IN_SUCCESS') }}
+              {{ t('ATTENDANCE.CHECK_IN_SUCCESS') }}
               } @else {
-                {{ t('DASHBOARD.NO_ATTENDANCE_DATA') }}
+              {{ t(currentAttendanceStatusLabel()) }}
               }
-            </span>
+            </h2>
+
+            <p class="m-0 text-lg font-semibold eading-relaxed text-white/80">
+              @if (attendanceDaysResource.isLoading()) {
+              {{ t('COMMON.LOADING') }}
+              } @else {
+              {{ currentAttendanceSummary() || t('DASHBOARD.NO_ATTENDANCE_DATA') }}
+              }
+            </p>
+          </div>
+
+           <div class="inline-flex pt-0.5">
+            <div
+              class="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#FFFFFF4D] ">
+              <ng-icon name="lucideSun" size="38" color="white"/>
+            </div>
           </div>
         </div>
-      </header>
 
-      <section class="grid grid-cols-1 gap-3 lg:grid-cols-[0.92fr_1.1fr_0.96fr]">
-        <article class="dashboard-card flex min-h-[154px] flex-col justify-between px-3.5 py-3">
-          <div class="flex min-h-[98px] items-center justify-between gap-3">
-            <div class="flex min-w-0 flex-col gap-1 text-start">
-              <h2 class="m-0 text-[1.0625rem] font-bold leading-snug text-[var(--dashboard-text)]">
-                {{ t('DASHBOARD.LEAVE_BALANCE') }}
-              </h2>
-              <p class="m-0 text-xs leading-relaxed text-[var(--dashboard-muted)]">
-                {{ leaveStats().remainingBalance }} {{ t('COMMON.DAYS_PLURAL') }}
-              </p>
-            </div>
-
-            <div class="flex h-[66px] w-[66px] shrink-0 flex-col items-center justify-center rounded-full border-[3px] border-[var(--dashboard-green)]">
-              <strong class="text-lg leading-none text-[var(--dashboard-text)]">
-                {{ leaveStats().remainingBalance }}
-              </strong>
-              <span class="mt-0.5 text-[0.625rem] text-[var(--dashboard-muted)]">
-                {{ t('COMMON.DAYS_PLURAL') }}
-              </span>
-            </div>
-          </div>
-
-          <button
-            type="button"
-            class="inline-flex min-h-8 w-full items-center justify-center rounded-full border border-[#7aa11b] bg-[#7aa11b] px-3.5 text-xs font-bold text-white transition-fast hover:brightness-[0.98]"
-            (click)="navigateTo('/attendance/view-permissions/create-leave-application')"
-          >
-            {{ t('BUTTON.ADD_LEAVE_APPLICATION') }}
-          </button>
-        </article>
-
-        <article
-          [class]="attendanceCardClass() + ' relative flex min-h-[154px] flex-col justify-between overflow-hidden rounded-[18px] border px-3.5 py-3 text-white'"
-        >
-          <div class="relative z-[1] flex items-start gap-3">
-            <div class="inline-flex h-[38px] w-[38px] shrink-0 items-center justify-center rounded-xl bg-white/15 text-white">
-              <ng-icon name="lucideClock3" size="18" />
-            </div>
-
-            <div class="flex min-w-0 flex-1 flex-col gap-1 text-start">
-              <span class="text-[0.6875rem] font-bold text-white/80">
-                {{ t('DASHBOARD.CURRENT_ATTENDANCE') }}
-              </span>
-
-              <h2 class="m-0 text-[1.0625rem] font-bold leading-snug">
-                @if (attendanceDaysResource.isLoading()) {
-                  {{ t('COMMON.LOADING') }}
-                } @else if (todayAttendance()?.checkIn && todayAttendance()?.checkOut) {
-                  {{ t('DASHBOARD.ATTENDANCE_COMPLETED') }}
-                } @else if (todayAttendance()?.checkIn) {
-                  {{ t('ATTENDANCE.CHECK_IN_SUCCESS') }}
-                } @else {
-                  {{ t(currentAttendanceStatusLabel()) }}
-                }
-              </h2>
-
-              <p class="m-0 text-xs leading-relaxed text-white/80">
-                @if (attendanceDaysResource.isLoading()) {
-                  {{ t('COMMON.LOADING') }}
-                } @else {
-                  {{ currentAttendanceSummary() || t('DASHBOARD.NO_ATTENDANCE_DATA') }}
-                }
-              </p>
-
-              @if (!attendanceDaysResource.isLoading()) {
-                <div class="mt-1 inline-flex items-center gap-2">
-                  <app-table-status-badge-component
-                    [status]="currentAttendanceStatusTone()"
-                    [label]="t(currentAttendanceStatusLabel())"
-                  />
-                  <span class="text-[0.6875rem] text-white/75">
-                    {{ formatClock(todayAttendance()?.checkIn) || '--:--' }}
-                  </span>
-                </div>
-              }
-            </div>
-          </div>
-
-          <button
-            type="button"
-            class="relative z-[1] mx-auto mt-3 inline-flex min-h-8 w-[calc(100%-28px)] items-center justify-center gap-2 rounded-full bg-white px-4 text-xs font-extrabold text-[var(--dashboard-green)] disabled:cursor-progress disabled:opacity-70"
-            [disabled]="isAttendanceActionLoading()"
-            (click)="handleAttendanceAction()"
-          >
-            <ng-icon [name]="attendanceAction().icon" size="16" />
-            <span>
-              @if (isAttendanceActionLoading()) {
-                {{ t('COMMON.LOADING') }}
-              } @else {
-                {{ t(attendanceAction().labelKey) }}
-              }
-            </span>
-          </button>
-        </article>
-
-        <article class="dashboard-card flex min-h-[154px] flex-col justify-between px-3.5 py-3">
-          <div class="flex min-h-full items-start gap-3">
-            <div class="inline-flex pt-0.5">
-              <div class="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[var(--dashboard-blue-soft)] text-[var(--dashboard-blue)]">
-                <ng-icon name="lucideCalendarDays" size="18" />
-              </div>
-            </div>
-
-            <div class="flex min-w-0 flex-1 flex-col gap-1 text-start">
-              <span class="text-[0.6875rem] font-bold leading-snug text-[var(--dashboard-muted)]">
-                {{ t('DASHBOARD.CURRENT_SHIFT') }}
-              </span>
-
-              <h2 class="m-0 max-w-full text-base font-bold leading-normal text-[var(--dashboard-text)]">
-                @if (currentShift(); as shift) {
-                  {{ shift.summary.name }}
-                } @else {
-                  {{ t('DASHBOARD.NO_SHIFT_ASSIGNED') }}
-                }
-              </h2>
-
-              @if (currentShift(); as shift) {
-                <p class="m-0 max-w-full text-sm font-medium leading-normal text-[var(--dashboard-text)]">
-                  {{ formatClock(shift.summary.onDutyTime) || '--:--' }} -
-                  {{ formatClock(shift.summary.offDutyTime) || '--:--' }}
-                </p>
-
-                <p class="m-0 flex flex-wrap items-center gap-1.5 text-[0.6875rem] leading-relaxed text-[var(--dashboard-muted)]">
-                  <span>{{ t('DASHBOARD.CURRENT_SHIFT') }}</span>
-                  @if (currentShiftWorkDays().length) {
-                    @for (dayKey of currentShiftWorkDays(); track dayKey; let last = $last) {
-                      <span>{{ t(dayKey) }}</span>
-                      @if (!last) {
-                        <i class="not-italic text-[#9ca3af]">•</i>
-                      }
-                    }
-                  }
-                </p>
-              } @else {
-                <p class="m-0 text-sm font-medium leading-normal text-[var(--dashboard-text)]">
-                  {{ t('DASHBOARD.NO_SHIFT_ASSIGNED') }}
-                </p>
-              }
-            </div>
-          </div>
-        </article>
-      </section>
-
-      <section class="dashboard-card px-3.5 py-3">
-        <div class="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
-          <span class="text-[0.6875rem] font-bold text-[var(--dashboard-muted)]">
-            {{ t('DASHBOARD.QUICK_ACTIONS') }}
+        <button type="button"
+          class="relative z-[1] mx-auto mt-3 inline-flex min-h-12 w-[calc(100%-12%)] items-center justify-center gap-2 rounded-full bg-white px-4 text-lg font-bold text-[var(--dashboard-green)] disabled:cursor-progress disabled:opacity-70"
+          [disabled]="isAttendanceActionLoading()" (click)="handleAttendanceAction()">
+          <ng-icon [name]="attendanceAction().icon" size="16" />
+          <span>
+            @if (isAttendanceActionLoading()) {
+            {{ t('COMMON.LOADING') }}
+            } @else {
+            {{ t(attendanceAction().labelKey) }}
+            }
           </span>
-          <h2 class="m-0 text-lg font-bold leading-snug text-[var(--dashboard-text)]">
-            {{ t('DASHBOARD.QUICK_ACTIONS') }}
-          </h2>
+        </button>
+      </article>
+
+
+        <article class="dashboard-card flex min-h-[154px] flex-col justify-between px-3.5 py-3">
+        <div class="flex min-h-[98px] items-center justify-between gap-3">
+          <div
+            class="flex h-[166px] w-[66px] shrink-0 flex-col items-center justify-center rounded-full border-[3px] border-[var(--dashboard-green)]">
+            <strong class="text-lg leading-none text-[var(--dashboard-text)]">
+              {{ leaveStats().remainingBalance }}
+            </strong>
+            <span class="mt-0.5 text-[0.625rem] text-[var(--dashboard-muted)]">
+              {{ t('COMMON.DAYS_PLURAL') }}
+            </span>
+          </div>
+
+           <div class="flex min-w-0 flex-col gap-1 text-start">
+            <h2 class="m-0 text-[1.0625rem] font-bold leading-snug text-[var(--dashboard-text)]">
+              {{ t('DASHBOARD.LEAVE_BALANCE') }}
+            </h2>
+            <p class="m-0 text-xs leading-relaxed text-[var(--dashboard-muted)]">
+              {{ leaveStats().remainingBalance }} {{ t('COMMON.DAYS_PLURAL') }}
+            </p>
+          </div>
         </div>
 
-        <div class="mt-3 flex flex-wrap gap-2">
-          @for (action of quickActions; track action.route) {
-            <button
-              type="button"
-              [class]="'quick-action inline-flex min-h-10 items-center gap-2 rounded-xl border border-[var(--dashboard-border)] bg-white px-3 text-[var(--dashboard-text)] transition-fast hover:border-[#c9d2dc] hover:bg-[#fafafa] max-sm:w-full max-sm:justify-start ' + quickActionClass(action)"
-              (click)="navigateTo(action.route)"
-            >
-              <span class="quick-action__icon inline-flex h-7 w-7 items-center justify-center rounded-[10px]">
-                <ng-icon [name]="action.icon" size="16" />
+        <button type="button"
+          class="relative z-[1] mx-auto mt-3 inline-flex min-h-12 w-[calc(100%-12%)] items-center justify-center gap-2 rounded-full bg-[var(--dashboard-green)] px-4 text-lg font-bold text-white disabled:cursor-progress disabled:opacity-70"
+          (click)="navigateTo('/attendance/view-permissions/create-leave-application')">
+          {{ t('BUTTON.ADD_LEAVE_APPLICATION') }}
+        </button>
+      </article>
+    </section>
+
+    <section class="dashboard-card px-3.5 py-3">
+      <div class="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
+        <span class="text-[0.6875rem] font-bold text-[var(--dashboard-muted)]">
+          {{ t('DASHBOARD.QUICK_ACTIONS') }}
+        </span>
+        <h2 class="m-0 text-lg font-bold leading-snug text-[var(--dashboard-text)]">
+          {{ t('DASHBOARD.QUICK_ACTIONS') }}
+        </h2>
+      </div>
+
+      <div class="mt-3 flex flex-wrap gap-2">
+        @for (action of quickActions; track action.route) {
+        <button type="button"
+          [class]="'quick-action inline-flex min-h-10 items-center gap-2 rounded-xl border border-[var(--dashboard-border)] bg-white px-3 text-[var(--dashboard-text)] transition-fast hover:border-[#c9d2dc] hover:bg-[#fafafa] max-sm:w-full max-sm:justify-start ' + quickActionClass(action)"
+          (click)="navigateTo(action.route)">
+          <span class="quick-action__icon inline-flex h-7 w-7 items-center justify-center rounded-[10px]">
+            <ng-icon [name]="action.icon" size="16" />
+          </span>
+          <span class="text-[0.8125rem] font-bold">
+            {{ t(action.labelKey) }}
+          </span>
+        </button>
+        }
+      </div>
+    </section>
+
+    <section class="grid grid-cols-1 items-start gap-3 xl:grid-cols-[minmax(292px,0.78fr)_minmax(0,1.42fr)]">
+      <aside class="grid gap-3">
+        <article class="dashboard-card px-3.5 py-3">
+          <div class="mb-2.5 flex items-start justify-between gap-2.5">
+            <div class="flex flex-col gap-0.5 text-start">
+              <span class="text-xs font-medium text-[var(--dashboard-muted)]">
+                {{ currentMonthLabel }}
               </span>
-              <span class="text-[0.8125rem] font-bold">
-                {{ t(action.labelKey) }}
+              <h2 class="m-0 text-[1.0625rem] font-bold leading-snug text-[var(--dashboard-text)]">
+                {{ t('DASHBOARD.MONTHLY_ATTENDANCE') }}
+              </h2>
+            </div>
+          </div>
+
+          @if (attendanceDaysResource.isLoading()) {
+          <div class="mt-2 grid grid-cols-7 gap-1.5">
+            @for (_ of [1,2,3,4,5,6,7,8,9,10,11,12,13,14]; track _) {
+            <span class="calendar-card__skeleton-box min-h-[34px] rounded-[10px]"></span>
+            }
+          </div>
+          } @else if (!attendanceDays().length) {
+          <app-empty-table-placeholder-component [titleKey]="'DASHBOARD.NO_ATTENDANCE_DATA'" />
+          } @else {
+          <div class="grid grid-cols-7 gap-1.5">
+            @for (dayKey of calendarWeekdayKeys; track dayKey) {
+            <span
+              class="inline-flex min-h-[18px] items-center justify-center text-[0.625rem] font-bold text-[var(--dashboard-muted)]">
+              {{ t(dayKey) }}
+            </span>
+            }
+          </div>
+
+          <div class="grid grid-cols-7 gap-1.5">
+            @for (cell of monthCalendarCells(); track $index) {
+            @if (cell.kind === 'day') {
+            <div
+              [class]="'relative flex min-h-[34px] items-center justify-center rounded-[10px] border border-[var(--dashboard-border-soft)] bg-white ' + calendarCellClass(cell)">
+              <span class="text-xs font-bold">
+                {{ cell.dayNumber }}
               </span>
-            </button>
+              <span [class]="'calendar-card__marker ' + calendarMarkerClass(cell.tone)"></span>
+            </div>
+            } @else {
+            <div
+              class="relative flex min-h-[34px] items-center justify-center rounded-[10px] border border-dashed border-[var(--dashboard-border-soft)] bg-[#fcfcfd]">
+            </div>
+            }
+            }
+          </div>
+
+          <div class="mt-2.5 flex flex-wrap gap-x-3 gap-y-2">
+            @for (legendItem of calendarLegend; track legendItem.labelKey) {
+            <div class="inline-flex items-center gap-1.5 text-[0.625rem] text-[var(--dashboard-muted)]">
+              <span
+                [class]="'calendar-card__marker calendar-card__marker--legend ' + calendarMarkerClass(legendItem.tone)"></span>
+              <span>{{ t(legendItem.labelKey) }}</span>
+            </div>
+            }
+          </div>
           }
-        </div>
-      </section>
-
-      <section class="grid grid-cols-1 items-start gap-3 xl:grid-cols-[minmax(292px,0.78fr)_minmax(0,1.42fr)]">
-        <aside class="grid gap-3">
-          <article class="dashboard-card px-3.5 py-3">
-            <div class="mb-2.5 flex items-start justify-between gap-2.5">
-              <div class="flex flex-col gap-0.5 text-start">
-                <span class="text-xs font-medium text-[var(--dashboard-muted)]">
-                  {{ currentMonthLabel }}
-                </span>
-                <h2 class="m-0 text-[1.0625rem] font-bold leading-snug text-[var(--dashboard-text)]">
-                  {{ t('DASHBOARD.MONTHLY_ATTENDANCE') }}
-                </h2>
-              </div>
-            </div>
-
-            @if (attendanceDaysResource.isLoading()) {
-              <div class="mt-2 grid grid-cols-7 gap-1.5">
-                @for (_ of [1,2,3,4,5,6,7,8,9,10,11,12,13,14]; track _) {
-                  <span class="calendar-card__skeleton-box min-h-[34px] rounded-[10px]"></span>
-                }
-              </div>
-            } @else if (!attendanceDays().length) {
-              <app-empty-table-placeholder-component [titleKey]="'DASHBOARD.NO_ATTENDANCE_DATA'" />
-            } @else {
-              <div class="grid grid-cols-7 gap-1.5">
-                @for (dayKey of calendarWeekdayKeys; track dayKey) {
-                  <span class="inline-flex min-h-[18px] items-center justify-center text-[0.625rem] font-bold text-[var(--dashboard-muted)]">
-                    {{ t(dayKey) }}
-                  </span>
-                }
-              </div>
-
-              <div class="grid grid-cols-7 gap-1.5">
-                @for (cell of monthCalendarCells(); track $index) {
-                  @if (cell.kind === 'day') {
-                    <div
-                      [class]="'relative flex min-h-[34px] items-center justify-center rounded-[10px] border border-[var(--dashboard-border-soft)] bg-white ' + calendarCellClass(cell)"
-                    >
-                      <span class="text-xs font-bold">
-                        {{ cell.dayNumber }}
-                      </span>
-                      <span [class]="'calendar-card__marker ' + calendarMarkerClass(cell.tone)"></span>
-                    </div>
-                  } @else {
-                    <div class="relative flex min-h-[34px] items-center justify-center rounded-[10px] border border-dashed border-[var(--dashboard-border-soft)] bg-[#fcfcfd]"></div>
-                  }
-                }
-              </div>
-
-              <div class="mt-2.5 flex flex-wrap gap-x-3 gap-y-2">
-                @for (legendItem of calendarLegend; track legendItem.labelKey) {
-                  <div class="inline-flex items-center gap-1.5 text-[0.625rem] text-[var(--dashboard-muted)]">
-                    <span [class]="'calendar-card__marker calendar-card__marker--legend ' + calendarMarkerClass(legendItem.tone)"></span>
-                    <span>{{ t(legendItem.labelKey) }}</span>
-                  </div>
-                }
-              </div>
-            }
-          </article>
-
-          <article class="dashboard-card px-3.5 py-3">
-            <div class="mb-2.5 flex items-start justify-between gap-2.5">
-              <div class="flex flex-col gap-0.5 text-start">
-                <span class="text-[0.6875rem] font-bold text-[var(--dashboard-muted)]">
-                  {{ t('DASHBOARD.LATEST_ALERTS') }}
-                </span>
-                <h2 class="m-0 text-[1.0625rem] font-bold leading-snug text-[var(--dashboard-text)]">
-                  {{ t('DASHBOARD.LATEST_ALERTS') }}
-                </h2>
-              </div>
-
-              <div class="inline-flex h-[34px] w-[34px] shrink-0 items-center justify-center rounded-[10px] bg-[#f1f5f9] text-[var(--dashboard-slate)]">
-                <ng-icon name="lucideBell" size="18" />
-              </div>
-            </div>
-
-            @if (holidayListsResource.isLoading()) {
-              <div>
-                <div class="dashboard-state-card__pulse dashboard-state-card__pulse--row"></div>
-              </div>
-            } @else if (!upcomingHoliday()) {
-              <app-empty-table-placeholder-component [titleKey]="'DASHBOARD.NO_ALERTS'" />
-            } @else {
-              @if (upcomingHoliday(); as holiday) {
-                <div class="flex items-start gap-2.5 pt-0.5">
-                  <div class="mt-0.5 inline-flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-full bg-[#eef2f7] text-[#9ca3af]">
-                    <ng-icon name="lucideBell" size="14" />
-                  </div>
-
-                  <div class="flex min-w-0 flex-col gap-1 text-start">
-                    <strong class="text-sm font-bold text-[var(--dashboard-text)]">
-                      {{ holiday.title }}
-                    </strong>
-                    <span class="text-[0.6875rem] leading-relaxed text-[var(--dashboard-muted)]">
-                      {{ formatDisplayDate(holiday.date) }}
-                    </span>
-                    <small class="text-[0.6875rem] leading-relaxed text-[var(--dashboard-muted)]">
-                      {{ holiday.listName }}
-                    </small>
-                  </div>
-                </div>
-              }
-            }
-          </article>
-
-          <article class="dashboard-card px-3.5 py-3">
-            <div class="mb-2.5 flex items-start justify-between gap-2.5">
-              <div class="flex flex-col gap-0.5 text-start">
-                <span class="text-[0.6875rem] font-bold text-[var(--dashboard-muted)]">
-                  {{ t('DASHBOARD.LATEST_UPDATES') }}
-                </span>
-                <h2 class="m-0 text-[1.0625rem] font-bold leading-snug text-[var(--dashboard-text)]">
-                  {{ t('DASHBOARD.LATEST_UPDATES') }}
-                </h2>
-              </div>
-
-              <div class="inline-flex h-[34px] w-[34px] shrink-0 items-center justify-center rounded-[10px] bg-[#f1f5f9] text-[var(--dashboard-slate)]">
-                <ng-icon name="lucideBell" size="18" />
-              </div>
-            </div>
-
-            @if (updatesResource.isLoading()) {
-              <div>
-                @for (_ of [1,2,3]; track _) {
-                  <div class="dashboard-state-card__pulse dashboard-state-card__pulse--row"></div>
-                }
-              </div>
-            } @else if (!updates().length) {
-              <app-empty-table-placeholder-component [titleKey]="'DASHBOARD.NO_UPDATES'" />
-            } @else {
-              <div class="flex flex-col">
-                @for (log of updates(); track log.id) {
-                  <div class="flex items-start justify-between gap-2.5 border-b border-[var(--dashboard-border-soft)] py-2.5 last:border-b-0 last:pb-0">
-                    <div class="flex flex-col gap-1 text-start">
-                      <strong class="text-xs font-bold text-[var(--dashboard-text)]">
-                        {{ log.sourceDisplay || t(log.sourceLabelKey) }}
-                      </strong>
-                      <span class="text-[0.6875rem] text-[var(--dashboard-muted)]">
-                        {{ formatDateTime(log.logDateTime) }}
-                      </span>
-                      @if (log.invalidReason) {
-                        <small class="text-[0.6875rem] text-[#c2410c]">
-                          {{ log.invalidReason }}
-                        </small>
-                      }
-                    </div>
-
-                    <app-table-status-badge-component
-                      [status]="log.statusTone"
-                      [label]="t(log.statusLabelKey)"
-                    />
-                  </div>
-                }
-              </div>
-            }
-          </article>
-        </aside>
+        </article>
 
         <article class="dashboard-card px-3.5 py-3">
           <div class="mb-2.5 flex items-start justify-between gap-2.5">
             <div class="flex flex-col gap-0.5 text-start">
               <span class="text-[0.6875rem] font-bold text-[var(--dashboard-muted)]">
-                {{ t('DASHBOARD.RECENT_REQUESTS') }}
+                {{ t('DASHBOARD.LATEST_ALERTS') }}
               </span>
               <h2 class="m-0 text-[1.0625rem] font-bold leading-snug text-[var(--dashboard-text)]">
-                {{ t('DASHBOARD.MY_REQUESTS') }}
+                {{ t('DASHBOARD.LATEST_ALERTS') }}
               </h2>
             </div>
 
-            <button
-              type="button"
-              class="inline-flex min-h-[26px] items-center justify-center border-0 bg-transparent p-0 text-xs font-bold text-[var(--dashboard-green)]"
-              (click)="openAllRequests()"
-            >
-              {{ t('DASHBOARD.VIEW_ALL_REQUESTS') }}
-            </button>
+            <div
+              class="inline-flex h-[34px] w-[34px] shrink-0 items-center justify-center rounded-[10px] bg-[#f1f5f9] text-[var(--dashboard-slate)]">
+              <ng-icon name="lucideBell" size="18" />
+            </div>
           </div>
 
-          @if (requestsResource.isLoading()) {
-            <div>
-              @for (_ of [1,2,3,4]; track _) {
-                <div class="dashboard-state-card__pulse dashboard-state-card__pulse--table"></div>
-              }
-            </div>
-          } @else if (!requests().length) {
-            <app-empty-table-placeholder-component [titleKey]="'DASHBOARD.NO_REQUESTS'" />
+          @if (holidayListsResource.isLoading()) {
+          <div>
+            <div class="dashboard-state-card__pulse dashboard-state-card__pulse--row"></div>
+          </div>
+          } @else if (!upcomingHoliday()) {
+          <app-empty-table-placeholder-component [titleKey]="'DASHBOARD.NO_ALERTS'" />
           } @else {
-            <div class="overflow-x-auto">
-              <table class="w-full min-w-[600px] border-separate border-spacing-0 text-start">
-                <thead>
-                  <tr>
-                    <th class="border-b border-[var(--dashboard-border-soft)] bg-[#f8fafc] px-3 py-2.5 text-start text-[0.6875rem] font-bold text-[var(--dashboard-muted)]">
-                      {{ t('PERMISSIONS.TABLE_REQUEST_TYPE') }}
-                    </th>
-                    <th class="border-b border-[var(--dashboard-border-soft)] bg-[#f8fafc] px-3 py-2.5 text-start text-[0.6875rem] font-bold text-[var(--dashboard-muted)]">
-                      {{ t('PERMISSIONS.TABLE_DATE') }}
-                    </th>
-                    <th class="border-b border-[var(--dashboard-border-soft)] bg-[#f8fafc] px-3 py-2.5 text-start text-[0.6875rem] font-bold text-[var(--dashboard-muted)]">
-                      {{ t('COMMON.STATUS') }}
-                    </th>
-                    <th class="w-[1%] whitespace-nowrap border-b border-[var(--dashboard-border-soft)] bg-[#f8fafc] px-3 py-2.5 text-start text-[0.6875rem] font-bold text-[var(--dashboard-muted)]">
-                      {{ t('COMMON.ACTIONS') }}
-                    </th>
-                  </tr>
-                </thead>
-
-                <tbody>
-                  @for (request of requests(); track request.id) {
-                    <tr
-                      class="cursor-pointer transition-fast hover:bg-[#fcfcfd]"
-                      (click)="openRequest(request)"
-                    >
-                      <td class="border-b border-[var(--dashboard-border-soft)] px-3 py-2.5 align-middle">
-                        <div class="flex items-center gap-2">
-                          <span class="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-[#f3f4f6] text-[var(--dashboard-slate)]">
-                            <ng-icon name="lucideFileText" size="14" />
-                          </span>
-
-                          <div class="flex flex-col gap-1 text-start">
-                            <strong class="text-xs font-bold text-[var(--dashboard-text)]">
-                              {{ t(formatRequestTypeKey(request)) }}
-                            </strong>
-                            <span class="text-[0.6875rem] text-[var(--dashboard-muted)]">
-                              #{{ requestReference(request) }}
-                            </span>
-                          </div>
-                        </div>
-                      </td>
-
-                      <td class="border-b border-[var(--dashboard-border-soft)] px-3 py-2.5 align-middle">
-                        <div class="flex flex-col gap-1 text-start">
-                          <strong class="text-xs font-bold text-[var(--dashboard-text)]">
-                            {{ request.dateRange }}
-                          </strong>
-                          <span class="text-[0.6875rem] text-[var(--dashboard-muted)]">
-                            {{ formatMetric(request) }}
-                            @if (isDayMetric(request)) {
-                              {{ t('COMMON.DAYS_PLURAL') }}
-                            } @else {
-                              {{ t('ATTENDANCE.DURATION_MINUTES') }}
-                            }
-                          </span>
-                        </div>
-                      </td>
-
-                      <td class="w-[1%] whitespace-nowrap border-b border-[var(--dashboard-border-soft)] px-3 py-2.5 align-middle">
-                        <app-table-status-badge-component
-                          [status]="request.statusTone"
-                          [label]="t(request.statusLabelKey)"
-                        />
-                      </td>
-
-                      <td class="w-[1%] whitespace-nowrap border-b border-[var(--dashboard-border-soft)] px-3 py-2.5 align-middle">
-                        <button
-                          type="button"
-                          class="inline-flex h-7 w-7 items-center justify-center rounded-lg border border-[var(--dashboard-border)] bg-white text-[var(--dashboard-slate)]"
-                          (click)="$event.stopPropagation(); openRequest(request)"
-                        >
-                          <ng-icon name="lucideFileText" size="14" />
-                        </button>
-                      </td>
-                    </tr>
-                  }
-                </tbody>
-              </table>
+          @if (upcomingHoliday(); as holiday) {
+          <div class="flex items-start gap-2.5 pt-0.5">
+            <div
+              class="mt-0.5 inline-flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-full bg-[#eef2f7] text-[#9ca3af]">
+              <ng-icon name="lucideBell" size="14" />
             </div>
+
+            <div class="flex min-w-0 flex-col gap-1 text-start">
+              <strong class="text-sm font-bold text-[var(--dashboard-text)]">
+                {{ holiday.title }}
+              </strong>
+              <span class="text-[0.6875rem] leading-relaxed text-[var(--dashboard-muted)]">
+                {{ formatDisplayDate(holiday.date) }}
+              </span>
+              <small class="text-[0.6875rem] leading-relaxed text-[var(--dashboard-muted)]">
+                {{ holiday.listName }}
+              </small>
+            </div>
+          </div>
+          }
           }
         </article>
-      </section>
-    </div>
+
+        <article class="dashboard-card px-3.5 py-3">
+          <div class="mb-2.5 flex items-start justify-between gap-2.5">
+            <div class="flex flex-col gap-0.5 text-start">
+              <span class="text-[0.6875rem] font-bold text-[var(--dashboard-muted)]">
+                {{ t('DASHBOARD.LATEST_UPDATES') }}
+              </span>
+              <h2 class="m-0 text-[1.0625rem] font-bold leading-snug text-[var(--dashboard-text)]">
+                {{ t('DASHBOARD.LATEST_UPDATES') }}
+              </h2>
+            </div>
+
+            <div
+              class="inline-flex h-[34px] w-[34px] shrink-0 items-center justify-center rounded-[10px] bg-[#f1f5f9] text-[var(--dashboard-slate)]">
+              <ng-icon name="lucideBell" size="18" />
+            </div>
+          </div>
+
+          @if (updatesResource.isLoading()) {
+          <div>
+            @for (_ of [1,2,3]; track _) {
+            <div class="dashboard-state-card__pulse dashboard-state-card__pulse--row"></div>
+            }
+          </div>
+          } @else if (!updates().length) {
+          <app-empty-table-placeholder-component [titleKey]="'DASHBOARD.NO_UPDATES'" />
+          } @else {
+          <div class="flex flex-col">
+            @for (log of updates(); track log.id) {
+            <div
+              class="flex items-start justify-between gap-2.5 border-b border-[var(--dashboard-border-soft)] py-2.5 last:border-b-0 last:pb-0">
+              <div class="flex flex-col gap-1 text-start">
+                <strong class="text-xs font-bold text-[var(--dashboard-text)]">
+                  {{ log.sourceDisplay || t(log.sourceLabelKey) }}
+                </strong>
+                <span class="text-[0.6875rem] text-[var(--dashboard-muted)]">
+                  {{ formatDateTime(log.logDateTime) }}
+                </span>
+                @if (log.invalidReason) {
+                <small class="text-[0.6875rem] text-[#c2410c]">
+                  {{ log.invalidReason }}
+                </small>
+                }
+              </div>
+
+              <app-table-status-badge-component [status]="log.statusTone" [label]="t(log.statusLabelKey)" />
+            </div>
+            }
+          </div>
+          }
+        </article>
+      </aside>
+
+      <article class="dashboard-card px-3.5 py-3">
+        <div class="mb-2.5 flex items-start justify-between gap-2.5">
+          <div class="flex flex-col gap-0.5 text-start">
+            <span class="text-[0.6875rem] font-bold text-[var(--dashboard-muted)]">
+              {{ t('DASHBOARD.RECENT_REQUESTS') }}
+            </span>
+            <h2 class="m-0 text-[1.0625rem] font-bold leading-snug text-[var(--dashboard-text)]">
+              {{ t('DASHBOARD.MY_REQUESTS') }}
+            </h2>
+          </div>
+
+          <button type="button"
+            class="inline-flex min-h-[26px] items-center justify-center border-0 bg-transparent p-0 text-xs font-bold text-[var(--dashboard-green)]"
+            (click)="openAllRequests()">
+            {{ t('DASHBOARD.VIEW_ALL_REQUESTS') }}
+          </button>
+        </div>
+
+        @if (requestsResource.isLoading()) {
+        <div>
+          @for (_ of [1,2,3,4]; track _) {
+          <div class="dashboard-state-card__pulse dashboard-state-card__pulse--table"></div>
+          }
+        </div>
+        } @else if (!requests().length) {
+        <app-empty-table-placeholder-component [titleKey]="'DASHBOARD.NO_REQUESTS'" />
+        } @else {
+        <div class="overflow-x-auto">
+          <table class="w-full min-w-[600px] border-separate border-spacing-0 text-start">
+            <thead>
+              <tr>
+                <th
+                  class="border-b border-[var(--dashboard-border-soft)] bg-[#f8fafc] px-3 py-2.5 text-start text-[0.6875rem] font-bold text-[var(--dashboard-muted)]">
+                  {{ t('PERMISSIONS.TABLE_REQUEST_TYPE') }}
+                </th>
+                <th
+                  class="border-b border-[var(--dashboard-border-soft)] bg-[#f8fafc] px-3 py-2.5 text-start text-[0.6875rem] font-bold text-[var(--dashboard-muted)]">
+                  {{ t('PERMISSIONS.TABLE_DATE') }}
+                </th>
+                <th
+                  class="border-b border-[var(--dashboard-border-soft)] bg-[#f8fafc] px-3 py-2.5 text-start text-[0.6875rem] font-bold text-[var(--dashboard-muted)]">
+                  {{ t('COMMON.STATUS') }}
+                </th>
+                <th
+                  class="w-[1%] whitespace-nowrap border-b border-[var(--dashboard-border-soft)] bg-[#f8fafc] px-3 py-2.5 text-start text-[0.6875rem] font-bold text-[var(--dashboard-muted)]">
+                  {{ t('COMMON.ACTIONS') }}
+                </th>
+              </tr>
+            </thead>
+
+            <tbody>
+              @for (request of requests(); track request.id) {
+              <tr class="cursor-pointer transition-fast hover:bg-[#fcfcfd]" (click)="openRequest(request)">
+                <td class="border-b border-[var(--dashboard-border-soft)] px-3 py-2.5 align-middle">
+                  <div class="flex items-center gap-2">
+                    <span
+                      class="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-[#f3f4f6] text-[var(--dashboard-slate)]">
+                      <ng-icon name="lucideFileText" size="14" />
+                    </span>
+
+                    <div class="flex flex-col gap-1 text-start">
+                      <strong class="text-xs font-bold text-[var(--dashboard-text)]">
+                        {{ t(formatRequestTypeKey(request)) }}
+                      </strong>
+                      <span class="text-[0.6875rem] text-[var(--dashboard-muted)]">
+                        #{{ requestReference(request) }}
+                      </span>
+                    </div>
+                  </div>
+                </td>
+
+                <td class="border-b border-[var(--dashboard-border-soft)] px-3 py-2.5 align-middle">
+                  <div class="flex flex-col gap-1 text-start">
+                    <strong class="text-xs font-bold text-[var(--dashboard-text)]">
+                      {{ request.dateRange }}
+                    </strong>
+                    <span class="text-[0.6875rem] text-[var(--dashboard-muted)]">
+                      {{ formatMetric(request) }}
+                      @if (isDayMetric(request)) {
+                      {{ t('COMMON.DAYS_PLURAL') }}
+                      } @else {
+                      {{ t('ATTENDANCE.DURATION_MINUTES') }}
+                      }
+                    </span>
+                  </div>
+                </td>
+
+                <td
+                  class="w-[1%] whitespace-nowrap border-b border-[var(--dashboard-border-soft)] px-3 py-2.5 align-middle">
+                  <app-table-status-badge-component [status]="request.statusTone" [label]="t(request.statusLabelKey)" />
+                </td>
+
+                <td
+                  class="w-[1%] whitespace-nowrap border-b border-[var(--dashboard-border-soft)] px-3 py-2.5 align-middle">
+                  <button type="button"
+                    class="inline-flex h-7 w-7 items-center justify-center rounded-lg border border-[var(--dashboard-border)] bg-white text-[var(--dashboard-slate)]"
+                    (click)="$event.stopPropagation(); openRequest(request)">
+                    <ng-icon name="lucideFileText" size="14" />
+                  </button>
+                </td>
+              </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+        }
+      </article>
+    </section>
+  </div>
   }
 </section>

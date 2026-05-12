@@ -5,14 +5,14 @@
 .employee-dashboard {
   --dashboard-border: #e5e7eb;
   --dashboard-border-soft: #eef2f7;
-  --dashboard-text: #111827;
-  --dashboard-muted: #6b7280;
+  --dashboard-text: #000000;
+  --dashboard-muted: #808080;
   --dashboard-surface: #ffffff;
   --dashboard-surface-soft: #f8fafc;
 
-  --dashboard-green: #6f9618;
-  --dashboard-green-strong: #5f8214;
-  --dashboard-green-soft: #eef7d4;
+  --dashboard-green: #537C0F;
+  --dashboard-green-soft: #6EA30D1A;
+  --dashboard-green-strong: #6EA30D;
 
   --dashboard-blue: #3f8fb4;
   --dashboard-blue-soft: #eaf5fb;

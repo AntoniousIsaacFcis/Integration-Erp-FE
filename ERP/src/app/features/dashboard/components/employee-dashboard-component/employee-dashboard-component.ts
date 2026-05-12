@@ -15,6 +15,7 @@ import {
   lucideClock3,
   lucideFileText,
   lucideShieldCheck,
+  lucideSun,
 } from '@ng-icons/lucide';
 import { AttendanceService } from '@features/attendance/services/attendance-service';
 import { IAttendanceDay, IAttendanceRelatedShift, IShift } from '@features/attendance/models/iattendance';
@@ -72,7 +73,7 @@ interface UpcomingHolidayItem {
   ],
   templateUrl: './employee-dashboard-component.html',
   styleUrl: './employee-dashboard-component.css',
-  providers: [provideIcons({ lucideShieldCheck, lucideCalendarDays, lucideClipboardList, lucideFileText, lucideClock3, lucideBell, lucideBarChart3 })],
+  providers: [provideIcons({ lucideShieldCheck, lucideCalendarDays, lucideClipboardList, lucideFileText, lucideClock3, lucideBell, lucideBarChart3 ,lucideSun})],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EmployeeDashboardComponent {
