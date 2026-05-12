@@ -831,7 +831,29 @@
     "ANNOUNCEMENTS": "الإعلانات",
     "UPCOMING_EVENTS": "الأحداث القادمة",
     "LEAVE_REQUESTS": "طلبات الإجازة",
-    "PENDING_APPROVALS": "الموافقات المعلقة"
+    "PENDING_APPROVALS": "الموافقات المعلقة",
+    "EMPLOYEE_TITLE": "لوحة الموظف",
+    "EMPLOYEE_SUBTITLE": "ملخص سريع للحضور والإجازات والإجراءات اليومية الخاصة بالموظف.",
+    "ADMIN_TITLE": "لوحة الإدارة والموارد البشرية",
+    "ADMIN_SUBTITLE": "نظرة عامة على الشركة والموافقات والحضور على مستوى المؤسسة.",
+    "EMPLOYEE_CARD_TITLE": "الحضور",
+    "EMPLOYEE_CARD_HEADING": "سجل الدخول والخروج اليومي",
+    "EMPLOYEE_CARD_DESCRIPTION": "هذا القسم مخصص لإحصاءات الحضور والانتقال لاحقاً إلى بطاقة الحضور الفعلية.",
+    "EMPLOYEE_WIDGET_PLACEHOLDER": "معلومات سريعة للموظف",
+    "EMPLOYEE_WIDGET_DESCRIPTION": "سيتم ربط هذا المكان بمؤشرات الإجازات والطلبات وسجل النشاطات في الخطوة التالية.",
+    "ATTENDANCE_CARD_TITLE": "بطاقة الحضور",
+    "ATTENDANCE_CARD_DESCRIPTION": "مساحة جاهزة لعرض حالة الحضور الحالية والاختصارات المرتبطة بها.",
+    "EMPLOYEE_SUMMARY_TITLE": "ملخص الطلبات",
+    "EMPLOYEE_SUMMARY_DESCRIPTION": "سيتم عرض ملخص الطلبات والإجازات الخاصة بالموظف هنا.",
+    "ADMIN_CARD_TITLE": "إحصائيات الشركة",
+    "ADMIN_CARD_HEADING": "لوحة ملخص الإدارة",
+    "ADMIN_CARD_DESCRIPTION": "هذا القسم مخصص للعرض الإداري العام قبل إضافة الرسوم والمخططات النهائية.",
+    "ADMIN_WIDGET_PLACEHOLDER": "الموافقات والإدارة",
+    "ADMIN_WIDGET_DESCRIPTION": "سيتم توصيل هذا المكان ببطاقات الموافقات والحضور والملخصات التنظيمية.",
+    "ADMIN_OVERVIEW_TITLE": "نظرة عامة على الحضور",
+    "ADMIN_OVERVIEW_DESCRIPTION": "مساحة مهيأة لعرض مؤشرات الحضور على مستوى الشركة.",
+    "ADMIN_SUMMARY_TITLE": "ملخص الموارد البشرية",
+    "ADMIN_SUMMARY_DESCRIPTION": "سيتم وضع ملخصات الموارد البشرية والتنبيهات التنظيمية هنا."
   },
   "ERRORS": {
     "SERVER_ERROR": "خطأ في الخادم",
@@ -1105,4 +1127,3 @@
     "PERMISSIONS_REQUIRED": "يرجى اختيار صلاحية واحدة على الأقل"
   }
 }
-

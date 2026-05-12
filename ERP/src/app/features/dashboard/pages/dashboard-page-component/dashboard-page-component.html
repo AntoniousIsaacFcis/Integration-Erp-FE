@@ -1,0 +1,19 @@
+<section class="flex flex-col gap-6" *transloco="let t">
+  <div class="rounded-[2rem] border border-white/10 bg-gradient-to-r from-[#111827] via-[#1F2937] to-[#0F172A] px-6 py-7 text-white shadow-[0_20px_60px_rgba(15,23,42,0.18)]">
+    <p class="text-xs font-semibold uppercase tracking-[0.24em] text-white/60">
+      {{ t('DASHBOARD.TITLE') }}
+    </p>
+    <h1 class="mt-3 text-3xl font-semibold">
+      {{ isAdminDashboard() ? t('DASHBOARD.ADMIN_TITLE') : t('DASHBOARD.EMPLOYEE_TITLE') }}
+    </h1>
+    <p class="mt-3 max-w-3xl text-sm leading-7 text-white/75">
+      {{ isAdminDashboard() ? t('DASHBOARD.ADMIN_SUBTITLE') : t('DASHBOARD.EMPLOYEE_SUBTITLE') }}
+    </p>
+  </div>
+
+  @if (isAdminDashboard()) {
+    <app-admin-dashboard-component />
+  } @else {
+    <app-employee-dashboard-component />
+  }
+</section>

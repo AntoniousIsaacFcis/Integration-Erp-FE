@@ -24,7 +24,7 @@ export const routes: Routes = [
     children: [
       {
         path: 'dashboard',
-        loadComponent: () => import('./features/dashboard/pages/dashboard-component/dashboard-component').then(x => x.DashboardComponent),
+        loadComponent: () => import('./features/dashboard/pages/dashboard-page-component/dashboard-page-component').then(x => x.DashboardPageComponent),
         data: { breadcrumb: null }
       },
       {
