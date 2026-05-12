@@ -20,7 +20,10 @@ import { AttendanceService } from '@features/attendance/services/attendance-serv
 import { IAttendanceDay, IAttendanceRelatedShift, IShift } from '@features/attendance/models/iattendance';
 import { IUnifiedRequestListItem } from '@features/attendance/models/ipermissions';
 import { IVacationResponse } from '@features/attendance/models/ivacation';
+import { IStaffApiItem } from '@features/core-hr/models/istaff';
+import { StaffService } from '@features/core-hr/services/staff-service';
 import { isDashboardAdminUser } from '@features/dashboard/utils/dashboard-role';
+import { DepartmentsService } from '@features/organization/services/departments-service';
 import { HolidayListsService } from '@features/settings/services/holiday-lists-service';
 import { catchError, map, of, switchMap } from 'rxjs';
 
@@ -75,6 +78,8 @@ interface UpcomingHolidayItem {
 export class EmployeeDashboardComponent {
   private readonly attendanceService = inject(AttendanceService);
   private readonly holidayListsService = inject(HolidayListsService);
+  private readonly departmentsService = inject(DepartmentsService);
+  private readonly staffService = inject(StaffService);
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
   private readonly notificationService = inject(NotificationService);
@@ -141,6 +146,37 @@ export class EmployeeDashboardComponent {
   readonly employeeCode = computed(() => this.currentStaffResource.value()?.staffCode?.trim() ?? '');
   readonly employeeEmail = computed(() => this.authService.currentUser()?.email?.trim() ?? '');
   readonly canOpenAdminStatistics = computed(() => isDashboardAdminUser(this.authService));
+
+  readonly staffDirectoryResource = rxResource({
+    stream: () => this.staffService.getStaff({ skipCount: 0, maxResultCount: 1000, filter: '' }).pipe(
+      catchError(() => of({ totalCount: 0, items: [] })),
+    ),
+  });
+
+  readonly staffDirectory = computed(() => this.staffDirectoryResource.value()?.items ?? []);
+  readonly currentStaffDetails = computed(() =>
+    this.staffDirectory().find(staff => staff.id === this.employeeId()) ?? null,
+  );
+  readonly currentDepartment = computed(() => {
+    const employeeId = this.employeeId();
+    const departmentId = this.currentStaffDetails()?.departmentId;
+    const departments = this.departmentsService.departmentsResource.value() ?? [];
+
+    return departments.find(department => department.id === departmentId)
+      ?? departments.find(department => department.employeeStaffIds.includes(employeeId))
+      ?? null;
+  });
+  readonly employeeDepartmentName = computed(() => this.currentDepartment()?.name?.trim() ?? '');
+  readonly departmentManagerName = computed(() => {
+    const managerIds = this.currentDepartment()?.managerStaffIds ?? [];
+    const managerNames = managerIds
+      .map(managerId => this.staffDirectory().find(staff => staff.id === managerId))
+      .filter((staff): staff is IStaffApiItem => Boolean(staff))
+      .map(staff => this.getStaffDisplayName(staff))
+      .filter(Boolean);
+
+    return managerNames.join(', ');
+  });
 
   readonly attendanceDaysResource = rxResource({
     params: () => {
@@ -536,6 +572,20 @@ export class EmployeeDashboardComponent {
     ];
 
     return labels[dayOfWeek] ?? 'DAYS.SUNDAY';
+  }
+
+  private getStaffDisplayName(staff: IStaffApiItem) {
+    const composedName = [staff.firstName, staff.middleName, staff.lastName]
+      .filter((part): part is string => Boolean(part?.trim()))
+      .join(' ')
+      .trim();
+
+    return staff.fullNameAr?.trim()
+      || staff.fullName?.trim()
+      || staff.fullNameEn?.trim()
+      || composedName
+      || staff.staffCode?.trim()
+      || staff.id;
   }
 
   private toCalendarTone(attendance: IAttendanceDay | null): CalendarTone {
