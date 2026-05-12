@@ -7,28 +7,66 @@
     </div>
   } @else if (currentStaffResource.error()) {
     <div class="dashboard-card dashboard-state-card dashboard-state-card--error">
-      <p class="dashboard-state-card__title">{{ t('COMMON.MESSAGES.OPERATION_FAILED') }}</p>
-      <p class="dashboard-state-card__text">{{ t('COMMON.MESSAGES.PLEASE_TRY_AGAIN') }}</p>
-      <button type="button" class="dashboard-link-button" (click)="currentStaffResource.reload()">
-        {{ t('BUTTON.REFRESH') }}
-      </button>
+      <p class="dashboard-state-card__title">
+        @if (canOpenAdminStatistics()) {
+          {{ t('DASHBOARD.PERSONAL_DASHBOARD_UNAVAILABLE') }}
+        } @else {
+          {{ t('COMMON.MESSAGES.OPERATION_FAILED') }}
+        }
+      </p>
+      <p class="dashboard-state-card__text">
+        @if (canOpenAdminStatistics()) {
+          {{ t('DASHBOARD.STAFF_PROFILE_REQUIRED') }}
+        } @else {
+          {{ t('COMMON.MESSAGES.PLEASE_TRY_AGAIN') }}
+        }
+      </p>
+      <div class="dashboard-state-card__actions">
+        @if (canOpenAdminStatistics()) {
+          <button
+            type="button"
+            class="employee-dashboard__admin-action"
+            (click)="navigateTo('/dashboard/admin')"
+          >
+            <ng-icon name="lucideBarChart3" size="14" />
+            <span>{{ t('DASHBOARD.ADMIN_STATISTICS') }}</span>
+          </button>
+        }
+
+        <button type="button" class="dashboard-link-button" (click)="currentStaffResource.reload()">
+          {{ t('BUTTON.REFRESH') }}
+        </button>
+      </div>
     </div>
   } @else if (currentStaffResource.value()) {
     <div class="employee-dashboard__layout">
       <header class="dashboard-card employee-dashboard__header">
         <div class="employee-dashboard__header-top">
           <h1 class="employee-dashboard__page-title">{{ t('DASHBOARD.TITLE') }}</h1>
-          <span class="dashboard-chip dashboard-chip--success employee-dashboard__status-pill">
-            @if (attendanceDaysResource.isLoading()) {
-              {{ t('COMMON.LOADING') }}
-            } @else if (todayAttendance()?.checkIn && todayAttendance()?.checkOut) {
-              {{ t('DASHBOARD.ATTENDANCE_COMPLETED') }}
-            } @else if (todayAttendance()?.checkIn) {
-              {{ t('ATTENDANCE.CHECK_IN_SUCCESS') }}
-            } @else {
-              {{ t('DASHBOARD.NO_ATTENDANCE_DATA') }}
+          <div class="employee-dashboard__header-actions">
+            @if (canOpenAdminStatistics()) {
+              <button
+                type="button"
+                class="employee-dashboard__admin-action"
+                (click)="navigateTo('/dashboard/admin')"
+              >
+                <ng-icon name="lucideBarChart3" size="14" />
+                <span>{{ t('DASHBOARD.ADMIN_STATISTICS') }}</span>
+              </button>
             }
-          </span>
+
+            <span class="dashboard-chip dashboard-chip--success employee-dashboard__status-pill">
+              @if (attendanceDaysResource.isLoading()) {
+                {{ t('COMMON.LOADING') }}
+              } @else if (todayAttendance()?.checkIn && todayAttendance()?.checkOut) {
+                {{ t('DASHBOARD.ATTENDANCE_COMPLETED') }}
+              } @else if (todayAttendance()?.checkIn) {
+                {{ t('ATTENDANCE.CHECK_IN_SUCCESS') }}
+              } @else {
+                {{ t('DASHBOARD.NO_ATTENDANCE_DATA') }}
+              }
+            </span>
+          </div>
         </div>
 
         <div class="employee-dashboard__header-copy">

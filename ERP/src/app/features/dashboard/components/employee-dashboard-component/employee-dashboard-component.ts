@@ -8,6 +8,7 @@ import { TableStatusBadgeComponent } from '@shared/components/atoms/table-status
 import { TranslocoModule } from '@jsverse/transloco';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import {
+  lucideBarChart3,
   lucideBell,
   lucideCalendarDays,
   lucideClipboardList,
@@ -19,6 +20,7 @@ import { AttendanceService } from '@features/attendance/services/attendance-serv
 import { IAttendanceDay, IAttendanceRelatedShift, IShift } from '@features/attendance/models/iattendance';
 import { IUnifiedRequestListItem } from '@features/attendance/models/ipermissions';
 import { IVacationResponse } from '@features/attendance/models/ivacation';
+import { isDashboardAdminUser } from '@features/dashboard/utils/dashboard-role';
 import { HolidayListsService } from '@features/settings/services/holiday-lists-service';
 import { catchError, map, of, switchMap } from 'rxjs';
 
@@ -67,7 +69,7 @@ interface UpcomingHolidayItem {
   ],
   templateUrl: './employee-dashboard-component.html',
   styleUrl: './employee-dashboard-component.css',
-  providers: [provideIcons({ lucideShieldCheck, lucideCalendarDays, lucideClipboardList, lucideFileText, lucideClock3, lucideBell })],
+  providers: [provideIcons({ lucideShieldCheck, lucideCalendarDays, lucideClipboardList, lucideFileText, lucideClock3, lucideBell, lucideBarChart3 })],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EmployeeDashboardComponent {
@@ -138,6 +140,7 @@ export class EmployeeDashboardComponent {
   );
   readonly employeeCode = computed(() => this.currentStaffResource.value()?.staffCode?.trim() ?? '');
   readonly employeeEmail = computed(() => this.authService.currentUser()?.email?.trim() ?? '');
+  readonly canOpenAdminStatistics = computed(() => isDashboardAdminUser(this.authService));
 
   readonly attendanceDaysResource = rxResource({
     params: () => {

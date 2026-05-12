@@ -782,6 +782,9 @@
   },
   "DASHBOARD": {
     "TITLE": "Dashboard",
+    "ADMIN_STATISTICS": "Admin Statistics",
+    "PERSONAL_DASHBOARD_UNAVAILABLE": "Personal dashboard is unavailable",
+    "STAFF_PROFILE_REQUIRED": "This account is not linked to a staff profile yet. Link it to a staff member to show personal attendance data.",
     "WELCOME": "Welcome",
     "WELCOME_MESSAGE": "Welcome to the Dashboard",
     "TOTAL_EMPLOYEES": "Total Employees",

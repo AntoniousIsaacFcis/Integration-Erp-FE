@@ -56,6 +56,14 @@
   gap: 12px;
 }
 
+.employee-dashboard__header-actions {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+}
+
 .section-eyebrow {
   font-size: 11px;
   font-weight: 700;
@@ -112,6 +120,36 @@
   padding: 0 12px;
   font-size: 11px;
   font-weight: 700;
+}
+
+.employee-dashboard__admin-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 28px;
+  padding-block: 0;
+  padding-inline: 10px;
+  border: 1px solid var(--dashboard-border);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--dashboard-green);
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+  transition: background-color 160ms ease, border-color 160ms ease, color 160ms ease;
+}
+
+.employee-dashboard__admin-action:hover {
+  border-color: #d8e8a7;
+  background: var(--dashboard-green-soft);
+  color: var(--dashboard-green-strong);
+}
+
+.employee-dashboard__admin-action ng-icon {
+  display: inline-flex;
+  flex: 0 0 auto;
 }
 
 .employee-dashboard__page-title {
@@ -1017,6 +1055,14 @@
   color: #b91c1c;
 }
 
+.dashboard-state-card__actions {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-block-start: 12px;
+}
+
 .dashboard-state-card__pulse,
 .calendar-card__skeleton-box {
   animation: dashboardPulse 1.4s ease-in-out infinite;
@@ -1119,6 +1165,10 @@
   .employee-dashboard__header-top {
     flex-direction: column-reverse;
     align-items: flex-start;
+  }
+
+  .employee-dashboard__header-actions {
+    justify-content: flex-start;
   }
 
   .employee-dashboard__meta {

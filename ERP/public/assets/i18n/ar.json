@@ -152,7 +152,8 @@
     "PERMISSIONS_AND_LEAVE_APPLICATIONS": "الأذونات وطلبات الإجازة",
     "CORE_HR":"الموظفين",
     "CREATE_LEAVE_APPLICATION":"إنشاء طلب إجازة",
-    "CREATE_ATTENDANCE_PERMISSION":"إنشاء إذن حضور"
+    "CREATE_ATTENDANCE_PERMISSION":"إنشاء إذن حضور",
+    "SHIFT_MANAGEMENT":"الحضور"
   },
   "BUTTON": {
     "ADD_LEVEL": "إضافة مستوى",
@@ -814,6 +815,9 @@
   },
   "DASHBOARD": {
     "TITLE": "لوحة التحكم",
+    "ADMIN_STATISTICS": "إحصائيات",
+    "PERSONAL_DASHBOARD_UNAVAILABLE": "لوحة التحكم الشخصية غير متاحة",
+    "STAFF_PROFILE_REQUIRED": "هذا الحساب غير مرتبط بملف موظف حتى الآن. اربطه بموظف لعرض بيانات الحضور الشخصية.",
     "WELCOME": "مرحباً",
     "WELCOME_MESSAGE": "أهلا وسهلا بك في لوحة التحكم",
     "TOTAL_EMPLOYEES": "إجمالي الموظفين",
